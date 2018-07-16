@@ -1,0 +1,63 @@
+import maya.cmds as cmds
+from . import SERigEnum
+
+#--------------------------------------------
+# Rig Control Class
+# Sun Che
+#--------------------------------------------
+class SERigControl():
+    def __init__(self,
+                 rigSide = SERigEnum.eRigSide.RS_Unkown,
+                 prefix = 'new', 
+                 scale = 1.0, 
+                 translateTo = '', 
+                 rotateTo = '', 
+                 parent = '', 
+                 lockChannels = ['s', 'v']):
+        
+        # Create control object and control group.
+        ctrlObj = cmds.circle(n = prefix + '_Ctrl', ch = False, normal = [1, 0, 0], radius = scale)[0]
+        ctrlGrp = cmds.group(n = prefix + '_CtrlGrp', em = 1)
+        cmds.parent(ctrlObj, ctrlGrp)
+
+        # Set control color.
+        ctrlShape = cmds.listRelatives(ctrlObj, s = 1)[0]
+        cmds.setAttr(ctrlShape + '.ove', 1)
+
+        if prefix.startswith('L_'):
+            cmds.setAttr(ctrlShape + '.ovc', 6)
+        elif prefix.startswith('R_'):
+            cmds.setAttr(ctrlShape + '.ovc', 13)
+        else:
+            cmds.setAttr(ctrlShape + '.ovc', 22)
+
+        # Translate control group to target translation object.
+        if cmds.objExists(translateTo):
+            cmds.delete(cmds.pointConstraint(translateTo, ctrlGrp))
+
+        # Rotate control group to target rotation object.
+        if cmds.objExists(rotateTo):
+            cmds.delete(cmds.orientConstraint(rotateTo, ctrlGrp))
+
+        # Parent the control group to the given parent.
+        if cmds.objExists(parent):
+            cmds.parent(ctrlGrp, parent)
+
+        # Lock control channels
+        singleAttributeLockList = []
+        for lc in lockChannels:
+            if lc in ['t', 'r', 's']:
+                for axis in ['x', 'y', 'z']:
+                    attr = lc + axis
+                    singleAttributeLockList.append(attr)
+            else:
+                singleAttributeLockList.append(lc)
+
+        for attr in singleAttributeLockList:
+            cmds.setAttr(ctrlObj + '.' + attr, l = 1, k = 0)
+
+        # Add public members
+        self.ContrlObject = ctrlObj
+        self.ContrlGroup = ctrlGrp
+        self.RigSide = rigSide
+        #self.RigType = rigType
