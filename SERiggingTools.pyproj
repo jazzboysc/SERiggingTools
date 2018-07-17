@@ -23,6 +23,9 @@
     <Compile Include="Base\SERigEnum.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Base\SERigNaming.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Base\__init__.py" />
     <Compile Include="Rig\__init__.py" />
     <Compile Include="Utils\__init__.py" />
