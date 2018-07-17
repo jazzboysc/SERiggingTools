@@ -1,5 +1,6 @@
 import maya.cmds as cmds
 from . import SERigEnum
+from . import SERigNaming
 
 #--------------------------------------------
 # Rig Control Class
@@ -7,7 +8,8 @@ from . import SERigEnum
 #--------------------------------------------
 class SERigControl():
     def __init__(self,
-                 rigSide = SERigEnum.eRigSide.RS_Unkown,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown,
                  prefix = 'new', 
                  scale = 1.0, 
                  translateTo = '', 
@@ -16,20 +18,23 @@ class SERigControl():
                  lockChannels = ['s', 'v']):
         
         # Create control object and control group.
-        ctrlObj = cmds.circle(n = prefix + '_Ctrl', ch = False, normal = [1, 0, 0], radius = scale)[0]
-        ctrlGrp = cmds.group(n = prefix + '_CtrlGrp', em = 1)
+        ctrlObj = cmds.circle(n = prefix + SERigNaming.sControl, ch = False, normal = [1, 0, 0], radius = scale)[0]
+        ctrlGrp = cmds.group(n = prefix + SERigNaming.sControlGroup, em = 1)
         cmds.parent(ctrlObj, ctrlGrp)
 
         # Set control color.
         ctrlShape = cmds.listRelatives(ctrlObj, s = 1)[0]
         cmds.setAttr(ctrlShape + '.ove', 1)
 
-        if prefix.startswith('L_'):
-            cmds.setAttr(ctrlShape + '.ovc', 6)
-        elif prefix.startswith('R_'):
-            cmds.setAttr(ctrlShape + '.ovc', 13)
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Blue)
+        elif rigSide == SERigEnum.eRigSide.RS_Right:
+            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Red)
+        elif rigSide == SERigEnum.eRigSide.RS_Center:
+            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Yellow)
         else:
-            cmds.setAttr(ctrlShape + '.ovc', 22)
+            # TODO:
+            pass
 
         # Translate control group to target translation object.
         if cmds.objExists(translateTo):
@@ -60,4 +65,4 @@ class SERigControl():
         self.ContrlObject = ctrlObj
         self.ContrlGroup = ctrlGrp
         self.RigSide = rigSide
-        #self.RigType = rigType
+        self.RigType = rigType

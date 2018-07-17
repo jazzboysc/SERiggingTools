@@ -1,2 +1,3 @@
 import SERigEnum
 import SERigControl
+import SERigNaming
