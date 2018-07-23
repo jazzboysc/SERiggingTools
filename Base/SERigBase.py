@@ -35,7 +35,7 @@ class SERigBase():
                                                  rigSide = SERigEnum.eRigSide.RS_Center,
                                                  rigType = SERigEnum.eRigType.RT_Global,
                                                  prefix = 'global1', 
-                                                 scale = scale, 
+                                                 scale = scale * 20, 
                                                  parent = self.RigGrp, 
                                                  lockChannels = ['v'])
 
@@ -43,19 +43,29 @@ class SERigBase():
                                                  rigSide = SERigEnum.eRigSide.RS_Center,
                                                  rigType = SERigEnum.eRigType.RT_Global,
                                                  prefix = 'global2', 
-                                                 scale = scale, 
+                                                 scale = scale * 18, 
                                                  parent = global1Ctrl.ContrlObject, 
                                                  lockChannels = ['s', 'v'])
+
+        self._flattenGlobalCtrlShape(global1Ctrl.ContrlObject)
+        self._flattenGlobalCtrlShape(global2Ctrl.ContrlObject)
 
         # Only allow uniform scaling.
         for axis in ['y', 'z']:
             cmds.connectAttr(global1Ctrl.ContrlObject + '.sx', global1Ctrl.ContrlObject + '.s' + axis)
             cmds.setAttr(global1Ctrl.ContrlObject + '.s' + axis, k = 0)
-
+        
         # Create more groups.
         self.JointsGrp = cmds.group(n = SERigNaming.sJointsGroup, em = 1, p = global2Ctrl.ContrlObject)
         self.RigCompsGrp = cmds.group(n = SERigNaming.sRigCompsGroup, em = 1, p = global2Ctrl.ContrlObject)
 
-        self.RigPartGrp = cmds.group(n = SERigNaming.sRigPartsGroup, em = 1, p = self.RigGrp)
-        cmds.setAttr(self.RigPartGrp + '.it', 0, l = 1) # Not inheriting transform
+        self.RigPartsGrp = cmds.group(n = SERigNaming.sRigPartsGroup, em = 1, p = self.RigGrp)
+        cmds.setAttr(self.RigPartsGrp + '.it', 0, l = 1) # Not inheriting transform
 
+    # Helper functions
+    def _flattenGlobalCtrlShape(self, ctrlObject):
+        ctrlShapes = cmds.listRelatives(ctrlObject, s = 1, type = 'nurbsCurve')
+        cluster = cmds.cluster(ctrlShapes)[1] # Get cluster handle, [0]: cluster name
+        cmds.setAttr(cluster + '.rz', 90)
+        cmds.delete(ctrlShapes, ch = 1)
+        
