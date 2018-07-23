@@ -2,10 +2,10 @@ import maya.cmds as cmds
 from . import SERigEnum
 from . import SERigNaming
 
-#--------------------------------------------
+#-----------------------------------------------------------------------------
 # Rig Control Class
 # Sun Che
-#--------------------------------------------
+#-----------------------------------------------------------------------------
 class SERigControl():
     def __init__(self,
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
@@ -48,7 +48,7 @@ class SERigControl():
         if cmds.objExists(parent):
             cmds.parent(ctrlGrp, parent)
 
-        # Lock control channels
+        # Lock control channels.
         singleAttributeLockList = []
         for lc in lockChannels:
             if lc in ['t', 'r', 's']:
@@ -61,7 +61,7 @@ class SERigControl():
         for attr in singleAttributeLockList:
             cmds.setAttr(ctrlObj + '.' + attr, l = 1, k = 0)
 
-        # Add public members
+        # Add public members.
         self.ContrlObject = ctrlObj
         self.ContrlGroup = ctrlGrp
         self.RigSide = rigSide

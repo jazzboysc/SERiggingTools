@@ -19,6 +19,12 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Base\SERigBase.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Base\SERigComponent.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Base\SERigControl.py" />
     <Compile Include="Base\SERigEnum.py">
       <SubType>Code</SubType>
