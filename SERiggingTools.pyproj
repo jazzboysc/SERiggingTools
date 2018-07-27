@@ -33,6 +33,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Base\__init__.py" />
+    <Compile Include="Character\SECharacter.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Character\SECharacterDeform.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Character\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Rig\__init__.py" />
     <Compile Include="Utils\SEJointHelper.py" />
     <Compile Include="Utils\SEStringHelper.py" />
@@ -42,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base" />
+    <Folder Include="Character\" />
     <Folder Include="Rig" />
     <Folder Include="Utils" />
   </ItemGroup>

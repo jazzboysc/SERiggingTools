@@ -8,4 +8,15 @@ def SE_MakeOffsetGrp(object, prefix = ''):
 
     offsetGrp = cmds.group(n = prefix + 'OffsetGrp', em = 1)
 
+    objectParents = cmds.listRelatives(object, p = 1)
+    if objectParents:
+        cmds.parent(offsetGrp, objectParents[0])
+
+    # Match group's transform to object's transform.
+    cmds.delete(cmds.parentConstraint(object, offsetGrp))
+    cmds.delete(cmds.scaleConstraint(object, offsetGrp))
     
+    # Parent the object under the offset group.
+    cmds.parent(object, offsetGrp)
+
+    return offsetGrp
