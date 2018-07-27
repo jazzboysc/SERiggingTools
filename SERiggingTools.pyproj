@@ -34,6 +34,9 @@
     </Compile>
     <Compile Include="Base\__init__.py" />
     <Compile Include="Rig\__init__.py" />
+    <Compile Include="Utils\SEJointHelper.py" />
+    <Compile Include="Utils\SEStringHelper.py" />
+    <Compile Include="Utils\SETransformHelper.py" />
     <Compile Include="Utils\__init__.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
