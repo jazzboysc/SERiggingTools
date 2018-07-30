@@ -43,6 +43,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rig\__init__.py" />
+    <Compile Include="ThirdParty\bSkinSaver.py" />
+    <Compile Include="ThirdParty\__init__.py" />
     <Compile Include="Utils\SEJointHelper.py" />
     <Compile Include="Utils\SEStringHelper.py" />
     <Compile Include="Utils\SETransformHelper.py" />
@@ -52,6 +54,7 @@
   <ItemGroup>
     <Folder Include="Base" />
     <Folder Include="Character\" />
+    <Folder Include="ThirdParty\" />
     <Folder Include="Rig" />
     <Folder Include="Utils" />
   </ItemGroup>
