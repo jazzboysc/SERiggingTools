@@ -12,9 +12,6 @@
     
 """
 
-
-
-
 import maya.OpenMayaMPx as OpenMayaMPx
 import maya.OpenMaya as OpenMaya
 import maya.OpenMayaAnim as OpenMayaAnim
@@ -22,8 +19,8 @@ import maya.mel
 import sys
 import maya.cmds as cmds
 import maya.OpenMayaUI as mui
-from PySide import QtCore, QtGui
-import shiboken
+from PySide2 import QtCore, QtGui, QtWidgets
+import shiboken2
 import os
 import time
 
@@ -35,37 +32,37 @@ def showUI():
 
 def getMayaWindow():
     ptr = mui.MQtUtil.mainWindow()
-    return shiboken.wrapInstance(long(ptr), QtGui.QWidget)
+    return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
 
 
-class bSkinSaverUI(QtGui.QDialog):
+class bSkinSaverUI(QtWidgets.QDialog):
     def __init__(self, parent=getMayaWindow()):
         super(bSkinSaverUI, self).__init__(parent, QtCore.Qt.WindowStaysOnTopHint)
 
-        tab_widget = QtGui.QTabWidget()
-        objectsTab = QtGui.QWidget()
-        verticesTab = QtGui.QWidget()
+        tab_widget = QtWidgets.QTabWidget()
+        objectsTab = QtWidgets.QWidget()
+        verticesTab = QtWidgets.QWidget()
         
         tab_widget.addTab(objectsTab, "Objects")
         tab_widget.addTab(verticesTab, "Vertices")
-        self.descLabel = QtGui.QLabel("(C) 2015 by Thomas Bittner", parent=self)       
+        self.descLabel = QtWidgets.QLabel("(C) 2015 by Thomas Bittner", parent=self)       
         self.setWindowTitle('bSkinSaver 1.1')
         
-        self.objectsFileLine = QtGui.QLineEdit('/Users/thomas/default.weights', parent=self)
-        self.selectObjectsFileButton = QtGui.QPushButton("Set File", parent=self)
-        self.saveObjectsButton = QtGui.QPushButton("Save Weights from selected Objects", parent=self)
-        self.loadObjectsButton = QtGui.QPushButton("Load", parent=self)
-        self.loadObjectsSelectionButton = QtGui.QPushButton("Load to Selected Object", parent=self)
+        self.objectsFileLine = QtWidgets.QLineEdit('/Users/thomas/default.weights', parent=self)
+        self.selectObjectsFileButton = QtWidgets.QPushButton("Set File", parent=self)
+        self.saveObjectsButton = QtWidgets.QPushButton("Save Weights from selected Objects", parent=self)
+        self.loadObjectsButton = QtWidgets.QPushButton("Load", parent=self)
+        self.loadObjectsSelectionButton = QtWidgets.QPushButton("Load to Selected Object", parent=self)
 
-        objectsLayout = QtGui.QVBoxLayout(objectsTab)
+        objectsLayout = QtWidgets.QVBoxLayout(objectsTab)
         objectsLayout.setAlignment(QtCore.Qt.AlignTop)
         objectsLayout.setSpacing(3)
-        objectsFileLayout = QtGui.QBoxLayout(QtGui.QBoxLayout.LeftToRight)
+        objectsFileLayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.LeftToRight)
         objectsFileLayout.addWidget(self.objectsFileLine)
         objectsFileLayout.addWidget(self.selectObjectsFileButton)    
         objectsLayout.addLayout(objectsFileLayout)
         
-        objectsButtonLayout = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom)
+        objectsButtonLayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.TopToBottom)
         objectsButtonLayout.setSpacing(0)
         objectsButtonLayout.addWidget(self.saveObjectsButton)
         objectsButtonLayout.addWidget(self.loadObjectsButton)
@@ -73,23 +70,23 @@ class bSkinSaverUI(QtGui.QDialog):
 
         objectsLayout.addLayout(objectsButtonLayout)
         
-        self.verticesFileLine = QtGui.QLineEdit('/Users/thomas/defaultVertex.weights', parent=self)
-        self.selectVerticesFileButton = QtGui.QPushButton("Set File", parent=self)
-        self.saveVerticesButton = QtGui.QPushButton("Save Weights from selected Vertices", parent=self)
-        self.loadVerticesButton = QtGui.QPushButton("Load onto selected Object", parent=self)
-        self.ignoreSoftSelectionWhenSaving = QtGui.QCheckBox("ignore Soft Selection when Saving", parent=self)
-        self.ignoreJointLocksWhenLoading = QtGui.QCheckBox("ignore Joint Locks when Loading", parent=self)
+        self.verticesFileLine = QtWidgets.QLineEdit('/Users/thomas/defaultVertex.weights', parent=self)
+        self.selectVerticesFileButton = QtWidgets.QPushButton("Set File", parent=self)
+        self.saveVerticesButton = QtWidgets.QPushButton("Save Weights from selected Vertices", parent=self)
+        self.loadVerticesButton = QtWidgets.QPushButton("Load onto selected Object", parent=self)
+        self.ignoreSoftSelectionWhenSaving = QtWidgets.QCheckBox("Ignore Soft Selection when Saving", parent=self)
+        self.ignoreJointLocksWhenLoading = QtWidgets.QCheckBox("Ignore Joint Locks when Loading", parent=self)
         
         
-        verticesLayout = QtGui.QVBoxLayout(verticesTab)
+        verticesLayout = QtWidgets.QVBoxLayout(verticesTab)
         verticesLayout.setAlignment(QtCore.Qt.AlignTop)
         verticesLayout.setSpacing(3)
-        verticesFileLayout = QtGui.QBoxLayout(QtGui.QBoxLayout.LeftToRight)
+        verticesFileLayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.LeftToRight)
         verticesFileLayout.addWidget(self.verticesFileLine)
-        verticesFileLayout.addWidget(self.selectVerticesFileButton)        
+        verticesFileLayout.addWidget(self.selectVerticesFileButton)
         verticesLayout.addLayout(verticesFileLayout)
         
-        verticesButtonLayout = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom)
+        verticesButtonLayout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.TopToBottom)
         verticesButtonLayout.setSpacing(0)
         verticesButtonLayout.addWidget(self.saveVerticesButton)
         verticesButtonLayout.addWidget(self.loadVerticesButton)
@@ -98,7 +95,7 @@ class bSkinSaverUI(QtGui.QDialog):
         verticesLayout.addLayout(verticesButtonLayout)
         
         
-        self.layout = QtGui.QBoxLayout(QtGui.QBoxLayout.TopToBottom, self) 
+        self.layout = QtWidgets.QBoxLayout(QtWidgets.QBoxLayout.TopToBottom, self)
         self.layout.addWidget(tab_widget)
         self.layout.addWidget(self.descLabel)
         self.resize(400, 10)
@@ -112,7 +109,8 @@ class bSkinSaverUI(QtGui.QDialog):
         self.connect(self.loadObjectsSelectionButton, QtCore.SIGNAL("clicked()"), self.loadObjectsSelection)   
                             
         self.connect(self.saveVerticesButton, QtCore.SIGNAL("clicked()"), self.saveVertices)        
-        self.connect(self.loadVerticesButton, QtCore.SIGNAL("clicked()"), self.loadVertices)                        
+        self.connect(self.loadVerticesButton, QtCore.SIGNAL("clicked()"), self.loadVertices)
+
                 
     def selectObjectsFile(self):
         fileResult = cmds.fileDialog2()
@@ -126,10 +124,10 @@ class bSkinSaverUI(QtGui.QDialog):
 
     
     def loadObjects(self):
-        bLoadSkinValues (False, str(self.objectsFileLine.text()))
+        bLoadSkinValues(False, str(self.objectsFileLine.text()))
         
     def loadObjectsSelection(self):
-        bLoadSkinValues (True, str(self.objectsFileLine.text()))
+        bLoadSkinValues(True, str(self.objectsFileLine.text()))
         
     def saveObjects(self):
         bSaveSkinValues(str(self.objectsFileLine.text()))
