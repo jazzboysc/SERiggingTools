@@ -1,18 +1,17 @@
-from Base import SERigControl
-from Base import SERigComponent
-from Base import SERigBase
+from ..Base import SERigControl
+from ..Base import SERigComponent
+from ..Base import SERigBase
 
 import maya.cmds as cmds
 
 sceneScale = 1.0
 
-mainProjectPath = ''
-modelFilePath = '%s/%s/model/%s_model.mb'
-builderFilePath = '%s/%s/builder/%s_builder.mb'
+modelFilePath = '%s/%s/Model/%s_Model.ma'
+builderFilePath = '%s/%s/Builder/%s_Builder.ma'
 
-def build(characterName):
+def build(characterName, mainProjectPath = ''):
     # Create new scene
-    cmds.file(new = True, f = True)
+    #cmds.file(new = True, f = True)
 
     # Create base.
     baseRig = SERigBase.SERigBase(characterName = characterName, scale = sceneScale)
