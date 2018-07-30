@@ -35,7 +35,7 @@ class SERigBase():
                                                  rigSide = SERigEnum.eRigSide.RS_Center,
                                                  rigType = SERigEnum.eRigType.RT_Global,
                                                  prefix = 'Global_01', 
-                                                 scale = scale * 20, 
+                                                 scale = scale * 40, 
                                                  parent = self.RigGrp, 
                                                  lockChannels = ['v'])
 
@@ -43,7 +43,7 @@ class SERigBase():
                                                  rigSide = SERigEnum.eRigSide.RS_Center,
                                                  rigType = SERigEnum.eRigType.RT_Global,
                                                  prefix = 'Global_02', 
-                                                 scale = scale * 18, 
+                                                 scale = scale * 30, 
                                                  parent = global1Ctrl.ContrlObject, 
                                                  lockChannels = ['s', 'v'])
 
