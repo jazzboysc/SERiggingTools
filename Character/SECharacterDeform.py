@@ -1,12 +1,69 @@
 import maya.cmds as cmds
 import os
+
+from ..Base import SERigNaming
 from ..ThirdParty import bSkinSaver
+from ..Utils import SEStringHelper
 
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
 
-def build(baseRig, mainProjectPath, sceneScale):
+def build(baseRig, mainProjectPath, sceneScale = 1.0, twistJointParents = []):
+    # Make twist joints.
+    makeTwistJoints(baseRig, twistJointParents)
+
+    # Load skin weights.
+
+    # Apply mush deformer.
+
+    # Wrap hi-res body mesh.
+
     pass
+
+def makeTwistJoints(baseRig, parentJoints, twistJointRadiusScale = 2.0):
+    if baseRig == None or len(parentJoints) == 0:
+        print('Unable to make twist joints.')
+        return
+
+    twistJointsMainGrp = cmds.group(n = SERigNaming.sTwistJointsGroup, p = baseRig.JointsGrp, em = 1)
+    
+    for parentJnt in parentJoints:
+        #prefix = SEStringHelper.SE_RemoveSuffix(parentJnt)
+        #prefix = prefix[:-1]
+        prefix = parentJnt
+        childJnt = cmds.listRelatives(parentJnt, c = 1, type = 'joint')[0]
+
+        # Make twist joints.
+        twistJntGrp = cmds.group(n = prefix + SERigNaming.s_TwistJointsGroup, p = twistJointsMainGrp, em = 1)
+
+        twistParentJnt = cmds.duplicate(parentJnt, n = prefix + '_Twist1_jnt', parentOnly = True)[0]
+        twistChildJnt = cmds.duplicate(childJnt, n = prefix + '_Twist2_jnt', parentOnly = True)[0]
+
+        # Adjust twist joints.
+        origJntRadius = cmds.getAttr(parentJnt + '.radius')
+        print origJntRadius
+
+        # Set new radius and color for twist joints.
+        for j in [twistParentJnt, twistChildJnt]:
+            cmds.setAttr(j + '.radius', origJntRadius * twistJointRadiusScale)
+            cmds.color(j, ud = 1)
+
+        # Parent twist joints.
+        cmds.parent(twistChildJnt, twistParentJnt)
+        cmds.parent(twistParentJnt, twistJntGrp)
+
+        # Attach twist joints.
+        cmds.pointConstraint(parentJnt, twistParentJnt)
+
+        # Make single chain IK.
+        twistIK = cmds.ikHandle(n = prefix + '_TwistJoint_ikh', sol = 'ikSCsolver', sj = twistParentJnt, ee = twistChildJnt)[0]
+        cmds.hide(twistIK)
+        cmds.parent(twistIK, twistJntGrp)
+        cmds.parentConstraint(childJnt, twistIK)
+
+
+
+
 
 def saveSkinWeights(characterName, mainProjectPath, geoList = []):
     for obj in geoList:
