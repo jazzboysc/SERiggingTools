@@ -9,11 +9,11 @@ from ..Utils import SEMathHelper
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
 
-def build(baseRig, mainProjectPath, sceneScale = 1.0, upperLimbJoints = []):
+def build(baseRig, mainProjectPath, sceneScale = 1.0, knobCount = 2, upperLimbJoints = []):
     # Make twist joints.
     #makeTwistJoints(baseRig, twistJointParents)
-    #for i in upperLimbJoints:
-    createUpperLimbTwistJoints(baseRig, 'L_Shoulder')
+    for i in upperLimbJoints:
+        createUpperLimbTwistJoints(baseRig, i, knobCount = knobCount)
 
     # Load skin weights.
 
@@ -75,12 +75,22 @@ def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 
         distance = SEMathHelper.getDistance3(twistBeginJointPos, twistEndJointPos)
         delta = distance / (knobCount + 1)
 
+        w0 = 1
+        w1 = knobCount
         for j in range(1, knobCount + 1):
             knobJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistKnob + str(j), parentOnly = True)[0]
             cmds.parent(knobJoint, upperLimbJoint)
             cmds.setAttr(knobJoint + '.tx', delta*j)
             cmds.setAttr(knobJoint + '.radius', origJntRadius * twistJointRadiusScale)
             cmds.color(knobJoint, ud = 1)
+
+            # Create twist knobs' orient constraint.
+            oc = cmds.orientConstraint(upperLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
+            cmds.setAttr(oc + '.' + upperLimbJoint + 'W0', w0)
+            cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
+            w0 += 1
+            w1 -= 1
+
             
 
 def makeTwistJoints(baseRig, parentJoints, twistJointRadiusScale = 2.0):

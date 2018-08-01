@@ -13,7 +13,7 @@ builderFilePath = '%s/%s/Builder/%s_Builder.ma'
 
 rootJnt = 'Root'
 
-def build(characterName, mainProjectPath = ''):
+def build(characterName, mainProjectPath = '', twistKnobCount = 2):
     # Create new scene
     #cmds.file(new = True, f = True)
 
@@ -37,4 +37,4 @@ def build(characterName, mainProjectPath = ''):
 
     # Setup model deformation.
     twistParents = ['L_Shoulder', 'R_Shoulder', 'L_Hip', 'R_Hip']
-    SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, twistParents)
+    SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, twistKnobCount, twistParents)
