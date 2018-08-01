@@ -8,9 +8,11 @@ from ..Utils import SEStringHelper
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
 
-def build(baseRig, mainProjectPath, sceneScale = 1.0, twistJointParents = []):
+def build(baseRig, mainProjectPath, sceneScale = 1.0, upperLimbJoints = []):
     # Make twist joints.
-    makeTwistJoints(baseRig, twistJointParents)
+    #makeTwistJoints(baseRig, twistJointParents)
+    for i in upperLimbJoints:
+        createUpperLimbTwistJoints(baseRig, i)
 
     # Load skin weights.
 
@@ -20,35 +22,35 @@ def build(baseRig, mainProjectPath, sceneScale = 1.0, twistJointParents = []):
 
     pass
 
-def createUpperArmTwistJoints(baseRig, upperArmJoint, twistJointRadiusScale = 2.0):
-    if baseRig == None or upperArmJoint == None:
-        print('Unable to make upper arm twist joints.')
+def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 2.0):
+    if baseRig == None or upperLimbJoint == None:
+        print('Unable to make upper limb twist joints.')
         return
 
-    prefix = upperArmJoint
+    prefix = upperLimbJoint
 
     # Find child joint.
-    childJointList = cmds.listRelatives(upperArmJoint, c = 1, type = 'joint')
+    childJointList = cmds.listRelatives(upperLimbJoint, c = 1, type = 'joint')
     if childJointList == None:
-        print('No child joint found for upper arm:' + upperArmJoint)
+        print('No child joint found for upper limb:' + upperLimbJoint)
         return
     childJoint = childJointList[0]
 
     # Find parent joint.
     parentJoint = None
-    parentJointList = cmds.listRelatives(upperArmJoint, p = 1, type = 'joint')
+    parentJointList = cmds.listRelatives(upperLimbJoint, p = 1, type = 'joint')
     if parentJointList == None:
-        print('No parent joint found for upper arm:' + upperArmJoint)
+        print('No parent joint found for upper limb:' + upperLimbJoint)
     else:
         parentJoint = parentJointList[0]
 
     # Create twist end joints.
-    twistBeginJoint = cmds.duplicate(upperArmJoint, n = prefix + '_TwistBegin', parentOnly = True)[0]
-    twistEndJoint = cmds.duplicate(upperArmJoint, n = prefix + '_TwistEnd', parentOnly = True)[0]
+    twistBeginJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistBegin, parentOnly = True)[0]
+    twistEndJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistEnd, parentOnly = True)[0]
     cmds.delete(cmds.pointConstraint(childJoint, twistEndJoint))
 
     # Adjust twist end joints.
-    origJntRadius = cmds.getAttr(upperArmJoint + '.radius')
+    origJntRadius = cmds.getAttr(upperLimbJoint + '.radius')
 
     # Set new radius and color for twist end joints.
     for i in [twistBeginJoint, twistEndJoint]:
@@ -59,12 +61,11 @@ def createUpperArmTwistJoints(baseRig, upperArmJoint, twistJointRadiusScale = 2.
     cmds.parent(twistEndJoint, twistBeginJoint)
 
     # Make single chain IK.
-    twistIK = cmds.ikHandle(n = prefix + '_Twist_ikHandle', sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
+    twistIK = cmds.ikHandle(n = prefix + SERigNaming.s_TwistIKHandle, sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
     cmds.hide(twistIK)
     cmds.pointConstraint(childJoint, twistIK)
 
     if parentJoint:
-        cmds.parent(twistBeginJoint, parentJoint)
         cmds.parent(twistIK, parentJoint)
 
 

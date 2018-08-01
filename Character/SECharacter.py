@@ -36,5 +36,5 @@ def build(characterName, mainProjectPath = ''):
     cmds.parent(rootJnt, baseRig.JointsGrp)
 
     # Setup model deformation.
-    twistParents = ['L_Elbow', 'R_Elbow', 'L_Knee', 'R_Knee']
+    twistParents = ['L_Shoulder', 'R_Shoulder', 'L_Hip', 'R_Hip']
     SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, twistParents)

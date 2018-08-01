@@ -10,6 +10,9 @@ sIKPrefix           = 'IK_'
 sFKPrefix           = 'FK_'
 sControlsGroup      = 'ControlsGrp'
 sTwistJointsGroup   = 'TwistJointsGrp'
+sTwistBegin         = 'TwistBegin'
+sTwistEnd           = 'TwistEnd'
+sTwistIKHandle      = 'Twist_ikHandle'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
@@ -19,3 +22,6 @@ s_RigPartsGroup      = '_' + sRigPartsGroup
 s_RigPartsFixedGroup = '_' + sRigPartsFixedGroup
 s_ControlsGroup      = '_' + sControlsGroup
 s_TwistJointsGroup   = '_' + sTwistJointsGroup
+s_TwistBegin         = '_' + sTwistBegin
+s_TwistEnd           = '_' + sTwistEnd
+s_TwistIKHandle      = '_' + sTwistIKHandle
