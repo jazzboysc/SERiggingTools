@@ -46,6 +46,9 @@
     <Compile Include="ThirdParty\bSkinSaver.py" />
     <Compile Include="ThirdParty\__init__.py" />
     <Compile Include="Utils\SEJointHelper.py" />
+    <Compile Include="Utils\SEMathHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Utils\SEStringHelper.py" />
     <Compile Include="Utils\SETransformHelper.py" />
     <Compile Include="Utils\__init__.py" />

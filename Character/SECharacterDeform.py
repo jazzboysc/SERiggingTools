@@ -4,6 +4,7 @@ import os
 from ..Base import SERigNaming
 from ..ThirdParty import bSkinSaver
 from ..Utils import SEStringHelper
+from ..Utils import SEMathHelper
 
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
@@ -11,8 +12,8 @@ skinWeightsExt = '.swt'
 def build(baseRig, mainProjectPath, sceneScale = 1.0, upperLimbJoints = []):
     # Make twist joints.
     #makeTwistJoints(baseRig, twistJointParents)
-    for i in upperLimbJoints:
-        createUpperLimbTwistJoints(baseRig, i)
+    #for i in upperLimbJoints:
+    createUpperLimbTwistJoints(baseRig, 'L_Shoulder')
 
     # Load skin weights.
 
@@ -20,9 +21,7 @@ def build(baseRig, mainProjectPath, sceneScale = 1.0, upperLimbJoints = []):
 
     # Wrap hi-res body mesh.
 
-    pass
-
-def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 2.0):
+def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 4.0, knobCount = 2, maxKnobCount = 5):
     if baseRig == None or upperLimbJoint == None:
         print('Unable to make upper limb twist joints.')
         return
@@ -60,7 +59,7 @@ def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 
     # Parent twist end joints.
     cmds.parent(twistEndJoint, twistBeginJoint)
 
-    # Make single chain IK.
+    # Create single chain IK.
     twistIK = cmds.ikHandle(n = prefix + SERigNaming.s_TwistIKHandle, sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
     cmds.hide(twistIK)
     cmds.pointConstraint(childJoint, twistIK)
@@ -68,6 +67,21 @@ def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 
     if parentJoint:
         cmds.parent(twistIK, parentJoint)
 
+    # Create twist knobs.
+    if knobCount > 0 and knobCount < maxKnobCount:
+        twistBeginJointPos = SEMathHelper.getWorldPosition(twistBeginJoint)
+        twistEndJointPos = SEMathHelper.getWorldPosition(twistEndJoint)
+        
+        distance = SEMathHelper.getDistance3(twistBeginJointPos, twistEndJointPos)
+        delta = distance / (knobCount + 1)
+
+        for j in range(1, knobCount + 1):
+            knobJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistKnob + str(j), parentOnly = True)[0]
+            cmds.parent(knobJoint, upperLimbJoint)
+            cmds.setAttr(knobJoint + '.tx', delta*j)
+            cmds.setAttr(knobJoint + '.radius', origJntRadius * twistJointRadiusScale)
+            cmds.color(knobJoint, ud = 1)
+            
 
 def makeTwistJoints(baseRig, parentJoints, twistJointRadiusScale = 2.0):
     if baseRig == None or len(parentJoints) == 0:
