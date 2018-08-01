@@ -20,6 +20,54 @@ def build(baseRig, mainProjectPath, sceneScale = 1.0, twistJointParents = []):
 
     pass
 
+def createUpperArmTwistJoints(baseRig, upperArmJoint, twistJointRadiusScale = 2.0):
+    if baseRig == None or upperArmJoint == None:
+        print('Unable to make upper arm twist joints.')
+        return
+
+    prefix = upperArmJoint
+
+    # Find child joint.
+    childJointList = cmds.listRelatives(upperArmJoint, c = 1, type = 'joint')
+    if childJointList == None:
+        print('No child joint found for upper arm:' + upperArmJoint)
+        return
+    childJoint = childJointList[0]
+
+    # Find parent joint.
+    parentJoint = None
+    parentJointList = cmds.listRelatives(upperArmJoint, p = 1, type = 'joint')
+    if parentJointList == None:
+        print('No parent joint found for upper arm:' + upperArmJoint)
+    else:
+        parentJoint = parentJointList[0]
+
+    # Create twist end joints.
+    twistBeginJoint = cmds.duplicate(upperArmJoint, n = prefix + '_TwistBegin', parentOnly = True)[0]
+    twistEndJoint = cmds.duplicate(upperArmJoint, n = prefix + '_TwistEnd', parentOnly = True)[0]
+    cmds.delete(cmds.pointConstraint(childJoint, twistEndJoint))
+
+    # Adjust twist end joints.
+    origJntRadius = cmds.getAttr(upperArmJoint + '.radius')
+
+    # Set new radius and color for twist end joints.
+    for i in [twistBeginJoint, twistEndJoint]:
+        cmds.setAttr(i + '.radius', origJntRadius * twistJointRadiusScale)
+        cmds.color(i, ud = 1)
+
+    # Parent twist end joints.
+    cmds.parent(twistEndJoint, twistBeginJoint)
+
+    # Make single chain IK.
+    twistIK = cmds.ikHandle(n = prefix + '_Twist_ikHandle', sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
+    cmds.hide(twistIK)
+    cmds.pointConstraint(childJoint, twistIK)
+
+    if parentJoint:
+        cmds.parent(twistBeginJoint, parentJoint)
+        cmds.parent(twistIK, parentJoint)
+
+
 def makeTwistJoints(baseRig, parentJoints, twistJointRadiusScale = 2.0):
     if baseRig == None or len(parentJoints) == 0:
         print('Unable to make twist joints.')
