@@ -2,9 +2,11 @@ import maya.cmds as cmds
 import os
 
 from ..Base import SERigNaming
+from ..Base import SERigEnum
 from ..ThirdParty import bSkinSaver
 from ..Utils import SEStringHelper
 from ..Utils import SEMathHelper
+from ..Utils import SEJointHelper
 
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
@@ -74,6 +76,10 @@ def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 
         
         distance = SEMathHelper.getDistance3(twistBeginJointPos, twistEndJointPos)
         delta = distance / (knobCount + 1)
+
+        jointSide = SEJointHelper.getJointSide(upperLimbJoint)
+        if jointSide == SERigEnum.eRigSide.RS_Right:
+            delta *= -1
 
         w0 = 1
         w1 = knobCount
