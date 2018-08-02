@@ -13,7 +13,14 @@ builderFilePath = '%s/%s/Builder/%s_Builder.ma'
 
 rootJnt = 'Root'
 
-def build(characterName, mainProjectPath = '', twistKnobCount = 2):
+def build(
+          characterName, 
+          mainProjectPath = '', 
+          upperBodyUpperLimbKnobCount = 2, 
+          upperBodyLowerLimbKnobCount = 2,
+          lowerBodyUpperLimbKnobCount = 2,
+          lowerBodyLowerLimbKnobCount = 1,
+          ):
     # Create new scene
     #cmds.file(new = True, f = True)
 
@@ -36,6 +43,19 @@ def build(characterName, mainProjectPath = '', twistKnobCount = 2):
     cmds.parent(rootJnt, baseRig.JointsGrp)
 
     # Setup model deformation.
-    upperLimeTwistParents = ['L_Shoulder', 'R_Shoulder', 'L_Hip', 'R_Hip']
-    lowerLimeTwistParents = ['L_Elbow']
-    SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, twistKnobCount, upperLimeTwistParents, lowerLimeTwistParents)
+    upperBodyUpperLimbJoints = ['L_Shoulder', 'R_Shoulder']
+    upperBodyLowerLimbJoints = ['L_Elbow', 'R_Elbow']
+    lowerBodyUpperLimbJoints = ['L_Hip', 'R_Hip']
+    lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
+
+    SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, 
+                            upperBodyUpperLimbKnobCount, 
+                            upperBodyLowerLimbKnobCount, 
+                            lowerBodyUpperLimbKnobCount, 
+                            lowerBodyLowerLimbKnobCount, 
+                            upperBodyUpperLimbJoints, 
+                            upperBodyLowerLimbJoints, 
+                            lowerBodyUpperLimbJoints, 
+                            lowerBodyLowerLimbJoints)
+
+    cmds.select(cl=1)

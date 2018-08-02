@@ -15,17 +15,27 @@ def build(
           baseRig, 
           mainProjectPath, 
           sceneScale = 1.0, 
-          knobCount = 2, 
-          upperLimbJoints = [], 
-          lowerLimbJoints = []
+          upperBodyUpperLimbKnobCount = 2, 
+          upperBodyLowerLimbKnobCount = 2,
+          lowerBodyUpperLimbKnobCount = 2,
+          lowerBodyLowerLimbKnobCount = 1,
+          upperBodyUpperLimbJoints = [],
+          upperBodyLowerLimbJoints = [],
+          lowerBodyUpperLimbJoints = [],
+          lowerBodyLowerLimbJoints = []
           ):
-    # Make twist joints.
-    #makeTwistJoints(baseRig, twistJointParents)
-    for i in upperLimbJoints:
-        createUpperLimbTwistJoints(baseRig, i, knobCount = knobCount)
+    # Create twist joints.
+    for i in upperBodyUpperLimbJoints:
+        createUpperLimbTwistJoints(baseRig, i, knobCount = upperBodyUpperLimbKnobCount)
 
-    for i in lowerLimbJoints:
-        createLowerLimbTwistJoints(baseRig, i, knobCount = knobCount)
+    for i in upperBodyLowerLimbJoints:
+        createLowerLimbTwistJoints(baseRig, i, knobCount = upperBodyLowerLimbKnobCount)
+
+    for i in lowerBodyUpperLimbJoints:
+        createUpperLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyUpperLimbKnobCount)
+
+    for i in lowerBodyLowerLimbJoints:
+        createLowerLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyLowerLimbKnobCount)
 
     # Load skin weights.
 
@@ -166,8 +176,8 @@ def createLowerLimbTwistJoints(
         if jointSide == SERigEnum.eRigSide.RS_Right:
             delta *= -1
 
-        w0 = 1
-        w1 = knobCount
+        w0 = knobCount
+        w1 = 1
         for j in range(1, knobCount + 1):
             knobJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistKnob + str(j), parentOnly = True)[0]
             cmds.parent(knobJoint, lowerLimbJoint)
@@ -176,11 +186,11 @@ def createLowerLimbTwistJoints(
             cmds.color(knobJoint, ud = 8)
 
             # Create twist knobs' orient constraint.
-            #oc = cmds.orientConstraint(upperLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
-            #cmds.setAttr(oc + '.' + upperLimbJoint + 'W0', w0)
-            #cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
-            #w0 += 1
-            #w1 -= 1
+            oc = cmds.orientConstraint(lowerLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
+            cmds.setAttr(oc + '.' + lowerLimbJoint + 'W0', w0)
+            cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
+            w0 -= 1
+            w1 += 1
 
 def makeTwistJoints(baseRig, parentJoints, twistJointRadiusScale = 2.0):
     if baseRig == None or len(parentJoints) == 0:
