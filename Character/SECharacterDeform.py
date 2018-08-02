@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import maya.mel as mel
 import os
 
 from ..Base import SERigNaming
@@ -14,7 +15,13 @@ skinWeightsExt = '.swt'
 def build(
           baseRig, 
           mainProjectPath, 
-          sceneScale = 1.0, 
+          sceneScale = 1.0,
+          loadSkinWeights = False,
+          applyDeltaMushDeformer = False,
+          deltaMushGeometry = '',
+          applyWrapDeformer = False,
+          wrappedObjects = [],
+          wrapperObject = '',
           upperBodyUpperLimbKnobCount = 2, 
           upperBodyLowerLimbKnobCount = 2,
           lowerBodyUpperLimbKnobCount = 2,
@@ -38,10 +45,30 @@ def build(
         createLowerLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyLowerLimbKnobCount)
 
     # Load skin weights.
+    if loadSkinWeights:
+        geoList = _getModelGeoObjects(baseRig.ModelGrp)
+        loadSkinWeights(baseRig.getCharacterName(), mainProjectPath, geoList)
 
-    # Apply mush deformer.
+    # Apply delta mush deformer.
+    if applyDeltaMushDeformer:
+        _applyDeltaMush(deltaMushGeometry)
 
     # Wrap hi-res body mesh.
+    if applyWrapDeformer:
+        _applyWrapDeformer(wrappedObjects, wrapperObject)
+
+def _applyDeltaMush(geometry):
+    res = cmds.deltaMush(geometry, smoothingIterations = 50)[0]
+    return res
+
+def _applyWrapDeformer(wrappedObjects, wrapperObject):
+    cmds.select(wrappedObjects)
+    cmds.select(wrapperObject, add = 1)
+    mel.eval('doWrapArgList "7" { "1", "0", "1", "2", "1", "1", "0", "0" }')
+
+def _getModelGeoObjects(modelGrp):
+    res = [cmds.listRelatives(shape, p = 1)[0] for shape in cmds.listRelatives(modelGrp, ad = 1, type = 'mesh')]
+    return res
 
 def createUpperLimbTwistJoints(
                                baseRig, 

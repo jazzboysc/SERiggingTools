@@ -5,6 +5,9 @@ from . import SERigControl
 
 sceneObjectType = 'rig'
 
+characterNameAttr = 'characterName'
+sceneObjectTypeAttr = 'sceneObjectType'
+
 #-----------------------------------------------------------------------------
 # Rig Base Class
 # Sun Che
@@ -21,9 +24,6 @@ class SERigBase():
         self.ModelGrp = cmds.group(n = SERigNaming.sModelGroup, em = 1, p = self.TopGrp)
 
         # Add custom attributes for the TopGrp object.
-        characterNameAttr = 'characterName'
-        sceneObjectTypeAttr = 'sceneObjectType'
-
         for attr in [characterNameAttr, sceneObjectTypeAttr]:
             cmds.addAttr(self.TopGrp, ln = attr, dt = 'string')
 
@@ -61,6 +61,10 @@ class SERigBase():
 
         self.RigPartsGrp = cmds.group(n = SERigNaming.sRigPartsGroup, em = 1, p = self.RigGrp)
         cmds.setAttr(self.RigPartsGrp + '.it', 0, l = 1) # Not inheriting transform
+
+    def getCharacterName(self):
+        res = cmds.getAttr(self.TopGrp + '.' + characterNameAttr)
+        return res
 
     # Helper functions
     def _flattenGlobalCtrlShape(self, ctrlObject):

@@ -49,6 +49,12 @@ def build(
     lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
 
     SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, 
+                            False,
+                            False,
+                            '',
+                            False,
+                            [],
+                            '',
                             upperBodyUpperLimbKnobCount, 
                             upperBodyLowerLimbKnobCount, 
                             lowerBodyUpperLimbKnobCount, 
