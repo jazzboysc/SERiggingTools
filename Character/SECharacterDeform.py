@@ -11,11 +11,21 @@ from ..Utils import SEJointHelper
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
 
-def build(baseRig, mainProjectPath, sceneScale = 1.0, knobCount = 2, upperLimbJoints = []):
+def build(
+          baseRig, 
+          mainProjectPath, 
+          sceneScale = 1.0, 
+          knobCount = 2, 
+          upperLimbJoints = [], 
+          lowerLimbJoints = []
+          ):
     # Make twist joints.
     #makeTwistJoints(baseRig, twistJointParents)
     for i in upperLimbJoints:
         createUpperLimbTwistJoints(baseRig, i, knobCount = knobCount)
+
+    for i in lowerLimbJoints:
+        createLowerLimbTwistJoints(baseRig, i, knobCount = knobCount)
 
     # Load skin weights.
 
@@ -23,19 +33,24 @@ def build(baseRig, mainProjectPath, sceneScale = 1.0, knobCount = 2, upperLimbJo
 
     # Wrap hi-res body mesh.
 
-def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 4.0, knobCount = 2, maxKnobCount = 5):
+def createUpperLimbTwistJoints(
+                               baseRig, 
+                               upperLimbJoint, 
+                               twistJointRadiusScale = 4.0, 
+                               knobCount = 2, 
+                               maxKnobCount = 5
+                               ):
     if baseRig == None or upperLimbJoint == None:
-        print('Unable to make upper limb twist joints.')
+        print('Unable to create upper limb twist joints.')
         return
 
     prefix = upperLimbJoint
 
     # Find child joint.
-    childJointList = cmds.listRelatives(upperLimbJoint, c = 1, type = 'joint')
-    if childJointList == None:
+    childJoint = SEJointHelper.getFirstChildJoint(upperLimbJoint)
+    if childJoint == None:
         print('No child joint found for upper limb:' + upperLimbJoint)
         return
-    childJoint = childJointList[0]
 
     # Find parent joint.
     parentJoint = None
@@ -97,7 +112,75 @@ def createUpperLimbTwistJoints(baseRig, upperLimbJoint, twistJointRadiusScale = 
             w0 += 1
             w1 -= 1
 
-            
+def createLowerLimbTwistJoints(
+                               baseRig, 
+                               lowerLimbJoint, 
+                               twistJointRadiusScale = 3.0, 
+                               knobCount = 2, 
+                               maxKnobCount = 5
+                               ):
+    if baseRig == None or lowerLimbJoint == None:
+        print('Unable to create lower limb twist joints.')
+        return
+
+    prefix = lowerLimbJoint
+
+    # Find child joint.
+    childJoint = SEJointHelper.getFirstChildJoint(lowerLimbJoint)
+    if childJoint == None:
+        print('No child joint found for lower limb:' + lowerLimbJoint)
+        return
+
+    # Create twist end joints.
+    twistBeginJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistBegin, parentOnly = True)[0]
+    twistEndJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistEnd, parentOnly = True)[0]
+    cmds.delete(cmds.pointConstraint(childJoint, twistBeginJoint))
+
+    # Adjust twist end joints.
+    origJntRadius = cmds.getAttr(lowerLimbJoint + '.radius')
+
+    # Set new radius and color for twist end joints.
+    for i in [twistBeginJoint, twistEndJoint]:
+        cmds.setAttr(i + '.radius', origJntRadius * twistJointRadiusScale)
+        cmds.color(i, ud = 8)
+
+    # Parent twist end joints.
+    cmds.parent(twistEndJoint, twistBeginJoint)
+    cmds.parent(twistBeginJoint, lowerLimbJoint)
+
+    # Create single chain IK.
+    twistIK = cmds.ikHandle(n = prefix + SERigNaming.s_TwistIKHandle, sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
+    cmds.hide(twistIK)
+    cmds.parent(twistIK, childJoint)
+    cmds.pointConstraint(lowerLimbJoint, twistIK)
+
+    # Create twist knobs.
+    if knobCount > 0 and knobCount < maxKnobCount:
+        twistBeginJointPos = SEMathHelper.getWorldPosition(twistBeginJoint)
+        twistEndJointPos = SEMathHelper.getWorldPosition(twistEndJoint)
+        
+        distance = SEMathHelper.getDistance3(twistBeginJointPos, twistEndJointPos)
+        delta = distance / (knobCount + 1)
+
+        jointSide = SEJointHelper.getJointSide(lowerLimbJoint)
+        if jointSide == SERigEnum.eRigSide.RS_Right:
+            delta *= -1
+
+        w0 = 1
+        w1 = knobCount
+        for j in range(1, knobCount + 1):
+            knobJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistKnob + str(j), parentOnly = True)[0]
+            cmds.parent(knobJoint, lowerLimbJoint)
+            cmds.setAttr(knobJoint + '.tx', delta*j)
+            cmds.setAttr(knobJoint + '.radius', origJntRadius * twistJointRadiusScale)
+            cmds.color(knobJoint, ud = 8)
+
+            # Create twist knobs' orient constraint.
+            #oc = cmds.orientConstraint(upperLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
+            #cmds.setAttr(oc + '.' + upperLimbJoint + 'W0', w0)
+            #cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
+            #w0 += 1
+            #w1 -= 1
 
 def makeTwistJoints(baseRig, parentJoints, twistJointRadiusScale = 2.0):
     if baseRig == None or len(parentJoints) == 0:

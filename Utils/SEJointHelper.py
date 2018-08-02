@@ -23,3 +23,13 @@ def getJointSide(joint):
         return SERigEnum.eRigSide.RS_Center
     else:
         return SERigEnum.eRigSide.RS_Unknown
+
+def getFirstChildJoint(parent):
+    # Find child joint.
+    childJoint = None
+
+    childJointList = cmds.listRelatives(parent, c = 1, type = 'joint')
+    if childJointList != None:
+        childJoint = childJointList[0]
+
+    return childJoint
