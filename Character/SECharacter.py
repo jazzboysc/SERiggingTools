@@ -12,6 +12,7 @@ modelFilePath = '%s/%s/Model/%s_Model.ma'
 builderFilePath = '%s/%s/Builder/%s_Builder.ma'
 
 rootJnt = 'Root'
+headJnt = 'C_Head'
 
 def build(
           characterName, 
@@ -20,20 +21,23 @@ def build(
           upperBodyLowerLimbKnobCount = 2,
           lowerBodyUpperLimbKnobCount = 2,
           lowerBodyLowerLimbKnobCount = 1,
+          mainCtrlOffset = 30
           ):
     # Create new scene
     #cmds.file(new = True, f = True)
-
-    # Create base.
-    baseRig = SERigBase.SERigBase(characterName = characterName, scale = sceneScale)
 
     # Import model.
     modelFile = modelFilePath % (mainProjectPath, characterName, characterName)
     cmds.file(modelFile, i = 1)
 
-    # Import builder scene
+    # Import builder scene.
     builderFile = builderFilePath % (mainProjectPath, characterName, characterName)
     cmds.file(builderFile, i = 1)
+
+    # Create rig base.
+    baseRig = SERigBase.SERigBase(characterName = characterName, 
+                                  scale = sceneScale, mainCtrlAttachObject = headJnt, 
+                                  mainCtrlOffset = mainCtrlOffset)
 
     # Parent the imported model to the rig base.
     modelGrp = ('%s' + SERigNaming.s_ModelGroup) % characterName

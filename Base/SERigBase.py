@@ -16,7 +16,9 @@ class SERigBase():
     def __init__(
                  self, 
                  characterName = 'new',
-                 scale = 1.0
+                 scale = 1.0,
+                 mainCtrlAttachObject = '',
+                 mainCtrlOffset = 35.0
                  ):
         # Add public members.
         self.TopGrp = cmds.group(n = characterName + SERigNaming.s_RigGroup, em = 1)
@@ -62,11 +64,52 @@ class SERigBase():
         self.RigPartsGrp = cmds.group(n = SERigNaming.sRigPartsGroup, em = 1, p = self.RigGrp)
         cmds.setAttr(self.RigPartsGrp + '.it', 0, l = 1) # Not inheriting transform
 
+        # Create main conotrol.
+        mainCtrl = SERigControl.SERigControl(
+                                                 rigSide = SERigEnum.eRigSide.RS_Center,
+                                                 rigType = SERigEnum.eRigType.RT_Global,
+                                                 prefix = 'Main', 
+                                                 scale = scale * 4, 
+                                                 parent = global2Ctrl.ContrlObject, 
+                                                 translateTo = mainCtrlAttachObject,
+                                                 lockChannels = ['t', 'r', 's', 'v'])
+
+        # Adjust main control position and orientation.
+        self._adjustMainCtrlShape(mainCtrl, scale, mainCtrlOffset)
+
+        if cmds.objExists(mainCtrlAttachObject):
+            cmds.parentConstraint(mainCtrlAttachObject, mainCtrl.ContrlGroup, mo = 1)
+
+        mainVisAts = ['modelVis', 'jointsVis']
+        mainDispAts = ['modelDisp', 'jointsDisp']
+        mainObjList = [self.ModelGrp, self.JointsGrp]
+
+        # Add rig visibility connections.
+        for at, obj in zip(mainVisAts, mainObjList):
+            cmds.addAttr(mainCtrl.ContrlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
+            cmds.setAttr(mainCtrl.ContrlObject + '.' + at, cb = 1)
+            cmds.connectAttr(mainCtrl.ContrlObject + '.' + at, obj + '.v')
+
+        # Add rig display type connections.
+        for at, obj in zip(mainDispAts, mainObjList):
+            cmds.addAttr(mainCtrl.ContrlObject, ln = at, at = 'enum', enumName = 'normal:template:reference', k = 1, dv = 2)
+            cmds.setAttr(mainCtrl.ContrlObject + '.' + at, cb = 1)
+            cmds.setAttr(obj + '.ove', 1)
+            cmds.connectAttr(mainCtrl.ContrlObject + '.' + at, obj + '.ovdt')
+
+
     def getCharacterName(self):
         res = cmds.getAttr(self.TopGrp + '.' + characterNameAttr)
         return res
 
     # Helper functions
+    def _adjustMainCtrlShape(self, ctrl, scale, offset):
+        ctrlShapes = cmds.listRelatives(ctrl.ContrlObject, s = 1, type = 'nurbsCurve')
+        cluster = cmds.cluster(ctrlShapes)[1] # Get cluster handle, [0]: cluster name
+        cmds.setAttr(cluster + '.ry', 90)
+        cmds.delete(ctrlShapes, ch = 1)
+        cmds.move(scale*offset, ctrl.ContrlGroup, moveY = True, relative = True)
+
     def _flattenGlobalCtrlShape(self, ctrlObject):
         ctrlShapes = cmds.listRelatives(ctrlObject, s = 1, type = 'nurbsCurve')
         cluster = cmds.cluster(ctrlShapes)[1] # Get cluster handle, [0]: cluster name
