@@ -62,7 +62,7 @@ class SERigControl():
             cmds.setAttr(ctrlObj + '.' + attr, l = 1, k = 0)
 
         # Add public members.
-        self.ContrlObject = ctrlObj
-        self.ContrlGroup = ctrlGrp
+        self.ControlObject = ctrlObj
+        self.ControlGroup = ctrlGrp
         self.RigSide = rigSide
         self.RigType = rigType

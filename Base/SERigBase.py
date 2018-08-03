@@ -46,20 +46,20 @@ class SERigBase():
                                                  rigType = SERigEnum.eRigType.RT_Global,
                                                  prefix = 'Global_02', 
                                                  scale = scale * 30, 
-                                                 parent = global1Ctrl.ContrlObject, 
+                                                 parent = global1Ctrl.ControlObject, 
                                                  lockChannels = ['s', 'v'])
 
-        self._flattenGlobalCtrlShape(global1Ctrl.ContrlObject)
-        self._flattenGlobalCtrlShape(global2Ctrl.ContrlObject)
+        self._flattenGlobalCtrlShape(global1Ctrl.ControlObject)
+        self._flattenGlobalCtrlShape(global2Ctrl.ControlObject)
 
         # Only allow uniform scaling.
         for axis in ['y', 'z']:
-            cmds.connectAttr(global1Ctrl.ContrlObject + '.sx', global1Ctrl.ContrlObject + '.s' + axis)
-            cmds.setAttr(global1Ctrl.ContrlObject + '.s' + axis, k = 0)
+            cmds.connectAttr(global1Ctrl.ControlObject + '.sx', global1Ctrl.ControlObject + '.s' + axis)
+            cmds.setAttr(global1Ctrl.ControlObject + '.s' + axis, k = 0)
         
         # Create more groups.
-        self.JointsGrp = cmds.group(n = SERigNaming.sJointsGroup, em = 1, p = global2Ctrl.ContrlObject)
-        self.RigCompsGrp = cmds.group(n = SERigNaming.sRigCompsGroup, em = 1, p = global2Ctrl.ContrlObject)
+        self.JointsGrp = cmds.group(n = SERigNaming.sJointsGroup, em = 1, p = global2Ctrl.ControlObject)
+        self.RigCompsGrp = cmds.group(n = SERigNaming.sRigCompsGroup, em = 1, p = global2Ctrl.ControlObject)
 
         self.RigPartsGrp = cmds.group(n = SERigNaming.sRigPartsGroup, em = 1, p = self.RigGrp)
         cmds.setAttr(self.RigPartsGrp + '.it', 0, l = 1) # Not inheriting transform
@@ -70,7 +70,7 @@ class SERigBase():
                                                  rigType = SERigEnum.eRigType.RT_Global,
                                                  prefix = 'Main', 
                                                  scale = scale * 4, 
-                                                 parent = global2Ctrl.ContrlObject, 
+                                                 parent = global2Ctrl.ControlObject, 
                                                  translateTo = mainCtrlAttachObject,
                                                  lockChannels = ['t', 'r', 's', 'v'])
 
@@ -78,7 +78,7 @@ class SERigBase():
         self._adjustMainCtrlShape(mainCtrl, scale, mainCtrlOffset)
 
         if cmds.objExists(mainCtrlAttachObject):
-            cmds.parentConstraint(mainCtrlAttachObject, mainCtrl.ContrlGroup, mo = 1)
+            cmds.parentConstraint(mainCtrlAttachObject, mainCtrl.ControlGroup, mo = 1)
 
         mainVisAts = ['modelVis', 'jointsVis']
         mainDispAts = ['modelDisp', 'jointsDisp']
@@ -86,16 +86,16 @@ class SERigBase():
 
         # Add rig visibility connections.
         for at, obj in zip(mainVisAts, mainObjList):
-            cmds.addAttr(mainCtrl.ContrlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
-            cmds.setAttr(mainCtrl.ContrlObject + '.' + at, cb = 1)
-            cmds.connectAttr(mainCtrl.ContrlObject + '.' + at, obj + '.v')
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
+            cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
+            cmds.connectAttr(mainCtrl.ControlObject + '.' + at, obj + '.v')
 
         # Add rig display type connections.
         for at, obj in zip(mainDispAts, mainObjList):
-            cmds.addAttr(mainCtrl.ContrlObject, ln = at, at = 'enum', enumName = 'normal:template:reference', k = 1, dv = 2)
-            cmds.setAttr(mainCtrl.ContrlObject + '.' + at, cb = 1)
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'normal:template:reference', k = 1, dv = 2)
+            cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
             cmds.setAttr(obj + '.ove', 1)
-            cmds.connectAttr(mainCtrl.ContrlObject + '.' + at, obj + '.ovdt')
+            cmds.connectAttr(mainCtrl.ControlObject + '.' + at, obj + '.ovdt')
 
 
     def getCharacterName(self):
@@ -104,11 +104,11 @@ class SERigBase():
 
     # Helper functions
     def _adjustMainCtrlShape(self, ctrl, scale, offset):
-        ctrlShapes = cmds.listRelatives(ctrl.ContrlObject, s = 1, type = 'nurbsCurve')
+        ctrlShapes = cmds.listRelatives(ctrl.ControlObject, s = 1, type = 'nurbsCurve')
         cluster = cmds.cluster(ctrlShapes)[1] # Get cluster handle, [0]: cluster name
         cmds.setAttr(cluster + '.ry', 90)
         cmds.delete(ctrlShapes, ch = 1)
-        cmds.move(scale*offset, ctrl.ContrlGroup, moveY = True, relative = True)
+        cmds.move(scale*offset, ctrl.ControlGroup, moveY = True, relative = True)
 
     def _flattenGlobalCtrlShape(self, ctrlObject):
         ctrlShapes = cmds.listRelatives(ctrlObject, s = 1, type = 'nurbsCurve')

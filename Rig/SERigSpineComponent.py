@@ -1,6 +1,8 @@
 import maya.cmds as cmds
 from ..Base import SERigComponent
 from ..Base import SERigControl
+from ..Base import SERigEnum
+from ..Base import SERigNaming
 
 def build(
     baseRig = None,
@@ -66,7 +68,7 @@ def build(
                                          )
 
     # Attach controls.
-    cmds.parentConstraint(chestCtrl.ControlObject, pelvisCtrl.ControlObject, middleCtrl.ContrlGroup, sr = ['x', 'y', 'z'], mo = 1)
+    cmds.parentConstraint(chestCtrl.ControlObject, pelvisCtrl.ControlObject, middleCtrl.ControlGroup, sr = ['x', 'y', 'z'], mo = 1)
 
     # Attach clusters.
     cmds.parent(spineCurveClusters[(middleCVIndex + 1):], chestCtrl.ControlObject)
@@ -81,7 +83,7 @@ def build(
     cmds.parent(spineIK, rigComp.RigPartsFixedGrp)
 
     cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
-    cmds.setAttr(spineIK + 'dWorldUpType', 4)
+    cmds.setAttr(spineIK + '.dWorldUpType', 4)
     cmds.connectAttr(chestCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
     cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
 
