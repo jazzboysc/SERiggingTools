@@ -12,8 +12,9 @@ eRigType = SE_RigEnum(
     RT_Shoulder = 1,
     RT_Elbow = 2,
     RT_Wrist = 3,
-    RT_Global = 4,
-    RT_Unknown = 5
+    RT_Spine = 4,
+    RT_Global = 5,
+    RT_Unknown = 6
     )
 
 eRigColor = SE_RigEnum(

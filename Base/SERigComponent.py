@@ -10,7 +10,7 @@ class SERigComponent():
     def __init__(
                  self, 
                  prefix = 'new',
-                 rigBase = None
+                 baseRig = None
                  ):
         # Add public members.
         self.TopGrp = cmds.group(n = prefix + SERigNaming.s_RigCompsGroup, em = 1)
@@ -22,5 +22,5 @@ class SERigComponent():
         cmds.setAttr(self.RigPartsFixedGrp + '.it', 0, l = 1)
         
         # Parent this component to the rig base.
-        if rigBase:
-            cmds.parent(self.TopGrp, rigBase.RigCompsGrp)
+        if baseRig:
+            cmds.parent(self.TopGrp, baseRig.RigCompsGrp)

@@ -42,6 +42,9 @@
     <Compile Include="Character\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Rig\SERigSpineComponent.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Rig\__init__.py" />
     <Compile Include="ThirdParty\bSkinSaver.py" />
     <Compile Include="ThirdParty\__init__.py" />
