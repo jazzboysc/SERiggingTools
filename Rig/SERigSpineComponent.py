@@ -19,6 +19,7 @@ def build(
     # Create spine curve clusters.
     spineCurveCVs = cmds.ls(spineCurve + '.cv[*]', fl = 1)
     numSpineCVs = len(spineCurveCVs)
+    middleCVIndex = numSpineCVs / 2
     spineCurveClusters = []
 
     for i in range(numSpineCVs):
@@ -59,7 +60,32 @@ def build(
                                          rigSide = SERigEnum.eRigSide.RS_Center,
                                          rigType = SERigEnum.eRigType.RT_Spine,
                                          prefix = prefix + 'Middle', 
-                                         translateTo = spineCurveClusters[numSpineCVs / 2],
+                                         translateTo = spineCurveClusters[middleCVIndex],
                                          scale = rigScale*6,
                                          parent = bodyCtrl.ControlObject
                                          )
+
+    # Attach controls.
+    cmds.parentConstraint(chestCtrl.ControlObject, pelvisCtrl.ControlObject, middleCtrl.ContrlGroup, sr = ['x', 'y', 'z'], mo = 1)
+
+    # Attach clusters.
+    cmds.parent(spineCurveClusters[(middleCVIndex + 1):], chestCtrl.ControlObject)
+    cmds.parent(spineCurveClusters[middleCVIndex], middleCtrl.ControlObject)
+    cmds.parent(spineCurveClusters[:middleCVIndex], pelvisCtrl.ControlObject)
+
+    # Create IK handle.
+    spineIK = cmds.ikHandle(n = prefix + '_ikh', sol = 'ikSplineSolver', sj = spineJoints[0], ee = spineJoints[-1], 
+                            c = spineCurve, ccv = 0, parentCurve = 0)[0]
+
+    cmds.hide(spineIK)
+    cmds.parent(spineIK, rigComp.RigPartsFixedGrp)
+
+    cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
+    cmds.setAttr(spineIK + 'dWorldUpType', 4)
+    cmds.connectAttr(chestCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
+    cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
+
+    # Attach root joint.
+    cmds.parentConstraint(pelvisCtrl.ControlObject, rootJoint, mo = 1)
+
+    return {'RigComponent':rigComp}
