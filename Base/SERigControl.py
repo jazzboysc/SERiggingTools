@@ -14,11 +14,20 @@ class SERigControl():
                  scale = 1.0, 
                  translateTo = '', 
                  rotateTo = '', 
-                 parent = '', 
+                 parent = '',
+                 shape = 'circle',
                  lockChannels = ['s', 'v']):
         
         # Create control object and control group.
-        ctrlObj = cmds.circle(n = prefix + SERigNaming.sControl, ch = False, normal = [1, 0, 0], radius = scale)[0]
+        circleNormal = [1, 0, 0]
+        if shape in ['circle', 'circleX']:
+            circleNormal = [1, 0, 0]
+        elif shape == 'circleY':
+            circleNormal = [0, 1, 0]
+        elif shape == 'circleZ':
+            circleNormal = [0, 0, 1]
+
+        ctrlObj = cmds.circle(n = prefix + SERigNaming.sControl, ch = False, normal = circleNormal, radius = scale)[0]
         ctrlGrp = cmds.group(n = prefix + SERigNaming.sControlGroup, em = 1)
         cmds.parent(ctrlObj, ctrlGrp)
 

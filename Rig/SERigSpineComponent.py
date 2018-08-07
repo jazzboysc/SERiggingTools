@@ -37,7 +37,7 @@ def build(
                                          rigType = SERigEnum.eRigType.RT_Spine,
                                          prefix = prefix + 'Body', 
                                          translateTo = bodyLocator,
-                                         scale = rigScale*12,
+                                         scale = rigScale*3,
                                          parent = rigComp.ControlsGrp
                                          )
 
@@ -47,7 +47,8 @@ def build(
                                          prefix = prefix + 'Chest', 
                                          translateTo = chestLocator,
                                          scale = rigScale*18,
-                                         parent = bodyCtrl.ControlObject
+                                         parent = bodyCtrl.ControlObject,
+                                         shape = 'circleY'
                                          )
 
     pelvisCtrl = SERigControl.SERigControl(
@@ -56,7 +57,8 @@ def build(
                                          prefix = prefix + 'Pelvis', 
                                          translateTo = pelvisLocator,
                                          scale = rigScale*18,
-                                         parent = bodyCtrl.ControlObject
+                                         parent = bodyCtrl.ControlObject,
+                                         shape = 'circleY'
                                          )
 
     middleCtrl = SERigControl.SERigControl(
@@ -65,8 +67,11 @@ def build(
                                          prefix = prefix + 'Middle', 
                                          translateTo = spineCurveClusters[middleCVIndex],
                                          scale = rigScale*18,
-                                         parent = bodyCtrl.ControlObject
+                                         parent = bodyCtrl.ControlObject,
+                                         shape = 'circleY'
                                          )
+
+    _adjustBodyCtrlShape(bodyCtrl, spineJoints, rigScale)
 
     # Attach controls.
     cmds.parentConstraint(chestCtrl.ControlObject, pelvisCtrl.ControlObject, middleCtrl.ControlGroup, sr = ['x', 'y', 'z'], mo = 1)
@@ -94,3 +99,11 @@ def build(
     cmds.parentConstraint(pelvisCtrl.ControlObject, rootJoint, mo = 1)
 
     return {'RigComponent':rigComp}
+
+def _adjustBodyCtrlShape(bodyCtrl, spineJoints, rigScale):
+    offsetGrp = cmds.group(em = 1, p = bodyCtrl.ControlObject)
+    cmds.parent(offsetGrp, spineJoints[2])
+    cluster = cmds.cluster(cmds.listRelatives(bodyCtrl.ControlObject, s = 1))[1]
+    cmds.parent(cluster, offsetGrp)
+    cmds.move(-40*rigScale, offsetGrp, moveZ = 1, relative = 1, objectSpace = 1)
+    cmds.delete(bodyCtrl.ControlObject, ch = 1)
