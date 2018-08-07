@@ -22,7 +22,8 @@ def build(
           upperBodyLowerLimbKnobCount = 2,
           lowerBodyUpperLimbKnobCount = 2,
           lowerBodyLowerLimbKnobCount = 1,
-          mainCtrlOffset = 30
+          mainCtrlOffset = 30,
+          spineIKTwist = 180.0
           ):
     # Create new scene
     #cmds.file(new = True, f = True)
@@ -69,13 +70,13 @@ def build(
                             lowerBodyUpperLimbJoints, 
                             lowerBodyLowerLimbJoints)
 
+    # Create rig components.
+    createRigComponents(baseRig, spineIKTwist)
+
     cmds.select(cl=1)
 
-    # Create rig components.
-    createRigComponents(baseRig)
 
-
-def createRigComponents(baseRig):
+def createRigComponents(baseRig, spineIKTwist):
     # Spine
     spineJoints = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
     SERigSpineComponent.build(
@@ -87,5 +88,6 @@ def createRigComponents(baseRig):
                                 chestLocator = 'locator_Chest',
                                 pelvisLocator = 'locator_Pelvis',
                                 prefix = 'Spine',
-                                rigScale = sceneScale
+                                rigScale = sceneScale,
+                                spineIKTwist = spineIKTwist
                                 )

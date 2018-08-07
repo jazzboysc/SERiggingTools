@@ -5,16 +5,17 @@ from ..Base import SERigEnum
 from ..Base import SERigNaming
 
 def build(
-    baseRig = None,
-    spineJoints = [],
-    rootJoint = '',
-    spineCurve = '',
-    bodyLocator = '',
-    chestLocator = '',
-    pelvisLocator = '',
-    prefix = 'spine',
-    rigScale = 1.0
-    ):
+        baseRig = None,
+        spineJoints = [],
+        rootJoint = '',
+        spineCurve = '',
+        bodyLocator = '',
+        chestLocator = '',
+        pelvisLocator = '',
+        prefix = 'spine',
+        rigScale = 1.0,
+        spineIKTwist = 0.0
+        ):
     # Create rig component.
     rigComp = SERigComponent.SERigComponent(prefix = prefix, baseRig = baseRig)
 
@@ -36,7 +37,7 @@ def build(
                                          rigType = SERigEnum.eRigType.RT_Spine,
                                          prefix = prefix + 'Body', 
                                          translateTo = bodyLocator,
-                                         scale = rigScale*4,
+                                         scale = rigScale*12,
                                          parent = rigComp.ControlsGrp
                                          )
 
@@ -45,7 +46,7 @@ def build(
                                          rigType = SERigEnum.eRigType.RT_Spine,
                                          prefix = prefix + 'Chest', 
                                          translateTo = chestLocator,
-                                         scale = rigScale*6,
+                                         scale = rigScale*18,
                                          parent = bodyCtrl.ControlObject
                                          )
 
@@ -54,7 +55,7 @@ def build(
                                          rigType = SERigEnum.eRigType.RT_Spine,
                                          prefix = prefix + 'Pelvis', 
                                          translateTo = pelvisLocator,
-                                         scale = rigScale*6,
+                                         scale = rigScale*18,
                                          parent = bodyCtrl.ControlObject
                                          )
 
@@ -63,7 +64,7 @@ def build(
                                          rigType = SERigEnum.eRigType.RT_Spine,
                                          prefix = prefix + 'Middle', 
                                          translateTo = spineCurveClusters[middleCVIndex],
-                                         scale = rigScale*6,
+                                         scale = rigScale*18,
                                          parent = bodyCtrl.ControlObject
                                          )
 
@@ -86,6 +87,8 @@ def build(
     cmds.setAttr(spineIK + '.dWorldUpType', 4)
     cmds.connectAttr(chestCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
     cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
+
+    cmds.setAttr(spineIK + '.twist', spineIKTwist)
 
     # Attach root joint.
     cmds.parentConstraint(pelvisCtrl.ControlObject, rootJoint, mo = 1)
