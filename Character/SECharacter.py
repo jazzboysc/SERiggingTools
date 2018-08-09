@@ -79,15 +79,15 @@ def build(
 def createRigComponents(baseRig, spineIKTwist):
     # Spine
     spineJoints = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
-    SERigSpineComponent.build(
-                                baseRig = baseRig,
-                                spineJoints = spineJoints,
-                                rootJoint = rootJnt,
-                                spineCurve = 'C_Spine_Curve',
-                                bodyLocator = 'locator_Body',
-                                chestLocator = 'locator_Chest',
-                                pelvisLocator = 'locator_Pelvis',
-                                prefix = 'Spine',
-                                rigScale = sceneScale,
-                                spineIKTwist = spineIKTwist
-                                )
+    #SERigSpineComponent.build(
+    #                            baseRig = baseRig,
+    #                            spineJoints = spineJoints,
+    #                            rootJoint = rootJnt,
+    #                            spineCurve = 'C_Spine_Curve',
+    #                            bodyLocator = 'locator_Body',
+    #                            chestLocator = 'locator_Chest',
+    #                            pelvisLocator = 'locator_Pelvis',
+    #                            prefix = 'Spine',
+    #                            rigScale = sceneScale,
+    #                            spineIKTwist = spineIKTwist
+    #                            )
