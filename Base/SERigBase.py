@@ -92,7 +92,7 @@ class SERigBase():
 
         # Add rig display type connections.
         for at, obj in zip(mainDispAts, mainObjList):
-            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'normal:template:reference', k = 1, dv = 2)
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'normal:template:reference', k = 1, dv = 0)
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
             cmds.setAttr(obj + '.ove', 1)
             cmds.connectAttr(mainCtrl.ControlObject + '.' + at, obj + '.ovdt')
