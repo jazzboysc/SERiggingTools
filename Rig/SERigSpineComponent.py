@@ -1,16 +1,31 @@
 import maya.cmds as cmds
-from ..Base import SERigComponent
-from ..Base import SERigControl
+from ..Base.SERigComponent import RigComponent
+from ..Base.SERigControl import RigControl
 from ..Base import SERigEnum
 from ..Base import SERigNaming
 
-class SERigSimpleIKSpine(SERigComponent.SERigComponent):
+class RigSimpleIKSpine(RigComponent):
     def __init__(
                  self, 
                  prefix = 'new',
                  baseRig = None
                  ):
-        super(SERigSimpleIKSpine, self).__init__(prefix, baseRig)
+        RigComponent.__init__(self, prefix, baseRig)
+
+    def build(
+            self,
+            spineJoints = [],
+            rootJoint = '',
+            spineCurve = '',
+            bodyLocator = '',
+            chestLocator = '',
+            pelvisLocator = '',
+            rigScale = 1.0
+            ):
+
+        # Create pelvis and chest proxy joints.
+        pelvisProxyJoint = cmds.duplicate(spineJoints[0], n = spineJoints[0] + SERigNaming.s_Proxy, parentOnly = True)[0]
+        chestBeginProxyJoint = cmds.duplicate(spineJoints[-1], n = spineJoints[-1] + SERigNaming.s_Proxy, parentOnly = True)[0]
 
     #def build(
     #        baseRig = None,

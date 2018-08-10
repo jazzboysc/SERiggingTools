@@ -1,6 +1,6 @@
-from ..Base import SERigControl
-from ..Base import SERigComponent
-from ..Base import SERigBase
+from ..Base.SERigControl import RigControl
+from ..Base.SERigComponent import RigComponent
+from ..Base.SERigBase import RigBase
 from ..Base import SERigNaming
 from ..Rig import SERigSpineComponent
 from . import SECharacterDeform
@@ -37,9 +37,9 @@ def build(
     cmds.file(builderFile, i = 1)
 
     # Create rig base.
-    baseRig = SERigBase.SERigBase(characterName = characterName, 
-                                  scale = sceneScale, mainCtrlAttachObject = headJnt, 
-                                  mainCtrlOffset = mainCtrlOffset)
+    baseRig = RigBase(characterName = characterName, 
+                      scale = sceneScale, mainCtrlAttachObject = headJnt, 
+                      mainCtrlOffset = mainCtrlOffset)
 
     # Parent the imported model to the rig base.
     modelGrp = ('%s' + SERigNaming.s_ModelGroup) % characterName
@@ -75,19 +75,20 @@ def build(
 
     cmds.select(cl=1)
 
+    return baseRig
+
 
 def createRigComponents(baseRig, spineIKTwist):
     # Spine
-    spineJoints = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
-    #SERigSpineComponent.build(
-    #                            baseRig = baseRig,
-    #                            spineJoints = spineJoints,
-    #                            rootJoint = rootJnt,
-    #                            spineCurve = 'C_Spine_Curve',
-    #                            bodyLocator = 'locator_Body',
-    #                            chestLocator = 'locator_Chest',
-    #                            pelvisLocator = 'locator_Pelvis',
-    #                            prefix = 'Spine',
-    #                            rigScale = sceneScale,
-    #                            spineIKTwist = spineIKTwist
-    #                            )
+    spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
+
+    spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'Spine', baseRig = baseRig)
+    spine.build(
+                spineJoints = spineJnts,
+                rootJoint = rootJnt,
+                spineCurve = 'C_Spine_Curve',
+                bodyLocator = 'locator_Body',
+                chestLocator = 'locator_Chest',
+                pelvisLocator = 'locator_Pelvis',
+                rigScale = sceneScale
+                )

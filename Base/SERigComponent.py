@@ -6,15 +6,17 @@ from . import SERigNaming
 # Rig Component Class
 # Sun Che
 #-----------------------------------------------------------------------------
-class SERigComponent():
+class RigComponent():
     def __init__(
                  self, 
                  prefix = 'new',
                  baseRig = None
                  ):
         # Add public members.
-        self.TopGrp = cmds.group(n = prefix + SERigNaming.s_RigCompsGroup, em = 1)
+        self.PreFix = prefix
+        self.BaseRig = baseRig
 
+        self.TopGrp = cmds.group(n = prefix + SERigNaming.s_RigCompsGroup, em = 1)
         self.ControlsGrp = cmds.group(n = prefix + SERigNaming.s_ControlsGroup, em = 1, p = self.TopGrp)
         self.JointsGrp = cmds.group(n = prefix + SERigNaming.s_JointsGroup, em = 1, p = self.TopGrp)
         self.RigPartsGrp = cmds.group(n = prefix + SERigNaming.s_RigPartsGroup, em = 1, p = self.TopGrp)
@@ -24,3 +26,4 @@ class SERigComponent():
         # Parent this component to the rig base.
         if baseRig:
             cmds.parent(self.TopGrp, baseRig.RigCompsGrp)
+            baseRig.RigComponents.append(self)

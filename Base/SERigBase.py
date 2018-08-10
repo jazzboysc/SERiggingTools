@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 from . import SERigEnum
 from . import SERigNaming
-from . import SERigControl
+from .SERigControl import RigControl
 
 sceneObjectType = 'rig'
 
@@ -12,7 +12,7 @@ sceneObjectTypeAttr = 'sceneObjectType'
 # Rig Base Class
 # Sun Che
 #-----------------------------------------------------------------------------
-class SERigBase():
+class RigBase():
     def __init__(
                  self, 
                  characterName = 'new',
@@ -21,6 +21,8 @@ class SERigBase():
                  mainCtrlOffset = 35.0
                  ):
         # Add public members.
+        self.RigComponents = []
+
         self.TopGrp = cmds.group(n = characterName + SERigNaming.s_RigGroup, em = 1)
         self.RigGrp = cmds.group(n = SERigNaming.sRigGroup, em = 1, p = self.TopGrp)
         self.ModelGrp = cmds.group(n = SERigNaming.sModelGroup, em = 1, p = self.TopGrp)
@@ -33,21 +35,21 @@ class SERigBase():
         cmds.setAttr(self.TopGrp + '.' + sceneObjectTypeAttr, sceneObjectType, type = 'string', l = 1)
 
         # Create global controls.
-        global1Ctrl = SERigControl.SERigControl(
-                                                 rigSide = SERigEnum.eRigSide.RS_Center,
-                                                 rigType = SERigEnum.eRigType.RT_Global,
-                                                 prefix = 'Global_01', 
-                                                 scale = scale * 40, 
-                                                 parent = self.RigGrp, 
-                                                 lockChannels = ['v'])
+        global1Ctrl = RigControl(
+                                rigSide = SERigEnum.eRigSide.RS_Center,
+                                rigType = SERigEnum.eRigType.RT_Global,
+                                prefix = 'Global_01', 
+                                scale = scale * 40, 
+                                parent = self.RigGrp, 
+                                lockChannels = ['v'])
 
-        global2Ctrl = SERigControl.SERigControl(
-                                                 rigSide = SERigEnum.eRigSide.RS_Center,
-                                                 rigType = SERigEnum.eRigType.RT_Global,
-                                                 prefix = 'Global_02', 
-                                                 scale = scale * 30, 
-                                                 parent = global1Ctrl.ControlObject, 
-                                                 lockChannels = ['s', 'v'])
+        global2Ctrl = RigControl(
+                                rigSide = SERigEnum.eRigSide.RS_Center,
+                                rigType = SERigEnum.eRigType.RT_Global,
+                                prefix = 'Global_02', 
+                                scale = scale * 30, 
+                                parent = global1Ctrl.ControlObject, 
+                                lockChannels = ['s', 'v'])
 
         self._flattenGlobalCtrlShape(global1Ctrl.ControlObject)
         self._flattenGlobalCtrlShape(global2Ctrl.ControlObject)
@@ -65,14 +67,14 @@ class SERigBase():
         cmds.setAttr(self.RigPartsGrp + '.it', 0, l = 1) # Not inheriting transform
 
         # Create main conotrol.
-        mainCtrl = SERigControl.SERigControl(
-                                                 rigSide = SERigEnum.eRigSide.RS_Center,
-                                                 rigType = SERigEnum.eRigType.RT_Global,
-                                                 prefix = 'Main', 
-                                                 scale = scale * 4, 
-                                                 parent = global2Ctrl.ControlObject, 
-                                                 translateTo = mainCtrlAttachObject,
-                                                 lockChannels = ['t', 'r', 's', 'v'])
+        mainCtrl = RigControl(
+                            rigSide = SERigEnum.eRigSide.RS_Center,
+                            rigType = SERigEnum.eRigType.RT_Global,
+                            prefix = 'Main', 
+                            scale = scale * 4, 
+                            parent = global2Ctrl.ControlObject, 
+                            translateTo = mainCtrlAttachObject,
+                            lockChannels = ['t', 'r', 's', 'v'])
 
         # Adjust main control position and orientation.
         self._adjustMainCtrlShape(mainCtrl, scale, mainCtrlOffset)

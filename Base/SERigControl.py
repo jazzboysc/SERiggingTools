@@ -6,7 +6,7 @@ from . import SERigNaming
 # Rig Control Class
 # Sun Che
 #-----------------------------------------------------------------------------
-class SERigControl():
+class RigControl():
     def __init__(self,
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,

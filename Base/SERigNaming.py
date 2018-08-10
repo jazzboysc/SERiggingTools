@@ -14,6 +14,7 @@ sTwistBegin         = 'TwistBegin'
 sTwistEnd           = 'TwistEnd'
 sTwistKnob          = 'TwistKnob'
 sTwistIKHandle      = 'Twist_ikHandle'
+sProxy              = 'Proxy'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
@@ -27,3 +28,4 @@ s_TwistBegin         = '_' + sTwistBegin
 s_TwistEnd           = '_' + sTwistEnd
 s_TwistKnob          = '_' + sTwistKnob
 s_TwistIKHandle      = '_' + sTwistIKHandle
+s_Proxy              = '_' + sProxy
