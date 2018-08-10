@@ -13,7 +13,7 @@ class RigComponent():
                  baseRig = None
                  ):
         # Add public members.
-        self.PreFix = prefix
+        self.Prefix = prefix
         self.BaseRig = baseRig
 
         self.TopGrp = cmds.group(n = prefix + SERigNaming.s_RigCompsGroup, em = 1)

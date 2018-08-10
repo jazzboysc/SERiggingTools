@@ -86,7 +86,6 @@ def createRigComponents(baseRig, spineIKTwist):
     spine.build(
                 spineJoints = spineJnts,
                 rootJoint = rootJnt,
-                spineCurve = 'C_Spine_Curve',
                 bodyLocator = 'locator_Body',
                 chestLocator = 'locator_Chest',
                 pelvisLocator = 'locator_Pelvis',

@@ -16,7 +16,6 @@ class RigSimpleIKSpine(RigComponent):
             self,
             spineJoints = [],
             rootJoint = '',
-            spineCurve = '',
             bodyLocator = '',
             chestLocator = '',
             pelvisLocator = '',
@@ -26,6 +25,52 @@ class RigSimpleIKSpine(RigComponent):
         # Create pelvis and chest proxy joints.
         pelvisProxyJoint = cmds.duplicate(spineJoints[0], n = spineJoints[0] + SERigNaming.s_Proxy, parentOnly = True)[0]
         chestBeginProxyJoint = cmds.duplicate(spineJoints[-1], n = spineJoints[-1] + SERigNaming.s_Proxy, parentOnly = True)[0]
+
+        # Create IK controls.
+        chestBeginCtrl = RigControl(
+                                    rigSide = SERigEnum.eRigSide.RS_Center,
+                                    rigType = SERigEnum.eRigType.RT_Spine,
+                                    prefix = self.Prefix + 'Chest', 
+                                    translateTo = chestBeginProxyJoint,
+                                    rotateTo = chestBeginProxyJoint,
+                                    scale = rigScale*20,
+                                    parent = self.ControlsGrp,
+                                    shape = 'circleX'
+                                    )
+
+        pelvisCtrl = RigControl(
+                                rigSide = SERigEnum.eRigSide.RS_Center,
+                                rigType = SERigEnum.eRigType.RT_Spine,
+                                prefix = self.Prefix + 'Pelvis', 
+                                translateTo = pelvisProxyJoint,
+                                rotateTo = pelvisProxyJoint,
+                                scale = rigScale*20,
+                                parent = self.ControlsGrp,
+                                shape = 'circleX'
+                                )
+
+        cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
+
+        cmds.parentConstraint(chestBeginCtrl.ControlObject, chestBeginProxyJoint)
+        cmds.parentConstraint(pelvisCtrl.ControlObject, pelvisProxyJoint)
+
+        # Create IK handle.
+        resList = cmds.ikHandle(n = 'spine_ikh', sol = 'ikSplineSolver', sj = 'C_Pelvis', ee = 'C_ChestBegin', ccv = 1, parentCurve = 0, numSpans = 4)
+        spineIK = resList[0]
+        spineCurve = resList[2]
+        cmds.rename(spineCurve, 'spine_crv')
+                                                
+        cmds.hide(spineIK)
+        cmds.hide('spine_crv')
+        cmds.parent(spineIK, 'spine_crv', self.RigPartsFixedGrp)
+
+        cmds.select(pelvisProxyJoint, chestBeginProxyJoint, 'spine_crv')
+        cmds.skinCluster(toSelectedBones = 1, bindMethod = 0, nw = 1, wd = 0, mi = 5, omi = True, dr = 4, rui = True)
+
+    #    cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
+    #    cmds.setAttr(spineIK + '.dWorldUpType', 4)
+    #    cmds.connectAttr(chestCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
+    #    cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
 
     #def build(
     #        baseRig = None,
