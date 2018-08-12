@@ -34,8 +34,7 @@ class RigSimpleIKSpine(RigComponent):
                                     translateTo = chestBeginProxyJoint,
                                     rotateTo = chestBeginProxyJoint,
                                     scale = rigScale*20,
-                                    parent = self.ControlsGrp,
-                                    shape = 'circleX'
+                                    parent = self.ControlsGrp
                                     )
 
         pelvisCtrl = RigControl(
@@ -45,8 +44,7 @@ class RigSimpleIKSpine(RigComponent):
                                 translateTo = pelvisProxyJoint,
                                 rotateTo = pelvisProxyJoint,
                                 scale = rigScale*20,
-                                parent = self.ControlsGrp,
-                                shape = 'circleX'
+                                parent = self.ControlsGrp
                                 )
 
         cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
@@ -102,55 +100,6 @@ class RigSimpleIKSpine(RigComponent):
 
     #    cmds.hide(spineCurveClusters)
 
-    #    # Create controls.
-    #    bodyCtrl = SERigControl.SERigControl(
-    #                                         rigSide = SERigEnum.eRigSide.RS_Center,
-    #                                         rigType = SERigEnum.eRigType.RT_Spine,
-    #                                         prefix = prefix + 'Body', 
-    #                                         translateTo = bodyLocator,
-    #                                         scale = rigScale*3,
-    #                                         parent = rigComp.ControlsGrp
-    #                                         )
-
-    #    chestCtrl = SERigControl.SERigControl(
-    #                                         rigSide = SERigEnum.eRigSide.RS_Center,
-    #                                         rigType = SERigEnum.eRigType.RT_Spine,
-    #                                         prefix = prefix + 'Chest', 
-    #                                         translateTo = chestLocator,
-    #                                         scale = rigScale*18,
-    #                                         parent = bodyCtrl.ControlObject,
-    #                                         shape = 'circleY'
-    #                                         )
-
-    #    pelvisCtrl = SERigControl.SERigControl(
-    #                                         rigSide = SERigEnum.eRigSide.RS_Center,
-    #                                         rigType = SERigEnum.eRigType.RT_Spine,
-    #                                         prefix = prefix + 'Pelvis', 
-    #                                         translateTo = pelvisLocator,
-    #                                         scale = rigScale*18,
-    #                                         parent = bodyCtrl.ControlObject,
-    #                                         shape = 'circleY'
-    #                                         )
-
-    #    middleCtrl = SERigControl.SERigControl(
-    #                                         rigSide = SERigEnum.eRigSide.RS_Center,
-    #                                         rigType = SERigEnum.eRigType.RT_Spine,
-    #                                         prefix = prefix + 'Middle', 
-    #                                         translateTo = spineCurveClusters[middleCVIndex],
-    #                                         scale = rigScale*18,
-    #                                         parent = bodyCtrl.ControlObject,
-    #                                         shape = 'circleY'
-    #                                         )
-
-    #    _adjustBodyCtrlShape(bodyCtrl, spineJoints, rigScale)
-
-    #    # Attach controls.
-    #    cmds.parentConstraint(chestCtrl.ControlObject, pelvisCtrl.ControlObject, middleCtrl.ControlGroup, sr = ['x', 'y', 'z'], mo = 1)
-
-    #    # Attach clusters.
-    #    cmds.parent(spineCurveClusters[(middleCVIndex + 1):], chestCtrl.ControlObject)
-    #    cmds.parent(spineCurveClusters[middleCVIndex], middleCtrl.ControlObject)
-    #    cmds.parent(spineCurveClusters[:middleCVIndex], pelvisCtrl.ControlObject)
 
     #    # Create IK handle.
     #    spineIK = cmds.ikHandle(n = prefix + '_ikh', sol = 'ikSplineSolver', sj = spineJoints[0], ee = spineJoints[-1], 

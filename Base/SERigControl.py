@@ -7,25 +7,29 @@ from . import SERigNaming
 # Sun Che
 #-----------------------------------------------------------------------------
 class RigControl():
-    def __init__(self,
+    def __init__(
+                 self,
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,
+                 rigFacing = SERigEnum.eRigFacing.RF_X,
                  prefix = 'new', 
                  scale = 1.0, 
                  translateTo = '', 
                  rotateTo = '', 
                  parent = '',
-                 shape = 'circle',
-                 lockChannels = ['s', 'v']):
+                 lockChannels = ['s', 'v']
+                 ):
         
         # Create control object and control group.
         circleNormal = [1, 0, 0]
-        if shape in ['circle', 'circleX']:
+        if rigFacing == SERigEnum.eRigFacing.RF_X:
             circleNormal = [1, 0, 0]
-        elif shape == 'circleY':
+        elif rigFacing == SERigEnum.eRigFacing.RF_Y:
             circleNormal = [0, 1, 0]
-        elif shape == 'circleZ':
+        elif rigFacing == SERigEnum.eRigFacing.RF_Z:
             circleNormal = [0, 0, 1]
+        else:
+            pass
 
         ctrlObj = cmds.circle(n = prefix + SERigNaming.sControl, ch = False, normal = circleNormal, radius = scale)[0]
         ctrlGrp = cmds.group(n = prefix + SERigNaming.sControlGroup, em = 1)

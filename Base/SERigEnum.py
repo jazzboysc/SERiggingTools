@@ -22,3 +22,9 @@ eRigColor = SE_RigEnum(
     RC_Blue = 6,
     RC_Yellow = 22
     )
+
+eRigFacing = SE_RigEnum(
+    RF_X = 1,
+    RF_Y = 2,
+    RF_Z = 3
+    )
