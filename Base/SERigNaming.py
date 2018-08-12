@@ -15,6 +15,8 @@ sTwistEnd           = 'TwistEnd'
 sTwistKnob          = 'TwistKnob'
 sTwistIKHandle      = 'Twist_ikHandle'
 sProxy              = 'Proxy'
+sCurve              = 'Curve'
+sSplineIKHandle     = 'Spline_ikHandle'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
@@ -29,3 +31,5 @@ s_TwistEnd           = '_' + sTwistEnd
 s_TwistKnob          = '_' + sTwistKnob
 s_TwistIKHandle      = '_' + sTwistIKHandle
 s_Proxy              = '_' + sProxy
+s_Curve              = '_' + sCurve
+s_SplineIKHandle     = '_' + sSplineIKHandle

@@ -55,16 +55,18 @@ class RigSimpleIKSpine(RigComponent):
         cmds.parentConstraint(pelvisCtrl.ControlObject, pelvisProxyJoint)
 
         # Create IK handle.
-        resList = cmds.ikHandle(n = 'spine_ikh', sol = 'ikSplineSolver', sj = 'C_Pelvis', ee = 'C_ChestBegin', ccv = 1, parentCurve = 0, numSpans = 4)
+        resList = cmds.ikHandle(n = self.Prefix + SERigNaming.s_SplineIKHandle, 
+                                sol = 'ikSplineSolver', sj = spineJoints[0], ee = spineJoints[-1], ccv = 1, parentCurve = 0, numSpans = 4)
         spineIK = resList[0]
         spineCurve = resList[2]
-        cmds.rename(spineCurve, 'spine_crv')
+        spineCurveNewName = self.Prefix + SERigNaming.s_Curve
+        cmds.rename(spineCurve, spineCurveNewName)
                                                 
         cmds.hide(spineIK)
-        cmds.hide('spine_crv')
-        cmds.parent(spineIK, 'spine_crv', self.RigPartsFixedGrp)
+        cmds.hide(spineCurveNewName)
+        cmds.parent(spineIK, spineCurveNewName, self.RigPartsFixedGrp)
 
-        cmds.select(pelvisProxyJoint, chestBeginProxyJoint, 'spine_crv')
+        cmds.select(pelvisProxyJoint, chestBeginProxyJoint, spineCurveNewName)
         cmds.skinCluster(toSelectedBones = 1, bindMethod = 0, nw = 1, wd = 0, mi = 5, omi = True, dr = 4, rui = True)
 
     #    cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
