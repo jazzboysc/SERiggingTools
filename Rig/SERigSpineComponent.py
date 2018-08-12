@@ -69,10 +69,11 @@ class RigSimpleIKSpine(RigComponent):
         cmds.select(pelvisProxyJoint, chestBeginProxyJoint, spineCurveNewName)
         cmds.skinCluster(toSelectedBones = 1, bindMethod = 0, nw = 1, wd = 0, mi = 5, omi = True, dr = 4, rui = True)
 
-    #    cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
-    #    cmds.setAttr(spineIK + '.dWorldUpType', 4)
-    #    cmds.connectAttr(chestCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
-    #    cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
+        # Make the spine twistable.
+        cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
+        cmds.setAttr(spineIK + '.dWorldUpType', 4)
+        cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
+        cmds.connectAttr(chestBeginCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
 
     #def build(
     #        baseRig = None,
