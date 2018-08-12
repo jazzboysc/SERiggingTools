@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 from . import SERigEnum
 from . import SERigNaming
-from .SERigControl import RigControl
+from . import SERigControl
 
 sceneObjectType = 'rig'
 
@@ -35,7 +35,7 @@ class RigBase():
         cmds.setAttr(self.TopGrp + '.' + sceneObjectTypeAttr, sceneObjectType, type = 'string', l = 1)
 
         # Create global controls.
-        global1Ctrl = RigControl(
+        global1Ctrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_Global,
                                 prefix = 'Global_01', 
@@ -43,7 +43,7 @@ class RigBase():
                                 parent = self.RigGrp, 
                                 lockChannels = ['v'])
 
-        global2Ctrl = RigControl(
+        global2Ctrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_Global,
                                 prefix = 'Global_02', 
@@ -66,8 +66,8 @@ class RigBase():
         self.RigPartsGrp = cmds.group(n = SERigNaming.sRigPartsGroup, em = 1, p = self.RigGrp)
         cmds.setAttr(self.RigPartsGrp + '.it', 0, l = 1) # Not inheriting transform
 
-        # Create main conotrol.
-        mainCtrl = RigControl(
+        # Create main control.
+        mainCtrl = SERigControl.RigCircleControl(
                             rigSide = SERigEnum.eRigSide.RS_Center,
                             rigType = SERigEnum.eRigType.RT_Global,
                             prefix = 'Main', 

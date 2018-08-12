@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 from ..Base.SERigComponent import RigComponent
-from ..Base.SERigControl import RigControl
+from ..Base import SERigControl
 from ..Base import SERigEnum
 from ..Base import SERigNaming
 
@@ -27,7 +27,7 @@ class RigSimpleIKSpine(RigComponent):
         chestBeginProxyJoint = cmds.duplicate(spineJoints[-1], n = spineJoints[-1] + SERigNaming.s_Proxy, parentOnly = True)[0]
 
         # Create IK controls.
-        chestBeginCtrl = RigControl(
+        chestBeginCtrl = SERigControl.RigCircleControl(
                                     rigSide = SERigEnum.eRigSide.RS_Center,
                                     rigType = SERigEnum.eRigType.RT_Spine,
                                     prefix = self.Prefix + 'Chest', 
@@ -37,7 +37,7 @@ class RigSimpleIKSpine(RigComponent):
                                     parent = self.ControlsGrp
                                     )
 
-        pelvisCtrl = RigControl(
+        pelvisCtrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_Spine,
                                 prefix = self.Prefix + 'Pelvis', 
