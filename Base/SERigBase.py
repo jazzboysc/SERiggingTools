@@ -43,7 +43,7 @@ class RigBase():
                                 parent = self.RigGrp, 
                                 lockChannels = ['v'])
 
-        global2Ctrl = SERigControl.RigCircleControl(
+        global2Ctrl = SERigControl.RigSpikeCrossControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_Global,
                                 prefix = 'Global_02', 
@@ -52,7 +52,6 @@ class RigBase():
                                 lockChannels = ['s', 'v'])
 
         self._flattenGlobalCtrlShape(global1Ctrl.ControlObject)
-        self._flattenGlobalCtrlShape(global2Ctrl.ControlObject)
 
         # Only allow uniform scaling.
         for axis in ['y', 'z']:
