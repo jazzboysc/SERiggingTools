@@ -22,6 +22,21 @@ class RigSimpleIKSpine(RigComponent):
             rigScale = 1.0
             ):
 
+        # Create upper body control.
+        upperBodyCtrl = SERigControl.RigCubeControl(
+                                rigSide = SERigEnum.eRigSide.RS_Center,
+                                rigType = SERigEnum.eRigType.RT_Spine,
+                                prefix = self.Prefix + 'UpperBody', 
+                                translateTo = spineJoints[0],
+                                rotateTo = spineJoints[0],
+                                scale = rigScale*20,
+                                parent = self.ControlsGrp,
+                                cubeScaleX = 3.0,
+                                cubeScaleY = 40.0,
+                                cubeScaleZ = 40.0,
+                                transparency = 0.8
+                                )
+
         # Create pelvis and chest proxy joints.
         pelvisProxyJoint = cmds.duplicate(spineJoints[0], n = spineJoints[0] + SERigNaming.s_Proxy, parentOnly = True)[0]
         chestBeginProxyJoint = cmds.duplicate(spineJoints[-1], n = spineJoints[-1] + SERigNaming.s_Proxy, parentOnly = True)[0]
@@ -34,7 +49,7 @@ class RigSimpleIKSpine(RigComponent):
                                     translateTo = chestBeginProxyJoint,
                                     rotateTo = chestBeginProxyJoint,
                                     scale = rigScale*20,
-                                    parent = self.ControlsGrp
+                                    parent = upperBodyCtrl.ControlObject
                                     )
 
         pelvisCtrl = SERigControl.RigCircleControl(
@@ -43,8 +58,8 @@ class RigSimpleIKSpine(RigComponent):
                                 prefix = self.Prefix + 'Pelvis', 
                                 translateTo = pelvisProxyJoint,
                                 rotateTo = pelvisProxyJoint,
-                                scale = rigScale*20,
-                                parent = self.ControlsGrp
+                                scale = rigScale*25,
+                                parent = upperBodyCtrl.ControlObject
                                 )
 
         cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
@@ -72,6 +87,8 @@ class RigSimpleIKSpine(RigComponent):
         cmds.setAttr(spineIK + '.dWorldUpType', 4)
         cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
         cmds.connectAttr(chestBeginCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
+
+
 
     #def build(
     #        baseRig = None,
