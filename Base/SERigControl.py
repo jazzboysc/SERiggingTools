@@ -273,3 +273,32 @@ class RigSpikeCrossControl(RigControl):
             pass
 
         return newShapeName
+
+#-----------------------------------------------------------------------------
+# Rig Foot Control Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigFootControl(RigControl):
+    def __init__(
+                 self,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown,
+                 rigFacing = SERigEnum.eRigFacing.RF_Y,
+                 prefix = 'new', 
+                 scale = 1.0, 
+                 translateTo = '', 
+                 rotateTo = '', 
+                 parent = '',
+                 lockChannels = ['s', 'v'],
+                 scaleX = 60.0,
+                 scaleZ = 60.0
+                 ):
+
+        self.ScaleX = scaleX
+        self.ScaleZ = scaleZ
+
+        RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
+                            scale, translateTo, rotateTo, parent, lockChannels)
+
+    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale):
+        pass
