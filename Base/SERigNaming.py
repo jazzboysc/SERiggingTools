@@ -17,6 +17,7 @@ sTwistIKHandle      = 'Twist_ikHandle'
 sProxy              = 'Proxy'
 sCurve              = 'Curve'
 sSplineIKHandle     = 'Spline_ikHandle'
+sPoleVector         = 'PV'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
@@ -33,3 +34,4 @@ s_TwistIKHandle      = '_' + sTwistIKHandle
 s_Proxy              = '_' + sProxy
 s_Curve              = '_' + sCurve
 s_SplineIKHandle     = '_' + sSplineIKHandle
+s_PoleVector         = '_' + sPoleVector

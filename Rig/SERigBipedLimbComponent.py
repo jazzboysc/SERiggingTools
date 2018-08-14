@@ -90,3 +90,13 @@ class RigHumanLeg(RigComponent):
         # Attach foot helper joints to component's JointsGroup.
         cmds.parent(footExtJnt, self.JointsGrp)
         cmds.makeIdentity(footExtJnt, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+        toeProxyPVlocator = cmds.spaceLocator(n = footToeProxy + SERigNaming.s_PoleVector)
+        cmds.delete(cmds.parentConstraint(footToeProxy, toeProxyPVlocator))
+        cmds.parent(toeProxyPVlocator, footToeProxy)
+        cmds.move(0, 0, 5, toeProxyPVlocator, r = 1, os = 1)
+
+        ballProxyPVlocator = cmds.spaceLocator(n = footBallProxy + SERigNaming.s_PoleVector)
+        cmds.delete(cmds.parentConstraint(footBallProxy, ballProxyPVlocator))
+        cmds.parent(ballProxyPVlocator, footBallProxy)
+        cmds.move(0, 0, 5, ballProxyPVlocator, r = 1, os = 1)
