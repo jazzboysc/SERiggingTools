@@ -4,6 +4,10 @@ from ..Base import SERigControl
 from ..Base import SERigEnum
 from ..Base import SERigNaming
 
+#-----------------------------------------------------------------------------
+# Rig Simple IK Spine Class
+# Sun Che
+#-----------------------------------------------------------------------------
 class RigSimpleIKSpine(RigComponent):
     def __init__(
                  self, 

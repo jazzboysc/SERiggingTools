@@ -1,1 +1,2 @@
 import SERigSpineComponent
+import SERigBipedLimbComponent
