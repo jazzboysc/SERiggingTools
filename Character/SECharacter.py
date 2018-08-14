@@ -3,6 +3,7 @@ from ..Base.SERigComponent import RigComponent
 from ..Base.SERigBase import RigBase
 from ..Base import SERigNaming
 from ..Rig import SERigSpineComponent
+from ..Rig import SERigBipedLimbComponent
 from . import SECharacterDeform
 
 import maya.cmds as cmds
@@ -81,8 +82,7 @@ def build(
 def createRigComponents(baseRig, spineIKTwist):
     # Spine
     spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
-
-    spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'Spine', baseRig = baseRig)
+    spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = baseRig)
     spine.build(
                 spineJoints = spineJnts,
                 rootJoint = rootJnt,
@@ -91,3 +91,16 @@ def createRigComponents(baseRig, spineIKTwist):
                 pelvisLocator = 'locator_Pelvis',
                 rigScale = sceneScale
                 )
+
+    # Left Leg
+    leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
+    leftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = baseRig)
+    leftLeg.build(
+            legJoints = leftLegJnts,
+            footExtLocator = 'locator_L_Foot_Ext',
+            footIntLocator = 'locator_L_Foot_Int',
+            footBaseLocator = 'locator_L_Foot_Base',
+            footBaseSwiveLocator = 'locator_L_Foot_BaseSwive',
+            footToeSwiveLocator = 'locator_L_Foot_ToeSwive',
+            rigScale = sceneScale
+            )
