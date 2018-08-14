@@ -166,7 +166,7 @@ class RigCubeControl(RigControl):
 
         # Set material color.
         if rigSide == SERigEnum.eRigSide.RS_Center:
-            cmds.setAttr(resShader + '.color', 0.9, 0.9, 0.4, type = 'double3')
+            cmds.setAttr(resShader + '.color', 0.4, 0.9, 0.9, type = 'double3')
         elif rigSide == SERigEnum.eRigSide.RS_Left:
             cmds.setAttr(resShader + '.color', 0.0, 0.0, 1.0, type = 'double3')
         elif rigSide == SERigEnum.eRigSide.RS_Right:
