@@ -49,6 +49,9 @@ def build(
     # Parent the imported skeleton to the rig base.
     cmds.parent(rootJnt, baseRig.JointsGrp)
 
+    # Create rig components.
+    createRigComponents(baseRig, spineIKTwist)
+
     # Setup model deformation.
     upperBodyUpperLimbJoints = ['L_Shoulder', 'R_Shoulder']
     upperBodyLowerLimbJoints = ['L_Elbow', 'R_Elbow']
@@ -70,9 +73,6 @@ def build(
                             upperBodyLowerLimbJoints, 
                             lowerBodyUpperLimbJoints, 
                             lowerBodyLowerLimbJoints)
-
-    # Create rig components.
-    createRigComponents(baseRig, spineIKTwist)
 
     cmds.select(cl=1)
 
@@ -97,6 +97,7 @@ def createRigComponents(baseRig, spineIKTwist):
     leftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = baseRig)
     leftLeg.build(
             legJoints = leftLegJnts,
+            legPVLocator = 'locator_L_LegPV',
             footExtLocator = 'locator_L_Foot_Ext',
             footIntLocator = 'locator_L_Foot_Int',
             footBaseLocator = 'locator_L_Foot_Base',

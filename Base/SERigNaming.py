@@ -35,3 +35,14 @@ s_Proxy              = '_' + sProxy
 s_Curve              = '_' + sCurve
 s_SplineIKHandle     = '_' + sSplineIKHandle
 s_PoleVector         = '_' + sPoleVector
+
+sFootExtJnt         = 'footExtJnt'
+sFootIntJnt         = 'footIntJnt'
+sFootBaseJnt        = 'footBaseJnt'
+sFootBaseSwiveJnt   = 'footBaseSwiveJnt'
+sFootToeSwiveJnt    = 'footToeSwiveJnt'
+sFootToeProxy       = 'footToeProxy'
+sFootBallProxy      = 'footBallProxy'
+sFootAnkleProxy     = 'footAnkleProxy'
+sToeProxyPVlocator  = 'toeProxyPVlocator'
+sBallProxyPVlocator = 'ballProxyPVlocator'

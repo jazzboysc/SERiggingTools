@@ -14,6 +14,7 @@ class RigControl():
                  rigFacing = SERigEnum.eRigFacing.RF_X,
                  prefix = 'new', 
                  scale = 1.0, 
+                 matchBoundingBoxScale = False,
                  translateTo = '', 
                  rotateTo = '', 
                  parent = '',
@@ -25,7 +26,7 @@ class RigControl():
         ctrlObj = None
         ctrlGrp = None
 
-        ctrlObj = self._createControlShape(rigSide, rigType, rigFacing, prefix, scale)
+        ctrlObj = self._createControlShape(rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale)
         if ctrlObj:
             # Parent to control group.
             ctrlGrp = cmds.group(n = prefix + SERigNaming.sControlGroup, em = 1)
@@ -62,7 +63,7 @@ class RigControl():
         self.RigSide = rigSide
         self.RigType = rigType
 
-    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale):
+    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         return None
 
 #-----------------------------------------------------------------------------
@@ -77,6 +78,7 @@ class RigCircleControl(RigControl):
                  rigFacing = SERigEnum.eRigFacing.RF_X,
                  prefix = 'new', 
                  scale = 1.0, 
+                 matchBoundingBoxScale = False,
                  translateTo = '', 
                  rotateTo = '', 
                  parent = '',
@@ -84,9 +86,9 @@ class RigCircleControl(RigControl):
                  ):
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
-                            scale, translateTo, rotateTo, parent, lockChannels)
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
 
-    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale):
+    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         
         circleNormal = [1, 0, 0]
         if rigFacing == SERigEnum.eRigFacing.RF_X:
@@ -128,6 +130,7 @@ class RigCubeControl(RigControl):
                  rigFacing = SERigEnum.eRigFacing.RF_X,
                  prefix = 'new', 
                  scale = 1.0, 
+                 matchBoundingBoxScale = False,
                  translateTo = '', 
                  rotateTo = '', 
                  parent = '',
@@ -144,9 +147,9 @@ class RigCubeControl(RigControl):
         self.Transparency = transparency
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
-                            scale, translateTo, rotateTo, parent, lockChannels)
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
 
-    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale):
+    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
 
         # Create control shape.
         resShape = cmds.polyCube(n = prefix + SERigNaming.sControl,
@@ -190,6 +193,7 @@ class RigSpikeCrossControl(RigControl):
                  rigFacing = SERigEnum.eRigFacing.RF_Y,
                  prefix = 'new', 
                  scale = 1.0, 
+                 matchBoundingBoxScale = False,
                  translateTo = '', 
                  rotateTo = '', 
                  parent = '',
@@ -202,9 +206,9 @@ class RigSpikeCrossControl(RigControl):
         self.ScaleZ = scaleZ
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
-                            scale, translateTo, rotateTo, parent, lockChannels)
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
 
-    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale):
+    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         list = []
         list.append(cmds.curve(p =[(0.5698271508338371, 4.091121663662989e-09, -2.132883735050939e-05), 
                                    (0.4208952391731131, 0.1488873944517639, -1.5755096100633637e-05), 
@@ -286,19 +290,65 @@ class RigFootControl(RigControl):
                  rigFacing = SERigEnum.eRigFacing.RF_Y,
                  prefix = 'new', 
                  scale = 1.0, 
+                 matchBoundingBoxScale = False,
                  translateTo = '', 
                  rotateTo = '', 
                  parent = '',
                  lockChannels = ['s', 'v'],
-                 scaleX = 60.0,
-                 scaleZ = 60.0
+                 scaleX = 20.0,
+                 scaleZ = 20.0
                  ):
 
         self.ScaleX = scaleX
         self.ScaleZ = scaleZ
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
-                            scale, translateTo, rotateTo, parent, lockChannels)
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
 
-    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale):
-        pass
+    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
+        list = []
+        list.append(cmds.curve( p =[(0.4249371493353358, 4.798237340988468e-17, 0.05965626747485875), (0.02479363526881334, 6.785732323110913e-17, -0.3369861890540169), 
+                                    (-0.4476029328500644, 4.798237340988471e-17, 0.059656267474858304), (-0.16523211069250432, 1.966335461618786e-32, 0.8432678923660822), 
+                                    (-0.61616597431764, -4.7982373409884694e-17, 1.635912638052866), (-0.5208473195637784, -6.785732323110915e-17, 2.405743087588424), 
+                                    (0.606808540733522, -4.798237340988472e-17, 1.7619653609862764), (0.46646824825008704, -3.644630067904792e-32, 1.2868969494440572), 
+                                    (0.4249371493353358, 4.798237340988468e-17, 0.05965626747485875), 
+                                    (0.02479363526881334, 6.785732323110913e-17, -0.3369861890540169), 
+                                    (-0.4476029328500644, 4.798237340988471e-17, 0.059656267474858304)],
+                                    per = True, d=3, k=[-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+        for x in range(len(list)-1):
+            cmds.makeIdentity(list[x+1], apply=True, t=1, r=1, s=1, n=0)
+            shapeNode = cmds.listRelatives(list[x+1], shapes=True)
+            cmds.parent(shapeNode, list[0], add=True, s=True)
+            cmds.delete(list[x+1])
+
+        newShapeName = prefix + SERigNaming.sControl
+        cmds.rename(list[0], newShapeName)
+
+        newScaleX = self.ScaleX
+        newScaleZ = self.ScaleZ
+        if matchBoundingBoxScale:
+            bb = cmds.exactWorldBoundingBox(newShapeName)
+            xExt = bb[3] - bb[0]
+            zExt = bb[5] - bb[2]
+            newScaleX = newScaleX / zExt * 1.5
+            newScaleZ = newScaleX
+
+        cmds.select(newShapeName)
+        cmds.scale(newScaleX, 1.0, newScaleZ, xyz = 1, relative = 1)
+        cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+        
+        # Set control color.
+        ctrlShape = cmds.listRelatives(newShapeName, s = 1)[0]
+        cmds.setAttr(ctrlShape + '.ove', 1)
+
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Blue)
+        elif rigSide == SERigEnum.eRigSide.RS_Right:
+            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Red)
+        elif rigSide == SERigEnum.eRigSide.RS_Center:
+            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Yellow)
+        else:
+            # TODO:
+            pass
+
+        return newShapeName
