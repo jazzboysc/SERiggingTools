@@ -48,7 +48,7 @@ class RigHumanLeg(RigComponent):
         footIKMainControl = SERigControl.RigFootControl(
                                 rigSide = SERigEnum.eRigSide.RS_Left,
                                 rigType = SERigEnum.eRigType.RT_Foot,
-                                prefix = self.Prefix + 'IKMain_', 
+                                prefix = self.Prefix + '_IK_Main', 
                                 scale = rigScale * 30, 
                                 matchBoundingBoxScale = True,
                                 scaleX = footSize,
@@ -85,7 +85,38 @@ class RigHumanLeg(RigComponent):
         cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sToeProxyPVlocator], toeIK)
         cmds.setAttr(toeIK + '.twist', 89.5)
 
+        # Create FK leg joints.
+        fkJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sFKPrefix)
 
+        # Create FK leg controls.
+        preParent = self.ControlsGrp
+        curScaleYZ = 17
+        for i in range(len(fkJoints) - 1):
+            curFKJnt = fkJoints[i]
+            nextFKJnt = fkJoints[i + 1]
+            curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
+            nextFKJntLoc = SEMathHelper.getWorldPosition(nextFKJnt)
+            distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
+
+            curFKControl = SERigControl.RigCubeControl(
+                                    rigSide = SERigEnum.eRigSide.RS_Left,
+                                    rigType = SERigEnum.eRigType.RT_Foot,
+                                    prefix = SERigNaming.sFKPrefix + self.Prefix + str(i), 
+                                    translateTo = curFKJnt,
+                                    rotateTo = curFKJnt,
+                                    scale = rigScale*20,
+                                    parent = preParent,
+                                    lockChannels = ['t', 's', 'v'],
+                                    cubeScaleX = distance,
+                                    cubeScaleY = curScaleYZ,
+                                    cubeScaleZ = curScaleYZ,
+                                    transparency = 0.75
+                                    )
+            cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
+            cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
+
+            preParent = curFKControl.ControlObject
+            curScaleYZ *= 0.75
 
     def buildFootHelperJoints(
             self,
@@ -145,6 +176,7 @@ class RigHumanLeg(RigComponent):
         # Attach foot helper joints to component's JointsGroup.
         cmds.parent(footExtJnt, self.JointsGrp)
         cmds.makeIdentity(footExtJnt, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+        cmds.hide(footExtJnt)
 
         # Create foot PVs for foot IK handles.
         toeProxyPVlocator = cmds.spaceLocator(n = footToeProxy + SERigNaming.s_PoleVector)
