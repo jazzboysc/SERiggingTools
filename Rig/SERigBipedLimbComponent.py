@@ -5,6 +5,7 @@ from ..Base import SERigEnum
 from ..Base import SERigNaming
 from ..Utils import SEStringHelper
 from ..Utils import SEMathHelper
+from ..Utils import SEJointHelper
 
 #-----------------------------------------------------------------------------
 # Rig Human Leg Class
@@ -34,7 +35,7 @@ class RigHumanLeg(RigComponent):
             rigScale = 1.0
             ):
 
-        # Create a map.
+        # Create a map storing foot helper joints.
         self.FootHelperJoints = self.buildFootHelperJoints(legJoints, footExtLocator, footIntLocator, 
                                                            footBaseLocator, footBaseSwiveLocator, footToeSwiveLocator)
 
@@ -43,11 +44,11 @@ class RigHumanLeg(RigComponent):
         footToeLocation = SEMathHelper.getWorldPosition(self.FootHelperJoints[SERigNaming.sFootToeProxy])
         footSize = SEMathHelper.getDistance3(footBaseLocation, footToeLocation)
 
-        # Create foot IK main control.
+        # Create foot IK main control based on foot size.
         footIKMainControl = SERigControl.RigFootControl(
                                 rigSide = SERigEnum.eRigSide.RS_Left,
                                 rigType = SERigEnum.eRigType.RT_Foot,
-                                prefix = 'FootIKMain_', 
+                                prefix = self.Prefix + 'IKMain_', 
                                 scale = rigScale * 30, 
                                 matchBoundingBoxScale = True,
                                 scaleX = footSize,
@@ -61,7 +62,30 @@ class RigHumanLeg(RigComponent):
         cmds.parentConstraint(footIKMainControl.ControlObject, self.FootHelperJoints[SERigNaming.sFootExtJnt], mo = 1)
 
         # Create IK leg joints.
-        cmds.duplicate(legJoints[0], n = SERigNaming.sIKPrefix + legJoints[0], parentOnly = False)[0]
+        ikJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sIKPrefix)
+
+        # Create IK handles.
+        ankleIK = cmds.ikHandle(n = self.Prefix + 'Ankle' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[0], ee = ikJoints[2])[0]
+        cmds.hide(ankleIK)
+        cmds.parent(ankleIK, self.RigPartsGrp)
+        cmds.parentConstraint(self.FootHelperJoints[SERigNaming.sFootAnkleProxy], ankleIK, mo = 1)
+        cmds.poleVectorConstraint(legPVLocator, ankleIK)
+
+        ballIK = cmds.ikHandle(n = self.Prefix + 'Ball' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[2], ee = ikJoints[3])[0]
+        cmds.hide(ballIK)
+        cmds.parent(ballIK, self.RigPartsGrp)
+        cmds.parentConstraint(self.FootHelperJoints[SERigNaming.sFootBallProxy], ballIK, mo = 1)
+        cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sBallProxyPVlocator], ballIK)
+        cmds.setAttr(ballIK + '.twist', 90)
+
+        toeIK = cmds.ikHandle(n = self.Prefix + 'Toe' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[3], ee = ikJoints[4])[0]
+        cmds.hide(toeIK)
+        cmds.parent(toeIK, self.RigPartsGrp)
+        cmds.parentConstraint(self.FootHelperJoints[SERigNaming.sFootToeProxy], toeIK, mo = 1)
+        cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sToeProxyPVlocator], toeIK)
+        cmds.setAttr(toeIK + '.twist', 89.5)
+
+
 
     def buildFootHelperJoints(
             self,
@@ -127,11 +151,13 @@ class RigHumanLeg(RigComponent):
         cmds.delete(cmds.parentConstraint(footToeProxy, toeProxyPVlocator))
         cmds.parent(toeProxyPVlocator, footToeProxy)
         cmds.move(0, 0, 5, toeProxyPVlocator, r = 1, os = 1)
+        cmds.makeIdentity(toeProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         ballProxyPVlocator = cmds.spaceLocator(n = footBallProxy + SERigNaming.s_PoleVector)
         cmds.delete(cmds.parentConstraint(footBallProxy, ballProxyPVlocator))
         cmds.parent(ballProxyPVlocator, footBallProxy)
         cmds.move(0, 0, 5, ballProxyPVlocator, r = 1, os = 1)
+        cmds.makeIdentity(ballProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         return {
                 SERigNaming.sFootExtJnt:footExtJnt,

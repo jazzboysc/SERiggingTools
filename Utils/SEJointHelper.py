@@ -1,7 +1,8 @@
 import maya.cmds as cmds
 from ..Base import SERigEnum
 
-def SE_ListHierarchy(topJoint, withEndJoints = True):
+def listHierarchy(topJoint, withEndJoints = True):
+
     listedJoints = cmds.listRelatives(topJoint, type = 'joint', ad = True)
     listedJoints.append(topJoint)
     listedJoints.reverse()
@@ -13,7 +14,22 @@ def SE_ListHierarchy(topJoint, withEndJoints = True):
 
     return res
 
+def duplicateHierarchy(topJoint, newPrefix = ''):
+
+    res = []
+
+    newJoints = cmds.duplicate(topJoint, n = newPrefix + topJoint, parentOnly = False, renameChildren = True)
+    res.append(newJoints[0])
+    for i in range(len(newJoints) - 1):
+        oldName = newJoints[i + 1][:-1]
+        newName = newPrefix + oldName
+        cmds.rename(newJoints[i + 1], newName)
+        res.append(newName)
+
+    return res
+
 def getJointSide(joint):
+
     token = joint.split('_')
     if token[0] == 'L' or token[0] == 'l':
         return SERigEnum.eRigSide.RS_Left
@@ -25,6 +41,7 @@ def getJointSide(joint):
         return SERigEnum.eRigSide.RS_Unknown
 
 def getFirstChildJoint(parent):
+
     # Find child joint.
     childJoint = None
 
