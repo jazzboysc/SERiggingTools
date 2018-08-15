@@ -83,7 +83,7 @@ class RigHumanLeg(RigComponent):
         cmds.parent(toeIK, self.RigPartsGrp)
         cmds.parentConstraint(self.FootHelperJoints[SERigNaming.sFootToeProxy], toeIK, mo = 1)
         cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sToeProxyPVlocator], toeIK)
-        cmds.setAttr(toeIK + '.twist', 89.5)
+        cmds.setAttr(toeIK + '.twist', 90)
 
         # Create FK leg joints.
         fkJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sFKPrefix)
@@ -180,15 +180,19 @@ class RigHumanLeg(RigComponent):
 
         # Create foot PVs for foot IK handles.
         toeProxyPVlocator = cmds.spaceLocator(n = footToeProxy + SERigNaming.s_PoleVector)
-        cmds.delete(cmds.parentConstraint(footToeProxy, toeProxyPVlocator))
-        cmds.parent(toeProxyPVlocator, footToeProxy)
+        #cmds.delete(cmds.parentConstraint(footToeProxy, toeProxyPVlocator))  # This is WRONG!
+        cmds.delete(cmds.parentConstraint(footBallProxy, toeProxyPVlocator))
+        cmds.delete(cmds.pointConstraint(footToeProxy, toeProxyPVlocator))
         cmds.move(0, 0, 5, toeProxyPVlocator, r = 1, os = 1)
+        cmds.parent(toeProxyPVlocator, footToeProxy)
         cmds.makeIdentity(toeProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         ballProxyPVlocator = cmds.spaceLocator(n = footBallProxy + SERigNaming.s_PoleVector)
-        cmds.delete(cmds.parentConstraint(footBallProxy, ballProxyPVlocator))
-        cmds.parent(ballProxyPVlocator, footBallProxy)
+        #cmds.delete(cmds.parentConstraint(footBallProxy, ballProxyPVlocator))  # This is WRONG!
+        cmds.delete(cmds.parentConstraint(footAnkleProxy, ballProxyPVlocator))
+        cmds.delete(cmds.pointConstraint(footBallProxy, ballProxyPVlocator))
         cmds.move(0, 0, 5, ballProxyPVlocator, r = 1, os = 1)
+        cmds.parent(ballProxyPVlocator, footBallProxy)
         cmds.makeIdentity(ballProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         return {
