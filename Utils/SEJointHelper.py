@@ -50,3 +50,14 @@ def getFirstChildJoint(parent):
         childJoint = childJointList[0]
 
     return childJoint
+
+def getFirstParentJoint(child):
+
+    parentJoint = None
+    parentJointList = cmds.listRelatives(child, p = 1, type = 'joint')
+    if parentJointList == None:
+        print('No parent joint found for:' + child)
+    else:
+        parentJoint = parentJointList[0]
+
+    return parentJoint

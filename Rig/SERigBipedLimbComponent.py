@@ -20,6 +20,7 @@ class RigHumanLeg(RigComponent):
                  ):
         RigComponent.__init__(self, prefix, baseRig)
 
+        self.FKControlGroup = cmds.group(n = prefix + '_FK_CtrlGrp', p = self.ControlsGrp, em = 1)
         self.FootHelperJoints = None
 
     def build(
@@ -89,8 +90,8 @@ class RigHumanLeg(RigComponent):
         fkJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sFKPrefix)
 
         # Create FK leg controls.
-        preParent = self.ControlsGrp
-        curScaleYZ = 17
+        preParent = self.FKControlGroup
+        curScaleYZ = 18.5
         for i in range(len(fkJoints) - 1):
             curFKJnt = fkJoints[i]
             nextFKJnt = fkJoints[i + 1]
@@ -117,6 +118,19 @@ class RigHumanLeg(RigComponent):
 
             preParent = curFKControl.ControlObject
             curScaleYZ *= 0.75
+
+        # Create FK IK blenders.
+        if self.BaseRig:
+            for i in range(len(legJoints)):
+                blender = cmds.createNode("blendColors")
+                cmds.connectAttr(ikJoints[i] + '.r', blender + '.color1', f = 1)
+                cmds.connectAttr(fkJoints[i] + '.r', blender + '.color2', f = 1)
+                cmds.connectAttr(blender + '.output', legJoints[i] + '.r', f = 1)
+                cmds.connectAttr(self.BaseRig.MainControl.ControlObject + '.' + self.BaseRig.MainIKFKSwitchAts[0], blender + '.blender')
+
+            fkAttachPoint = SEJointHelper.getFirstParentJoint(legJoints[0])
+            if fkAttachPoint:
+                cmds.parentConstraint(fkAttachPoint, self.FKControlGroup, mo = 1)
 
     def buildFootHelperJoints(
             self,

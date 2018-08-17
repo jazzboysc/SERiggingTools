@@ -74,6 +74,7 @@ class RigBase():
                             parent = global2Ctrl.ControlObject, 
                             translateTo = mainCtrlAttachObject,
                             lockChannels = ['t', 'r', 's', 'v'])
+        self.MainControl = mainCtrl
 
         # Adjust main control position and orientation.
         self._adjustMainCtrlShape(mainCtrl, scale, mainCtrlOffset)
@@ -81,8 +82,8 @@ class RigBase():
         if cmds.objExists(mainCtrlAttachObject):
             cmds.parentConstraint(mainCtrlAttachObject, mainCtrl.ControlGroup, mo = 1)
 
-        mainVisAts = ['modelVis', 'jointsVis']
-        mainDispAts = ['modelDisp', 'jointsDisp']
+        mainVisAts = ['modelVisibility', 'jointsVisibility']
+        mainDispAts = ['modelDisplay', 'jointsDisplay']
         mainObjList = [self.ModelGrp, self.JointsGrp]
 
         # Add rig visibility connections.
@@ -98,7 +99,14 @@ class RigBase():
             cmds.setAttr(obj + '.ove', 1)
             cmds.connectAttr(mainCtrl.ControlObject + '.' + at, obj + '.ovdt')
 
-
+        # Add IK/FK switches.
+        mainIKFKSwitchAts = [SERigNaming.sLeftLegIKFKSwitch, SERigNaming.sRightLegIKFKSwitch, 
+                             SERigNaming.sLeftArmIKFKSwitch, SERigNaming.sRightArmIKFKSwitch]
+        for at in mainIKFKSwitchAts:
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+            cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
+        self.MainIKFKSwitchAts = mainIKFKSwitchAts
+        
     def getCharacterName(self):
         res = cmds.getAttr(self.TopGrp + '.' + characterNameAttr)
         return res

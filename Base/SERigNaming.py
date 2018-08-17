@@ -48,3 +48,8 @@ sFootBallProxy      = 'footBallProxy'
 sFootAnkleProxy     = 'footAnkleProxy'
 sToeProxyPVlocator  = 'toeProxyPVlocator'
 sBallProxyPVlocator = 'ballProxyPVlocator'
+
+sLeftLegIKFKSwitch  = 'leftLegIKFKSwitch'
+sRightLegIKFKSwitch = 'rightLegIKFKSwitch'
+sLeftArmIKFKSwitch  = 'leftArmIKFKSwitch'
+sRightArmIKFKSwitch = 'rightArmIKFKSwitch'
