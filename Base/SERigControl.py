@@ -335,6 +335,8 @@ class RigFootControl(RigControl):
             zExt = bb[5] - bb[2]
             newScaleX = newScaleX / zExt * 1.5
             newScaleZ = newScaleX
+            #if rigSide == SERigEnum.eRigSide.RS_Right:
+            #    newScaleZ *= -1
 
         cmds.select(newShapeName)
         cmds.scale(newScaleX, 1.0, newScaleZ, xyz = 1, relative = 1)
