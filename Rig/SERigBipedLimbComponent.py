@@ -16,11 +16,14 @@ class RigHumanLeg(RigComponent):
                  self, 
                  prefix = 'new',
                  baseRig = None,
-                 abc = ''
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown
                  ):
-        RigComponent.__init__(self, prefix, baseRig)
+
+        RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
 
         self.FKControlGroup = cmds.group(n = prefix + '_FK_CtrlGrp', p = self.ControlsGrp, em = 1)
+        self.IKControlGroup = cmds.group(n = prefix + '_IK_CtrlGrp', p = self.ControlsGrp, em = 1)
         self.FootHelperJoints = None
 
     def build(
@@ -47,7 +50,7 @@ class RigHumanLeg(RigComponent):
 
         # Create foot IK main control based on foot size.
         footIKMainControl = SERigControl.RigFootControl(
-                                rigSide = SERigEnum.eRigSide.RS_Left,
+                                rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_Foot,
                                 prefix = self.Prefix + '_IK_Main', 
                                 scale = rigScale * 30, 
@@ -56,7 +59,7 @@ class RigHumanLeg(RigComponent):
                                 scaleZ = footSize,
                                 translateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                 rotateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
-                                parent = self.ControlsGrp, 
+                                parent = self.IKControlGroup, 
                                 lockChannels = ['s', 'v'])
 
         # Attach foot helper joints to the foot IK main control.
@@ -91,7 +94,7 @@ class RigHumanLeg(RigComponent):
 
         # Create FK leg controls.
         preParent = self.FKControlGroup
-        curScaleYZ = 18.5
+        curScaleYZ = 19
         for i in range(len(fkJoints) - 1):
             curFKJnt = fkJoints[i]
             nextFKJnt = fkJoints[i + 1]
@@ -100,7 +103,7 @@ class RigHumanLeg(RigComponent):
             distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
 
             curFKControl = SERigControl.RigCubeControl(
-                                    rigSide = SERigEnum.eRigSide.RS_Left,
+                                    rigSide = self.RigSide,
                                     rigType = SERigEnum.eRigType.RT_Foot,
                                     prefix = SERigNaming.sFKPrefix + self.Prefix + str(i), 
                                     translateTo = curFKJnt,
@@ -111,7 +114,7 @@ class RigHumanLeg(RigComponent):
                                     cubeScaleX = distance,
                                     cubeScaleY = curScaleYZ,
                                     cubeScaleZ = curScaleYZ,
-                                    transparency = 0.75
+                                    transparency = 0.85
                                     )
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)

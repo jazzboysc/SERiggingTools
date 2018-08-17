@@ -12,9 +12,11 @@ class RigSimpleIKSpine(RigComponent):
     def __init__(
                  self, 
                  prefix = 'new',
-                 baseRig = None
+                 baseRig = None,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown
                  ):
-        RigComponent.__init__(self, prefix, baseRig)
+        RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
 
     def build(
             self,

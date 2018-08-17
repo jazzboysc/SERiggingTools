@@ -10,11 +10,15 @@ class RigComponent():
     def __init__(
                  self, 
                  prefix = 'new',
-                 baseRig = None
+                 baseRig = None,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown,
                  ):
         # Add public members.
         self.Prefix = prefix
         self.BaseRig = baseRig
+        self.RigSide = rigSide
+        self.RigType = rigType
 
         self.TopGrp = cmds.group(n = prefix + SERigNaming.s_RigCompsGroup, em = 1)
         self.ControlsGrp = cmds.group(n = prefix + SERigNaming.s_ControlsGroup, em = 1, p = self.TopGrp)

@@ -156,6 +156,9 @@ class RigCubeControl(RigControl):
                                  w = 1, h = 1, d = 1, sx = 1, sy = 1, sz = 1, ax = [0, 1, 0], cuv = 4, ch = 0)[0]
         cmds.move(-0.5, resShape + '.scalePivot', resShape + '.rotatePivot', moveX = 1, relative = 1)
         cmds.move(0.5, resShape, moveX = 1, relative = 1)
+
+        if rigSide == SERigEnum.eRigSide.RS_Right:
+            self.CubeScaleX *= -1
         cmds.scale(self.CubeScaleX, self.CubeScaleY, self.CubeScaleZ, xyz = 1, relative = 1)
         cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
