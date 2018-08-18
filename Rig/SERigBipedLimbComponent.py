@@ -170,6 +170,24 @@ class RigHumanLeg(RigComponent):
         return footHelperJointsMap
 
     @staticmethod
+    def mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints = {}):
+
+        leftFootExtJnt = leftFootHelperJoints[SERigNaming.sFootExtJnt]
+        mirroredJoints = cmds.mirrorJoint(leftFootExtJnt, mb = True, myz = True, sr = ('L_', 'R_'))
+
+        return {
+                SERigNaming.sFootExtJnt:mirroredJoints[0],
+                SERigNaming.sFootIntJnt:mirroredJoints[1],
+                SERigNaming.sFootBaseJnt:mirroredJoints[2],
+                SERigNaming.sFootBaseSwiveJnt:mirroredJoints[3],
+                SERigNaming.sFootToeSwiveJnt:mirroredJoints[4],
+                SERigNaming.sFootToeProxy:mirroredJoints[5],
+                SERigNaming.sFootBallProxy:mirroredJoints[6],
+                SERigNaming.sFootAnkleProxy:mirroredJoints[7]
+                }
+
+
+    @staticmethod
     def buildFootHelperJointsMapForLeftSide(
             legJoints = [],  # 0: hip, -1: toe, -2: ball, -3: ankle
             footExtLocator = '',

@@ -116,17 +116,14 @@ def createRigComponents(baseRig, spineIKTwist):
             )
 
     # Right Leg
-    #rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
-    #rightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = baseRig,
-    #                                               rigSide = SERigEnum.eRigSide.RS_Right, 
-    #                                               rigType = SERigEnum.eRigType.RT_Component)
-    #rightLeg.build(
-    #        legJoints = rightLegJnts,
-    #        legPVLocator = 'locator_R_LegPV',
-    #        footExtLocator = 'locator_R_Foot_Ext',
-    #        footIntLocator = 'locator_R_Foot_Int',
-    #        footBaseLocator = 'locator_R_Foot_Base',
-    #        footBaseSwiveLocator = 'locator_R_Foot_BaseSwive',
-    #        footToeSwiveLocator = 'locator_R_Foot_ToeSwive',
-    #        rigScale = sceneScale
-    #        )
+    rightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = baseRig,
+                                                   rigSide = SERigEnum.eRigSide.RS_Right, 
+                                                   rigType = SERigEnum.eRigType.RT_Component)
+    rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
+    rightFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints)
+    rightLeg.build(
+            legJoints = rightLegJnts,
+            footHelperJoints = rightFootHelperJoints,
+            legPVLocator = 'locator_R_LegPV',
+            rigScale = sceneScale
+            )
