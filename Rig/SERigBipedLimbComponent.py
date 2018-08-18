@@ -24,24 +24,19 @@ class RigHumanLeg(RigComponent):
 
         self.FKControlGroup = cmds.group(n = prefix + '_FK_CtrlGrp', p = self.ControlsGrp, em = 1)
         self.IKControlGroup = cmds.group(n = prefix + '_IK_CtrlGrp', p = self.ControlsGrp, em = 1)
+        self.FootHelperJointsGroup = cmds.group(n = prefix + '_FootHelperJointsGrp', p = self.JointsGrp, em = 1)
         self.FootHelperJoints = None
 
     def build(
             self,
             legJoints = [],  # 0: hip, -1: toe, -2: ball, -3: ankle
+            footHelperJoints = {},
             legPVLocator = '',
             rootJoint = '',
-            footExtLocator = '',
-            footIntLocator = '',
-            footBaseLocator = '',
-            footBaseSwiveLocator = '',
-            footToeSwiveLocator = '',
             rigScale = 1.0
             ):
 
-        # Create a map storing foot helper joints.
-        self.FootHelperJoints = self.buildFootHelperJoints(legJoints, footExtLocator, footIntLocator, 
-                                                           footBaseLocator, footBaseSwiveLocator, footToeSwiveLocator)
+        self.FootHelperJoints = self.attachFootHelperJoints(footHelperJoints)
 
         # Measure foot size.
         footBaseLocation = SEMathHelper.getWorldPosition(self.FootHelperJoints[SERigNaming.sFootBaseJnt])
@@ -63,7 +58,7 @@ class RigHumanLeg(RigComponent):
                                 lockChannels = ['s', 'v'])
 
         # Attach foot helper joints to the foot IK main control.
-        cmds.parentConstraint(footIKMainControl.ControlObject, self.FootHelperJoints[SERigNaming.sFootExtJnt], mo = 1)
+        cmds.parentConstraint(footIKMainControl.ControlObject, self.FootHelperJointsGroup, mo = 1)
 
         # Create IK leg joints.
         ikJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sIKPrefix)
@@ -135,8 +130,47 @@ class RigHumanLeg(RigComponent):
             if fkAttachPoint:
                 cmds.parentConstraint(fkAttachPoint, self.FKControlGroup, mo = 1)
 
-    def buildFootHelperJoints(
+    def attachFootHelperJoints(
             self,
+            footHelperJointsMap
+            ):
+
+        # Fetch joints from map.
+        footExtJnt = footHelperJointsMap[SERigNaming.sFootExtJnt]
+        footToeProxy = footHelperJointsMap[SERigNaming.sFootToeProxy]
+        footBallProxy = footHelperJointsMap[SERigNaming.sFootBallProxy]
+        footAnkleProxy = footHelperJointsMap[SERigNaming.sFootAnkleProxy]
+
+        # Attach foot helper joints to component's FootHelperJointsGroup.
+        cmds.parent(footExtJnt, self.FootHelperJointsGroup)
+        cmds.makeIdentity(footExtJnt, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+        cmds.hide(footExtJnt)
+
+        # Create foot PVs for foot IK handles.
+        toeProxyPVlocator = cmds.spaceLocator(n = footToeProxy + SERigNaming.s_PoleVector)
+        #cmds.delete(cmds.parentConstraint(footToeProxy, toeProxyPVlocator))  # This is WRONG!
+        cmds.delete(cmds.parentConstraint(footBallProxy, toeProxyPVlocator))
+        cmds.delete(cmds.pointConstraint(footToeProxy, toeProxyPVlocator))
+        cmds.move(0, 0, 5, toeProxyPVlocator, r = 1, os = 1)
+        cmds.parent(toeProxyPVlocator, footToeProxy)
+        cmds.makeIdentity(toeProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+        ballProxyPVlocator = cmds.spaceLocator(n = footBallProxy + SERigNaming.s_PoleVector)
+        #cmds.delete(cmds.parentConstraint(footBallProxy, ballProxyPVlocator))  # This is WRONG!
+        cmds.delete(cmds.parentConstraint(footAnkleProxy, ballProxyPVlocator))
+        cmds.delete(cmds.pointConstraint(footBallProxy, ballProxyPVlocator))
+        cmds.move(0, 0, 5, ballProxyPVlocator, r = 1, os = 1)
+        cmds.parent(ballProxyPVlocator, footBallProxy)
+        cmds.makeIdentity(ballProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+        # Insert foot helper PVs into the map
+        footHelperJointsMap[SERigNaming.sToeProxyPVlocator] = toeProxyPVlocator
+        footHelperJointsMap[SERigNaming.sBallProxyPVlocator] = ballProxyPVlocator
+
+        return footHelperJointsMap
+
+    @staticmethod
+    def buildFootHelperJointsMapForLeftSide(
             legJoints = [],  # 0: hip, -1: toe, -2: ball, -3: ankle
             footExtLocator = '',
             footIntLocator = '',
@@ -190,28 +224,6 @@ class RigHumanLeg(RigComponent):
         cmds.parent(footBaseJnt, footIntJnt)
         cmds.parent(footIntJnt, footExtJnt)
 
-        # Attach foot helper joints to component's JointsGroup.
-        cmds.parent(footExtJnt, self.JointsGrp)
-        cmds.makeIdentity(footExtJnt, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
-        cmds.hide(footExtJnt)
-
-        # Create foot PVs for foot IK handles.
-        toeProxyPVlocator = cmds.spaceLocator(n = footToeProxy + SERigNaming.s_PoleVector)
-        #cmds.delete(cmds.parentConstraint(footToeProxy, toeProxyPVlocator))  # This is WRONG!
-        cmds.delete(cmds.parentConstraint(footBallProxy, toeProxyPVlocator))
-        cmds.delete(cmds.pointConstraint(footToeProxy, toeProxyPVlocator))
-        cmds.move(0, 0, 5, toeProxyPVlocator, r = 1, os = 1)
-        cmds.parent(toeProxyPVlocator, footToeProxy)
-        cmds.makeIdentity(toeProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
-
-        ballProxyPVlocator = cmds.spaceLocator(n = footBallProxy + SERigNaming.s_PoleVector)
-        #cmds.delete(cmds.parentConstraint(footBallProxy, ballProxyPVlocator))  # This is WRONG!
-        cmds.delete(cmds.parentConstraint(footAnkleProxy, ballProxyPVlocator))
-        cmds.delete(cmds.pointConstraint(footBallProxy, ballProxyPVlocator))
-        cmds.move(0, 0, 5, ballProxyPVlocator, r = 1, os = 1)
-        cmds.parent(ballProxyPVlocator, footBallProxy)
-        cmds.makeIdentity(ballProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
-
         return {
                 SERigNaming.sFootExtJnt:footExtJnt,
                 SERigNaming.sFootIntJnt:footIntJnt,
@@ -220,7 +232,5 @@ class RigHumanLeg(RigComponent):
                 SERigNaming.sFootToeSwiveJnt:footToeSwiveJnt,
                 SERigNaming.sFootToeProxy:footToeProxy,
                 SERigNaming.sFootBallProxy:footBallProxy,
-                SERigNaming.sFootAnkleProxy:footAnkleProxy,
-                SERigNaming.sToeProxyPVlocator:toeProxyPVlocator,
-                SERigNaming.sBallProxyPVlocator:ballProxyPVlocator
+                SERigNaming.sFootAnkleProxy:footAnkleProxy
                 }
