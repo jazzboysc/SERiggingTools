@@ -18,7 +18,8 @@ class RigControl():
                  translateTo = '', 
                  rotateTo = '', 
                  parent = '',
-                 lockChannels = ['s', 'v']
+                 lockChannels = ['s', 'v'],
+                 flipScaleChannels = False
                  ):
         
         # Create control object and control group.
@@ -44,6 +45,11 @@ class RigControl():
             if cmds.objExists(parent):
                 cmds.parent(ctrlGrp, parent)
 
+            if rigSide == SERigEnum.eRigSide.RS_Right and flipScaleChannels == True:
+                cmds.setAttr(ctrlGrp + '.scaleX', -1)
+                cmds.setAttr(ctrlGrp + '.scaleY', -1)
+                cmds.setAttr(ctrlGrp + '.scaleZ', -1)
+
             # Lock control channels.
             singleAttributeLockList = []
             for lc in lockChannels:
@@ -62,6 +68,7 @@ class RigControl():
         self.ControlGroup = ctrlGrp
         self.RigSide = rigSide
         self.RigType = rigType
+        self.FlipScaleChannels = flipScaleChannels
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         return None
@@ -299,14 +306,15 @@ class RigFootControl(RigControl):
                  parent = '',
                  lockChannels = ['s', 'v'],
                  scaleX = 20.0,
-                 scaleZ = 20.0
+                 scaleZ = 20.0,
+                 flipScaleChannels = False
                  ):
 
         self.ScaleX = scaleX
         self.ScaleZ = scaleZ
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
-                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, flipScaleChannels)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         list = []
@@ -329,18 +337,16 @@ class RigFootControl(RigControl):
 
         newScaleX = self.ScaleX
         newScaleZ = self.ScaleZ
+        newScaleY = 1
         if matchBoundingBoxScale:
             bb = cmds.exactWorldBoundingBox(newShapeName)
             xExt = bb[3] - bb[0]
             zExt = bb[5] - bb[2]
             newScaleX = newScaleX / zExt * 1.5
             newScaleZ = newScaleX
-            #if rigSide == SERigEnum.eRigSide.RS_Right:
-            #    newScaleX *= -1
-            #    newScaleZ *= -1
 
         cmds.select(newShapeName)
-        cmds.scale(newScaleX, 1.0, newScaleZ, xyz = 1, relative = 1)
+        cmds.scale(newScaleX, newScaleY, newScaleZ, xyz = 1, relative = 1)
         cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
         
         # Set control color.

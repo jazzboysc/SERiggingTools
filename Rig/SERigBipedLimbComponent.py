@@ -44,18 +44,23 @@ class RigHumanLeg(RigComponent):
         footSize = SEMathHelper.getDistance3(footBaseLocation, footToeLocation)
 
         # Create foot IK main control based on foot size.
+        flipScaleChannels = False
+        if self.RigSide == SERigEnum.eRigSide.RS_Right:
+            flipScaleChannels = True
         footIKMainControl = SERigControl.RigFootControl(
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_Foot,
                                 prefix = self.Prefix + '_IK_Main', 
-                                scale = rigScale * 30, 
+                                scale = rigScale * 38, 
                                 matchBoundingBoxScale = True,
                                 scaleX = footSize,
                                 scaleZ = footSize,
                                 translateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                 rotateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                 parent = self.IKControlGroup, 
-                                lockChannels = ['s', 'v'])
+                                lockChannels = ['s', 'v'],
+                                flipScaleChannels = flipScaleChannels
+                                )
 
         # Attach foot helper joints to the foot IK main control.
         cmds.parentConstraint(footIKMainControl.ControlObject, self.FootHelperJointsGroup, mo = 1)
@@ -67,22 +72,28 @@ class RigHumanLeg(RigComponent):
         ankleIK = cmds.ikHandle(n = self.Prefix + 'Ankle' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[0], ee = ikJoints[2])[0]
         cmds.hide(ankleIK)
         cmds.parent(ankleIK, self.RigPartsGrp)
-        cmds.parentConstraint(self.FootHelperJoints[SERigNaming.sFootAnkleProxy], ankleIK, mo = 1)
+        cmds.pointConstraint(self.FootHelperJoints[SERigNaming.sFootAnkleProxy], ankleIK, mo = 0)
         cmds.poleVectorConstraint(legPVLocator, ankleIK)
 
         ballIK = cmds.ikHandle(n = self.Prefix + 'Ball' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[2], ee = ikJoints[3])[0]
         cmds.hide(ballIK)
         cmds.parent(ballIK, self.RigPartsGrp)
-        cmds.parentConstraint(self.FootHelperJoints[SERigNaming.sFootBallProxy], ballIK, mo = 1)
+        cmds.pointConstraint(self.FootHelperJoints[SERigNaming.sFootBallProxy], ballIK, mo = 0)
         cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sBallProxyPVlocator], ballIK)
-        cmds.setAttr(ballIK + '.twist', 90)
+        if self.RigSide == SERigEnum.eRigSide.RS_Left:
+            cmds.setAttr(ballIK + '.twist', 90)
+        else:
+            cmds.setAttr(ballIK + '.twist', 270)
 
         toeIK = cmds.ikHandle(n = self.Prefix + 'Toe' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[3], ee = ikJoints[4])[0]
         cmds.hide(toeIK)
         cmds.parent(toeIK, self.RigPartsGrp)
-        cmds.parentConstraint(self.FootHelperJoints[SERigNaming.sFootToeProxy], toeIK, mo = 1)
+        cmds.pointConstraint(self.FootHelperJoints[SERigNaming.sFootToeProxy], toeIK, mo = 0)
         cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sToeProxyPVlocator], toeIK)
-        cmds.setAttr(toeIK + '.twist', 90)
+        if self.RigSide == SERigEnum.eRigSide.RS_Left:
+            cmds.setAttr(toeIK + '.twist', 90)
+        else:
+            cmds.setAttr(toeIK + '.twist', 0)
 
         # Create FK leg joints.
         fkJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sFKPrefix)
@@ -147,11 +158,16 @@ class RigHumanLeg(RigComponent):
         cmds.hide(footExtJnt)
 
         # Create foot PVs for foot IK handles.
+
+        offsetZ = 5
+        if self.RigSide == SERigEnum.eRigSide.RS_Right:
+            offsetZ *= -1
+
         toeProxyPVlocator = cmds.spaceLocator(n = footToeProxy + SERigNaming.s_PoleVector)
         #cmds.delete(cmds.parentConstraint(footToeProxy, toeProxyPVlocator))  # This is WRONG!
         cmds.delete(cmds.parentConstraint(footBallProxy, toeProxyPVlocator))
         cmds.delete(cmds.pointConstraint(footToeProxy, toeProxyPVlocator))
-        cmds.move(0, 0, 5, toeProxyPVlocator, r = 1, os = 1)
+        cmds.move(0, 0, offsetZ, toeProxyPVlocator, r = 1, os = 1)
         cmds.parent(toeProxyPVlocator, footToeProxy)
         cmds.makeIdentity(toeProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
@@ -159,7 +175,7 @@ class RigHumanLeg(RigComponent):
         #cmds.delete(cmds.parentConstraint(footBallProxy, ballProxyPVlocator))  # This is WRONG!
         cmds.delete(cmds.parentConstraint(footAnkleProxy, ballProxyPVlocator))
         cmds.delete(cmds.pointConstraint(footBallProxy, ballProxyPVlocator))
-        cmds.move(0, 0, 5, ballProxyPVlocator, r = 1, os = 1)
+        cmds.move(0, 0, offsetZ, ballProxyPVlocator, r = 1, os = 1)
         cmds.parent(ballProxyPVlocator, footBallProxy)
         cmds.makeIdentity(ballProxyPVlocator, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
