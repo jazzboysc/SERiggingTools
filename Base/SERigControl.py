@@ -19,7 +19,9 @@ class RigControl():
                  rotateTo = '', 
                  parent = '',
                  lockChannels = ['s', 'v'],
-                 flipScaleChannels = False
+                 flipScaleX = False,
+                 flipScaleY = False,
+                 flipScaleZ = False
                  ):
         
         # Create control object and control group.
@@ -45,9 +47,13 @@ class RigControl():
             if cmds.objExists(parent):
                 cmds.parent(ctrlGrp, parent)
 
-            if rigSide == SERigEnum.eRigSide.RS_Right and flipScaleChannels == True:
+            if rigSide == SERigEnum.eRigSide.RS_Right and flipScaleX == True:
                 cmds.setAttr(ctrlGrp + '.scaleX', -1)
+
+            if rigSide == SERigEnum.eRigSide.RS_Right and flipScaleY == True:
                 cmds.setAttr(ctrlGrp + '.scaleY', -1)
+
+            if rigSide == SERigEnum.eRigSide.RS_Right and flipScaleZ == True:
                 cmds.setAttr(ctrlGrp + '.scaleZ', -1)
 
             # Lock control channels.
@@ -68,7 +74,9 @@ class RigControl():
         self.ControlGroup = ctrlGrp
         self.RigSide = rigSide
         self.RigType = rigType
-        self.FlipScaleChannels = flipScaleChannels
+        self.FlipScaleX = flipScaleX
+        self.FlipScaleY = flipScaleY
+        self.FlipScaleZ = flipScaleZ
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         return None
@@ -89,11 +97,15 @@ class RigCircleControl(RigControl):
                  translateTo = '', 
                  rotateTo = '', 
                  parent = '',
-                 lockChannels = ['s', 'v']
+                 lockChannels = ['s', 'v'],
+                 flipScaleX = False,
+                 flipScaleY = False,
+                 flipScaleZ = False
                  ):
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
-                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels,
+                            flipScaleX, flipScaleY, flipScaleZ)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         
@@ -307,14 +319,16 @@ class RigFootControl(RigControl):
                  lockChannels = ['s', 'v'],
                  scaleX = 20.0,
                  scaleZ = 20.0,
-                 flipScaleChannels = False
+                 flipScaleX = False,
+                 flipScaleY = False,
+                 flipScaleZ = False
                  ):
 
         self.ScaleX = scaleX
         self.ScaleZ = scaleZ
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
-                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, flipScaleChannels)
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, flipScaleX, flipScaleY, flipScaleZ)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         list = []

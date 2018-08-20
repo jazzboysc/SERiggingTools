@@ -44,14 +44,14 @@ class RigHumanLeg(RigComponent):
         footSize = SEMathHelper.getDistance3(footBaseLocation, footToeLocation)
 
         # Create foot IK main control based on foot size.
-        flipScaleChannels = False
+        flipScaleXYZ = False
         if self.RigSide == SERigEnum.eRigSide.RS_Right:
-            flipScaleChannels = True
+            flipScaleXYZ = True
         footIKMainControl = SERigControl.RigFootControl(
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_Foot,
                                 prefix = self.Prefix + '_IK_Main', 
-                                scale = rigScale * 38, 
+                                scale = rigScale * 42, 
                                 matchBoundingBoxScale = True,
                                 scaleX = footSize,
                                 scaleZ = footSize,
@@ -59,20 +59,39 @@ class RigHumanLeg(RigComponent):
                                 rotateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                 parent = self.IKControlGroup, 
                                 lockChannels = ['s', 'v'],
-                                flipScaleChannels = flipScaleChannels
+                                flipScaleX = flipScaleXYZ,
+                                flipScaleY = flipScaleXYZ,
+                                flipScaleZ = flipScaleXYZ
                                 )
 
         # Create foot base swive control.
+        flipScaleX = False
+        if self.RigSide == SERigEnum.eRigSide.RS_Right:
+            flipScaleX = True
+
         footBaseSwiveControl = SERigControl.RigCircleControl(
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_Foot,
                                 rigFacing = SERigEnum.eRigFacing.RF_Y,
                                 prefix = self.Prefix + '_FootBaseSwive', 
-                                scale = rigScale * 5, 
+                                scale = rigScale * 3.5, 
                                 translateTo = self.FootHelperJoints[SERigNaming.sFootBaseSwiveJnt],
-                                #rotateTo = self.FootHelperJoints[SERigNaming.sFootBaseSwiveJnt],
                                 parent = footIKMainControl.ControlObject, 
-                                lockChannels = ['s', 't', 'rx', 'rz', 'v']
+                                lockChannels = ['s', 't', 'rx', 'rz', 'v'],
+                                flipScaleX = flipScaleX
+                                )
+
+        # Create foot toe swive control.
+        footToeSwiveControl = SERigControl.RigCircleControl(
+                                rigSide = self.RigSide,
+                                rigType = SERigEnum.eRigType.RT_Foot,
+                                rigFacing = SERigEnum.eRigFacing.RF_Y,
+                                prefix = self.Prefix + '_ToeSwive', 
+                                scale = rigScale * 6, 
+                                translateTo = self.FootHelperJoints[SERigNaming.sFootToeSwiveJnt],
+                                parent = footIKMainControl.ControlObject, 
+                                lockChannels = ['s', 't', 'rx', 'rz', 'v'],
+                                flipScaleX = flipScaleX
                                 )
 
         # Attach foot helper joints to the foot IK main control.
@@ -160,6 +179,10 @@ class RigHumanLeg(RigComponent):
         footBaseSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootBaseSwive'
         footBaseSwiveES = self.FootHelperJoints[SERigNaming.sFootBaseSwiveJnt] + '.rotateY = ' + footBaseSwiveControl.ControlObject + '.rotateY;'
         cmds.expression(n = footBaseSwiveEN, s = footBaseSwiveES, ae = 1)
+
+        footToeSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootToeSwive'
+        footToeSwiveES = self.FootHelperJoints[SERigNaming.sFootToeSwiveJnt] + '.rotateY = ' + footToeSwiveControl.ControlObject + '.rotateY;'
+        cmds.expression(n = footToeSwiveEN, s = footToeSwiveES, ae = 1)
 
     def attachFootHelperJoints(
             self,
