@@ -51,7 +51,7 @@ class RigHumanLeg(RigComponent):
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_Foot,
                                 prefix = self.Prefix + '_IK_Main', 
-                                scale = rigScale * 42, 
+                                scale = rigScale * 44, 
                                 matchBoundingBoxScale = True,
                                 scaleX = footSize,
                                 scaleZ = footSize,
@@ -63,6 +63,9 @@ class RigHumanLeg(RigComponent):
                                 flipScaleY = flipScaleXYZ,
                                 flipScaleZ = flipScaleXYZ
                                 )
+
+        # Adjust main IK control's pivot to ankle's position.
+        SEMathHelper.movePivotTo(footIKMainControl.ControlObject, legJoints[-3])
 
         # Create foot base swive control.
         flipScaleX = False

@@ -12,3 +12,8 @@ def getDistance3(a, b):
 
     res = sqrt(dx*dx + dy*dy + dz*dz)
     return res
+
+def movePivotTo(object, target):
+
+    targetPos = cmds.xform(target, q = True, t = True, ws = True)
+    cmds.move(targetPos[0], targetPos[1], targetPos[2], object + '.scalePivot',  object + '.rotatePivot', rpr = 1)
