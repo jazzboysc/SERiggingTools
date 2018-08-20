@@ -135,7 +135,9 @@ class RigHumanLeg(RigComponent):
                 cmds.connectAttr(ikJoints[i] + '.r', blender + '.color1', f = 1)
                 cmds.connectAttr(fkJoints[i] + '.r', blender + '.color2', f = 1)
                 cmds.connectAttr(blender + '.output', legJoints[i] + '.r', f = 1)
-                cmds.connectAttr(self.BaseRig.MainControl.ControlObject + '.' + self.BaseRig.MainIKFKSwitchAts[0], blender + '.blender')
+
+                blenderControlAttr = self.BaseRig.getLegIKFKSwitch(self.RigSide)
+                cmds.connectAttr(blenderControlAttr, blender + '.blender')
 
             fkAttachPoint = SEJointHelper.getFirstParentJoint(legJoints[0])
             if fkAttachPoint:

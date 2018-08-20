@@ -107,6 +107,24 @@ class RigBase():
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
         self.MainIKFKSwitchAts = mainIKFKSwitchAts
         
+    def getLegIKFKSwitch(self, rigSide = SERigEnum.eRigSide.RS_Unknown):
+
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            return self.MainControl.ControlObject + '.' + self.MainIKFKSwitchAts[0]
+        elif rigSide == SERigEnum.eRigSide.RS_Right:
+            return self.MainControl.ControlObject + '.' + self.MainIKFKSwitchAts[1]
+        else:
+            return None
+
+    def getArmIKFKSwitch(self, rigSide = SERigEnum.eRigSide.RS_Unknown):
+
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            return self.MainControl.ControlObject + '.' + self.MainIKFKSwitchAts[2]
+        elif rigSide == SERigEnum.eRigSide.RS_Right:
+            return self.MainControl.ControlObject + '.' + self.MainIKFKSwitchAts[3]
+        else:
+            return None
+
     def getCharacterName(self):
         res = cmds.getAttr(self.TopGrp + '.' + characterNameAttr)
         return res
