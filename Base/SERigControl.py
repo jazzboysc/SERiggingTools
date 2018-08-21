@@ -352,6 +352,10 @@ class RigFootControl(RigControl):
         newShapeName = prefix + SERigNaming.sControl
         cmds.rename(list[0], newShapeName)
 
+        # Adjust foot shape via hard coded CV position.
+        cmds.select(newShapeName + '.cv[5]', r = 1)
+        cmds.move(0.35, 0, 0, r = 1, os = 1, wd = 1)
+
         newScaleX = self.ScaleX
         newScaleZ = self.ScaleZ
         newScaleY = 1

@@ -42,6 +42,7 @@ class RigHumanLeg(RigComponent):
         footBaseLocation = SEMathHelper.getWorldPosition(self.FootHelperJoints[SERigNaming.sFootBaseJnt])
         footToeLocation = SEMathHelper.getWorldPosition(self.FootHelperJoints[SERigNaming.sFootToeProxy])
         footSize = SEMathHelper.getDistance3(footBaseLocation, footToeLocation)
+        footSize *= 1.2
 
         # Create foot IK main control based on foot size.
         flipScaleXYZ = False
@@ -51,7 +52,7 @@ class RigHumanLeg(RigComponent):
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_Foot,
                                 prefix = self.Prefix + '_IK_Main', 
-                                scale = rigScale * 44, 
+                                scale = rigScale * 55, 
                                 matchBoundingBoxScale = True,
                                 scaleX = footSize,
                                 scaleZ = footSize,
@@ -63,6 +64,11 @@ class RigHumanLeg(RigComponent):
                                 flipScaleY = flipScaleXYZ,
                                 flipScaleZ = flipScaleXYZ
                                 )
+        if self.RigSide == SERigEnum.eRigSide.RS_Right:
+            ikMainControlOffsetX = -0.5
+        else:
+            ikMainControlOffsetX = 0.5
+        footIKMainControl.adjustControlGroupOffset(ikMainControlOffsetX, 0, -5)
 
         # Adjust main IK control's pivot to ankle's position.
         SEMathHelper.movePivotTo(footIKMainControl.ControlObject, legJoints[-3])
