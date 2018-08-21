@@ -97,6 +97,20 @@ class RigHumanLeg(RigComponent):
                                 flipScaleX = flipScaleX
                                 )
 
+        # Create foot rotation control.
+        footRotationControl = SERigControl.RigRotationControl(
+                                 rigSide = self.RigSide,
+                                 rigType = SERigEnum.eRigType.RT_Foot,
+                                 rigFacing = SERigEnum.eRigFacing.RF_Z,
+                                 prefix = self.Prefix + '_Rotation', 
+                                 scale = rigScale * 6, 
+                                 translateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
+                                 parent = footIKMainControl.ControlObject, 
+                                 lockChannels = ['s', 't', 'v'],
+                                 flipScaleX = flipScaleX
+                                 )
+        footRotationControl.adjustControlGroupOffset(0, 8, -15)
+
         # Attach foot helper joints to the foot IK main control.
         cmds.parentConstraint(footIKMainControl.ControlObject, self.FootHelperJointsGroup, mo = 1)
 
@@ -178,7 +192,7 @@ class RigHumanLeg(RigComponent):
             if fkAttachPoint:
                 cmds.parentConstraint(fkAttachPoint, self.FKControlGroup, mo = 1)
 
-        # Create foot control expressions.
+        # Create foot swive control expressions.
         footBaseSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootBaseSwive'
         footBaseSwiveES = self.FootHelperJoints[SERigNaming.sFootBaseSwiveJnt] + '.rotateY = ' + footBaseSwiveControl.ControlObject + '.rotateY;'
         cmds.expression(n = footBaseSwiveEN, s = footBaseSwiveES, ae = 1)
@@ -186,6 +200,21 @@ class RigHumanLeg(RigComponent):
         footToeSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootToeSwive'
         footToeSwiveES = self.FootHelperJoints[SERigNaming.sFootToeSwiveJnt] + '.rotateY = ' + footToeSwiveControl.ControlObject + '.rotateY;'
         cmds.expression(n = footToeSwiveEN, s = footToeSwiveES, ae = 1)
+
+        # Create foot rotation control expressions.
+        # TODO: hard coded rotation angel for now.
+        footRotationEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootRotation'
+        footRotationES = self.FootHelperJoints[SERigNaming.sFootBaseJnt] + '.rotateX = clamp(-60, 0, ' + footRotationControl.ControlObject + '.rotateX);'
+        footRotationES += '\n'
+        footRotationES += self.FootHelperJoints[SERigNaming.sFootBallProxy] + '.rotateZ = clamp(0, 15, ' + footRotationControl.ControlObject + '.rotateX);'
+        footRotationES += '\n'
+        footRotationES += self.FootHelperJoints[SERigNaming.sFootToeProxy] + '.rotateZ = clamp(15, 45, ' + footRotationControl.ControlObject + '.rotateX) - 15;'
+        footRotationES += '\n'
+        footRotationES += self.FootHelperJoints[SERigNaming.sFootExtJnt] + '.rotateZ = clamp(-25, 0, ' + footRotationControl.ControlObject + '.rotateZ);'
+        footRotationES += '\n'
+        footRotationES += self.FootHelperJoints[SERigNaming.sFootIntJnt] + '.rotateZ = clamp(0, 25, ' + footRotationControl.ControlObject + '.rotateZ);'
+
+        cmds.expression(n = footRotationEN, s = footRotationES, ae = 1)
 
     def attachFootHelperJoints(
             self,
