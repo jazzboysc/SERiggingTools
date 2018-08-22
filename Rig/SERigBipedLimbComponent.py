@@ -150,6 +150,12 @@ class RigHumanLeg(RigComponent):
         else:
             cmds.setAttr(toeIK + '.twist', 0)
 
+        # Attach ik joints to current rig component.
+        ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
+        cmds.parent(ikJoints[0], ikJointsGroup)
+        ikJointsParent = SEJointHelper.getFirstParentJoint(legJoints[0])
+        cmds.parentConstraint(ikJointsParent, ikJointsGroup, mo = 1)
+
         # Create FK leg joints.
         fkJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sFKPrefix)
 
@@ -182,6 +188,12 @@ class RigHumanLeg(RigComponent):
 
             preParent = curFKControl.ControlObject
             curScaleYZ *= 0.75
+
+        # Attach fk joints to current rig component.
+        fkJointsGroup = cmds.group(n = self.Prefix + '_FK_JointsGrp', em = 1, p = self.JointsGrp)
+        cmds.parent(fkJoints[0], fkJointsGroup)
+        fkJointsParent = SEJointHelper.getFirstParentJoint(legJoints[0])
+        cmds.parentConstraint(fkJointsParent, fkJointsGroup, mo = 1)
 
         # Create FK IK blenders.
         if self.BaseRig:
