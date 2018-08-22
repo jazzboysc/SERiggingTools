@@ -387,9 +387,8 @@ class RigHumanArm(RigComponent):
 
         # Create clavicle rotation control.
         if armParent:
-
             flipScaleX = False
-            offsetX = 10
+            offsetX = 16.5
             if self.RigSide == SERigEnum.eRigSide.RS_Right:
                 flipScaleX = True
                 offsetX *= -1
@@ -399,13 +398,15 @@ class RigHumanArm(RigComponent):
                                      rigType = SERigEnum.eRigType.RT_Clavicle,
                                      rigFacing = SERigEnum.eRigFacing.RF_Z,
                                      prefix = self.Prefix + '_Clav_Rotation', 
-                                     scale = rigScale * 6, 
+                                     scale = rigScale * 4.5, 
                                      translateTo = armParent,
                                      parent = self.FKControlGroup, 
                                      lockChannels = ['s', 't', 'v'],
                                      flipScaleX = flipScaleX
                                      )
-            clavRotationControl.adjustControlGroupOffset(offsetX, 8, 20)
+            clavRotationControl.adjustControlGroupOffset(offsetX, 10, -10)
+
+            #cmds.orientConstraint(clavRotationControl.ControlObject, armParent, mo = 1)
 
         # Create arm IK main control.
         flipScaleXYZ = False
