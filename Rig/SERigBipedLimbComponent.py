@@ -383,6 +383,30 @@ class RigHumanArm(RigComponent):
             rigScale = 1.0
             ):
         
+        armParent = SEJointHelper.getFirstParentJoint(armJoints[0])
+
+        # Create clavicle rotation control.
+        if armParent:
+
+            flipScaleX = False
+            offsetX = 10
+            if self.RigSide == SERigEnum.eRigSide.RS_Right:
+                flipScaleX = True
+                offsetX *= -1
+
+            clavRotationControl = SERigControl.RigRotationControl(
+                                     rigSide = self.RigSide,
+                                     rigType = SERigEnum.eRigType.RT_Clavicle,
+                                     rigFacing = SERigEnum.eRigFacing.RF_Z,
+                                     prefix = self.Prefix + '_Clav_Rotation', 
+                                     scale = rigScale * 6, 
+                                     translateTo = armParent,
+                                     parent = self.FKControlGroup, 
+                                     lockChannels = ['s', 't', 'v'],
+                                     flipScaleX = flipScaleX
+                                     )
+            clavRotationControl.adjustControlGroupOffset(offsetX, 8, 20)
+
         # Create arm IK main control.
         flipScaleXYZ = False
         if self.RigSide == SERigEnum.eRigSide.RS_Right:
@@ -421,8 +445,9 @@ class RigHumanArm(RigComponent):
         # Attach ik joints to current rig component.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
         cmds.parent(ikShoulderJoint, ikJointsGroup)
-        ikJointsParent = SEJointHelper.getFirstParentJoint(armJoints[0])
-        cmds.parentConstraint(ikJointsParent, ikJointsGroup, mo = 1)
+
+        if armParent:
+            cmds.parentConstraint(armParent, ikJointsGroup, mo = 1)
 
         # Create FK arm joints.
         fkShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sFKPrefix + armJoints[0], parentOnly = True)[0]
@@ -487,8 +512,9 @@ class RigHumanArm(RigComponent):
         # Attach FK joints to current rig component.
         fkJointsGroup = cmds.group(n = self.Prefix + '_FK_JointsGrp', em = 1, p = self.JointsGrp)
         cmds.parent(fkJoints[0], fkJointsGroup)
-        fkJointsParent = SEJointHelper.getFirstParentJoint(armJoints[0])
-        cmds.parentConstraint(fkJointsParent, fkJointsGroup, mo = 1)
+
+        if armParent:
+            cmds.parentConstraint(armParent, fkJointsGroup, mo = 1)
 
         # Create FK IK blenders.
         if self.BaseRig:

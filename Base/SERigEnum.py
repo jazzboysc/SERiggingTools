@@ -17,9 +17,10 @@ eRigType = SE_RigEnum(
     RT_Knee      = 6,
     RT_Ankle     = 7,
     RT_Foot      = 8,
-    RT_Global    = 9,
-    RT_Component = 10,
-    RT_Unknown   = 11
+    RT_Clavicle  = 9,
+    RT_Global    = 10,
+    RT_Component = 11,
+    RT_Unknown   = 12
     )
 
 eRigColor = SE_RigEnum(
