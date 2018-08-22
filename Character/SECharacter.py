@@ -81,8 +81,25 @@ def build(
 
 
 def createRigComponents(baseRig, spineIKTwist):
-    # Spine
+
+    # Prepare joints.
     spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
+
+    leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
+
+    rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
+
+    leftFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.buildFootHelperJointsMapForLeftSide(legJoints = leftLegJnts,
+        footExtLocator = 'locator_L_Foot_Ext', footIntLocator = 'locator_L_Foot_Int', footBaseLocator = 'locator_L_Foot_Base',
+        footBaseSwiveLocator = 'locator_L_Foot_BaseSwive', footToeSwiveLocator = 'locator_L_Foot_ToeSwive')
+
+    rightFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints)
+
+    leftArmJnts = ['L_Shoulder', 'L_Elbow', 'L_Wrist']
+
+    rightArmJnts = ['R_Shoulder', 'R_Elbow', 'R_Wrist']
+
+    # Spine.
     spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = baseRig, 
                                                  rigSide = SERigEnum.eRigSide.RS_Center, 
                                                  rigType = SERigEnum.eRigType.RT_Component)
@@ -95,20 +112,7 @@ def createRigComponents(baseRig, spineIKTwist):
                 rigScale = sceneScale
                 )
 
-    # Prepare leg joints.
-    leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
-    rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
-    leftFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.buildFootHelperJointsMapForLeftSide(
-                                                                                                    legJoints = leftLegJnts,
-                                                                                                    footExtLocator = 'locator_L_Foot_Ext',
-                                                                                                    footIntLocator = 'locator_L_Foot_Int',
-                                                                                                    footBaseLocator = 'locator_L_Foot_Base',
-                                                                                                    footBaseSwiveLocator = 'locator_L_Foot_BaseSwive',
-                                                                                                    footToeSwiveLocator = 'locator_L_Foot_ToeSwive',
-                                                                                                    )
-    rightFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints)
-
-    # Left Leg
+    # Left Leg.
     leftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = baseRig,
                                                   rigSide = SERigEnum.eRigSide.RS_Left, 
                                                   rigType = SERigEnum.eRigType.RT_Component)
@@ -119,7 +123,7 @@ def createRigComponents(baseRig, spineIKTwist):
             rigScale = sceneScale
             )
 
-    # Right Leg
+    # Right Leg.
     rightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = baseRig,
                                                    rigSide = SERigEnum.eRigSide.RS_Right, 
                                                    rigType = SERigEnum.eRigType.RT_Component)
@@ -127,5 +131,25 @@ def createRigComponents(baseRig, spineIKTwist):
             legJoints = rightLegJnts,
             footHelperJoints = rightFootHelperJoints,
             legPVLocator = 'locator_R_LegPV',
+            rigScale = sceneScale
+            )
+
+    # Left arm.
+    leftArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'L_Arm', baseRig = baseRig,
+                                                  rigSide = SERigEnum.eRigSide.RS_Left, 
+                                                  rigType = SERigEnum.eRigType.RT_Component)
+    leftArm.build(
+            armJoints = leftArmJnts,
+            armPVLocator = 'locator_L_ArmPV',
+            rigScale = sceneScale
+            )
+
+    # Right arm.
+    rightArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'R_Arm', baseRig = baseRig,
+                                                  rigSide = SERigEnum.eRigSide.RS_Right, 
+                                                  rigType = SERigEnum.eRigType.RT_Component)
+    rightArm.build(
+            armJoints = rightArmJnts,
+            armPVLocator = 'locator_R_ArmPV',
             rigScale = sceneScale
             )

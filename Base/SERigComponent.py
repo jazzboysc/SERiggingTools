@@ -26,6 +26,9 @@ class RigComponent():
         self.RigPartsGrp = cmds.group(n = prefix + SERigNaming.s_RigPartsGroup, em = 1, p = self.TopGrp)
         self.RigPartsFixedGrp = cmds.group(n = prefix + SERigNaming.s_RigPartsFixedGroup, em = 1, p = self.TopGrp)
         cmds.setAttr(self.RigPartsFixedGrp + '.it', 0, l = 1)
+
+        self.FKControlGroup = cmds.group(n = prefix + '_FK_CtrlGrp', p = self.ControlsGrp, em = 1)
+        self.IKControlGroup = cmds.group(n = prefix + '_IK_CtrlGrp', p = self.ControlsGrp, em = 1)
         
         # Parent this component to the rig base.
         if baseRig:

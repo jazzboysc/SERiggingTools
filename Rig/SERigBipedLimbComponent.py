@@ -22,8 +22,6 @@ class RigHumanLeg(RigComponent):
 
         RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
 
-        self.FKControlGroup = cmds.group(n = prefix + '_FK_CtrlGrp', p = self.ControlsGrp, em = 1)
-        self.IKControlGroup = cmds.group(n = prefix + '_IK_CtrlGrp', p = self.ControlsGrp, em = 1)
         self.FootHelperJointsGroup = cmds.group(n = prefix + '_FootHelperJointsGrp', p = self.JointsGrp, em = 1)
         self.FootHelperJoints = None
 
@@ -361,3 +359,59 @@ class RigHumanLeg(RigComponent):
                 SERigNaming.sFootBallProxy:footBallProxy,
                 SERigNaming.sFootAnkleProxy:footAnkleProxy
                 }
+
+#-----------------------------------------------------------------------------
+# Rig Human Arm Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigHumanArm(RigComponent):
+    def __init__(
+                 self, 
+                 prefix = 'new',
+                 baseRig = None,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown
+                 ):
+
+        RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
+
+    def build(
+            self,
+            armJoints = [],  # 0: shoulder, 1: elbow, 2: wrist
+            armPVLocator = '',
+            rootJoint = '',
+            rigScale = 1.0
+            ):
+        
+        # Create arm IK main control.
+        flipScaleXYZ = False
+        if self.RigSide == SERigEnum.eRigSide.RS_Right:
+            flipScaleXYZ = True
+        armIKMainControl = SERigControl.RigCircleControl(
+                                rigSide = self.RigSide,
+                                rigType = SERigEnum.eRigType.RT_Wrist,
+                                rigFacing = SERigEnum.eRigFacing.RF_X,
+                                prefix = self.Prefix + '_IK_Main', 
+                                scale = rigScale * 6, 
+                                translateTo = armJoints[2],
+                                rotateTo = armJoints[2], 
+                                parent = self.IKControlGroup, 
+                                lockChannels = ['s', 'v'],
+                                flipScaleX = flipScaleXYZ,
+                                flipScaleY = flipScaleXYZ,
+                                flipScaleZ = flipScaleXYZ
+                                )
+
+        # Create IK arm joints.
+        ikShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sIKPrefix + armJoints[0], parentOnly = True)[0]
+        ikElbowJoint = cmds.duplicate(armJoints[1], n = SERigNaming.sIKPrefix + armJoints[1], parentOnly = True)[0]
+        ikWristJoint = cmds.duplicate(armJoints[2], n = SERigNaming.sIKPrefix + armJoints[2], parentOnly = True)[0]
+        cmds.parent(ikWristJoint, ikElbowJoint)
+        cmds.parent(ikElbowJoint, ikShoulderJoint)
+
+        # Create FK arm joints.
+        fkShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sFKPrefix + armJoints[0], parentOnly = True)[0]
+        fkElbowJoint = cmds.duplicate(armJoints[1], n = SERigNaming.sFKPrefix + armJoints[1], parentOnly = True)[0]
+        fkWristJoint = cmds.duplicate(armJoints[2], n = SERigNaming.sFKPrefix + armJoints[2], parentOnly = True)[0]
+        cmds.parent(fkWristJoint, fkElbowJoint)
+        cmds.parent(fkElbowJoint, fkShoulderJoint)
