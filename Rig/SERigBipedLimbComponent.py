@@ -392,7 +392,7 @@ class RigHumanArm(RigComponent):
                                 rigType = SERigEnum.eRigType.RT_Wrist,
                                 rigFacing = SERigEnum.eRigFacing.RF_X,
                                 prefix = self.Prefix + '_IK_Main', 
-                                scale = rigScale * 6, 
+                                scale = rigScale * 8, 
                                 translateTo = armJoints[2],
                                 rotateTo = armJoints[2], 
                                 parent = self.IKControlGroup, 
@@ -409,9 +409,98 @@ class RigHumanArm(RigComponent):
         cmds.parent(ikWristJoint, ikElbowJoint)
         cmds.parent(ikElbowJoint, ikShoulderJoint)
 
+        ikJoints = [ikShoulderJoint, ikElbowJoint, ikWristJoint]
+
+        # Create IK handle.
+        wristIK = cmds.ikHandle(n = self.Prefix + 'Wrist' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikShoulderJoint, ee = ikWristJoint)[0]
+        cmds.hide(wristIK)
+        cmds.parent(wristIK, self.RigPartsGrp)
+        cmds.pointConstraint(armIKMainControl.ControlObject, wristIK, mo = 0)
+        cmds.poleVectorConstraint(armPVLocator, wristIK)
+
+        # Attach ik joints to current rig component.
+        ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
+        cmds.parent(ikShoulderJoint, ikJointsGroup)
+        ikJointsParent = SEJointHelper.getFirstParentJoint(armJoints[0])
+        cmds.parentConstraint(ikJointsParent, ikJointsGroup, mo = 1)
+
         # Create FK arm joints.
         fkShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sFKPrefix + armJoints[0], parentOnly = True)[0]
         fkElbowJoint = cmds.duplicate(armJoints[1], n = SERigNaming.sFKPrefix + armJoints[1], parentOnly = True)[0]
         fkWristJoint = cmds.duplicate(armJoints[2], n = SERigNaming.sFKPrefix + armJoints[2], parentOnly = True)[0]
         cmds.parent(fkWristJoint, fkElbowJoint)
         cmds.parent(fkElbowJoint, fkShoulderJoint)
+
+        fkJoints = [fkShoulderJoint, fkElbowJoint, fkWristJoint]
+        fkRigTypes = [SERigEnum.eRigType.RT_Shoulder, SERigEnum.eRigType.RT_Elbow, SERigEnum.eRigType.RT_Wrist]
+
+        # Create FK arm controls.
+        preParent = self.FKControlGroup
+        curScaleYZ = 10
+        curFKJnt = None
+        nextFKJnt = None
+        for i in range(len(fkJoints) - 1):
+            curFKJnt = fkJoints[i]
+            nextFKJnt = fkJoints[i + 1]
+            curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
+            nextFKJntLoc = SEMathHelper.getWorldPosition(nextFKJnt)
+            distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
+
+            curFKControl = SERigControl.RigCubeControl(
+                                    rigSide = self.RigSide,
+                                    rigType = fkRigTypes[i],
+                                    prefix = SERigNaming.sFKPrefix + self.Prefix + str(i), 
+                                    translateTo = curFKJnt,
+                                    rotateTo = curFKJnt,
+                                    scale = rigScale*20,
+                                    parent = preParent,
+                                    lockChannels = ['t', 's', 'v'],
+                                    cubeScaleX = distance,
+                                    cubeScaleY = curScaleYZ,
+                                    cubeScaleZ = curScaleYZ,
+                                    transparency = 0.85
+                                    )
+            cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
+            cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
+
+            preParent = curFKControl.ControlObject
+            curScaleYZ *= 0.9
+
+        # Create Wrist FK control.
+        curFKControl = SERigControl.RigCubeControl(
+                                rigSide = self.RigSide,
+                                rigType = fkRigTypes[2],
+                                prefix = SERigNaming.sFKPrefix + self.Prefix + str(2), 
+                                translateTo = nextFKJnt,
+                                rotateTo = nextFKJnt,
+                                scale = rigScale*20,
+                                parent = preParent,
+                                lockChannels = ['t', 's', 'v'],
+                                cubeScaleX = curScaleYZ,
+                                cubeScaleY = curScaleYZ,
+                                cubeScaleZ = curScaleYZ,
+                                transparency = 0.85
+                                )
+        cmds.orientConstraint(curFKControl.ControlObject, nextFKJnt)
+        cmds.pointConstraint(curFKControl.ControlObject, nextFKJnt)
+
+        # Attach FK joints to current rig component.
+        fkJointsGroup = cmds.group(n = self.Prefix + '_FK_JointsGrp', em = 1, p = self.JointsGrp)
+        cmds.parent(fkJoints[0], fkJointsGroup)
+        fkJointsParent = SEJointHelper.getFirstParentJoint(armJoints[0])
+        cmds.parentConstraint(fkJointsParent, fkJointsGroup, mo = 1)
+
+        # Create FK IK blenders.
+        if self.BaseRig:
+            for i in range(len(armJoints)):
+                blender = cmds.createNode("blendColors")
+                cmds.connectAttr(ikJoints[i] + '.r', blender + '.color1', f = 1)
+                cmds.connectAttr(fkJoints[i] + '.r', blender + '.color2', f = 1)
+                cmds.connectAttr(blender + '.output', armJoints[i] + '.r', f = 1)
+
+                blenderControlAttr = self.BaseRig.getArmIKFKSwitch(self.RigSide)
+                cmds.connectAttr(blenderControlAttr, blender + '.blender')
+
+            fkAttachPoint = SEJointHelper.getFirstParentJoint(armJoints[0])
+            if fkAttachPoint:
+                cmds.parentConstraint(fkAttachPoint, self.FKControlGroup, mo = 1)
