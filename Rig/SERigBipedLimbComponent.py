@@ -563,3 +563,77 @@ class RigHumanArm(RigComponent):
             fkArmAttachPoint = SEJointHelper.getFirstParentJoint(armJoints[0])
             if fkArmAttachPoint and len(self.FKArmControls) > 0:
                 cmds.parentConstraint(fkArmAttachPoint, self.FKArmControls[0].ControlGroup, mo = 1)
+
+#-----------------------------------------------------------------------------
+# Rig Human Hand Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigHumanHand(RigComponent):
+    def __init__(
+                 self, 
+                 prefix = 'new',
+                 baseRig = None,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown
+                 ):
+
+        RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
+
+        # Add public members.
+        self.FKFingerControls = []
+
+    def build(
+            self,
+            fingers = [],
+            rootJoint = '',
+            armFKFingerAttachPoint = '',
+            rigScale = 1.0
+            ):
+
+        fkFingerControlGroup = cmds.group(n = self.Prefix + SERigNaming.s_FKPrefix + 'Finger' + SERigNaming.sControlGroup, em = 1, 
+                                          p = self.FKControlGroup)
+
+        # Attach fk fingers to the arm.
+        if cmds.objExists(armFKFingerAttachPoint):
+            cmds.parentConstraint(armFKFingerAttachPoint, fkFingerControlGroup)
+
+        for finger in fingers:
+
+            fingerJoints = SEJointHelper.listHierarchy(finger, withEndJoints = True)
+            fkJoints = fingerJoints
+
+            # Create FK finger controls.
+            preParent = fkFingerControlGroup
+            curScaleYZ = 2.5
+            curFKJnt = None
+            nextFKJnt = None
+            curFKFingerControls = []
+            for i in range(len(fkJoints) - 1):
+                curFKJnt = fkJoints[i]
+                nextFKJnt = fkJoints[i + 1]
+                curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
+                nextFKJntLoc = SEMathHelper.getWorldPosition(nextFKJnt)
+                distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
+
+                curFKControl = SERigControl.RigCubeControl(
+                                        rigSide = self.RigSide,
+                                        rigType = SERigEnum.eRigType.RT_Hand,
+                                        prefix = SERigNaming.sFKPrefix + fingerJoints[0] + str(i), 
+                                        translateTo = curFKJnt,
+                                        rotateTo = curFKJnt,
+                                        scale = rigScale,
+                                        parent = preParent,
+                                        lockChannels = ['t', 's', 'v'],
+                                        cubeScaleX = distance,
+                                        cubeScaleY = curScaleYZ,
+                                        cubeScaleZ = curScaleYZ,
+                                        transparency = 0.75
+                                        )
+                curFKFingerControls.append(curFKControl)
+
+                cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
+                cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
+
+                preParent = curFKControl.ControlObject
+
+            self.FKFingerControls.append(curFKFingerControls)

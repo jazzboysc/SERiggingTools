@@ -99,6 +99,10 @@ def createRigComponents(baseRig, spineIKTwist):
 
     rightArmJnts = ['R_Shoulder', 'R_Elbow', 'R_Wrist']
 
+    leftHandJnts = ['L_Thumb_0', 'L_Index_0', 'L_Middle_0', 'L_Ring_0', 'L_Pinky_0']
+
+    rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
+
     # Spine.
     spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = baseRig, 
                                                  rigSide = SERigEnum.eRigSide.RS_Center, 
@@ -153,5 +157,25 @@ def createRigComponents(baseRig, spineIKTwist):
             armJoints = rightArmJnts,
             armPVLocator = 'locator_R_ArmPV',
             chestEndJoint = 'C_ChestEnd',
+            rigScale = sceneScale
+            )
+
+    # Left hand.
+    leftHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'L_Hand', baseRig = baseRig,
+                                                  rigSide = SERigEnum.eRigSide.RS_Left, 
+                                                  rigType = SERigEnum.eRigType.RT_Component)
+    leftHand.build(
+            fingers = leftHandJnts,
+            armFKFingerAttachPoint = 'L_Wrist',
+            rigScale = sceneScale
+            )
+
+    # Right hand.
+    rightHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'R_Hand', baseRig = baseRig,
+                                                  rigSide = SERigEnum.eRigSide.RS_Right, 
+                                                  rigType = SERigEnum.eRigType.RT_Component)
+    rightHand.build(
+            fingers = rightHandJnts,
+            armFKFingerAttachPoint = 'R_Wrist',
             rigScale = sceneScale
             )
