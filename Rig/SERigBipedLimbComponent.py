@@ -22,8 +22,14 @@ class RigHumanLeg(RigComponent):
 
         RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
 
+        # Add public members.
         self.FootHelperJointsGroup = cmds.group(n = prefix + '_FootHelperJointsGrp', p = self.JointsGrp, em = 1)
         self.FootHelperJoints = None
+        self.FootIKMainControl = None
+        self.FootBaseSwiveControl = None
+        self.FootToeSwiveControl = None
+        self.FootRotationControl = None
+        self.FKLegControls = []
 
     def build(
             self,
@@ -62,6 +68,8 @@ class RigHumanLeg(RigComponent):
                                 flipScaleY = flipScaleXYZ,
                                 flipScaleZ = flipScaleXYZ
                                 )
+        self.FootIKMainControl = footIKMainControl
+
         if self.RigSide == SERigEnum.eRigSide.RS_Right:
             ikMainControlOffsetX = -0.5
         else:
@@ -87,6 +95,7 @@ class RigHumanLeg(RigComponent):
                                 lockChannels = ['s', 't', 'rx', 'rz', 'v'],
                                 flipScaleX = flipScaleX
                                 )
+        self.FootBaseSwiveControl = footBaseSwiveControl
 
         # Create foot toe swive control.
         footToeSwiveControl = SERigControl.RigCircleControl(
@@ -100,6 +109,7 @@ class RigHumanLeg(RigComponent):
                                 lockChannels = ['s', 't', 'rx', 'rz', 'v'],
                                 flipScaleX = flipScaleX
                                 )
+        self.FootToeSwiveControl = footToeSwiveControl
 
         # Create foot rotation control.
         footRotationControl = SERigControl.RigRotationControl(
@@ -113,6 +123,8 @@ class RigHumanLeg(RigComponent):
                                  lockChannels = ['s', 't', 'v'],
                                  flipScaleX = flipScaleX
                                  )
+        self.FootRotationControl = footRotationControl
+
         footRotationControl.adjustControlGroupOffset(0, 8, -15)
 
         # Attach foot helper joints to the foot IK main control.
@@ -181,6 +193,8 @@ class RigHumanLeg(RigComponent):
                                     cubeScaleZ = curScaleYZ,
                                     transparency = 0.85
                                     )
+            self.FKLegControls.append(curFKControl)
+
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
 
@@ -375,11 +389,17 @@ class RigHumanArm(RigComponent):
 
         RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
 
+        # Add public members.
+        self.FKArmControls = []
+        self.ClavRotationControl = None
+        self.ArmIKMainControl = None
+
     def build(
             self,
             armJoints = [],  # 0: shoulder, 1: elbow, 2: wrist
             armPVLocator = '',
             rootJoint = '',
+            chestEndJoint = '',
             rigScale = 1.0
             ):
         
@@ -405,8 +425,14 @@ class RigHumanArm(RigComponent):
                                      flipScaleX = flipScaleX
                                      )
             clavRotationControl.adjustControlGroupOffset(offsetX, 10, -10)
+            self.ClavRotationControl = clavRotationControl
 
-            #cmds.orientConstraint(clavRotationControl.ControlObject, armParent, mo = 1)
+            # Control the clavicle joint.
+            cmds.orientConstraint(clavRotationControl.ControlObject, armParent, mo = 1)
+
+            # Attach clavicle control group to chest end joint.
+            if cmds.objExists(chestEndJoint):
+                cmds.parentConstraint(chestEndJoint, clavRotationControl.ControlGroup, mo = 1)
 
         # Create arm IK main control.
         flipScaleXYZ = False
@@ -426,6 +452,7 @@ class RigHumanArm(RigComponent):
                                 flipScaleY = flipScaleXYZ,
                                 flipScaleZ = flipScaleXYZ
                                 )
+        self.ArmIKMainControl = armIKMainControl
 
         # Create IK arm joints.
         ikShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sIKPrefix + armJoints[0], parentOnly = True)[0]
@@ -486,6 +513,8 @@ class RigHumanArm(RigComponent):
                                     cubeScaleZ = curScaleYZ,
                                     transparency = 0.85
                                     )
+            self.FKArmControls.append(curFKControl)
+
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
 
@@ -507,6 +536,8 @@ class RigHumanArm(RigComponent):
                                 cubeScaleZ = curScaleYZ,
                                 transparency = 0.85
                                 )
+        self.FKArmControls.append(curFKControl)
+
         cmds.orientConstraint(curFKControl.ControlObject, nextFKJnt)
         cmds.pointConstraint(curFKControl.ControlObject, nextFKJnt)
 
@@ -528,6 +559,7 @@ class RigHumanArm(RigComponent):
                 blenderControlAttr = self.BaseRig.getArmIKFKSwitch(self.RigSide)
                 cmds.connectAttr(blenderControlAttr, blender + '.blender')
 
-            fkAttachPoint = SEJointHelper.getFirstParentJoint(armJoints[0])
-            if fkAttachPoint:
-                cmds.parentConstraint(fkAttachPoint, self.FKControlGroup, mo = 1)
+            # Attach FK arm controls to base rig attach point.
+            fkArmAttachPoint = SEJointHelper.getFirstParentJoint(armJoints[0])
+            if fkArmAttachPoint and len(self.FKArmControls) > 0:
+                cmds.parentConstraint(fkArmAttachPoint, self.FKArmControls[0].ControlGroup, mo = 1)

@@ -141,6 +141,7 @@ def createRigComponents(baseRig, spineIKTwist):
     leftArm.build(
             armJoints = leftArmJnts,
             armPVLocator = 'locator_L_ArmPV',
+            chestEndJoint = 'C_ChestEnd',
             rigScale = sceneScale
             )
 
@@ -151,5 +152,6 @@ def createRigComponents(baseRig, spineIKTwist):
     rightArm.build(
             armJoints = rightArmJnts,
             armPVLocator = 'locator_R_ArmPV',
+            chestEndJoint = 'C_ChestEnd',
             rigScale = sceneScale
             )
