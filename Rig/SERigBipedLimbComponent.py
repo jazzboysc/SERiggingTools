@@ -30,6 +30,7 @@ class RigHumanLeg(RigComponent):
         self.FootToeSwiveControl = None
         self.FootRotationControl = None
         self.FKLegControls = []
+        self.LegPVControl = None
 
     def build(
             self,
@@ -126,6 +127,25 @@ class RigHumanLeg(RigComponent):
         self.FootRotationControl = footRotationControl
 
         footRotationControl.adjustControlGroupOffset(0, 8, -15)
+
+        # Create leg PV control.
+        legPVControl = SERigControl.RigDiamondControl(
+                                 rigSide = self.RigSide,
+                                 rigType = SERigEnum.eRigType.RT_LegPV,
+                                 rigFacing = SERigEnum.eRigFacing.RF_Y,
+                                 prefix = self.Prefix + '_PV', 
+                                 scale = rigScale * 15, 
+                                 translateTo = legPVLocator,
+                                 parent = self.ControlsGrp, 
+                                 lockChannels = ['s', 'r', 'v'],
+                                 flipScaleX = flipScaleX
+                                 )
+        self.LegPVControl = legPVControl
+        
+        # Move leg PV locator from builder scene to this component.
+        cmds.parent(legPVLocator, self.RigPartsGrp)
+        cmds.pointConstraint(legPVControl.ControlObject, legPVLocator)
+        cmds.hide(legPVLocator)
 
         # Attach foot helper joints to the foot IK main control.
         cmds.parentConstraint(footIKMainControl.ControlObject, self.FootHelperJointsGroup, mo = 1)
@@ -393,6 +413,7 @@ class RigHumanArm(RigComponent):
         self.FKArmControls = []
         self.ClavRotationControl = None
         self.ArmIKMainControl = None
+        self.ArmPVControl = None
 
     def build(
             self,
@@ -540,6 +561,25 @@ class RigHumanArm(RigComponent):
 
         cmds.orientConstraint(curFKControl.ControlObject, nextFKJnt)
         cmds.pointConstraint(curFKControl.ControlObject, nextFKJnt)
+
+        # Create arm PV control.
+        armPVControl = SERigControl.RigDiamondControl(
+                                 rigSide = self.RigSide,
+                                 rigType = SERigEnum.eRigType.RT_ArmPV,
+                                 rigFacing = SERigEnum.eRigFacing.RF_Y,
+                                 prefix = self.Prefix + '_PV', 
+                                 scale = rigScale * 15, 
+                                 translateTo = armPVLocator,
+                                 parent = self.ControlsGrp, 
+                                 lockChannels = ['s', 'r', 'v'],
+                                 flipScaleX = flipScaleX
+                                 )
+        self.ArmPVControl = armPVControl
+        
+        # Move arm PV locator from builder scene to this component.
+        cmds.parent(armPVLocator, self.RigPartsGrp)
+        cmds.pointConstraint(armPVControl.ControlObject, armPVLocator)
+        cmds.hide(armPVLocator)
 
         # Attach FK joints to current rig component.
         fkJointsGroup = cmds.group(n = self.Prefix + '_FK_JointsGrp', em = 1, p = self.JointsGrp)
