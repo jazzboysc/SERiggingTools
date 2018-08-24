@@ -8,6 +8,13 @@ def getWorldPosition(object):
 def setWorldPosition(object, wPos):
     cmds.xform(object, t = wPos, ws = True)
 
+def getWorldRotation(object):
+    res = cmds.xform(object, q = True, ro = True, ws = True)
+    return res
+
+def setWorldRotation(object, wRot):
+    cmds.xform(object, ro = wRot, ws = True)
+
 def getDistance3(a, b):
     dx = a[0] - b[0]
     dy = a[1] - b[1]

@@ -17,6 +17,8 @@ builderFilePath = '%s/%s/Builder/%s_Builder.ma'
 
 rootJnt = 'Root'
 headJnt = 'C_Head'
+gLeftArm = None
+gRightArm = None
 
 def build(
           characterName, 
@@ -80,14 +82,21 @@ def build(
 
     return baseRig
 
-gLeftArm = None
-
 def leftArmSyncIKToFK():
+
     global gLeftArm
     if gLeftArm != None:
         gLeftArm.syncIKToFK()
     else:
         print('gLeftArm is None')
+
+def rightArmSyncIKToFK():
+
+    global gRightArm
+    if gRightArm != None:
+        gRightArm.syncIKToFK()
+    else:
+        print('gRightArm is None')
 
 def createRigComponents(baseRig, spineIKTwist):
 
@@ -162,10 +171,11 @@ def createRigComponents(baseRig, spineIKTwist):
             )
 
     # Right arm.
-    rightArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'R_Arm', baseRig = baseRig,
+    global gRightArm
+    gRightArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'R_Arm', baseRig = baseRig,
                                                   rigSide = SERigEnum.eRigSide.RS_Right, 
                                                   rigType = SERigEnum.eRigType.RT_Component)
-    rightArm.build(
+    gRightArm.build(
             armJoints = rightArmJnts,
             armPVLocator = 'locator_R_ArmPV',
             chestEndJoint = 'C_ChestEnd',

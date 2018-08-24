@@ -421,11 +421,18 @@ class RigHumanArm(RigComponent):
         self.PVLocatorSync = None
 
     def syncIKToFK(self):
-        pvSyncPos = SEMathHelper.getWorldPosition(self.PVLocatorSync)
-        ikMainControlSyncPos = SEMathHelper.getWorldPosition(self.FKArmControls[-1].ControlObject)
-        SEMathHelper.setWorldPosition(self.ArmPVControl.ControlObject, pvSyncPos)
-        SEMathHelper.setWorldPosition(self.ArmIKMainControl.ControlObject, ikMainControlSyncPos)
+        
+        #pvSyncPos = SEMathHelper.getWorldPosition(self.PVLocatorSync)
+        #ikMainControlSyncPos = SEMathHelper.getWorldPosition(self.FKArmControls[-1].ControlObject)
+        #fkWristRot = SEMathHelper.getWorldRotation(self.FKArmControls[-1].ControlObject)
 
+        #SEMathHelper.setWorldPosition(self.ArmPVControl.ControlObject, pvSyncPos)
+        #SEMathHelper.setWorldPosition(self.ArmIKMainControl.ControlObject, ikMainControlSyncPos)
+        #SEMathHelper.setWorldRotation(self.ArmIKMainControl.ControlObject, fkWristRot)
+
+        cmds.delete(cmds.pointConstraint(self.PVLocatorSync, self.ArmPVControl.ControlObject))
+        cmds.delete(cmds.pointConstraint(self.FKArmControls[-1].ControlObject, self.ArmIKMainControl.ControlObject))
+        cmds.delete(cmds.orientConstraint(self.FKArmControls[-1].ControlObject, self.ArmIKMainControl.ControlObject))
 
     def build(
             self,
