@@ -498,6 +498,9 @@ class RigHumanArm(RigComponent):
         if armParent:
             cmds.parentConstraint(armParent, ikJointsGroup, mo = 1)
 
+        # Create ik wrist rotation constraint.
+        cmds.orientConstraint(armIKMainControl.ControlObject, ikWristJoint)
+
         # Create FK arm joints.
         fkShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sFKPrefix + armJoints[0], parentOnly = True)[0]
         fkElbowJoint = cmds.duplicate(armJoints[1], n = SERigNaming.sFKPrefix + armJoints[1], parentOnly = True)[0]
