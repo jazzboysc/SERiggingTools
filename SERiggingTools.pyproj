@@ -45,6 +45,9 @@
     <Compile Include="Rig\SERigBipedLimbComponent.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Rig\SERigBipedNeckComponent.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Rig\SERigSpineComponent.py">
       <SubType>Code</SubType>
     </Compile>

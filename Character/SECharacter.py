@@ -5,6 +5,7 @@ from ..Base import SERigNaming
 from ..Base import SERigEnum
 from ..Rig import SERigSpineComponent
 from ..Rig import SERigBipedLimbComponent
+from ..Rig import SERigBipedNeckComponent
 from . import SECharacterDeform
 
 import maya.cmds as cmds
@@ -103,6 +104,8 @@ def createRigComponents(baseRig, spineIKTwist):
 
     rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
 
+    neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
+
     # Spine.
     spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = baseRig, 
                                                  rigSide = SERigEnum.eRigSide.RS_Center, 
@@ -177,5 +180,15 @@ def createRigComponents(baseRig, spineIKTwist):
     rightHand.build(
             fingers = rightHandJnts,
             armFKFingerAttachPoint = 'R_Wrist',
+            rigScale = sceneScale
+            )
+
+    # Neck.
+    neck = SERigBipedNeckComponent.RigHumanNeck(prefix = 'C_Neck', baseRig = baseRig,
+                                                  rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                  rigType = SERigEnum.eRigType.RT_Neck)
+    neck.build(
+            neckJoints = neckJnts,
+            fkNeckAttachPoint = 'C_ChestEnd',
             rigScale = sceneScale
             )
