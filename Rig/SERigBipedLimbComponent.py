@@ -32,6 +32,9 @@ class RigHumanLeg(RigComponent):
         self.FKLegControls = []
         self.LegPVControl = None
 
+    def syncIKToFK():
+        pass
+
     def build(
             self,
             legJoints = [],  # 0: hip, -1: toe, -2: ball, -3: ankle
@@ -415,6 +418,15 @@ class RigHumanArm(RigComponent):
         self.ArmIKMainControl = None
         self.ArmPVControl = None
 
+        self.PVLocatorSync = None
+
+    def syncIKToFK(self):
+        pvSyncPos = SEMathHelper.getWorldPosition(self.PVLocatorSync)
+        ikMainControlSyncPos = SEMathHelper.getWorldPosition(self.FKArmControls[-1].ControlObject)
+        SEMathHelper.setWorldPosition(self.ArmPVControl.ControlObject, pvSyncPos)
+        SEMathHelper.setWorldPosition(self.ArmIKMainControl.ControlObject, ikMainControlSyncPos)
+
+
     def build(
             self,
             armJoints = [],  # 0: shoulder, 1: elbow, 2: wrist
@@ -564,6 +576,14 @@ class RigHumanArm(RigComponent):
 
         cmds.orientConstraint(curFKControl.ControlObject, nextFKJnt)
         cmds.pointConstraint(curFKControl.ControlObject, nextFKJnt)
+
+        # Create PV sync.
+        if cmds.objExists(armPVLocator):
+            armPVLocatorSync = cmds.duplicate(armPVLocator, n = armPVLocator + SERigNaming.s_Sync, rr = True)
+            cmds.parent(armPVLocatorSync, self.RigPartsGrp)
+            cmds.parentConstraint(fkElbowJoint, armPVLocatorSync, mo = 1)
+            cmds.hide(armPVLocatorSync)
+            self.PVLocatorSync = armPVLocatorSync
 
         # Create arm PV control.
         armPVControl = SERigControl.RigDiamondControl(

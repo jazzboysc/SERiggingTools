@@ -20,6 +20,7 @@ sCurve              = 'Curve'
 sSplineIKHandle     = 'Spline_ikHandle'
 sIKHandle           = 'ikHandle'
 sPoleVector         = 'PV'
+sSync               = 'Sync'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
@@ -41,6 +42,7 @@ s_Curve              = '_' + sCurve
 s_SplineIKHandle     = '_' + sSplineIKHandle
 s_IKHandle           = '_' + sIKHandle
 s_PoleVector         = '_' + sPoleVector
+s_Sync               = '_' + sSync
 
 sFootExtJnt         = 'footExtJnt'
 sFootIntJnt         = 'footIntJnt'

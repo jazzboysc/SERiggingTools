@@ -5,6 +5,9 @@ def getWorldPosition(object):
     res = cmds.xform(object, q = True, t = True, ws = True)
     return res
 
+def setWorldPosition(object, wPos):
+    cmds.xform(object, t = wPos, ws = True)
+
 def getDistance3(a, b):
     dx = a[0] - b[0]
     dy = a[1] - b[1]

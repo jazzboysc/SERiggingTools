@@ -80,6 +80,14 @@ def build(
 
     return baseRig
 
+gLeftArm = None
+
+def leftArmSyncIKToFK():
+    global gLeftArm
+    if gLeftArm != None:
+        gLeftArm.syncIKToFK()
+    else:
+        print('gLeftArm is None')
 
 def createRigComponents(baseRig, spineIKTwist):
 
@@ -142,10 +150,11 @@ def createRigComponents(baseRig, spineIKTwist):
             )
 
     # Left arm.
-    leftArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'L_Arm', baseRig = baseRig,
+    global gLeftArm
+    gLeftArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'L_Arm', baseRig = baseRig,
                                                   rigSide = SERigEnum.eRigSide.RS_Left, 
                                                   rigType = SERigEnum.eRigType.RT_Component)
-    leftArm.build(
+    gLeftArm.build(
             armJoints = leftArmJnts,
             armPVLocator = 'locator_L_ArmPV',
             chestEndJoint = 'C_ChestEnd',
