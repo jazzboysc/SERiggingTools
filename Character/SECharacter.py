@@ -19,6 +19,8 @@ rootJnt = 'Root'
 headJnt = 'C_Head'
 gLeftArm = None
 gRightArm = None
+gLeftLeg = None
+gRightLeg = None
 
 def build(
           characterName, 
@@ -98,6 +100,22 @@ def rightArmSyncIKToFK():
     else:
         print('gRightArm is None')
 
+def leftLegSyncIKToFK():
+
+    global gLeftLeg
+    if gLeftLeg != None:
+        gLeftLeg.syncIKToFK()
+    else:
+        print('gLeftLeg is None')
+
+def rightLegSyncIKToFK():
+
+    global gRightLeg
+    if gRightLeg != None:
+        gRightLeg.syncIKToFK()
+    else:
+        print('gRightLeg is None')
+
 def createRigComponents(baseRig, spineIKTwist):
 
     # Prepare joints.
@@ -137,10 +155,11 @@ def createRigComponents(baseRig, spineIKTwist):
                 )
 
     # Left Leg.
-    leftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = baseRig,
+    global gLeftLeg
+    gLeftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = baseRig,
                                                   rigSide = SERigEnum.eRigSide.RS_Left, 
                                                   rigType = SERigEnum.eRigType.RT_Component)
-    leftLeg.build(
+    gLeftLeg.build(
             legJoints = leftLegJnts,
             footHelperJoints = leftFootHelperJoints,
             legPVLocator = 'locator_L_LegPV',
@@ -148,10 +167,11 @@ def createRigComponents(baseRig, spineIKTwist):
             )
 
     # Right Leg.
-    rightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = baseRig,
+    global gRightLeg
+    gRightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = baseRig,
                                                    rigSide = SERigEnum.eRigSide.RS_Right, 
                                                    rigType = SERigEnum.eRigType.RT_Component)
-    rightLeg.build(
+    gRightLeg.build(
             legJoints = rightLegJnts,
             footHelperJoints = rightFootHelperJoints,
             legPVLocator = 'locator_R_LegPV',

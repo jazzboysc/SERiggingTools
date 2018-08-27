@@ -8,10 +8,10 @@ from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
 
 #-----------------------------------------------------------------------------
-# Rig Human Leg Class
+# Rig Human Limb Base Class
 # Sun Che
 #-----------------------------------------------------------------------------
-class RigHumanLeg(RigComponent):
+class RigHumanLimb(RigComponent):
     def __init__(
                  self, 
                  prefix = 'new',
@@ -23,6 +23,51 @@ class RigHumanLeg(RigComponent):
         RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
 
         # Add public members.
+        self.LimbIKMainControl = None
+        self.LimbIKMainControlSyncTarget = None
+        self.LimbPVControl = None
+        self.PVLocatorSync = None
+
+    def createPVLocatorSync(self, limbPVLocator, parentJoint):
+
+        if cmds.objExists(limbPVLocator) and cmds.objExists(parentJoint):
+
+            self.PVLocatorSync = cmds.duplicate(limbPVLocator, n = limbPVLocator + SERigNaming.s_Sync, rr = True, po = True)
+            cmds.parent(self.PVLocatorSync, w = 1) # Parent to world space first.
+            cmds.parent(self.PVLocatorSync, self.RigPartsGrp)
+            cmds.parentConstraint(parentJoint, self.PVLocatorSync, mo = 1)
+            cmds.hide(self.PVLocatorSync)
+
+        else:
+            print('Cannot create limb PV locator sync.')
+
+    def syncIKToFK(self):
+
+        if self.LimbIKMainControl and self.LimbIKMainControlSyncTarget and self.LimbPVControl and self.PVLocatorSync:
+
+            cmds.delete(cmds.pointConstraint(self.PVLocatorSync, self.LimbPVControl.ControlObject))
+            cmds.delete(cmds.pointConstraint(self.LimbIKMainControlSyncTarget.ControlObject, self.LimbIKMainControl.ControlObject))
+            cmds.delete(cmds.orientConstraint(self.LimbIKMainControlSyncTarget.ControlObject, self.LimbIKMainControl.ControlObject))
+
+        else:
+            print('Delegates not created.')
+
+#-----------------------------------------------------------------------------
+# Rig Human Leg Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigHumanLeg(RigHumanLimb):
+    def __init__(
+                 self, 
+                 prefix = 'new',
+                 baseRig = None,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown
+                 ):
+
+        RigHumanLimb.__init__(self, prefix, baseRig, rigSide, rigType)
+
+        # Add public members.
         self.FootHelperJointsGroup = cmds.group(n = prefix + '_FootHelperJointsGrp', p = self.JointsGrp, em = 1)
         self.FootHelperJoints = None
         self.FootIKMainControl = None
@@ -31,9 +76,6 @@ class RigHumanLeg(RigComponent):
         self.FootRotationControl = None
         self.FKLegControls = []
         self.LegPVControl = None
-
-    def syncIKToFK():
-        pass
 
     def build(
             self,
@@ -73,6 +115,7 @@ class RigHumanLeg(RigComponent):
                                 flipScaleZ = flipScaleXYZ
                                 )
         self.FootIKMainControl = footIKMainControl
+        self.LimbIKMainControl = footIKMainControl
 
         if self.RigSide == SERigEnum.eRigSide.RS_Right:
             ikMainControlOffsetX = -0.5
@@ -144,6 +187,7 @@ class RigHumanLeg(RigComponent):
                                  flipScaleX = flipScaleX
                                  )
         self.LegPVControl = legPVControl
+        self.LimbPVControl = legPVControl
         
         # Move leg PV locator from builder scene to this component.
         cmds.parent(legPVLocator, self.RigPartsGrp)
@@ -224,11 +268,17 @@ class RigHumanLeg(RigComponent):
             preParent = curFKControl.ControlObject
             curScaleYZ *= 0.75
 
+        self.LimbIKMainControlSyncTarget = self.FKLegControls[2]
+        print(self.LimbIKMainControlSyncTarget.ControlObject)
+
         # Attach fk joints to current rig component.
         fkJointsGroup = cmds.group(n = self.Prefix + '_FK_JointsGrp', em = 1, p = self.JointsGrp)
         cmds.parent(fkJoints[0], fkJointsGroup)
         fkJointsParent = SEJointHelper.getFirstParentJoint(legJoints[0])
         cmds.parentConstraint(fkJointsParent, fkJointsGroup, mo = 1)
+
+        # Create PV sync.
+        self.createPVLocatorSync(legPVLocator, fkJoints[1])
 
         # Create FK IK blenders.
         if self.BaseRig:
@@ -401,7 +451,7 @@ class RigHumanLeg(RigComponent):
 # Rig Human Arm Class
 # Sun Che
 #-----------------------------------------------------------------------------
-class RigHumanArm(RigComponent):
+class RigHumanArm(RigHumanLimb):
     def __init__(
                  self, 
                  prefix = 'new',
@@ -410,29 +460,13 @@ class RigHumanArm(RigComponent):
                  rigType = SERigEnum.eRigType.RT_Unknown
                  ):
 
-        RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
+        RigHumanLimb.__init__(self, prefix, baseRig, rigSide, rigType)
 
         # Add public members.
         self.FKArmControls = []
         self.ClavRotationControl = None
         self.ArmIKMainControl = None
         self.ArmPVControl = None
-
-        self.PVLocatorSync = None
-
-    def syncIKToFK(self):
-        
-        #pvSyncPos = SEMathHelper.getWorldPosition(self.PVLocatorSync)
-        #ikMainControlSyncPos = SEMathHelper.getWorldPosition(self.FKArmControls[-1].ControlObject)
-        #fkWristRot = SEMathHelper.getWorldRotation(self.FKArmControls[-1].ControlObject)
-
-        #SEMathHelper.setWorldPosition(self.ArmPVControl.ControlObject, pvSyncPos)
-        #SEMathHelper.setWorldPosition(self.ArmIKMainControl.ControlObject, ikMainControlSyncPos)
-        #SEMathHelper.setWorldRotation(self.ArmIKMainControl.ControlObject, fkWristRot)
-
-        cmds.delete(cmds.pointConstraint(self.PVLocatorSync, self.ArmPVControl.ControlObject))
-        cmds.delete(cmds.pointConstraint(self.FKArmControls[-1].ControlObject, self.ArmIKMainControl.ControlObject))
-        cmds.delete(cmds.orientConstraint(self.FKArmControls[-1].ControlObject, self.ArmIKMainControl.ControlObject))
 
     def build(
             self,
@@ -493,6 +527,7 @@ class RigHumanArm(RigComponent):
                                 flipScaleZ = flipScaleXYZ
                                 )
         self.ArmIKMainControl = armIKMainControl
+        self.LimbIKMainControl = armIKMainControl
 
         # Create IK arm joints.
         ikShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sIKPrefix + armJoints[0], parentOnly = True)[0]
@@ -584,13 +619,10 @@ class RigHumanArm(RigComponent):
         cmds.orientConstraint(curFKControl.ControlObject, nextFKJnt)
         cmds.pointConstraint(curFKControl.ControlObject, nextFKJnt)
 
+        self.LimbIKMainControlSyncTarget = self.FKArmControls[-1]
+
         # Create PV sync.
-        if cmds.objExists(armPVLocator):
-            armPVLocatorSync = cmds.duplicate(armPVLocator, n = armPVLocator + SERigNaming.s_Sync, rr = True)
-            cmds.parent(armPVLocatorSync, self.RigPartsGrp)
-            cmds.parentConstraint(fkElbowJoint, armPVLocatorSync, mo = 1)
-            cmds.hide(armPVLocatorSync)
-            self.PVLocatorSync = armPVLocatorSync
+        self.createPVLocatorSync(armPVLocator, fkElbowJoint)
 
         # Create arm PV control.
         armPVControl = SERigControl.RigDiamondControl(
@@ -605,6 +637,7 @@ class RigHumanArm(RigComponent):
                                  flipScaleX = flipScaleX
                                  )
         self.ArmPVControl = armPVControl
+        self.LimbPVControl = armPVControl
         
         # Move arm PV locator from builder scene to this component.
         cmds.parent(armPVLocator, self.RigPartsGrp)
