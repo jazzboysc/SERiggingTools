@@ -24,6 +24,7 @@ class RigHumanLimb(RigComponent):
 
         # Add public members.
         self.LimbIKMainControl = None
+        self.LimbIKMainRotationControl = None
         self.LimbIKMainControlSyncTarget = None
         self.LimbPVControl = None
         self.PVLocatorSync = None
@@ -43,11 +44,11 @@ class RigHumanLimb(RigComponent):
 
     def syncIKToFK(self):
 
-        if self.LimbIKMainControl and self.LimbIKMainControlSyncTarget and self.LimbPVControl and self.PVLocatorSync:
+        if self.LimbIKMainControl and self.LimbIKMainControlSyncTarget and self.LimbPVControl and self.PVLocatorSync and self.LimbIKMainRotationControl:
 
             cmds.delete(cmds.pointConstraint(self.PVLocatorSync, self.LimbPVControl.ControlObject))
             cmds.delete(cmds.pointConstraint(self.LimbIKMainControlSyncTarget.ControlObject, self.LimbIKMainControl.ControlObject))
-            cmds.delete(cmds.orientConstraint(self.LimbIKMainControlSyncTarget.ControlObject, self.LimbIKMainControl.ControlObject))
+            cmds.delete(cmds.orientConstraint(self.LimbIKMainControlSyncTarget.ControlObject, self.LimbIKMainRotationControl.ControlObject))
 
         else:
             print('Delegates not created.')
@@ -70,6 +71,7 @@ class RigHumanLeg(RigHumanLimb):
         # Add public members.
         self.FootHelperJointsGroup = cmds.group(n = prefix + '_FootHelperJointsGrp', p = self.JointsGrp, em = 1)
         self.FootHelperJoints = None
+        self.AnkleIKRotationControl = None
         self.FootIKMainControl = None
         self.FootBaseSwiveControl = None
         self.FootToeSwiveControl = None
@@ -98,6 +100,7 @@ class RigHumanLeg(RigHumanLimb):
         flipScaleXYZ = False
         if self.RigSide == SERigEnum.eRigSide.RS_Right:
             flipScaleXYZ = True
+
         footIKMainControl = SERigControl.RigFootControl(
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_Foot,
@@ -109,7 +112,7 @@ class RigHumanLeg(RigHumanLimb):
                                 translateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                 rotateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                 parent = self.IKControlGroup, 
-                                lockChannels = ['s', 'v'],
+                                lockChannels = ['s', 'r', 'v'],
                                 flipScaleX = flipScaleXYZ,
                                 flipScaleY = flipScaleXYZ,
                                 flipScaleZ = flipScaleXYZ
@@ -125,6 +128,21 @@ class RigHumanLeg(RigHumanLimb):
 
         # Adjust main IK control's pivot to ankle's position.
         SEMathHelper.movePivotTo(footIKMainControl.ControlObject, legJoints[-3])
+
+        # Create ankle IK rotation control.
+        ankleIKRotationControl = SERigControl.RigCircleControl(
+                                rigSide = self.RigSide,
+                                rigType = SERigEnum.eRigType.RT_Ankle,
+                                rigFacing = SERigEnum.eRigFacing.RF_X,
+                                prefix = self.Prefix + '_IK_Rotation', 
+                                scale = rigScale * 9, 
+                                translateTo = legJoints[-3],
+                                rotateTo = legJoints[-3], 
+                                parent = footIKMainControl.ControlObject, 
+                                lockChannels = ['s', 't', 'v']
+                                )
+        self.AnkleIKRotationControl = ankleIKRotationControl
+        self.LimbIKMainRotationControl = ankleIKRotationControl
 
         # Create foot base swive control.
         flipScaleX = False
@@ -194,8 +212,8 @@ class RigHumanLeg(RigHumanLimb):
         cmds.pointConstraint(legPVControl.ControlObject, legPVLocator)
         cmds.hide(legPVLocator)
 
-        # Attach foot helper joints to the foot IK main control.
-        cmds.parentConstraint(footIKMainControl.ControlObject, self.FootHelperJointsGroup, mo = 1)
+        # Attach foot helper joints to ankle IK rotation control.
+        cmds.parentConstraint(ankleIKRotationControl.ControlObject, self.FootHelperJointsGroup, mo = 1)
 
         # Create IK leg joints.
         ikJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sIKPrefix)
@@ -528,6 +546,7 @@ class RigHumanArm(RigHumanLimb):
                                 )
         self.ArmIKMainControl = armIKMainControl
         self.LimbIKMainControl = armIKMainControl
+        self.LimbIKMainRotationControl = armIKMainControl
 
         # Create IK arm joints.
         ikShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sIKPrefix + armJoints[0], parentOnly = True)[0]
