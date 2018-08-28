@@ -28,6 +28,8 @@ class RigHumanLimb(RigComponent):
         self.LimbIKMainControlSyncTarget = None
         self.LimbPVControl = None
         self.PVLocatorSync = None
+        self.LimbFKControls = []
+        self.LimbFKControlSyncTargets = []
 
     def createPVLocatorSync(self, limbPVLocator, parentJoint):
 
@@ -52,6 +54,17 @@ class RigHumanLimb(RigComponent):
 
         else:
             print('Delegates not created.')
+
+    def syncFKToIK(self):
+        
+        numFKControls = len(self.LimbFKControls)
+        numFKControlTargets = len(self.LimbFKControlSyncTargets)
+
+        if numFKControls == numFKControlTargets:
+            for fkControl, fkControlTarget in zip(self.LimbFKControls, self.LimbFKControlSyncTargets):
+                cmds.delete(cmds.orientConstraint(fkControlTarget, fkControl.ControlObject))
+        else:
+            print('The numbers of FK controls and control targets do not match.')
 
 #-----------------------------------------------------------------------------
 # Rig Human Leg Class
@@ -294,6 +307,15 @@ class RigHumanLeg(RigHumanLimb):
         cmds.parent(fkJoints[0], fkJointsGroup)
         fkJointsParent = SEJointHelper.getFirstParentJoint(legJoints[0])
         cmds.parentConstraint(fkJointsParent, fkJointsGroup, mo = 1)
+
+        # FK control delegate.
+        for fkLegControl in self.FKLegControls:
+            self.LimbFKControls.append(fkLegControl)
+
+        # FK control sync target delegate.
+        ikJointsForDelegate = ikJoints[:-1] # Remove toe joint
+        for ikJointTarget in ikJointsForDelegate:
+            self.LimbFKControlSyncTargets.append(ikJointTarget)
 
         # Create PV sync.
         self.createPVLocatorSync(legPVLocator, fkJoints[1])
@@ -638,6 +660,15 @@ class RigHumanArm(RigHumanLimb):
         cmds.orientConstraint(curFKControl.ControlObject, nextFKJnt)
         cmds.pointConstraint(curFKControl.ControlObject, nextFKJnt)
 
+        # FK control delegate.
+        for fkArmControl in self.FKArmControls:
+            self.LimbFKControls.append(fkArmControl)
+
+        # FK control sync target delegate.
+        for ikJoint in ikJoints:
+            self.LimbFKControlSyncTargets.append(ikJoint)
+
+        # IK main control sync target delegate.
         self.LimbIKMainControlSyncTarget = self.FKArmControls[-1]
 
         # Create PV sync.

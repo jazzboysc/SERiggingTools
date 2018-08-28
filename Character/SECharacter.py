@@ -100,6 +100,22 @@ def rightArmSyncIKToFK():
     else:
         print('gRightArm is None')
 
+def leftArmSyncFKToIK():
+
+    global gLeftArm
+    if gLeftArm != None:
+        gLeftArm.syncFKToIK()
+    else:
+        print('gLeftArm is None')
+
+def rightArmSyncFKToIK():
+
+    global gRightArm
+    if gRightArm != None:
+        gRightArm.syncFKToIK()
+    else:
+        print('gRightArm is None')
+
 def leftLegSyncIKToFK():
 
     global gLeftLeg
@@ -108,11 +124,27 @@ def leftLegSyncIKToFK():
     else:
         print('gLeftLeg is None')
 
+def leftLegSyncFKToIK():
+
+    global gLeftLeg
+    if gLeftLeg != None:
+        gLeftLeg.syncFKToIK()
+    else:
+        print('gLeftLeg is None')
+
 def rightLegSyncIKToFK():
 
     global gRightLeg
     if gRightLeg != None:
         gRightLeg.syncIKToFK()
+    else:
+        print('gRightLeg is None')
+
+def rightLegSyncFKToIK():
+
+    global gRightLeg
+    if gRightLeg != None:
+        gRightLeg.syncFKToIK()
     else:
         print('gRightLeg is None')
 
