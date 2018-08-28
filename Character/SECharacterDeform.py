@@ -157,8 +157,8 @@ def createLowerLimbTwistJoints(
                                maxKnobCount = 5
                                ):
 
-    # If this function succeeded, joints which will be slaved are returned through this list.
-    toBeSlaved = []
+    # If this function succeeded, joints upon which slave joints will be created are returned through this list.
+    slaveMasters = []
 
     if baseRig == None or lowerLimbJoint == None:
         print('Unable to create lower limb twist joints.')
@@ -195,7 +195,7 @@ def createLowerLimbTwistJoints(
     cmds.parent(twistIK, childJoint)
     cmds.pointConstraint(lowerLimbJoint, twistIK)
 
-    toBeSlaved.append(lowerLimbJoint)
+    slaveMasters.append(lowerLimbJoint)
 
     # Create twist knobs.
     if knobCount > 0 and knobCount < maxKnobCount:
@@ -225,16 +225,16 @@ def createLowerLimbTwistJoints(
             w0 -= 1
             w1 += 1
 
-            toBeSlaved.append(knobJoint)
+            slaveMasters.append(knobJoint)
 
-    toBeSlaved.append(twistBeginJoint)
-    toBeSlaved.append(childJoint)
+    slaveMasters.append(twistBeginJoint)
+    slaveMasters.append(childJoint)
 
-    print('To be slaved joints:')
-    for i in toBeSlaved:
+    print('Slave master joints:')
+    for i in slaveMasters:
         print(i)
 
-    return toBeSlaved
+    return slaveMasters
 
 
 def saveSkinWeights(characterName, mainProjectPath, geoList = []):
