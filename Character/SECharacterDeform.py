@@ -156,6 +156,10 @@ def createLowerLimbTwistJoints(
                                knobCount = 2, 
                                maxKnobCount = 5
                                ):
+
+    # If this function succeeded, joints which will be slaved are returned through this list.
+    toBeSlaved = []
+
     if baseRig == None or lowerLimbJoint == None:
         print('Unable to create lower limb twist joints.')
         return
@@ -191,6 +195,8 @@ def createLowerLimbTwistJoints(
     cmds.parent(twistIK, childJoint)
     cmds.pointConstraint(lowerLimbJoint, twistIK)
 
+    toBeSlaved.append(lowerLimbJoint)
+
     # Create twist knobs.
     if knobCount > 0 and knobCount < maxKnobCount:
         twistBeginJointPos = SEMathHelper.getWorldPosition(twistBeginJoint)
@@ -218,6 +224,17 @@ def createLowerLimbTwistJoints(
             cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
             w0 -= 1
             w1 += 1
+
+            toBeSlaved.append(knobJoint)
+
+    toBeSlaved.append(twistBeginJoint)
+    toBeSlaved.append(childJoint)
+
+    print('To be slaved joints:')
+    for i in toBeSlaved:
+        print(i)
+
+    return toBeSlaved
 
 
 def saveSkinWeights(characterName, mainProjectPath, geoList = []):
