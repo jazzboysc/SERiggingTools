@@ -148,6 +148,9 @@ def rightLegSyncFKToIK():
     else:
         print('gRightLeg is None')
 
+def createRigSlaveJoints():
+    pass
+
 def createRigComponents(baseRig, spineIKTwist):
 
     # Prepare joints.
