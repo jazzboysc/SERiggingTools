@@ -299,8 +299,8 @@ class RigHumanLeg(RigHumanLimb):
             preParent = curFKControl.ControlObject
             curScaleYZ *= 0.75
 
+        # IK main control sync target delegate.
         self.LimbIKMainControlSyncTarget = self.FKLegControls[2]
-        print(self.LimbIKMainControlSyncTarget.ControlObject)
 
         # Attach fk joints to current rig component.
         fkJointsGroup = cmds.group(n = self.Prefix + '_FK_JointsGrp', em = 1, p = self.JointsGrp)
