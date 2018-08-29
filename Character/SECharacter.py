@@ -116,6 +116,7 @@ def build(
                             lowerBodyUpperLimbJoints, 
                             lowerBodyLowerLimbJoints,
                             spineJnts,
+                            upperChestJnts,
                             leftLegJnts,
                             rightLegJnts,
                             leftFootHelperJoints,

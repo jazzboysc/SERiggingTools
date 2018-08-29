@@ -42,12 +42,12 @@ def createUpperLimbSlaveJoints(upperLimbSlaveMasterJnts = [], lowerLimbTopJoint 
 
     return slaveJnts
 
-def createLowerLimbSlaveJoints(lowerLimbSlaveMasterJnts = []):
+def createSlaveJointsHelper(masterJnts = []):
 
     slaveJnts = []
 
     preParent = None
-    for masterJnt in lowerLimbSlaveMasterJnts:
+    for masterJnt in masterJnts:
 
         cmds.select(cl = 1)
         curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
@@ -63,6 +63,25 @@ def createLowerLimbSlaveJoints(lowerLimbSlaveMasterJnts = []):
         if preParent:
             cmds.parent(curSlaveJoint, preParent)
         preParent = curSlaveJoint
+
+    return slaveJnts
+
+def createSlaveJointsHelperNoHierarchy(masterJnts = []):
+
+    slaveJnts = []
+
+    for masterJnt in masterJnts:
+
+        cmds.select(cl = 1)
+        curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+        cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+        cmds.makeIdentity(curSlaveJoint, apply = True)
+        
+        pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+        oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+
+        curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+        slaveJnts.append(curSlaveJntsInfo)
 
     return slaveJnts
 
@@ -85,6 +104,7 @@ def build(
           lowerBodyUpperLimbJoints = [],
           lowerBodyLowerLimbJoints = [],
           spineJnts = [],
+          upperChestJnts = [],
           leftLegJnts = [],
           rightLegJnts = [],
           leftFootHelperJoints = [],
@@ -118,28 +138,51 @@ def build(
         lowerBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
 
     # Create slave joints.
+
+    # Create arm slaves.
     leftUpperArmSlaveJnts = createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[0], upperBodyLowerLimbSlaveMasterJnts[0][0])
     rightUpperArmSlaveJnts = createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[1], upperBodyLowerLimbSlaveMasterJnts[1][0])
-    leftLowerArmSlaveJnts = createLowerLimbSlaveJoints(upperBodyLowerLimbSlaveMasterJnts[0])
-    rightLowerArmSlaveJnts = createLowerLimbSlaveJoints(upperBodyLowerLimbSlaveMasterJnts[1])
-
-    leftUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0])
-    rightUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0])
-    leftLowerLegSlaveJnts = createLowerLimbSlaveJoints(lowerBodyLowerLimbSlaveMasterJnts[0])
-    rightLowerLegSlaveJnts = createLowerLimbSlaveJoints(lowerBodyLowerLimbSlaveMasterJnts[1])
+    leftLowerArmSlaveJnts = createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[0])
+    rightLowerArmSlaveJnts = createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[1])
 
     cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[-1][0])
     cmds.parent(rightLowerArmSlaveJnts[0][0], rightUpperArmSlaveJnts[-1][0])
+
+    # Create leg slaves.
+    leftUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0])
+    rightUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0])
+    leftLowerLegSlaveJnts = createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[0])
+    rightLowerLegSlaveJnts = createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[1])
+
+    # Parent leg slaves to spine.
     cmds.parent(leftLowerLegSlaveJnts[0][0], leftUpperLegSlaveJnts[-1][0])
     cmds.parent(rightLowerLegSlaveJnts[0][0], rightUpperLegSlaveJnts[-1][0])
 
-    #leftArmSlaveMasterJnts = upperBodyUpperLimbSlaveMasterJnts[0] + upperBodyLowerLimbSlaveMasterJnts[0]
-    #for i in leftArmSlaveMasterJnts:
-    #    print(i)
+    # Create spine slaves.
+    spineSlaveJnts = createSlaveJointsHelper(spineJnts)
 
-    #rightArmSlaveMasterJnts = upperBodyUpperLimbSlaveMasterJnts[1] + upperBodyLowerLimbSlaveMasterJnts[1]
-    #for i in rightArmSlaveMasterJnts:
-    #    print(i)
+    cmds.parent(leftUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
+    cmds.parent(rightUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
+
+    # Create upper chest slaves and parent them to the spine.
+    upperChestSlaveJnts = createSlaveJointsHelperNoHierarchy(upperChestJnts)
+    for upperChestSlaveJointInfo in upperChestSlaveJnts:
+        cmds.parent(upperChestSlaveJointInfo[0], spineSlaveJnts[-1][0])
+
+    # Parent arm slaves to upper chest slaves.
+    cmds.parent(leftUpperArmSlaveJnts[0][0], upperChestSlaveJnts[0][0])
+    cmds.parent(rightUpperArmSlaveJnts[0][0], upperChestSlaveJnts[1][0])
+
+    # Create foot slaves.
+    leftFootJnts = leftLegJnts[3:]
+    leftFootSlaveJnts = createSlaveJointsHelper(leftFootJnts)
+    
+    rightFootJnts = rightLegJnts[3:]
+    rightFootSlaveJnts = createSlaveJointsHelper(rightFootJnts)
+
+    cmds.parent(leftFootSlaveJnts[0][0], leftLowerLegSlaveJnts[-1][0])
+    cmds.parent(rightFootSlaveJnts[0][0], rightLowerLegSlaveJnts[-1][0])
+
 
     # Load skin weights.
     if loadSkinWeights:
