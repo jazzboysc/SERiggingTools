@@ -12,18 +12,59 @@ from ..Utils import SEJointHelper
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
 
-def createUpperLimbSlaveJoints(upperLimbSlaveMasterJnts = []):
+def createUpperLimbSlaveJoints(upperLimbSlaveMasterJnts = [], lowerLimbTopJoint = ''):
 
     slaveJnts = []
 
+    preParent = None
     for masterJnt in upperLimbSlaveMasterJnts:
+
         cmds.select(cl = 1)
         curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
         cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
         cmds.makeIdentity(curSlaveJoint, apply = True)
-        cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+        
+        pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+        oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
 
+        curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+        slaveJnts.append(curSlaveJntsInfo)
 
+        if preParent:
+            cmds.parent(curSlaveJoint, preParent)
+        preParent = curSlaveJoint
+
+    if len(slaveJnts) > 1:
+        cmds.delete(slaveJnts[-1][1])
+
+        if cmds.objExists(lowerLimbTopJoint):
+            cmds.pointConstraint(lowerLimbTopJoint, slaveJnts[-1][0], mo = 0)
+
+    return slaveJnts
+
+def createLowerLimbSlaveJoints(lowerLimbSlaveMasterJnts = []):
+
+    slaveJnts = []
+
+    preParent = None
+    for masterJnt in lowerLimbSlaveMasterJnts:
+
+        cmds.select(cl = 1)
+        curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+        cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+        cmds.makeIdentity(curSlaveJoint, apply = True)
+        
+        pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+        oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+
+        curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+        slaveJnts.append(curSlaveJntsInfo)
+
+        if preParent:
+            cmds.parent(curSlaveJoint, preParent)
+        preParent = curSlaveJoint
+
+    return slaveJnts
 
 def build(
           baseRig, 
@@ -77,6 +118,21 @@ def build(
         lowerBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
 
     # Create slave joints.
+    leftUpperArmSlaveJnts = createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[0], upperBodyLowerLimbSlaveMasterJnts[0][0])
+    rightUpperArmSlaveJnts = createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[1], upperBodyLowerLimbSlaveMasterJnts[1][0])
+    leftLowerArmSlaveJnts = createLowerLimbSlaveJoints(upperBodyLowerLimbSlaveMasterJnts[0])
+    rightLowerArmSlaveJnts = createLowerLimbSlaveJoints(upperBodyLowerLimbSlaveMasterJnts[1])
+
+    leftUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0])
+    rightUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0])
+    leftLowerLegSlaveJnts = createLowerLimbSlaveJoints(lowerBodyLowerLimbSlaveMasterJnts[0])
+    rightLowerLegSlaveJnts = createLowerLimbSlaveJoints(lowerBodyLowerLimbSlaveMasterJnts[1])
+
+    cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[-1][0])
+    cmds.parent(rightLowerArmSlaveJnts[0][0], rightUpperArmSlaveJnts[-1][0])
+    cmds.parent(leftLowerLegSlaveJnts[0][0], leftUpperLegSlaveJnts[-1][0])
+    cmds.parent(rightLowerLegSlaveJnts[0][0], rightUpperLegSlaveJnts[-1][0])
+
     #leftArmSlaveMasterJnts = upperBodyUpperLimbSlaveMasterJnts[0] + upperBodyLowerLimbSlaveMasterJnts[0]
     #for i in leftArmSlaveMasterJnts:
     #    print(i)
@@ -165,7 +221,7 @@ def createUpperLimbTwistJoints(
     if parentJoint:
         cmds.parent(twistIK, parentJoint)
 
-    slaveMasters.append(upperLimbJoint)
+    slaveMasters.append(twistBeginJoint)
 
     # Create twist knobs.
     if knobCount > 0 and knobCount < maxKnobCount:
@@ -197,7 +253,7 @@ def createUpperLimbTwistJoints(
 
             slaveMasters.append(knobJoint)
 
-    slaveMasters.append(twistBeginJoint)
+    slaveMasters.append(upperLimbJoint)
 
     if 0:
         print('Slave master joints:')
