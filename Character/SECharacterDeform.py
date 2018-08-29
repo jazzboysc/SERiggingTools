@@ -12,6 +12,19 @@ from ..Utils import SEJointHelper
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
 
+def createUpperLimbSlaveJoints(upperLimbSlaveMasterJnts = []):
+
+    slaveJnts = []
+
+    for masterJnt in upperLimbSlaveMasterJnts:
+        cmds.select(cl = 1)
+        curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+        cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+        cmds.makeIdentity(curSlaveJoint, apply = True)
+        cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+
+
+
 def build(
           baseRig, 
           mainProjectPath, 
@@ -29,20 +42,48 @@ def build(
           upperBodyUpperLimbJoints = [],
           upperBodyLowerLimbJoints = [],
           lowerBodyUpperLimbJoints = [],
-          lowerBodyLowerLimbJoints = []
+          lowerBodyLowerLimbJoints = [],
+          spineJnts = [],
+          leftLegJnts = [],
+          rightLegJnts = [],
+          leftFootHelperJoints = [],
+          rightFootHelperJoints = [],
+          leftArmJnts = [],
+          rightArmJnts = [],
+          leftHandJnts = [],
+          rightHandJnts = [],
+          neckJnts = []
           ):
-    # Create twist joints.
+
+    # Create twist joints for all the limbs.
+    upperBodyUpperLimbSlaveMasterJnts = []
     for i in upperBodyUpperLimbJoints:
-        createUpperLimbTwistJoints(baseRig, i, knobCount = upperBodyUpperLimbKnobCount)
+        curUpperLimbSlaveMasterJnts = createUpperLimbTwistJoints(baseRig, i, knobCount = upperBodyUpperLimbKnobCount)
+        upperBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
 
+    upperBodyLowerLimbSlaveMasterJnts = []
     for i in upperBodyLowerLimbJoints:
-        createLowerLimbTwistJoints(baseRig, i, knobCount = upperBodyLowerLimbKnobCount)
+        curLowerLimbSlaveMasterJnts = createLowerLimbTwistJoints(baseRig, i, knobCount = upperBodyLowerLimbKnobCount)
+        upperBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
 
+    lowerBodyUpperLimbSlaveMasterJnts = []
     for i in lowerBodyUpperLimbJoints:
-        createUpperLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyUpperLimbKnobCount)
+        curUpperLimbSlaveMasterJnts = createUpperLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyUpperLimbKnobCount)
+        lowerBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
 
+    lowerBodyLowerLimbSlaveMasterJnts = []
     for i in lowerBodyLowerLimbJoints:
-        createLowerLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyLowerLimbKnobCount)
+        curLowerLimbSlaveMasterJnts = createLowerLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyLowerLimbKnobCount)
+        lowerBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
+
+    # Create slave joints.
+    #leftArmSlaveMasterJnts = upperBodyUpperLimbSlaveMasterJnts[0] + upperBodyLowerLimbSlaveMasterJnts[0]
+    #for i in leftArmSlaveMasterJnts:
+    #    print(i)
+
+    #rightArmSlaveMasterJnts = upperBodyUpperLimbSlaveMasterJnts[1] + upperBodyLowerLimbSlaveMasterJnts[1]
+    #for i in rightArmSlaveMasterJnts:
+    #    print(i)
 
     # Load skin weights.
     if loadSkinWeights:
@@ -77,6 +118,9 @@ def createUpperLimbTwistJoints(
                                knobCount = 2, 
                                maxKnobCount = 5
                                ):
+    # If this function succeeded, joints upon which slave joints will be created are returned through this list.
+    slaveMasters = []
+
     if baseRig == None or upperLimbJoint == None:
         print('Unable to create upper limb twist joints.')
         return
@@ -121,6 +165,8 @@ def createUpperLimbTwistJoints(
     if parentJoint:
         cmds.parent(twistIK, parentJoint)
 
+    slaveMasters.append(upperLimbJoint)
+
     # Create twist knobs.
     if knobCount > 0 and knobCount < maxKnobCount:
         twistBeginJointPos = SEMathHelper.getWorldPosition(twistBeginJoint)
@@ -149,6 +195,17 @@ def createUpperLimbTwistJoints(
             w0 += 1
             w1 -= 1
 
+            slaveMasters.append(knobJoint)
+
+    slaveMasters.append(twistBeginJoint)
+
+    if 0:
+        print('Slave master joints:')
+        for i in slaveMasters:
+            print(i)
+
+    return slaveMasters
+
 def createLowerLimbTwistJoints(
                                baseRig, 
                                lowerLimbJoint, 
@@ -162,7 +219,7 @@ def createLowerLimbTwistJoints(
 
     if baseRig == None or lowerLimbJoint == None:
         print('Unable to create lower limb twist joints.')
-        return
+        return slaveMasters
 
     prefix = lowerLimbJoint
 
@@ -170,7 +227,7 @@ def createLowerLimbTwistJoints(
     childJoint = SEJointHelper.getFirstChildJoint(lowerLimbJoint)
     if childJoint == None:
         print('No child joint found for lower limb:' + lowerLimbJoint)
-        return
+        return slaveMasters
 
     # Create twist end joints.
     twistBeginJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistBegin, parentOnly = True)[0]
@@ -230,9 +287,10 @@ def createLowerLimbTwistJoints(
     slaveMasters.append(twistBeginJoint)
     slaveMasters.append(childJoint)
 
-    print('Slave master joints:')
-    for i in slaveMasters:
-        print(i)
+    if 0:
+        print('Slave master joints:')
+        for i in slaveMasters:
+            print(i)
 
     return slaveMasters
 

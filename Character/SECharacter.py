@@ -55,8 +55,44 @@ def build(
     # Parent the imported skeleton to the rig base.
     cmds.parent(rootJnt, baseRig.JointsGrp)
 
+    # Prepare joints.
+    spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
+
+    upperChestJnts = ['L_Clav', 'R_Clav', 'C_ChestEnd']
+
+    leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
+
+    rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
+
+    leftFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.buildFootHelperJointsMapForLeftSide(legJoints = leftLegJnts,
+        footExtLocator = 'locator_L_Foot_Ext', footIntLocator = 'locator_L_Foot_Int', footBaseLocator = 'locator_L_Foot_Base',
+        footBaseSwiveLocator = 'locator_L_Foot_BaseSwive', footToeSwiveLocator = 'locator_L_Foot_ToeSwive')
+
+    rightFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints)
+
+    leftArmJnts = ['L_Shoulder', 'L_Elbow', 'L_Wrist']
+
+    rightArmJnts = ['R_Shoulder', 'R_Elbow', 'R_Wrist']
+
+    leftHandJnts = ['L_Thumb_0', 'L_Index_0', 'L_Middle_0', 'L_Ring_0', 'L_Pinky_0']
+
+    rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
+
+    neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
+
     # Create rig components.
-    createRigComponents(baseRig, spineIKTwist)
+    createRigComponents(baseRig, 
+                        spineJnts,
+                        leftLegJnts,
+                        rightLegJnts,
+                        leftFootHelperJoints,
+                        rightFootHelperJoints,
+                        leftArmJnts,
+                        rightArmJnts,
+                        leftHandJnts,
+                        rightHandJnts,
+                        neckJnts
+                        )
 
     # Setup model deformation.
     upperBodyUpperLimbJoints = ['L_Shoulder', 'R_Shoulder']
@@ -78,7 +114,18 @@ def build(
                             upperBodyUpperLimbJoints, 
                             upperBodyLowerLimbJoints, 
                             lowerBodyUpperLimbJoints, 
-                            lowerBodyLowerLimbJoints)
+                            lowerBodyLowerLimbJoints,
+                            spineJnts,
+                            leftLegJnts,
+                            rightLegJnts,
+                            leftFootHelperJoints,
+                            rightFootHelperJoints,
+                            leftArmJnts,
+                            rightArmJnts,
+                            leftHandJnts,
+                            rightHandJnts,
+                            neckJnts                            
+                            )
 
     cmds.select(cl=1)
 
@@ -151,30 +198,18 @@ def rightLegSyncFKToIK():
 def createRigSlaveJoints():
     pass
 
-def createRigComponents(baseRig, spineIKTwist):
-
-    # Prepare joints.
-    spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
-
-    leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
-
-    rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
-
-    leftFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.buildFootHelperJointsMapForLeftSide(legJoints = leftLegJnts,
-        footExtLocator = 'locator_L_Foot_Ext', footIntLocator = 'locator_L_Foot_Int', footBaseLocator = 'locator_L_Foot_Base',
-        footBaseSwiveLocator = 'locator_L_Foot_BaseSwive', footToeSwiveLocator = 'locator_L_Foot_ToeSwive')
-
-    rightFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints)
-
-    leftArmJnts = ['L_Shoulder', 'L_Elbow', 'L_Wrist']
-
-    rightArmJnts = ['R_Shoulder', 'R_Elbow', 'R_Wrist']
-
-    leftHandJnts = ['L_Thumb_0', 'L_Index_0', 'L_Middle_0', 'L_Ring_0', 'L_Pinky_0']
-
-    rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
-
-    neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
+def createRigComponents(baseRig, 
+                        spineJnts, 
+                        leftLegJnts, 
+                        rightLegJnts, 
+                        leftFootHelperJoints, 
+                        rightFootHelperJoints,
+                        leftArmJnts,
+                        rightArmJnts,
+                        leftHandJnts,
+                        rightHandJnts,
+                        neckJnts
+                        ):
 
     # Spine.
     spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = baseRig, 
