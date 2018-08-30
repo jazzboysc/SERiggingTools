@@ -26,8 +26,9 @@ def createUpperLimbSlaveJoints(upperLimbSlaveMasterJnts = [], lowerLimbTopJoint 
         
         pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
         oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+        sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-        curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+        curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
         slaveJnts.append(curSlaveJntsInfo)
 
         if preParent:
@@ -56,8 +57,9 @@ def createSlaveJointsHelper(masterJnts = []):
         
         pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
         oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+        sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-        curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+        curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
         slaveJnts.append(curSlaveJntsInfo)
 
         if preParent:
@@ -79,8 +81,9 @@ def createSlaveJointsHelperNoHierarchy(masterJnts = []):
         
         pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
         oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+        sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-        curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+        curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
         slaveJnts.append(curSlaveJntsInfo)
 
     return slaveJnts
@@ -179,6 +182,11 @@ def build(
     cmds.parent(leftUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
     cmds.parent(rightUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
 
+    # Create root slave and parent the spine slave to the root slave.
+    rootSlaveJnt = createSlaveJointsHelperNoHierarchy([rootJnt])
+
+    cmds.parent(spineSlaveJnts[0][0], rootSlaveJnt[0][0])
+
     # Create neck slaves and parent them to the spine slave.
     neckSlaveJnts = createSlaveJointsHelper(neckJnts)
 
@@ -209,6 +217,9 @@ def build(
     cmds.parent(leftFootSlaveJnts[0][0], leftLowerLegSlaveJnts[-1][0])
     cmds.parent(rightFootSlaveJnts[0][0], rightLowerLegSlaveJnts[-1][0])
 
+    # Create deformation group and parent the slave root to it.
+    deformationGroup = cmds.group(n = SERigNaming.sDeformationGroup, p = baseRig.RigGrp, em = 1)
+    cmds.parent(rootSlaveJnt[0][0], deformationGroup)
 
     # Load skin weights.
     if loadSkinWeights:

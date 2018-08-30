@@ -22,6 +22,7 @@ sSplineIKHandle     = 'Spline_ikHandle'
 sIKHandle           = 'ikHandle'
 sPoleVector         = 'PV'
 sSync               = 'Sync'
+sDeformationGroup   = 'DeformationGrp'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup

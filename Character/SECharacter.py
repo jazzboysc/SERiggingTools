@@ -130,7 +130,8 @@ def build(
                             leftHandJnts,
                             rightHandJnts,
                             neckJnts,
-                            facialJnts
+                            facialJnts,
+                            rootJnt
                             )
 
     cmds.select(cl=1)

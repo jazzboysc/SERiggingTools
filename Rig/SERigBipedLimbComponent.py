@@ -230,6 +230,7 @@ class RigHumanLeg(RigHumanLimb):
 
         # Create IK leg joints.
         ikJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sIKPrefix)
+        cmds.hide(ikJoints[0])
 
         # Create IK handles.
         ankleIK = cmds.ikHandle(n = self.Prefix + 'Ankle' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[0], ee = ikJoints[2])[0]
@@ -266,6 +267,7 @@ class RigHumanLeg(RigHumanLimb):
 
         # Create FK leg joints.
         fkJoints = SEJointHelper.duplicateHierarchy(legJoints[0], SERigNaming.sFKPrefix)
+        cmds.hide(fkJoints[0])
 
         # Create FK leg controls.
         preParent = self.FKControlGroup
@@ -576,6 +578,7 @@ class RigHumanArm(RigHumanLimb):
         ikWristJoint = cmds.duplicate(armJoints[2], n = SERigNaming.sIKPrefix + armJoints[2], parentOnly = True)[0]
         cmds.parent(ikWristJoint, ikElbowJoint)
         cmds.parent(ikElbowJoint, ikShoulderJoint)
+        cmds.hide(ikShoulderJoint)
 
         ikJoints = [ikShoulderJoint, ikElbowJoint, ikWristJoint]
 
@@ -602,6 +605,7 @@ class RigHumanArm(RigHumanLimb):
         fkWristJoint = cmds.duplicate(armJoints[2], n = SERigNaming.sFKPrefix + armJoints[2], parentOnly = True)[0]
         cmds.parent(fkWristJoint, fkElbowJoint)
         cmds.parent(fkElbowJoint, fkShoulderJoint)
+        cmds.hide(fkShoulderJoint)
 
         fkJoints = [fkShoulderJoint, fkElbowJoint, fkWristJoint]
         fkRigTypes = [SERigEnum.eRigType.RT_Shoulder, SERigEnum.eRigType.RT_Elbow, SERigEnum.eRigType.RT_Wrist]
