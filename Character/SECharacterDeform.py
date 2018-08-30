@@ -148,6 +148,19 @@ def build(
     cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[-1][0])
     cmds.parent(rightLowerArmSlaveJnts[0][0], rightUpperArmSlaveJnts[-1][0])
 
+    # Create hand slaves and parent them to the arm slaves.
+    leftHandSlaveJnts = []
+    for fingerTopJoint in leftHandJnts:
+        curFingerMasterJnts = SEJointHelper.listHierarchy(fingerTopJoint)
+        curFingerSlaveJnts = createSlaveJointsHelper(curFingerMasterJnts)
+        cmds.parent(curFingerSlaveJnts[0][0], leftLowerArmSlaveJnts[-1][0])
+
+    rightHandSlaveJnts = []
+    for fingerTopJoint in rightHandJnts:
+        curFingerMasterJnts = SEJointHelper.listHierarchy(fingerTopJoint)
+        curFingerSlaveJnts = createSlaveJointsHelper(curFingerMasterJnts)
+        cmds.parent(curFingerSlaveJnts[0][0], rightLowerArmSlaveJnts[-1][0])
+
     # Create leg slaves.
     leftUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0])
     rightUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0])
@@ -173,7 +186,7 @@ def build(
     cmds.parent(leftUpperArmSlaveJnts[0][0], upperChestSlaveJnts[0][0])
     cmds.parent(rightUpperArmSlaveJnts[0][0], upperChestSlaveJnts[1][0])
 
-    # Create foot slaves.
+    # Create foot slaves and parent them to the leg slaves.
     leftFootJnts = leftLegJnts[3:]
     leftFootSlaveJnts = createSlaveJointsHelper(leftFootJnts)
     
