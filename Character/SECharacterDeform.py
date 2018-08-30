@@ -113,7 +113,9 @@ def build(
           rightArmJnts = [],
           leftHandJnts = [],
           rightHandJnts = [],
-          neckJnts = []
+          neckJnts = [],
+          facialJnts = [],
+          rootJnt = ''
           ):
 
     # Create twist joints for all the limbs.
@@ -176,6 +178,17 @@ def build(
 
     cmds.parent(leftUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
     cmds.parent(rightUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
+
+    # Create neck slaves and parent them to the spine slave.
+    neckSlaveJnts = createSlaveJointsHelper(neckJnts)
+
+    cmds.parent(neckSlaveJnts[0][0], spineSlaveJnts[-1][0])
+
+    # Create facial slaves and parent them to the neck slave.
+    facialSlaveJnts = createSlaveJointsHelperNoHierarchy(facialJnts)
+
+    for facialSlaveJoint in facialSlaveJnts:
+        cmds.parent(facialSlaveJoint[0], neckSlaveJnts[-1][0])
 
     # Create upper chest slaves and parent them to the spine.
     upperChestSlaveJnts = createSlaveJointsHelperNoHierarchy(upperChestJnts)

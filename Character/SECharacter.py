@@ -17,6 +17,7 @@ builderFilePath = '%s/%s/Builder/%s_Builder.ma'
 
 rootJnt = 'Root'
 headJnt = 'C_Head'
+
 gLeftArm = None
 gRightArm = None
 gLeftLeg = None
@@ -58,7 +59,7 @@ def build(
     # Prepare joints.
     spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
 
-    upperChestJnts = ['L_Clav', 'R_Clav', 'C_ChestEnd']
+    upperChestJnts = ['L_Clav', 'R_Clav', 'C_ChestEnd', 'L_Breast', 'R_Breast']
 
     leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
 
@@ -79,6 +80,9 @@ def build(
     rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
 
     neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
+
+    facialJnts = ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
+                  'R_EyelidLower', 'C_Jaw', 'C_JawEnd', 'C_LowerTeeth']
 
     # Create rig components.
     createRigComponents(baseRig, 
@@ -125,7 +129,8 @@ def build(
                             rightArmJnts,
                             leftHandJnts,
                             rightHandJnts,
-                            neckJnts                            
+                            neckJnts,
+                            facialJnts
                             )
 
     cmds.select(cl=1)
