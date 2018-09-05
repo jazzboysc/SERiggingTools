@@ -98,7 +98,14 @@ class RigHumanLeg(RigHumanLimb):
             footHelperJoints = {},
             legPVLocator = '',
             rootJoint = '',
-            rigScale = 1.0
+            rigScale = 1.0,
+            fkControlScaleYZ = 19,
+            fkControlScaleYZMultiplier = 0.75,
+            fkControlTransparency = 0.85,
+            ballIKTwistLeft = 90,
+            ballIKTwistRight = 270,
+            toeIKTwistLeft = 90,
+            toeIKTwistRight = 0
             ):
 
         self.FootHelperJoints = self.attachFootHelperJoints(footHelperJoints)
@@ -245,9 +252,9 @@ class RigHumanLeg(RigHumanLimb):
         cmds.pointConstraint(self.FootHelperJoints[SERigNaming.sFootBallProxy], ballIK, mo = 0)
         cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sBallProxyPVlocator], ballIK)
         if self.RigSide == SERigEnum.eRigSide.RS_Left:
-            cmds.setAttr(ballIK + '.twist', 90)
+            cmds.setAttr(ballIK + '.twist', ballIKTwistLeft)
         else:
-            cmds.setAttr(ballIK + '.twist', 270)
+            cmds.setAttr(ballIK + '.twist', ballIKTwistRight)
 
         toeIK = cmds.ikHandle(n = self.Prefix + 'Toe' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[3], ee = ikJoints[4])[0]
         cmds.hide(toeIK)
@@ -255,9 +262,9 @@ class RigHumanLeg(RigHumanLimb):
         cmds.pointConstraint(self.FootHelperJoints[SERigNaming.sFootToeProxy], toeIK, mo = 0)
         cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sToeProxyPVlocator], toeIK)
         if self.RigSide == SERigEnum.eRigSide.RS_Left:
-            cmds.setAttr(toeIK + '.twist', 90)
+            cmds.setAttr(toeIK + '.twist', toeIKTwistLeft)
         else:
-            cmds.setAttr(toeIK + '.twist', 0)
+            cmds.setAttr(toeIK + '.twist', toeIKTwistRight)
 
         # Attach ik joints to current rig component.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
@@ -271,7 +278,7 @@ class RigHumanLeg(RigHumanLimb):
 
         # Create FK leg controls.
         preParent = self.FKControlGroup
-        curScaleYZ = 19
+        curScaleYZ = fkControlScaleYZ
         for i in range(len(fkJoints) - 1):
             curFKJnt = fkJoints[i]
             nextFKJnt = fkJoints[i + 1]
@@ -291,7 +298,7 @@ class RigHumanLeg(RigHumanLimb):
                                     cubeScaleX = distance,
                                     cubeScaleY = curScaleYZ,
                                     cubeScaleZ = curScaleYZ,
-                                    transparency = 0.85
+                                    transparency = fkControlTransparency
                                     )
             self.FKLegControls.append(curFKControl)
 
@@ -299,7 +306,7 @@ class RigHumanLeg(RigHumanLimb):
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
 
             preParent = curFKControl.ControlObject
-            curScaleYZ *= 0.75
+            curScaleYZ *= fkControlScaleYZMultiplier
 
         # IK main control sync target delegate.
         self.LimbIKMainControlSyncTarget = self.FKLegControls[2]
@@ -516,7 +523,10 @@ class RigHumanArm(RigHumanLimb):
             armPVLocator = '',
             rootJoint = '',
             chestEndJoint = '',
-            rigScale = 1.0
+            rigScale = 1.0,
+            fkControlScaleYZ = 10,
+            fkControlScaleYZMultiplier = 0.9,
+            fkControlTransparency = 0.85
             ):
         
         armParent = SEJointHelper.getFirstParentJoint(armJoints[0])
@@ -612,7 +622,7 @@ class RigHumanArm(RigHumanLimb):
 
         # Create FK arm controls.
         preParent = self.FKControlGroup
-        curScaleYZ = 10
+        curScaleYZ = fkControlScaleYZ
         curFKJnt = None
         nextFKJnt = None
         for i in range(len(fkJoints) - 1):
@@ -634,7 +644,7 @@ class RigHumanArm(RigHumanLimb):
                                     cubeScaleX = distance,
                                     cubeScaleY = curScaleYZ,
                                     cubeScaleZ = curScaleYZ,
-                                    transparency = 0.85
+                                    transparency = fkControlTransparency
                                     )
             self.FKArmControls.append(curFKControl)
 
@@ -642,7 +652,7 @@ class RigHumanArm(RigHumanLimb):
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
 
             preParent = curFKControl.ControlObject
-            curScaleYZ *= 0.9
+            curScaleYZ *= fkControlScaleYZMultiplier
 
         # Create Wrist FK control.
         curFKControl = SERigControl.RigCubeControl(
@@ -657,7 +667,7 @@ class RigHumanArm(RigHumanLimb):
                                 cubeScaleX = curScaleYZ,
                                 cubeScaleY = curScaleYZ,
                                 cubeScaleZ = curScaleYZ,
-                                transparency = 0.85
+                                transparency = fkControlTransparency
                                 )
         self.FKArmControls.append(curFKControl)
 

@@ -53,7 +53,17 @@ class RigBipedCharacter():
               upperBodyLowerLimbKnobCount = 2,
               lowerBodyUpperLimbKnobCount = 2,
               lowerBodyLowerLimbKnobCount = 1,
-              mainCtrlOffset = 30
+              mainCtrlOffset = 30,
+              fkLegControlScaleYZ = 19,
+              fkLegControlScaleYZMultiplier = 0.75,
+              fkLegControlTransparency = 0.85,
+              ballIKTwistLeft = 90,
+              ballIKTwistRight = 270,
+              toeIKTwistLeft = 90,
+              toeIKTwistRight = 0,
+              fkArmControlScaleYZ = 10,
+              fkArmControlScaleYZMultiplier = 0.9,
+              fkArmControlTransparency = 0.85
               ):
 
         # Import model.
@@ -116,7 +126,17 @@ class RigBipedCharacter():
                                 rightArmJnts,
                                 leftHandJnts,
                                 rightHandJnts,
-                                neckJnts
+                                neckJnts,
+                                fkLegControlScaleYZ,
+                                fkLegControlScaleYZMultiplier,
+                                fkLegControlTransparency,
+                                ballIKTwistLeft,
+                                ballIKTwistRight,
+                                toeIKTwistLeft,
+                                toeIKTwistRight,
+                                fkArmControlScaleYZ,
+                                fkArmControlScaleYZMultiplier,
+                                fkArmControlTransparency
                                 )
 
         # Setup model deformation.
@@ -172,7 +192,17 @@ class RigBipedCharacter():
                             rightArmJnts,
                             leftHandJnts,
                             rightHandJnts,
-                            neckJnts
+                            neckJnts,
+                            fkLegControlScaleYZ,
+                            fkLegControlScaleYZMultiplier,
+                            fkLegControlTransparency,
+                            ballIKTwistLeft,
+                            ballIKTwistRight,
+                            toeIKTwistLeft,
+                            toeIKTwistRight,
+                            fkArmControlScaleYZ,
+                            fkArmControlScaleYZMultiplier,
+                            fkArmControlTransparency
                             ):
 
         # Spine.
@@ -197,7 +227,14 @@ class RigBipedCharacter():
                 legJoints = leftLegJnts,
                 footHelperJoints = leftFootHelperJoints,
                 legPVLocator = 'locator_L_LegPV',
-                rigScale = sceneScale
+                rigScale = sceneScale,
+                fkControlScaleYZ = fkLegControlScaleYZ,
+                fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
+                fkControlTransparency = fkLegControlTransparency,
+                ballIKTwistLeft = ballIKTwistLeft,
+                ballIKTwistRight = ballIKTwistRight,
+                toeIKTwistLeft = toeIKTwistLeft,
+                toeIKTwistRight = toeIKTwistRight
                 )
         self.LeftLeg = leftLeg
 
@@ -209,7 +246,14 @@ class RigBipedCharacter():
                 legJoints = rightLegJnts,
                 footHelperJoints = rightFootHelperJoints,
                 legPVLocator = 'locator_R_LegPV',
-                rigScale = sceneScale
+                rigScale = sceneScale,
+                fkControlScaleYZ = fkLegControlScaleYZ,
+                fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
+                fkControlTransparency = fkLegControlTransparency,
+                ballIKTwistLeft = ballIKTwistLeft,
+                ballIKTwistRight = ballIKTwistRight,
+                toeIKTwistLeft = toeIKTwistLeft,
+                toeIKTwistRight = toeIKTwistRight
                 )
         self.RightLeg = rightLeg
 
@@ -221,7 +265,10 @@ class RigBipedCharacter():
                 armJoints = leftArmJnts,
                 armPVLocator = 'locator_L_ArmPV',
                 chestEndJoint = 'C_ChestEnd',
-                rigScale = sceneScale
+                rigScale = sceneScale,
+                fkControlScaleYZ = fkArmControlScaleYZ,
+                fkControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
+                fkControlTransparency = fkArmControlTransparency
                 )
         self.LeftArm = leftArm
 
@@ -233,7 +280,10 @@ class RigBipedCharacter():
                 armJoints = rightArmJnts,
                 armPVLocator = 'locator_R_ArmPV',
                 chestEndJoint = 'C_ChestEnd',
-                rigScale = sceneScale
+                rigScale = sceneScale,
+                fkControlScaleYZ = fkArmControlScaleYZ,
+                fkControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
+                fkControlTransparency = fkArmControlTransparency
                 )
         self.RightArm = rightArm
 

@@ -84,12 +84,13 @@ class RigBase():
             cmds.parentConstraint(mainCtrlAttachObject, mainCtrl.ControlGroup, mo = 1)
 
         mainVisAts = ['modelVisibility', 'masterJointsVisibility', 'slaveJointsVisibility']
+        mainVisAtsDV = [1, 0, 0]
         mainDispAts = ['modelDisplay', 'masterJointsDisplay', 'slaveJointsDisplay']
         mainObjList = [self.ModelGrp, self.JointsGrp, self.DeformationGrp]
 
         # Add rig visibility connections.
-        for at, obj in zip(mainVisAts, mainObjList):
-            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
+        for at, obj, dv in zip(mainVisAts, mainObjList, mainVisAtsDV):
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = dv)
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
             cmds.connectAttr(mainCtrl.ControlObject + '.' + at, obj + '.v')
 
