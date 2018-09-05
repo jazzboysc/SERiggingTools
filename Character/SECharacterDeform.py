@@ -231,8 +231,7 @@ class RigBipedCharacterDeform():
         cmds.parent(rightFootSlaveJnts[0][0], rightLowerLegSlaveJnts[-1][0])
 
         # Create deformation group and parent the slave root to it.
-        deformationGroup = cmds.group(n = SERigNaming.sDeformationGroup, p = baseRig.RigGrp, em = 1)
-        cmds.parent(rootSlaveJnt[0][0], deformationGroup)
+        cmds.parent(rootSlaveJnt[0][0], baseRig.DeformationGrp)
 
         # Load skin weights.
         if loadSkinWeights:

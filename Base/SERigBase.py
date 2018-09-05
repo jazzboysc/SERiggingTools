@@ -26,6 +26,7 @@ class RigBase():
         self.TopGrp = cmds.group(n = characterName + SERigNaming.s_RigGroup, em = 1)
         self.RigGrp = cmds.group(n = SERigNaming.sRigGroup, em = 1, p = self.TopGrp)
         self.ModelGrp = cmds.group(n = SERigNaming.sModelGroup, em = 1, p = self.TopGrp)
+        self.DeformationGrp = cmds.group(n = SERigNaming.sDeformationGroup, em = 1, p = self.RigGrp)
 
         # Add custom attributes for the TopGrp object.
         for attr in [characterNameAttr, sceneObjectTypeAttr]:
@@ -82,9 +83,9 @@ class RigBase():
         if cmds.objExists(mainCtrlAttachObject):
             cmds.parentConstraint(mainCtrlAttachObject, mainCtrl.ControlGroup, mo = 1)
 
-        mainVisAts = ['modelVisibility', 'jointsVisibility']
-        mainDispAts = ['modelDisplay', 'jointsDisplay']
-        mainObjList = [self.ModelGrp, self.JointsGrp]
+        mainVisAts = ['modelVisibility', 'masterJointsVisibility', 'slaveJointsVisibility']
+        mainDispAts = ['modelDisplay', 'masterJointsDisplay', 'slaveJointsDisplay']
+        mainObjList = [self.ModelGrp, self.JointsGrp, self.DeformationGrp]
 
         # Add rig visibility connections.
         for at, obj in zip(mainVisAts, mainObjList):
