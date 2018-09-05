@@ -18,293 +18,307 @@ builderFilePath = '%s/%s/Builder/%s_Builder.ma'
 rootJnt = 'Root'
 headJnt = 'C_Head'
 
-gLeftArm = None
-gRightArm = None
-gLeftLeg = None
-gRightLeg = None
 
-def build(
-          characterName, 
-          mainProjectPath = '', 
-          upperBodyUpperLimbKnobCount = 2, 
-          upperBodyLowerLimbKnobCount = 2,
-          lowerBodyUpperLimbKnobCount = 2,
-          lowerBodyLowerLimbKnobCount = 1,
-          mainCtrlOffset = 30,
-          spineIKTwist = 180.0
-          ):
-    # Create new scene
-    #cmds.file(new = True, f = True)
+#-----------------------------------------------------------------------------
+# Rig Biped Character Base Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigBipedCharacter():
+    def __init__(
+                 self,
+                 characterName
+                 ):
 
-    # Import model.
-    modelFile = modelFilePath % (mainProjectPath, characterName, characterName)
-    cmds.file(modelFile, i = 1)
+        self.CharacterName = characterName
 
-    # Import builder scene.
-    builderFile = builderFilePath % (mainProjectPath, characterName, characterName)
-    cmds.file(builderFile, i = 1)
+        # Rig components.
+        self.BaseRig = None
+        self.Spine = None
+        self.LeftLeg = None
+        self.RightLeg = None
+        self.LeftArm = None
+        self.RightArm = None
+        self.LeftHand = None
+        self.RightHand = None
+        self.Neck = None
 
-    # Create rig base.
-    baseRig = RigBase(characterName = characterName, 
-                      scale = sceneScale, mainCtrlAttachObject = headJnt, 
-                      mainCtrlOffset = mainCtrlOffset)
+    def build(
+              self,
+              mainProjectPath = '', 
+              upperBodyUpperLimbKnobCount = 2, 
+              upperBodyLowerLimbKnobCount = 2,
+              lowerBodyUpperLimbKnobCount = 2,
+              lowerBodyLowerLimbKnobCount = 1,
+              mainCtrlOffset = 30
+              ):
+        # Create new scene
+        #cmds.file(new = True, f = True)
 
-    # Parent the imported model to the rig base.
-    modelGrp = ('%s' + SERigNaming.s_ModelGroup) % characterName
-    cmds.parent(modelGrp, baseRig.ModelGrp)
+        # Import model.
+        modelFile = modelFilePath % (mainProjectPath, self.CharacterName, self.CharacterName)
+        cmds.file(modelFile, i = 1)
 
-    # Parent the imported skeleton to the rig base.
-    cmds.parent(rootJnt, baseRig.JointsGrp)
+        # Import builder scene.
+        builderFile = builderFilePath % (mainProjectPath, self.CharacterName, self.CharacterName)
+        cmds.file(builderFile, i = 1)
 
-    # Prepare joints.
-    spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
+        # Create rig base.
+        baseRig = RigBase(characterName = self.CharacterName, 
+                          scale = sceneScale, mainCtrlAttachObject = headJnt, 
+                          mainCtrlOffset = mainCtrlOffset)
+        self.BaseRig = baseRig
 
-    upperChestJnts = ['L_Clav', 'R_Clav', 'C_ChestEnd', 'L_Breast', 'R_Breast']
+        # Parent the imported model to the rig base.
+        modelGrp = ('%s' + SERigNaming.s_ModelGroup) % self.CharacterName
+        cmds.parent(modelGrp, baseRig.ModelGrp)
 
-    leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
+        # Parent the imported skeleton to the rig base.
+        cmds.parent(rootJnt, baseRig.JointsGrp)
 
-    rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
+        # Prepare joints.
+        spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
 
-    leftFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.buildFootHelperJointsMapForLeftSide(legJoints = leftLegJnts,
-        footExtLocator = 'locator_L_Foot_Ext', footIntLocator = 'locator_L_Foot_Int', footBaseLocator = 'locator_L_Foot_Base',
-        footBaseSwiveLocator = 'locator_L_Foot_BaseSwive', footToeSwiveLocator = 'locator_L_Foot_ToeSwive')
+        upperChestJnts = ['L_Clav', 'R_Clav', 'C_ChestEnd', 'L_Breast', 'R_Breast']
 
-    rightFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints)
+        leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
 
-    leftArmJnts = ['L_Shoulder', 'L_Elbow', 'L_Wrist']
+        rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
 
-    rightArmJnts = ['R_Shoulder', 'R_Elbow', 'R_Wrist']
+        leftFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.buildFootHelperJointsMapForLeftSide(legJoints = leftLegJnts,
+            footExtLocator = 'locator_L_Foot_Ext', footIntLocator = 'locator_L_Foot_Int', footBaseLocator = 'locator_L_Foot_Base',
+            footBaseSwiveLocator = 'locator_L_Foot_BaseSwive', footToeSwiveLocator = 'locator_L_Foot_ToeSwive')
 
-    leftHandJnts = ['L_Thumb_0', 'L_Index_0', 'L_Middle_0', 'L_Ring_0', 'L_Pinky_0']
+        rightFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints)
 
-    rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
+        leftArmJnts = ['L_Shoulder', 'L_Elbow', 'L_Wrist']
 
-    neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
+        rightArmJnts = ['R_Shoulder', 'R_Elbow', 'R_Wrist']
 
-    facialJnts = ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
-                  'R_EyelidLower', 'C_Jaw', 'C_JawEnd', 'C_LowerTeeth']
+        leftHandJnts = ['L_Thumb_0', 'L_Index_0', 'L_Middle_0', 'L_Ring_0', 'L_Pinky_0']
 
-    # Create rig components.
-    createRigComponents(baseRig, 
-                        spineJnts,
-                        leftLegJnts,
-                        rightLegJnts,
-                        leftFootHelperJoints,
-                        rightFootHelperJoints,
-                        leftArmJnts,
-                        rightArmJnts,
-                        leftHandJnts,
-                        rightHandJnts,
-                        neckJnts
-                        )
+        rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
 
-    # Setup model deformation.
-    upperBodyUpperLimbJoints = ['L_Shoulder', 'R_Shoulder']
-    upperBodyLowerLimbJoints = ['L_Elbow', 'R_Elbow']
-    lowerBodyUpperLimbJoints = ['L_Hip', 'R_Hip']
-    lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
+        neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
 
-    SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, 
-                            False,
-                            False,
-                            '',
-                            False,
-                            [],
-                            '',
-                            upperBodyUpperLimbKnobCount, 
-                            upperBodyLowerLimbKnobCount, 
-                            lowerBodyUpperLimbKnobCount, 
-                            lowerBodyLowerLimbKnobCount, 
-                            upperBodyUpperLimbJoints, 
-                            upperBodyLowerLimbJoints, 
-                            lowerBodyUpperLimbJoints, 
-                            lowerBodyLowerLimbJoints,
-                            spineJnts,
-                            upperChestJnts,
-                            leftLegJnts,
-                            rightLegJnts,
-                            leftFootHelperJoints,
+        facialJnts = ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
+                      'R_EyelidLower', 'C_Jaw', 'C_JawEnd', 'C_LowerTeeth']
+
+        # Create rig components.
+        self._createRigComponents( 
+                                spineJnts,
+                                leftLegJnts,
+                                rightLegJnts,
+                                leftFootHelperJoints,
+                                rightFootHelperJoints,
+                                leftArmJnts,
+                                rightArmJnts,
+                                leftHandJnts,
+                                rightHandJnts,
+                                neckJnts
+                                )
+
+        # Setup model deformation.
+
+        upperBodyUpperLimbJoints = ['L_Shoulder', 'R_Shoulder']
+        upperBodyLowerLimbJoints = ['L_Elbow', 'R_Elbow']
+        lowerBodyUpperLimbJoints = ['L_Hip', 'R_Hip']
+        lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
+
+        SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, 
+                                False,
+                                False,
+                                '',
+                                False,
+                                [],
+                                '',
+                                upperBodyUpperLimbKnobCount, 
+                                upperBodyLowerLimbKnobCount, 
+                                lowerBodyUpperLimbKnobCount, 
+                                lowerBodyLowerLimbKnobCount, 
+                                upperBodyUpperLimbJoints, 
+                                upperBodyLowerLimbJoints, 
+                                lowerBodyUpperLimbJoints, 
+                                lowerBodyLowerLimbJoints,
+                                spineJnts,
+                                upperChestJnts,
+                                leftLegJnts,
+                                rightLegJnts,
+                                leftFootHelperJoints,
+                                rightFootHelperJoints,
+                                leftArmJnts,
+                                rightArmJnts,
+                                leftHandJnts,
+                                rightHandJnts,
+                                neckJnts,
+                                facialJnts,
+                                rootJnt
+                                )
+
+        cmds.select(cl=1)
+
+
+    def _createRigComponents(
+                            self,
+                            spineJnts, 
+                            leftLegJnts, 
+                            rightLegJnts, 
+                            leftFootHelperJoints, 
                             rightFootHelperJoints,
                             leftArmJnts,
                             rightArmJnts,
                             leftHandJnts,
                             rightHandJnts,
-                            neckJnts,
-                            facialJnts,
-                            rootJnt
-                            )
+                            neckJnts
+                            ):
 
-    cmds.select(cl=1)
+        # Spine.
+        spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = self.BaseRig, 
+                                                     rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                     rigType = SERigEnum.eRigType.RT_Component)
+        spine.build(
+                    spineJoints = spineJnts,
+                    rootJoint = rootJnt,
+                    bodyLocator = 'locator_Body',
+                    chestLocator = 'locator_Chest',
+                    pelvisLocator = 'locator_Pelvis',
+                    rigScale = sceneScale
+                    )
+        self.Spine = spine
 
-    return baseRig
-
-def leftArmSyncIKToFK():
-
-    global gLeftArm
-    if gLeftArm != None:
-        gLeftArm.syncIKToFK()
-    else:
-        print('gLeftArm is None')
-
-def rightArmSyncIKToFK():
-
-    global gRightArm
-    if gRightArm != None:
-        gRightArm.syncIKToFK()
-    else:
-        print('gRightArm is None')
-
-def leftArmSyncFKToIK():
-
-    global gLeftArm
-    if gLeftArm != None:
-        gLeftArm.syncFKToIK()
-    else:
-        print('gLeftArm is None')
-
-def rightArmSyncFKToIK():
-
-    global gRightArm
-    if gRightArm != None:
-        gRightArm.syncFKToIK()
-    else:
-        print('gRightArm is None')
-
-def leftLegSyncIKToFK():
-
-    global gLeftLeg
-    if gLeftLeg != None:
-        gLeftLeg.syncIKToFK()
-    else:
-        print('gLeftLeg is None')
-
-def leftLegSyncFKToIK():
-
-    global gLeftLeg
-    if gLeftLeg != None:
-        gLeftLeg.syncFKToIK()
-    else:
-        print('gLeftLeg is None')
-
-def rightLegSyncIKToFK():
-
-    global gRightLeg
-    if gRightLeg != None:
-        gRightLeg.syncIKToFK()
-    else:
-        print('gRightLeg is None')
-
-def rightLegSyncFKToIK():
-
-    global gRightLeg
-    if gRightLeg != None:
-        gRightLeg.syncFKToIK()
-    else:
-        print('gRightLeg is None')
-
-def createRigSlaveJoints():
-    pass
-
-def createRigComponents(baseRig, 
-                        spineJnts, 
-                        leftLegJnts, 
-                        rightLegJnts, 
-                        leftFootHelperJoints, 
-                        rightFootHelperJoints,
-                        leftArmJnts,
-                        rightArmJnts,
-                        leftHandJnts,
-                        rightHandJnts,
-                        neckJnts
-                        ):
-
-    # Spine.
-    spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = baseRig, 
-                                                 rigSide = SERigEnum.eRigSide.RS_Center, 
-                                                 rigType = SERigEnum.eRigType.RT_Component)
-    spine.build(
-                spineJoints = spineJnts,
-                rootJoint = rootJnt,
-                bodyLocator = 'locator_Body',
-                chestLocator = 'locator_Chest',
-                pelvisLocator = 'locator_Pelvis',
+        # Left Leg.
+        leftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = self.BaseRig,
+                                                      rigSide = SERigEnum.eRigSide.RS_Left, 
+                                                      rigType = SERigEnum.eRigType.RT_Component)
+        leftLeg.build(
+                legJoints = leftLegJnts,
+                footHelperJoints = leftFootHelperJoints,
+                legPVLocator = 'locator_L_LegPV',
                 rigScale = sceneScale
                 )
+        self.LeftLeg = leftLeg
 
-    # Left Leg.
-    global gLeftLeg
-    gLeftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = baseRig,
-                                                  rigSide = SERigEnum.eRigSide.RS_Left, 
-                                                  rigType = SERigEnum.eRigType.RT_Component)
-    gLeftLeg.build(
-            legJoints = leftLegJnts,
-            footHelperJoints = leftFootHelperJoints,
-            legPVLocator = 'locator_L_LegPV',
-            rigScale = sceneScale
-            )
+        # Right Leg.
+        rightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = self.BaseRig,
+                                                       rigSide = SERigEnum.eRigSide.RS_Right, 
+                                                       rigType = SERigEnum.eRigType.RT_Component)
+        rightLeg.build(
+                legJoints = rightLegJnts,
+                footHelperJoints = rightFootHelperJoints,
+                legPVLocator = 'locator_R_LegPV',
+                rigScale = sceneScale
+                )
+        self.RightLeg = rightLeg
 
-    # Right Leg.
-    global gRightLeg
-    gRightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = baseRig,
-                                                   rigSide = SERigEnum.eRigSide.RS_Right, 
-                                                   rigType = SERigEnum.eRigType.RT_Component)
-    gRightLeg.build(
-            legJoints = rightLegJnts,
-            footHelperJoints = rightFootHelperJoints,
-            legPVLocator = 'locator_R_LegPV',
-            rigScale = sceneScale
-            )
+        # Left arm.
+        leftArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'L_Arm', baseRig = self.BaseRig,
+                                                      rigSide = SERigEnum.eRigSide.RS_Left, 
+                                                      rigType = SERigEnum.eRigType.RT_Component)
+        leftArm.build(
+                armJoints = leftArmJnts,
+                armPVLocator = 'locator_L_ArmPV',
+                chestEndJoint = 'C_ChestEnd',
+                rigScale = sceneScale
+                )
+        self.LeftArm = leftArm
 
-    # Left arm.
-    global gLeftArm
-    gLeftArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'L_Arm', baseRig = baseRig,
-                                                  rigSide = SERigEnum.eRigSide.RS_Left, 
-                                                  rigType = SERigEnum.eRigType.RT_Component)
-    gLeftArm.build(
-            armJoints = leftArmJnts,
-            armPVLocator = 'locator_L_ArmPV',
-            chestEndJoint = 'C_ChestEnd',
-            rigScale = sceneScale
-            )
+        # Right arm.
+        rightArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'R_Arm', baseRig = self.BaseRig,
+                                                      rigSide = SERigEnum.eRigSide.RS_Right, 
+                                                      rigType = SERigEnum.eRigType.RT_Component)
+        rightArm.build(
+                armJoints = rightArmJnts,
+                armPVLocator = 'locator_R_ArmPV',
+                chestEndJoint = 'C_ChestEnd',
+                rigScale = sceneScale
+                )
+        self.RightArm = rightArm
 
-    # Right arm.
-    global gRightArm
-    gRightArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'R_Arm', baseRig = baseRig,
-                                                  rigSide = SERigEnum.eRigSide.RS_Right, 
-                                                  rigType = SERigEnum.eRigType.RT_Component)
-    gRightArm.build(
-            armJoints = rightArmJnts,
-            armPVLocator = 'locator_R_ArmPV',
-            chestEndJoint = 'C_ChestEnd',
-            rigScale = sceneScale
-            )
+        # Left hand.
+        leftHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'L_Hand', baseRig = self.BaseRig,
+                                                      rigSide = SERigEnum.eRigSide.RS_Left, 
+                                                      rigType = SERigEnum.eRigType.RT_Component)
+        leftHand.build(
+                fingers = leftHandJnts,
+                armFKFingerAttachPoint = 'L_Wrist',
+                rigScale = sceneScale
+                )
+        self.LeftHand = leftHand
 
-    # Left hand.
-    leftHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'L_Hand', baseRig = baseRig,
-                                                  rigSide = SERigEnum.eRigSide.RS_Left, 
-                                                  rigType = SERigEnum.eRigType.RT_Component)
-    leftHand.build(
-            fingers = leftHandJnts,
-            armFKFingerAttachPoint = 'L_Wrist',
-            rigScale = sceneScale
-            )
+        # Right hand.
+        rightHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'R_Hand', baseRig = self.BaseRig,
+                                                      rigSide = SERigEnum.eRigSide.RS_Right, 
+                                                      rigType = SERigEnum.eRigType.RT_Component)
+        rightHand.build(
+                fingers = rightHandJnts,
+                armFKFingerAttachPoint = 'R_Wrist',
+                rigScale = sceneScale
+                )
+        self.RightHand = rightHand
 
-    # Right hand.
-    rightHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'R_Hand', baseRig = baseRig,
-                                                  rigSide = SERigEnum.eRigSide.RS_Right, 
-                                                  rigType = SERigEnum.eRigType.RT_Component)
-    rightHand.build(
-            fingers = rightHandJnts,
-            armFKFingerAttachPoint = 'R_Wrist',
-            rigScale = sceneScale
-            )
+        # Neck.
+        neck = SERigBipedNeckComponent.RigHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
+                                                      rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                      rigType = SERigEnum.eRigType.RT_Neck)
+        neck.build(
+                neckJoints = neckJnts,
+                fkNeckAttachPoint = 'C_ChestEnd',
+                rigScale = sceneScale
+                )
+        self.Neck = neck
 
-    # Neck.
-    neck = SERigBipedNeckComponent.RigHumanNeck(prefix = 'C_Neck', baseRig = baseRig,
-                                                  rigSide = SERigEnum.eRigSide.RS_Center, 
-                                                  rigType = SERigEnum.eRigType.RT_Neck)
-    neck.build(
-            neckJoints = neckJnts,
-            fkNeckAttachPoint = 'C_ChestEnd',
-            rigScale = sceneScale
-            )
+
+    def leftArmSyncIKToFK(self):
+
+        if self.LeftArm != None:
+            self.LeftArm.syncIKToFK()
+        else:
+            print('Left arm is None')
+
+    def rightArmSyncIKToFK(self):
+
+        if self.RightArm != None:
+            self.RightArm.syncIKToFK()
+        else:
+            print('Right arm is None')
+
+    def leftArmSyncFKToIK(self):
+
+        if self.LeftArm != None:
+            self.LeftArm.syncFKToIK()
+        else:
+            print('Left arm is None')
+
+    def rightArmSyncFKToIK(self):
+
+        if self.RightArm != None:
+            self.RightArm.syncFKToIK()
+        else:
+            print('Right arm is None')
+
+    def leftLegSyncIKToFK(self):
+
+        if self.LeftLeg != None:
+            self.LeftLeg.syncIKToFK()
+        else:
+            print('Left leg is None')
+
+    def leftLegSyncFKToIK(self):
+
+        if self.LeftLeg != None:
+            self.LeftLeg.syncFKToIK()
+        else:
+            print('Left leg is None')
+
+    def rightLegSyncIKToFK(self):
+
+        if self.RightLeg != None:
+            self.RightLeg.syncIKToFK()
+        else:
+            print('Right leg is None')
+
+    def rightLegSyncFKToIK(self):
+
+        if self.RightLeg != None:
+            self.RightLeg.syncFKToIK()
+        else:
+            print('Right leg is None')
