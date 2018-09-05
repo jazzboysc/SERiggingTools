@@ -12,458 +12,479 @@ from ..Utils import SEJointHelper
 skinWeightsDir = 'Weights/SkinCluster'
 skinWeightsExt = '.swt'
 
-def createUpperLimbSlaveJoints(upperLimbSlaveMasterJnts = [], lowerLimbTopJoint = ''):
+#-----------------------------------------------------------------------------
+# Rig Biped Character Deform Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigBipedCharacterDeform():
+    def __init__(
+                 self,
+                 rigBipedCharacter = None
+                 ):
 
-    slaveJnts = []
+        self.RigBipedCharacter = rigBipedCharacter
 
-    preParent = None
-    for masterJnt in upperLimbSlaveMasterJnts:
+    def createUpperLimbSlaveJoints(self, upperLimbSlaveMasterJnts = [], lowerLimbTopJoint = ''):
 
-        cmds.select(cl = 1)
-        curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
-        cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
-        cmds.makeIdentity(curSlaveJoint, apply = True)
+        slaveJnts = []
+
+        preParent = None
+        for masterJnt in upperLimbSlaveMasterJnts:
+
+            cmds.select(cl = 1)
+            curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+            cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+            cmds.makeIdentity(curSlaveJoint, apply = True)
         
-        pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
-        oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
-        sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
+            pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+            oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+            sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-        curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
-        slaveJnts.append(curSlaveJntsInfo)
+            curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
+            slaveJnts.append(curSlaveJntsInfo)
 
-        if preParent:
-            cmds.parent(curSlaveJoint, preParent)
-        preParent = curSlaveJoint
+            if preParent:
+                cmds.parent(curSlaveJoint, preParent)
+            preParent = curSlaveJoint
 
-    if len(slaveJnts) > 1:
-        cmds.delete(slaveJnts[-1][1])
+        if len(slaveJnts) > 1:
+            cmds.delete(slaveJnts[-1][1])
 
-        if cmds.objExists(lowerLimbTopJoint):
-            cmds.pointConstraint(lowerLimbTopJoint, slaveJnts[-1][0], mo = 0)
+            if cmds.objExists(lowerLimbTopJoint):
+                cmds.pointConstraint(lowerLimbTopJoint, slaveJnts[-1][0], mo = 0)
 
-    return slaveJnts
+        return slaveJnts
 
-def createSlaveJointsHelper(masterJnts = []):
+    def createSlaveJointsHelper(self, masterJnts = []):
 
-    slaveJnts = []
+        slaveJnts = []
 
-    preParent = None
-    for masterJnt in masterJnts:
+        preParent = None
+        for masterJnt in masterJnts:
 
-        cmds.select(cl = 1)
-        curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
-        cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
-        cmds.makeIdentity(curSlaveJoint, apply = True)
+            cmds.select(cl = 1)
+            curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+            cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+            cmds.makeIdentity(curSlaveJoint, apply = True)
         
-        pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
-        oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
-        sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
+            pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+            oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+            sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-        curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
-        slaveJnts.append(curSlaveJntsInfo)
+            curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
+            slaveJnts.append(curSlaveJntsInfo)
 
-        if preParent:
-            cmds.parent(curSlaveJoint, preParent)
-        preParent = curSlaveJoint
+            if preParent:
+                cmds.parent(curSlaveJoint, preParent)
+            preParent = curSlaveJoint
 
-    return slaveJnts
+        return slaveJnts
 
-def createSlaveJointsHelperNoHierarchy(masterJnts = []):
+    def createSlaveJointsHelperNoHierarchy(self, masterJnts = []):
 
-    slaveJnts = []
+        slaveJnts = []
 
-    for masterJnt in masterJnts:
+        for masterJnt in masterJnts:
 
-        cmds.select(cl = 1)
-        curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
-        cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
-        cmds.makeIdentity(curSlaveJoint, apply = True)
+            cmds.select(cl = 1)
+            curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+            cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+            cmds.makeIdentity(curSlaveJoint, apply = True)
         
-        pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
-        oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
-        sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
+            pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+            oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+            sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-        curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
-        slaveJnts.append(curSlaveJntsInfo)
+            curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
+            slaveJnts.append(curSlaveJntsInfo)
 
-    return slaveJnts
+        return slaveJnts
 
-def build(
-          baseRig, 
-          mainProjectPath, 
-          sceneScale = 1.0,
-          loadSkinWeights = False,
-          applyDeltaMushDeformer = False,
-          deltaMushGeometry = '',
-          applyWrapDeformer = False,
-          wrappedObjects = [],
-          wrapperObject = '',
-          upperBodyUpperLimbKnobCount = 2, 
-          upperBodyLowerLimbKnobCount = 2,
-          lowerBodyUpperLimbKnobCount = 2,
-          lowerBodyLowerLimbKnobCount = 1,
-          upperBodyUpperLimbJoints = [],
-          upperBodyLowerLimbJoints = [],
-          lowerBodyUpperLimbJoints = [],
-          lowerBodyLowerLimbJoints = [],
-          spineJnts = [],
-          upperChestJnts = [],
-          leftLegJnts = [],
-          rightLegJnts = [],
-          leftFootHelperJoints = [],
-          rightFootHelperJoints = [],
-          leftArmJnts = [],
-          rightArmJnts = [],
-          leftHandJnts = [],
-          rightHandJnts = [],
-          neckJnts = [],
-          facialJnts = [],
-          rootJnt = ''
-          ):
+    def build(
+              self,
+              baseRig, 
+              mainProjectPath, 
+              sceneScale = 1.0,
+              loadSkinWeights = False,
+              applyDeltaMushDeformer = False,
+              deltaMushGeometry = '',
+              applyWrapDeformer = False,
+              wrappedObjects = [],
+              wrapperObject = '',
+              upperBodyUpperLimbKnobCount = 2, 
+              upperBodyLowerLimbKnobCount = 2,
+              lowerBodyUpperLimbKnobCount = 2,
+              lowerBodyLowerLimbKnobCount = 1,
+              upperBodyUpperLimbJoints = [],
+              upperBodyLowerLimbJoints = [],
+              lowerBodyUpperLimbJoints = [],
+              lowerBodyLowerLimbJoints = [],
+              spineJnts = [],
+              upperChestJnts = [],
+              leftLegJnts = [],
+              rightLegJnts = [],
+              leftFootHelperJoints = [],
+              rightFootHelperJoints = [],
+              leftArmJnts = [],
+              rightArmJnts = [],
+              leftHandJnts = [],
+              rightHandJnts = [],
+              neckJnts = [],
+              facialJnts = [],
+              rootJnt = ''
+              ):
 
-    # Create twist joints for all the limbs.
-    upperBodyUpperLimbSlaveMasterJnts = []
-    for i in upperBodyUpperLimbJoints:
-        curUpperLimbSlaveMasterJnts = createUpperLimbTwistJoints(baseRig, i, knobCount = upperBodyUpperLimbKnobCount)
-        upperBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
+        # Create twist joints for all the limbs.
+        upperBodyUpperLimbSlaveMasterJnts = []
+        for i in upperBodyUpperLimbJoints:
+            curUpperLimbSlaveMasterJnts = self.createUpperLimbTwistJoints(baseRig, i, knobCount = upperBodyUpperLimbKnobCount)
+            upperBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
 
-    upperBodyLowerLimbSlaveMasterJnts = []
-    for i in upperBodyLowerLimbJoints:
-        curLowerLimbSlaveMasterJnts = createLowerLimbTwistJoints(baseRig, i, knobCount = upperBodyLowerLimbKnobCount)
-        upperBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
+        upperBodyLowerLimbSlaveMasterJnts = []
+        for i in upperBodyLowerLimbJoints:
+            curLowerLimbSlaveMasterJnts = self.createLowerLimbTwistJoints(baseRig, i, knobCount = upperBodyLowerLimbKnobCount)
+            upperBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
 
-    lowerBodyUpperLimbSlaveMasterJnts = []
-    for i in lowerBodyUpperLimbJoints:
-        curUpperLimbSlaveMasterJnts = createUpperLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyUpperLimbKnobCount)
-        lowerBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
+        lowerBodyUpperLimbSlaveMasterJnts = []
+        for i in lowerBodyUpperLimbJoints:
+            curUpperLimbSlaveMasterJnts = self.createUpperLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyUpperLimbKnobCount)
+            lowerBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
 
-    lowerBodyLowerLimbSlaveMasterJnts = []
-    for i in lowerBodyLowerLimbJoints:
-        curLowerLimbSlaveMasterJnts = createLowerLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyLowerLimbKnobCount)
-        lowerBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
+        lowerBodyLowerLimbSlaveMasterJnts = []
+        for i in lowerBodyLowerLimbJoints:
+            curLowerLimbSlaveMasterJnts = self.createLowerLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyLowerLimbKnobCount)
+            lowerBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
 
-    # Create slave joints.
+        # Create slave joints.
 
-    # Create arm slaves.
-    leftUpperArmSlaveJnts = createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[0], upperBodyLowerLimbSlaveMasterJnts[0][0])
-    rightUpperArmSlaveJnts = createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[1], upperBodyLowerLimbSlaveMasterJnts[1][0])
-    leftLowerArmSlaveJnts = createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[0])
-    rightLowerArmSlaveJnts = createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[1])
+        # Create arm slaves.
+        leftUpperArmSlaveJnts = self.createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[0], upperBodyLowerLimbSlaveMasterJnts[0][0])
+        rightUpperArmSlaveJnts = self.createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[1], upperBodyLowerLimbSlaveMasterJnts[1][0])
+        leftLowerArmSlaveJnts = self.createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[0])
+        rightLowerArmSlaveJnts = self.createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[1])
 
-    cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[-1][0])
-    cmds.parent(rightLowerArmSlaveJnts[0][0], rightUpperArmSlaveJnts[-1][0])
+        cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[-1][0])
+        cmds.parent(rightLowerArmSlaveJnts[0][0], rightUpperArmSlaveJnts[-1][0])
 
-    # Create hand slaves and parent them to the arm slaves.
-    leftHandSlaveJnts = []
-    for fingerTopJoint in leftHandJnts:
-        curFingerMasterJnts = SEJointHelper.listHierarchy(fingerTopJoint)
-        curFingerSlaveJnts = createSlaveJointsHelper(curFingerMasterJnts)
-        cmds.parent(curFingerSlaveJnts[0][0], leftLowerArmSlaveJnts[-1][0])
+        # Create hand slaves and parent them to the arm slaves.
+        leftHandSlaveJnts = []
+        for fingerTopJoint in leftHandJnts:
+            curFingerMasterJnts = SEJointHelper.listHierarchy(fingerTopJoint)
+            curFingerSlaveJnts = self.createSlaveJointsHelper(curFingerMasterJnts)
+            cmds.parent(curFingerSlaveJnts[0][0], leftLowerArmSlaveJnts[-1][0])
 
-    rightHandSlaveJnts = []
-    for fingerTopJoint in rightHandJnts:
-        curFingerMasterJnts = SEJointHelper.listHierarchy(fingerTopJoint)
-        curFingerSlaveJnts = createSlaveJointsHelper(curFingerMasterJnts)
-        cmds.parent(curFingerSlaveJnts[0][0], rightLowerArmSlaveJnts[-1][0])
+        rightHandSlaveJnts = []
+        for fingerTopJoint in rightHandJnts:
+            curFingerMasterJnts = SEJointHelper.listHierarchy(fingerTopJoint)
+            curFingerSlaveJnts = self.createSlaveJointsHelper(curFingerMasterJnts)
+            cmds.parent(curFingerSlaveJnts[0][0], rightLowerArmSlaveJnts[-1][0])
 
-    # Create leg slaves.
-    leftUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0])
-    rightUpperLegSlaveJnts = createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0])
-    leftLowerLegSlaveJnts = createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[0])
-    rightLowerLegSlaveJnts = createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[1])
+        # Create leg slaves.
+        leftUpperLegSlaveJnts = self.createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0])
+        rightUpperLegSlaveJnts = self.createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0])
+        leftLowerLegSlaveJnts = self.createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[0])
+        rightLowerLegSlaveJnts = self.createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[1])
 
-    # Parent leg slaves to spine.
-    cmds.parent(leftLowerLegSlaveJnts[0][0], leftUpperLegSlaveJnts[-1][0])
-    cmds.parent(rightLowerLegSlaveJnts[0][0], rightUpperLegSlaveJnts[-1][0])
+        # Parent leg slaves to spine.
+        cmds.parent(leftLowerLegSlaveJnts[0][0], leftUpperLegSlaveJnts[-1][0])
+        cmds.parent(rightLowerLegSlaveJnts[0][0], rightUpperLegSlaveJnts[-1][0])
 
-    # Create spine slaves.
-    spineSlaveJnts = createSlaveJointsHelper(spineJnts)
+        # Create spine slaves.
+        spineSlaveJnts = self.createSlaveJointsHelper(spineJnts)
 
-    cmds.parent(leftUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
-    cmds.parent(rightUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
+        cmds.parent(leftUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
+        cmds.parent(rightUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
 
-    # Create root slave and parent the spine slave to the root slave.
-    rootSlaveJnt = createSlaveJointsHelperNoHierarchy([rootJnt])
+        # Create root slave and parent the spine slave to the root slave.
+        rootSlaveJnt = self.createSlaveJointsHelperNoHierarchy([rootJnt])
 
-    cmds.parent(spineSlaveJnts[0][0], rootSlaveJnt[0][0])
+        cmds.parent(spineSlaveJnts[0][0], rootSlaveJnt[0][0])
 
-    # Create neck slaves and parent them to the spine slave.
-    neckSlaveJnts = createSlaveJointsHelper(neckJnts)
+        # Create neck slaves and parent them to the spine slave.
+        neckSlaveJnts = self.createSlaveJointsHelper(neckJnts)
 
-    cmds.parent(neckSlaveJnts[0][0], spineSlaveJnts[-1][0])
+        cmds.parent(neckSlaveJnts[0][0], spineSlaveJnts[-1][0])
 
-    # Create facial slaves and parent them to the neck slave.
-    facialSlaveJnts = createSlaveJointsHelperNoHierarchy(facialJnts)
+        # Create facial slaves and parent them to the neck slave.
+        facialSlaveJnts = self.createSlaveJointsHelperNoHierarchy(facialJnts)
 
-    for facialSlaveJoint in facialSlaveJnts:
-        cmds.parent(facialSlaveJoint[0], neckSlaveJnts[-1][0])
+        for facialSlaveJoint in facialSlaveJnts:
+            cmds.parent(facialSlaveJoint[0], neckSlaveJnts[-1][0])
 
-    # Create upper chest slaves and parent them to the spine.
-    upperChestSlaveJnts = createSlaveJointsHelperNoHierarchy(upperChestJnts)
-    for upperChestSlaveJointInfo in upperChestSlaveJnts:
-        cmds.parent(upperChestSlaveJointInfo[0], spineSlaveJnts[-1][0])
+        # Create upper chest slaves and parent them to the spine.
+        upperChestSlaveJnts = self.createSlaveJointsHelperNoHierarchy(upperChestJnts)
+        for upperChestSlaveJointInfo in upperChestSlaveJnts:
+            cmds.parent(upperChestSlaveJointInfo[0], spineSlaveJnts[-1][0])
 
-    # Parent arm slaves to upper chest slaves.
-    cmds.parent(leftUpperArmSlaveJnts[0][0], upperChestSlaveJnts[0][0])
-    cmds.parent(rightUpperArmSlaveJnts[0][0], upperChestSlaveJnts[1][0])
+        # Parent arm slaves to upper chest slaves.
+        cmds.parent(leftUpperArmSlaveJnts[0][0], upperChestSlaveJnts[0][0])
+        cmds.parent(rightUpperArmSlaveJnts[0][0], upperChestSlaveJnts[1][0])
 
-    # Create foot slaves and parent them to the leg slaves.
-    leftFootJnts = leftLegJnts[3:]
-    leftFootSlaveJnts = createSlaveJointsHelper(leftFootJnts)
+        # Create foot slaves and parent them to the leg slaves.
+        leftFootJnts = leftLegJnts[3:]
+        leftFootSlaveJnts = self.createSlaveJointsHelper(leftFootJnts)
     
-    rightFootJnts = rightLegJnts[3:]
-    rightFootSlaveJnts = createSlaveJointsHelper(rightFootJnts)
+        rightFootJnts = rightLegJnts[3:]
+        rightFootSlaveJnts = self.createSlaveJointsHelper(rightFootJnts)
 
-    cmds.parent(leftFootSlaveJnts[0][0], leftLowerLegSlaveJnts[-1][0])
-    cmds.parent(rightFootSlaveJnts[0][0], rightLowerLegSlaveJnts[-1][0])
+        cmds.parent(leftFootSlaveJnts[0][0], leftLowerLegSlaveJnts[-1][0])
+        cmds.parent(rightFootSlaveJnts[0][0], rightLowerLegSlaveJnts[-1][0])
 
-    # Create deformation group and parent the slave root to it.
-    deformationGroup = cmds.group(n = SERigNaming.sDeformationGroup, p = baseRig.RigGrp, em = 1)
-    cmds.parent(rootSlaveJnt[0][0], deformationGroup)
+        # Create deformation group and parent the slave root to it.
+        deformationGroup = cmds.group(n = SERigNaming.sDeformationGroup, p = baseRig.RigGrp, em = 1)
+        cmds.parent(rootSlaveJnt[0][0], deformationGroup)
 
-    # Load skin weights.
-    if loadSkinWeights:
-        geoList = _getModelGeoObjects(baseRig.ModelGrp)
-        loadSkinWeights(baseRig.getCharacterName(), mainProjectPath, geoList)
+        # Load skin weights.
+        if loadSkinWeights:
+            geoList = self._getModelGeoObjects(baseRig.ModelGrp)
+            self._loadSkinWeights(baseRig.getCharacterName(), mainProjectPath, geoList)
 
-    # Apply delta mush deformer.
-    if applyDeltaMushDeformer:
-        _applyDeltaMush(deltaMushGeometry)
+        # Apply delta mush deformer.
+        if applyDeltaMushDeformer:
+            self._applyDeltaMush(deltaMushGeometry)
 
-    # Wrap hi-res body mesh.
-    if applyWrapDeformer:
-        _applyWrapDeformer(wrappedObjects, wrapperObject)
+        # Wrap hi-res body mesh.
+        if applyWrapDeformer:
+            self._applyWrapDeformer(wrappedObjects, wrapperObject)
 
-def _applyDeltaMush(geometry):
-    res = cmds.deltaMush(geometry, smoothingIterations = 50)[0]
-    return res
+    def _applyDeltaMush(self, geometry):
 
-def _applyWrapDeformer(wrappedObjects, wrapperObject):
-    cmds.select(wrappedObjects)
-    cmds.select(wrapperObject, add = 1)
-    mel.eval('doWrapArgList "7" { "1", "0", "1", "2", "1", "1", "0", "0" }')
+        res = cmds.deltaMush(geometry, smoothingIterations = 50)[0]
+        return res
 
-def _getModelGeoObjects(modelGrp):
-    res = [cmds.listRelatives(shape, p = 1)[0] for shape in cmds.listRelatives(modelGrp, ad = 1, type = 'mesh')]
-    return res
+    def _applyWrapDeformer(self, wrappedObjects, wrapperObject):
 
-def createUpperLimbTwistJoints(
-                               baseRig, 
-                               upperLimbJoint, 
-                               twistJointRadiusScale = 4.0, 
-                               knobCount = 2, 
-                               maxKnobCount = 5
-                               ):
-    # If this function succeeded, joints upon which slave joints will be created are returned through this list.
-    slaveMasters = []
+        cmds.select(wrappedObjects)
+        cmds.select(wrapperObject, add = 1)
+        mel.eval('doWrapArgList "7" { "1", "0", "1", "2", "1", "1", "0", "0" }')
 
-    if baseRig == None or upperLimbJoint == None:
-        print('Unable to create upper limb twist joints.')
-        return
+    def _getModelGeoObjects(self, modelGrp):
 
-    prefix = upperLimbJoint
+        res = [cmds.listRelatives(shape, p = 1)[0] for shape in cmds.listRelatives(modelGrp, ad = 1, type = 'mesh')]
+        return res
 
-    # Find child joint.
-    childJoint = SEJointHelper.getFirstChildJoint(upperLimbJoint)
-    if childJoint == None:
-        print('No child joint found for upper limb:' + upperLimbJoint)
-        return
+    def createUpperLimbTwistJoints(
+                                   self,
+                                   baseRig, 
+                                   upperLimbJoint, 
+                                   twistJointRadiusScale = 4.0, 
+                                   knobCount = 2, 
+                                   maxKnobCount = 5
+                                   ):
 
-    # Find parent joint.
-    parentJoint = None
-    parentJointList = cmds.listRelatives(upperLimbJoint, p = 1, type = 'joint')
-    if parentJointList == None:
-        print('No parent joint found for upper limb:' + upperLimbJoint)
-    else:
-        parentJoint = parentJointList[0]
+        # If this function succeeded, joints upon which slave joints will be created are returned through this list.
+        slaveMasters = []
 
-    # Create twist end joints.
-    twistBeginJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistBegin, parentOnly = True)[0]
-    twistEndJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistEnd, parentOnly = True)[0]
-    cmds.delete(cmds.pointConstraint(childJoint, twistEndJoint))
+        if baseRig == None or upperLimbJoint == None:
+            print('Unable to create upper limb twist joints.')
+            return
 
-    # Adjust twist end joints.
-    origJntRadius = cmds.getAttr(upperLimbJoint + '.radius')
+        prefix = upperLimbJoint
 
-    # Set new radius and color for twist end joints.
-    for i in [twistBeginJoint, twistEndJoint]:
-        cmds.setAttr(i + '.radius', origJntRadius * twistJointRadiusScale)
-        cmds.color(i, ud = 1)
+        # Find child joint.
+        childJoint = SEJointHelper.getFirstChildJoint(upperLimbJoint)
+        if childJoint == None:
+            print('No child joint found for upper limb:' + upperLimbJoint)
+            return
 
-    # Parent twist end joints.
-    cmds.parent(twistEndJoint, twistBeginJoint)
+        # Find parent joint.
+        parentJoint = None
+        parentJointList = cmds.listRelatives(upperLimbJoint, p = 1, type = 'joint')
+        if parentJointList == None:
+            print('No parent joint found for upper limb:' + upperLimbJoint)
+        else:
+            parentJoint = parentJointList[0]
 
-    # Create single chain IK.
-    twistIK = cmds.ikHandle(n = prefix + SERigNaming.s_TwistIKHandle, sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
-    cmds.hide(twistIK)
-    cmds.pointConstraint(childJoint, twistIK)
+        # Create twist end joints.
+        twistBeginJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistBegin, parentOnly = True)[0]
+        twistEndJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistEnd, parentOnly = True)[0]
+        cmds.delete(cmds.pointConstraint(childJoint, twistEndJoint))
 
-    if parentJoint:
-        cmds.parent(twistIK, parentJoint)
+        # Adjust twist end joints.
+        origJntRadius = cmds.getAttr(upperLimbJoint + '.radius')
 
-    slaveMasters.append(twistBeginJoint)
+        # Set new radius and color for twist end joints.
+        for i in [twistBeginJoint, twistEndJoint]:
+            cmds.setAttr(i + '.radius', origJntRadius * twistJointRadiusScale)
+            cmds.color(i, ud = 1)
 
-    # Create twist knobs.
-    if knobCount > 0 and knobCount < maxKnobCount:
-        twistBeginJointPos = SEMathHelper.getWorldPosition(twistBeginJoint)
-        twistEndJointPos = SEMathHelper.getWorldPosition(twistEndJoint)
+        # Parent twist end joints.
+        cmds.parent(twistEndJoint, twistBeginJoint)
+
+        # Create single chain IK.
+        twistIK = cmds.ikHandle(n = prefix + SERigNaming.s_TwistIKHandle, sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
+        cmds.hide(twistIK)
+        cmds.pointConstraint(childJoint, twistIK)
+
+        if parentJoint:
+            cmds.parent(twistIK, parentJoint)
+
+        slaveMasters.append(twistBeginJoint)
+
+        # Create twist knobs.
+        if knobCount > 0 and knobCount < maxKnobCount:
+            twistBeginJointPos = SEMathHelper.getWorldPosition(twistBeginJoint)
+            twistEndJointPos = SEMathHelper.getWorldPosition(twistEndJoint)
         
-        distance = SEMathHelper.getDistance3(twistBeginJointPos, twistEndJointPos)
-        delta = distance / (knobCount + 1)
+            distance = SEMathHelper.getDistance3(twistBeginJointPos, twistEndJointPos)
+            delta = distance / (knobCount + 1)
 
-        jointSide = SEJointHelper.getJointSide(upperLimbJoint)
-        if jointSide == SERigEnum.eRigSide.RS_Right:
-            delta *= -1
+            jointSide = SEJointHelper.getJointSide(upperLimbJoint)
+            if jointSide == SERigEnum.eRigSide.RS_Right:
+                delta *= -1
 
-        w0 = 1
-        w1 = knobCount
-        for j in range(1, knobCount + 1):
-            knobJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistKnob + str(j), parentOnly = True)[0]
-            cmds.parent(knobJoint, upperLimbJoint)
-            cmds.setAttr(knobJoint + '.tx', delta*j)
-            cmds.setAttr(knobJoint + '.radius', origJntRadius * twistJointRadiusScale)
-            cmds.color(knobJoint, ud = 1)
+            w0 = 1
+            w1 = knobCount
+            for j in range(1, knobCount + 1):
+                knobJoint = cmds.duplicate(upperLimbJoint, n = prefix + SERigNaming.s_TwistKnob + str(j), parentOnly = True)[0]
+                cmds.parent(knobJoint, upperLimbJoint)
+                cmds.setAttr(knobJoint + '.tx', delta*j)
+                cmds.setAttr(knobJoint + '.radius', origJntRadius * twistJointRadiusScale)
+                cmds.color(knobJoint, ud = 1)
 
-            # Create twist knobs' orient constraint.
-            oc = cmds.orientConstraint(upperLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
-            cmds.setAttr(oc + '.' + upperLimbJoint + 'W0', w0)
-            cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
-            w0 += 1
-            w1 -= 1
+                # Create twist knobs' orient constraint.
+                oc = cmds.orientConstraint(upperLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
+                cmds.setAttr(oc + '.' + upperLimbJoint + 'W0', w0)
+                cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
+                w0 += 1
+                w1 -= 1
 
-            slaveMasters.append(knobJoint)
+                slaveMasters.append(knobJoint)
 
-    slaveMasters.append(upperLimbJoint)
+        slaveMasters.append(upperLimbJoint)
 
-    if 0:
-        print('Slave master joints:')
-        for i in slaveMasters:
-            print(i)
+        if 0:
+            print('Slave master joints:')
+            for i in slaveMasters:
+                print(i)
 
-    return slaveMasters
-
-def createLowerLimbTwistJoints(
-                               baseRig, 
-                               lowerLimbJoint, 
-                               twistJointRadiusScale = 3.0, 
-                               knobCount = 2, 
-                               maxKnobCount = 5
-                               ):
-
-    # If this function succeeded, joints upon which slave joints will be created are returned through this list.
-    slaveMasters = []
-
-    if baseRig == None or lowerLimbJoint == None:
-        print('Unable to create lower limb twist joints.')
         return slaveMasters
 
-    prefix = lowerLimbJoint
+    def createLowerLimbTwistJoints(
+                                   self,
+                                   baseRig, 
+                                   lowerLimbJoint, 
+                                   twistJointRadiusScale = 3.0, 
+                                   knobCount = 2, 
+                                   maxKnobCount = 5
+                                   ):
 
-    # Find child joint.
-    childJoint = SEJointHelper.getFirstChildJoint(lowerLimbJoint)
-    if childJoint == None:
-        print('No child joint found for lower limb:' + lowerLimbJoint)
+        # If this function succeeded, joints upon which slave joints will be created are returned through this list.
+        slaveMasters = []
+
+        if baseRig == None or lowerLimbJoint == None:
+            print('Unable to create lower limb twist joints.')
+            return slaveMasters
+
+        prefix = lowerLimbJoint
+
+        # Find child joint.
+        childJoint = SEJointHelper.getFirstChildJoint(lowerLimbJoint)
+        if childJoint == None:
+            print('No child joint found for lower limb:' + lowerLimbJoint)
+            return slaveMasters
+
+        # Create twist end joints.
+        twistBeginJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistBegin, parentOnly = True)[0]
+        twistEndJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistEnd, parentOnly = True)[0]
+        cmds.delete(cmds.pointConstraint(childJoint, twistBeginJoint))
+
+        # Adjust twist end joints.
+        origJntRadius = cmds.getAttr(lowerLimbJoint + '.radius')
+
+        # Set new radius and color for twist end joints.
+        for i in [twistBeginJoint, twistEndJoint]:
+            cmds.setAttr(i + '.radius', origJntRadius * twistJointRadiusScale)
+            cmds.color(i, ud = 8)
+
+        # Parent twist end joints.
+        cmds.parent(twistEndJoint, twistBeginJoint)
+        cmds.parent(twistBeginJoint, lowerLimbJoint)
+
+        # Create single chain IK.
+        twistIK = cmds.ikHandle(n = prefix + SERigNaming.s_TwistIKHandle, sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
+        cmds.hide(twistIK)
+        cmds.parent(twistIK, childJoint)
+        cmds.pointConstraint(lowerLimbJoint, twistIK)
+
+        slaveMasters.append(lowerLimbJoint)
+
+        # Create twist knobs.
+        if knobCount > 0 and knobCount < maxKnobCount:
+            twistBeginJointPos = SEMathHelper.getWorldPosition(twistBeginJoint)
+            twistEndJointPos = SEMathHelper.getWorldPosition(twistEndJoint)
+        
+            distance = SEMathHelper.getDistance3(twistBeginJointPos, twistEndJointPos)
+            delta = distance / (knobCount + 1)
+
+            jointSide = SEJointHelper.getJointSide(lowerLimbJoint)
+            if jointSide == SERigEnum.eRigSide.RS_Right:
+                delta *= -1
+
+            w0 = knobCount
+            w1 = 1
+            for j in range(1, knobCount + 1):
+                knobJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistKnob + str(j), parentOnly = True)[0]
+                cmds.parent(knobJoint, lowerLimbJoint)
+                cmds.setAttr(knobJoint + '.tx', delta*j)
+                cmds.setAttr(knobJoint + '.radius', origJntRadius * twistJointRadiusScale)
+                cmds.color(knobJoint, ud = 8)
+
+                # Create twist knobs' orient constraint.
+                oc = cmds.orientConstraint(lowerLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
+                cmds.setAttr(oc + '.' + lowerLimbJoint + 'W0', w0)
+                cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
+                w0 -= 1
+                w1 += 1
+
+                slaveMasters.append(knobJoint)
+
+        slaveMasters.append(twistBeginJoint)
+        slaveMasters.append(childJoint)
+
+        if 0:
+            print('Slave master joints:')
+            for i in slaveMasters:
+                print(i)
+
         return slaveMasters
 
-    # Create twist end joints.
-    twistBeginJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistBegin, parentOnly = True)[0]
-    twistEndJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistEnd, parentOnly = True)[0]
-    cmds.delete(cmds.pointConstraint(childJoint, twistBeginJoint))
 
-    # Adjust twist end joints.
-    origJntRadius = cmds.getAttr(lowerLimbJoint + '.radius')
+    def _saveSkinWeights(self, characterName, mainProjectPath, geoList = []):
 
-    # Set new radius and color for twist end joints.
-    for i in [twistBeginJoint, twistEndJoint]:
-        cmds.setAttr(i + '.radius', origJntRadius * twistJointRadiusScale)
-        cmds.color(i, ud = 8)
+        for obj in geoList:
+            # Weights file path.
+            weightFilePath = os.path.join(mainProjectPath, characterName, skinWeightsDir, obj + skinWeightsExt)
 
-    # Parent twist end joints.
-    cmds.parent(twistEndJoint, twistBeginJoint)
-    cmds.parent(twistBeginJoint, lowerLimbJoint)
+            # Save skin weights.
+            cmds.select(obj)
+            bSkinSaver.bSaveSkinValues(weightFilePath)
 
-    # Create single chain IK.
-    twistIK = cmds.ikHandle(n = prefix + SERigNaming.s_TwistIKHandle, sol = 'ikSCsolver', sj = twistBeginJoint, ee = twistEndJoint)[0]
-    cmds.hide(twistIK)
-    cmds.parent(twistIK, childJoint)
-    cmds.pointConstraint(lowerLimbJoint, twistIK)
+    def _loadSkinWeights(self, characterName, mainProjectPath, geoList = []):
 
-    slaveMasters.append(lowerLimbJoint)
+        # Get weight file paths.
+        weightFileDir = os.path.join(mainProjectPath, characterName, skinWeightsDir)
+        weightFiles = os.listdir(weightFileDir)
 
-    # Create twist knobs.
-    if knobCount > 0 and knobCount < maxKnobCount:
-        twistBeginJointPos = SEMathHelper.getWorldPosition(twistBeginJoint)
-        twistEndJointPos = SEMathHelper.getWorldPosition(twistEndJoint)
-        
-        distance = SEMathHelper.getDistance3(twistBeginJointPos, twistEndJointPos)
-        delta = distance / (knobCount + 1)
+        # Load skin weights.
+        for weightFile in weightFiles:
+            extRes = os.path.splitext(weightFile)
 
-        jointSide = SEJointHelper.getJointSide(lowerLimbJoint)
-        if jointSide == SERigEnum.eRigSide.RS_Right:
-            delta *= -1
+            # Check extension format.
+            if not extRes > 1:
+                continue
 
-        w0 = knobCount
-        w1 = 1
-        for j in range(1, knobCount + 1):
-            knobJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistKnob + str(j), parentOnly = True)[0]
-            cmds.parent(knobJoint, lowerLimbJoint)
-            cmds.setAttr(knobJoint + '.tx', delta*j)
-            cmds.setAttr(knobJoint + '.radius', origJntRadius * twistJointRadiusScale)
-            cmds.color(knobJoint, ud = 8)
+            # Check skin weight file.
+            if not extRes[1] == skinWeightsExt:
+                continue
 
-            # Create twist knobs' orient constraint.
-            oc = cmds.orientConstraint(lowerLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
-            cmds.setAttr(oc + '.' + lowerLimbJoint + 'W0', w0)
-            cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
-            w0 -= 1
-            w1 += 1
+            # Check geometry list.
+            if geoList and not extRes[0] in geoList:
+                continue
 
-            slaveMasters.append(knobJoint)
+            # Check if the object exists.
+            if not cmds.objExists(extRes[0]):
+                continue
 
-    slaveMasters.append(twistBeginJoint)
-    slaveMasters.append(childJoint)
-
-    if 0:
-        print('Slave master joints:')
-        for i in slaveMasters:
-            print(i)
-
-    return slaveMasters
-
-
-def saveSkinWeights(characterName, mainProjectPath, geoList = []):
-    for obj in geoList:
-        # Weights file path.
-        weightFilePath = os.path.join(mainProjectPath, characterName, skinWeightsDir, obj + skinWeightsExt)
-
-        # Save skin weights.
-        cmds.select(obj)
-        bSkinSaver.bSaveSkinValues(weightFilePath)
-
-def loadSkinWeights(characterName, mainProjectPath, geoList = []):
-    # Get weight file paths.
-    weightFileDir = os.path.join(mainProjectPath, characterName, skinWeightsDir)
-    weightFiles = os.listdir(weightFileDir)
-
-    # Load skin weights.
-    for weightFile in weightFiles:
-        extRes = os.path.splitext(weightFile)
-
-        # Check extension format.
-        if not extRes > 1:
-            continue
-
-        # Check skin weight file.
-        if not extRes[1] == skinWeightsExt:
-            continue
-
-        # Check geometry list.
-        if geoList and not extRes[0] in geoList:
-            continue
-
-        # Check if the object exists.
-        if not cmds.objExists(extRes[0]):
-            continue
-
-        weightFileFullPath = os.path.join(weightFileDir, weightFile)
-        bSkinSaver.bLoadSkinValues(loadOnSelection = False, inputFile = weightFileFullPath)
+            weightFileFullPath = os.path.join(weightFileDir, weightFile)
+            bSkinSaver.bLoadSkinValues(loadOnSelection = False, inputFile = weightFileFullPath)

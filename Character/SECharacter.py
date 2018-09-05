@@ -29,6 +29,7 @@ class RigBipedCharacter():
                  characterName
                  ):
 
+        # Rig info.
         self.CharacterName = characterName
 
         # Rig components.
@@ -42,6 +43,9 @@ class RigBipedCharacter():
         self.RightHand = None
         self.Neck = None
 
+        # Rig deformation system.
+        self.RigDeform = SECharacterDeform.RigBipedCharacterDeform(self)
+
     def build(
               self,
               mainProjectPath = '', 
@@ -51,8 +55,6 @@ class RigBipedCharacter():
               lowerBodyLowerLimbKnobCount = 1,
               mainCtrlOffset = 30
               ):
-        # Create new scene
-        #cmds.file(new = True, f = True)
 
         # Import model.
         modelFile = modelFilePath % (mainProjectPath, self.CharacterName, self.CharacterName)
@@ -124,7 +126,9 @@ class RigBipedCharacter():
         lowerBodyUpperLimbJoints = ['L_Hip', 'R_Hip']
         lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
 
-        SECharacterDeform.build(baseRig, mainProjectPath, sceneScale, 
+        if self.RigDeform:
+            self.RigDeform.build(
+                                baseRig, mainProjectPath, sceneScale, 
                                 False,
                                 False,
                                 '',
