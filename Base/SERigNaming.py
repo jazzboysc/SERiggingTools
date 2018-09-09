@@ -61,3 +61,8 @@ sLeftLegIKFKSwitch  = 'leftLegIKFKSwitch'
 sRightLegIKFKSwitch = 'rightLegIKFKSwitch'
 sLeftArmIKFKSwitch  = 'leftArmIKFKSwitch'
 sRightArmIKFKSwitch = 'rightArmIKFKSwitch'
+
+sLeftLegIKFKAutoHide  = 'leftLegIKFKAutoHide'
+sRightLegIKFKAutoHide = 'rightLegIKFKAutoHide'
+sLeftArmIKFKAutoHide  = 'leftArmIKFKAutoHide'
+sRightArmIKFKAutoHide = 'rightArmIKFKAutoHide'

@@ -108,6 +108,15 @@ class RigBase():
             cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
         self.MainIKFKSwitchAts = mainIKFKSwitchAts
+
+        # Add IK/FK auto hide options.
+        mainIKFKAutoHideAts = [SERigNaming.sLeftLegIKFKAutoHide, SERigNaming.sRightLegIKFKAutoHide, 
+                             SERigNaming.sLeftArmIKFKAutoHide, SERigNaming.sRightArmIKFKAutoHide]
+        for at in mainIKFKAutoHideAts:
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
+            cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
+        self.MainIKFKAutoHideAts = mainIKFKAutoHideAts
+
         
     def getLegIKFKSwitch(self, rigSide = SERigEnum.eRigSide.RS_Unknown):
 

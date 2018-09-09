@@ -208,7 +208,7 @@ class RigBipedCharacter():
         # Spine.
         spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = self.BaseRig, 
                                                      rigSide = SERigEnum.eRigSide.RS_Center, 
-                                                     rigType = SERigEnum.eRigType.RT_Component)
+                                                     rigType = SERigEnum.eRigType.RT_SpineComponent)
         spine.build(
                     spineJoints = spineJnts,
                     rootJoint = rootJnt,
@@ -222,7 +222,7 @@ class RigBipedCharacter():
         # Left Leg.
         leftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = self.BaseRig,
                                                       rigSide = SERigEnum.eRigSide.RS_Left, 
-                                                      rigType = SERigEnum.eRigType.RT_Component)
+                                                      rigType = SERigEnum.eRigType.RT_LegComponent)
         leftLeg.build(
                 legJoints = leftLegJnts,
                 footHelperJoints = leftFootHelperJoints,
@@ -241,7 +241,7 @@ class RigBipedCharacter():
         # Right Leg.
         rightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = self.BaseRig,
                                                        rigSide = SERigEnum.eRigSide.RS_Right, 
-                                                       rigType = SERigEnum.eRigType.RT_Component)
+                                                       rigType = SERigEnum.eRigType.RT_LegComponent)
         rightLeg.build(
                 legJoints = rightLegJnts,
                 footHelperJoints = rightFootHelperJoints,
@@ -260,7 +260,7 @@ class RigBipedCharacter():
         # Left arm.
         leftArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'L_Arm', baseRig = self.BaseRig,
                                                       rigSide = SERigEnum.eRigSide.RS_Left, 
-                                                      rigType = SERigEnum.eRigType.RT_Component)
+                                                      rigType = SERigEnum.eRigType.RT_ArmComponent)
         leftArm.build(
                 armJoints = leftArmJnts,
                 armPVLocator = 'locator_L_ArmPV',
@@ -275,7 +275,7 @@ class RigBipedCharacter():
         # Right arm.
         rightArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'R_Arm', baseRig = self.BaseRig,
                                                       rigSide = SERigEnum.eRigSide.RS_Right, 
-                                                      rigType = SERigEnum.eRigType.RT_Component)
+                                                      rigType = SERigEnum.eRigType.RT_ArmComponent)
         rightArm.build(
                 armJoints = rightArmJnts,
                 armPVLocator = 'locator_R_ArmPV',
@@ -290,7 +290,7 @@ class RigBipedCharacter():
         # Left hand.
         leftHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'L_Hand', baseRig = self.BaseRig,
                                                       rigSide = SERigEnum.eRigSide.RS_Left, 
-                                                      rigType = SERigEnum.eRigType.RT_Component)
+                                                      rigType = SERigEnum.eRigType.RT_HandComponent)
         leftHand.build(
                 fingers = leftHandJnts,
                 armFKFingerAttachPoint = 'L_Wrist',
@@ -301,7 +301,7 @@ class RigBipedCharacter():
         # Right hand.
         rightHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'R_Hand', baseRig = self.BaseRig,
                                                       rigSide = SERigEnum.eRigSide.RS_Right, 
-                                                      rigType = SERigEnum.eRigType.RT_Component)
+                                                      rigType = SERigEnum.eRigType.RT_HandComponent)
         rightHand.build(
                 fingers = rightHandJnts,
                 armFKFingerAttachPoint = 'R_Wrist',
@@ -312,7 +312,7 @@ class RigBipedCharacter():
         # Neck.
         neck = SERigBipedNeckComponent.RigHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
                                                       rigSide = SERigEnum.eRigSide.RS_Center, 
-                                                      rigType = SERigEnum.eRigType.RT_Neck)
+                                                      rigType = SERigEnum.eRigType.RT_NeckComponent)
         neck.build(
                 neckJoints = neckJnts,
                 fkNeckAttachPoint = 'C_ChestEnd',

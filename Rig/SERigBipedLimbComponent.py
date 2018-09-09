@@ -220,7 +220,7 @@ class RigHumanLeg(RigHumanLimb):
                                  prefix = self.Prefix + '_PV', 
                                  scale = rigScale * 15, 
                                  translateTo = legPVLocator,
-                                 parent = self.ControlsGrp, 
+                                 parent = self.IKControlGroup, 
                                  lockChannels = ['s', 'r', 'v'],
                                  flipScaleX = flipScaleX
                                  )
@@ -367,6 +367,32 @@ class RigHumanLeg(RigHumanLimb):
         footRotationES += self.FootHelperJoints[SERigNaming.sFootIntJnt] + '.rotateZ = clamp(0, 25, ' + footRotationControl.ControlObject + '.rotateZ);'
 
         cmds.expression(n = footRotationEN, s = footRotationES, ae = 1)
+
+        # Create IK/FK control group auto hide expression.
+
+        mainCtrlAutoHideAt = ''
+        mainCtrlIKFKSwitchAt = ''
+        if self.RigSide == SERigEnum.eRigSide.RS_Left:
+            mainCtrlAutoHideAt = SERigNaming.sLeftLegIKFKAutoHide
+            mainCtrlIKFKSwitchAt = SERigNaming.sLeftLegIKFKSwitch
+        else:
+            mainCtrlAutoHideAt = SERigNaming.sRightLegIKFKAutoHide
+            mainCtrlIKFKSwitchAt = SERigNaming.sRightLegIKFKSwitch
+
+        ikfkAutoHideEN = SERigNaming.sExpressionPrefix + self.Prefix + 'IKFKAutoHide'
+        ikfkAutoHideES = 'if( Main_Ctrl.' + mainCtrlAutoHideAt + ' )'
+        ikfkAutoHideES += '\n{\n'
+        ikfkAutoHideES += self.FKControlGroup + '.visibility = 1 - int(Main_Ctrl.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\n'
+        ikfkAutoHideES += self.IKControlGroup + '.visibility = int(Main_Ctrl.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\n}\nelse\n{\n'
+        ikfkAutoHideES += self.FKControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\n'
+        ikfkAutoHideES += self.IKControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\n}'
+
+        cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
+
 
     def attachFootHelperJoints(
             self,
