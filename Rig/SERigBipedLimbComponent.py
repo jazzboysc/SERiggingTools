@@ -379,16 +379,17 @@ class RigHumanLeg(RigHumanLimb):
             mainCtrlAutoHideAt = SERigNaming.sRightLegIKFKAutoHide
             mainCtrlIKFKSwitchAt = SERigNaming.sRightLegIKFKSwitch
 
+        mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
         ikfkAutoHideEN = SERigNaming.sExpressionPrefix + self.Prefix + 'IKFKAutoHide'
-        ikfkAutoHideES = 'if( Main_Ctrl.' + mainCtrlAutoHideAt + ' )'
+        ikfkAutoHideES = 'if( ' + mainControl + '.' + mainCtrlAutoHideAt + ' )'
         ikfkAutoHideES += '\n{\n'
-        ikfkAutoHideES += self.FKControlGroup + '.visibility = 1 - int(Main_Ctrl.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = 1 - int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ');'
         ikfkAutoHideES += '\n'
-        ikfkAutoHideES += self.IKControlGroup + '.visibility = int(Main_Ctrl.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ');'
         ikfkAutoHideES += '\n}\nelse\n{\n'
-        ikfkAutoHideES += self.FKControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = 1;'
         ikfkAutoHideES += '\n'
-        ikfkAutoHideES += self.IKControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = 1;'
         ikfkAutoHideES += '\n}'
 
         cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
@@ -722,7 +723,7 @@ class RigHumanArm(RigHumanLimb):
                                  prefix = self.Prefix + '_PV', 
                                  scale = rigScale * 15, 
                                  translateTo = armPVLocator,
-                                 parent = self.ControlsGrp, 
+                                 parent = self.IKControlGroup, 
                                  lockChannels = ['s', 'r', 'v'],
                                  flipScaleX = flipScaleX
                                  )
@@ -756,6 +757,33 @@ class RigHumanArm(RigHumanLimb):
             fkArmAttachPoint = SEJointHelper.getFirstParentJoint(armJoints[0])
             if fkArmAttachPoint and len(self.FKArmControls) > 0:
                 cmds.parentConstraint(fkArmAttachPoint, self.FKArmControls[0].ControlGroup, mo = 1)
+
+        # Create IK/FK control group auto hide expression.
+
+        mainCtrlAutoHideAt = ''
+        mainCtrlIKFKSwitchAt = ''
+        if self.RigSide == SERigEnum.eRigSide.RS_Left:
+            mainCtrlAutoHideAt = SERigNaming.sLeftArmIKFKAutoHide
+            mainCtrlIKFKSwitchAt = SERigNaming.sLeftArmIKFKSwitch
+        else:
+            mainCtrlAutoHideAt = SERigNaming.sRightArmIKFKAutoHide
+            mainCtrlIKFKSwitchAt = SERigNaming.sRightArmIKFKSwitch
+
+        mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
+        ikfkAutoHideEN = SERigNaming.sExpressionPrefix + self.Prefix + 'IKFKAutoHide'
+        ikfkAutoHideES = 'if( ' + mainControl + '.' + mainCtrlAutoHideAt + ' )'
+        ikfkAutoHideES += '\n{\n'
+        ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = 1 - int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\n'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\n}\nelse\n{\n'
+        ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\n'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\n}'
+
+        cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
+
 
 #-----------------------------------------------------------------------------
 # Rig Human Hand Class

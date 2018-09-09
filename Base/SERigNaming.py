@@ -1,3 +1,4 @@
+sMainControlPrefix  = 'Main'
 sControl            = '_Ctrl'
 sControlGroup       = '_CtrlGrp'
 sRigGroup           = 'RigGrp'

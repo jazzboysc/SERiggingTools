@@ -70,7 +70,7 @@ class RigBase():
         mainCtrl = SERigControl.RigCircleControl(
                             rigSide = SERigEnum.eRigSide.RS_Center,
                             rigType = SERigEnum.eRigType.RT_Global,
-                            prefix = 'Main', 
+                            prefix = SERigNaming.sMainControlPrefix, 
                             scale = scale * 4, 
                             parent = global2Ctrl.ControlObject, 
                             translateTo = mainCtrlAttachObject,
@@ -105,7 +105,7 @@ class RigBase():
         mainIKFKSwitchAts = [SERigNaming.sLeftLegIKFKSwitch, SERigNaming.sRightLegIKFKSwitch, 
                              SERigNaming.sLeftArmIKFKSwitch, SERigNaming.sRightArmIKFKSwitch]
         for at in mainIKFKSwitchAts:
-            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'float', k = 1, dv = 1.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
         self.MainIKFKSwitchAts = mainIKFKSwitchAts
 
