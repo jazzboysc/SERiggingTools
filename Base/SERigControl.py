@@ -78,6 +78,13 @@ class RigControl():
         self.FlipScaleY = flipScaleY
         self.FlipScaleZ = flipScaleZ
 
+        # Add component instance info to top group.
+        cmds.addAttr(self.ControlGroup, ln = 'RigSide', dt = 'string')
+        cmds.addAttr(self.ControlGroup, ln = 'RigType', dt = 'string')
+
+        cmds.setAttr(self.ControlGroup + '.' + 'RigSide', SERigEnum.eRigSideStringTable[self.RigSide], type = 'string', l = 1)
+        cmds.setAttr(self.ControlGroup + '.' + 'RigType', SERigEnum.eRigTypeStringTable[self.RigType], type = 'string', l = 1)
+
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         return None
 

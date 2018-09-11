@@ -35,7 +35,7 @@ class RigHumanLimb(RigComponent):
 
         if cmds.objExists(limbPVLocator) and cmds.objExists(parentJoint):
 
-            self.PVLocatorSync = cmds.duplicate(limbPVLocator, n = limbPVLocator + SERigNaming.s_Sync, rr = True, po = True)
+            self.PVLocatorSync = cmds.duplicate(limbPVLocator, n = limbPVLocator + SERigNaming.s_Sync, rr = True, po = True)[0]
             cmds.parent(self.PVLocatorSync, w = 1) # Parent to world space first.
             cmds.parent(self.PVLocatorSync, self.RigPartsGrp)
             cmds.parentConstraint(parentJoint, self.PVLocatorSync, mo = 1)
@@ -65,6 +65,40 @@ class RigHumanLimb(RigComponent):
                 cmds.delete(cmds.orientConstraint(fkControlTarget, fkControl.ControlObject))
         else:
             print('The numbers of FK controls and control targets do not match.')
+
+    def saveDelegates(self):
+
+        # FK to IK
+        fkSyncTargets = ''
+        fkSyncSources = ''
+        for fkControl, fkControlTarget in zip(self.LimbFKControls, self.LimbFKControlSyncTargets):
+            fkSyncTargets += fkControlTarget
+            fkSyncTargets += ','
+            fkSyncSources += fkControl.ControlObject
+            fkSyncSources += ','
+        fkSyncTargets = fkSyncTargets[:-1]
+        fkSyncSources = fkSyncSources[:-1]
+
+        cmds.addAttr(self.TopGrp, ln = 'FKSyncTargets', dt = 'string')
+        cmds.addAttr(self.TopGrp, ln = 'FKSyncSources', dt = 'string')
+
+        cmds.setAttr(self.TopGrp + '.' + 'FKSyncTargets', fkSyncTargets, type = 'string', l = 1)
+        cmds.setAttr(self.TopGrp + '.' + 'FKSyncSources', fkSyncSources, type = 'string', l = 1)
+
+        # IK to FK
+        cmds.addAttr(self.TopGrp, ln = 'IKMainControl', dt = 'string')
+        cmds.addAttr(self.TopGrp, ln = 'IKMainRotationControl', dt = 'string')
+        cmds.addAttr(self.TopGrp, ln = 'PVControl', dt = 'string')
+        cmds.addAttr(self.TopGrp, ln = 'IKMainControlSyncTarget', dt = 'string')
+        cmds.addAttr(self.TopGrp, ln = 'PVLocatorSyncTarget', dt = 'string')
+
+        cmds.setAttr(self.TopGrp + '.' + 'IKMainControl', self.LimbIKMainControl.ControlObject, type = 'string', l = 1)
+        cmds.setAttr(self.TopGrp + '.' + 'IKMainRotationControl', self.LimbIKMainRotationControl.ControlObject, type = 'string', l = 1)
+        cmds.setAttr(self.TopGrp + '.' + 'PVControl', self.LimbPVControl.ControlObject, type = 'string', l = 1)
+        cmds.setAttr(self.TopGrp + '.' + 'IKMainControlSyncTarget', self.LimbIKMainControlSyncTarget.ControlObject, type = 'string', l = 1)
+        cmds.setAttr(self.TopGrp + '.' + 'PVLocatorSyncTarget', self.PVLocatorSync, type = 'string', l = 1)
+
+
 
 #-----------------------------------------------------------------------------
 # Rig Human Leg Class
@@ -393,6 +427,9 @@ class RigHumanLeg(RigHumanLimb):
         ikfkAutoHideES += '\n}'
 
         cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
+
+        # Save delegates to top group.
+        self.saveDelegates()
 
 
     def attachFootHelperJoints(
@@ -783,6 +820,9 @@ class RigHumanArm(RigHumanLimb):
         ikfkAutoHideES += '\n}'
 
         cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
+
+        # Save delegates to top group.
+        self.saveDelegates()
 
 
 #-----------------------------------------------------------------------------

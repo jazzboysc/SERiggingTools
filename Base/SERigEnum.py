@@ -2,13 +2,22 @@ def SE_RigEnum(**namedValues):
     return type('SERigEnum', (), namedValues)
 
 eRigSide = SE_RigEnum(
+    RS_Unknown = 0,
     RS_Left    = 1,
     RS_Right   = 2,
     RS_Center  = 3,
-    RS_Unknown = 4
+    RS_Max     = 4
     )
 
+eRigSideStringTable = [
+    'RS_Unknown',    
+    'RS_Left',
+    'RS_Right',
+    'RS_Center'
+    ]
+
 eRigType = SE_RigEnum(
+    RT_Unknown   = 0,
     RT_Shoulder  = 1,
     RT_Elbow     = 2,
     RT_Wrist     = 3,
@@ -30,8 +39,33 @@ eRigType = SE_RigEnum(
     RT_SpineComponent = 19,
     RT_NeckComponent  = 20,
     RT_HandComponent  = 21,
-    RT_Unknown        = 22
+    RT_Max            = 22
     )
+
+eRigTypeStringTable = [
+    'RT_Unknown',
+    'RT_Shoulder',
+    'RT_Elbow',
+    'RT_Wrist',
+    'RT_Spine',
+    'RT_Hip',
+    'RT_Knee',
+    'RT_Ankle',
+    'RT_Foot',
+    'RT_Clavicle',
+    'RT_Hand',
+    'RT_LegPV',
+    'RT_ArmPV',
+    'RT_Neck',
+    'RT_Head',
+    'RT_Global',
+    'RT_Component',
+    'RT_LegComponent',
+    'RT_ArmComponent',
+    'RT_SpineComponent',
+    'RT_NeckComponent',
+    'RT_HandComponent'
+    ]
 
 eRigColor = SE_RigEnum(
     RC_Red    = 13,
