@@ -66,37 +66,52 @@ class RigHumanLimb(RigComponent):
         else:
             print('The numbers of FK controls and control targets do not match.')
 
-    def saveDelegates(self):
+    def createDelegateAttributes(self):
 
         # FK to IK
-        fkSyncTargets = ''
-        fkSyncSources = ''
+        
+        FKSyncTargetsAttr = 'FKSyncTargets'
+        FKSyncSourcesAttr = 'FKSyncSources'
+        numTargets = len(self.LimbFKControlSyncTargets)
+        cmds.addAttr(self.TopGrp, ln = FKSyncTargetsAttr, nc = numTargets, at = 'compound')
+        cmds.addAttr(self.TopGrp, ln = FKSyncSourcesAttr, nc = numTargets, at = 'compound')
+
+        # Create compound message attributes for FK sync targets and sources.
+        for i in range(numTargets):
+
+            curTargetAttr = 'FKSyncTarget' + str(i)
+            cmds.addAttr(self.TopGrp, ln = curTargetAttr, at = 'message', p = FKSyncTargetsAttr)
+
+            curSourceAttr = 'FKSyncSource' + str(i)
+            cmds.addAttr(self.TopGrp, ln = curSourceAttr, at = 'message', p = FKSyncSourcesAttr)
+
+        # Connect sub message attributes to sync targets and sources.
+        i = 0
         for fkControl, fkControlTarget in zip(self.LimbFKControls, self.LimbFKControlSyncTargets):
-            fkSyncTargets += fkControlTarget
-            fkSyncTargets += ','
-            fkSyncSources += fkControl.ControlObject
-            fkSyncSources += ','
-        fkSyncTargets = fkSyncTargets[:-1]
-        fkSyncSources = fkSyncSources[:-1]
 
-        cmds.addAttr(self.TopGrp, ln = 'FKSyncTargets', dt = 'string')
-        cmds.addAttr(self.TopGrp, ln = 'FKSyncSources', dt = 'string')
+            curTargetAttr = 'FKSyncTarget' + str(i)
+            cmds.connectAttr(fkControlTarget + '.message', self.TopGrp + '.' + curTargetAttr)
 
-        cmds.setAttr(self.TopGrp + '.' + 'FKSyncTargets', fkSyncTargets, type = 'string', l = 1)
-        cmds.setAttr(self.TopGrp + '.' + 'FKSyncSources', fkSyncSources, type = 'string', l = 1)
+            curSourceAttr = 'FKSyncSource' + str(i)
+            cmds.connectAttr(fkControl.ControlObject + '.message', self.TopGrp + '.' + curSourceAttr)
+
+            i += 1
 
         # IK to FK
-        cmds.addAttr(self.TopGrp, ln = 'IKMainControl', dt = 'string')
-        cmds.addAttr(self.TopGrp, ln = 'IKMainRotationControl', dt = 'string')
-        cmds.addAttr(self.TopGrp, ln = 'PVControl', dt = 'string')
-        cmds.addAttr(self.TopGrp, ln = 'IKMainControlSyncTarget', dt = 'string')
-        cmds.addAttr(self.TopGrp, ln = 'PVLocatorSyncTarget', dt = 'string')
 
-        cmds.setAttr(self.TopGrp + '.' + 'IKMainControl', self.LimbIKMainControl.ControlObject, type = 'string', l = 1)
-        cmds.setAttr(self.TopGrp + '.' + 'IKMainRotationControl', self.LimbIKMainRotationControl.ControlObject, type = 'string', l = 1)
-        cmds.setAttr(self.TopGrp + '.' + 'PVControl', self.LimbPVControl.ControlObject, type = 'string', l = 1)
-        cmds.setAttr(self.TopGrp + '.' + 'IKMainControlSyncTarget', self.LimbIKMainControlSyncTarget.ControlObject, type = 'string', l = 1)
-        cmds.setAttr(self.TopGrp + '.' + 'PVLocatorSyncTarget', self.PVLocatorSync, type = 'string', l = 1)
+        # Create message attributes for IK sync targets and sources.
+        cmds.addAttr(self.TopGrp, ln = 'IKMainControl', at = 'message')
+        cmds.addAttr(self.TopGrp, ln = 'IKMainRotationControl', at = 'message')
+        cmds.addAttr(self.TopGrp, ln = 'PVControl', at = 'message')
+        cmds.addAttr(self.TopGrp, ln = 'IKMainControlSyncTarget', at = 'message')
+        cmds.addAttr(self.TopGrp, ln = 'PVLocatorSyncTarget', at = 'message')
+
+        # Connect message attributes to sync targets and sources.
+        cmds.connectAttr(self.LimbIKMainControl.ControlObject + '.message', self.TopGrp + '.' + 'IKMainControl')
+        cmds.connectAttr(self.LimbIKMainRotationControl.ControlObject + '.message', self.TopGrp + '.' + 'IKMainRotationControl')
+        cmds.connectAttr(self.LimbPVControl.ControlObject + '.message', self.TopGrp + '.' + 'PVControl')
+        cmds.connectAttr(self.LimbIKMainControlSyncTarget.ControlObject + '.message', self.TopGrp + '.' + 'IKMainControlSyncTarget')
+        cmds.connectAttr(self.PVLocatorSync + '.message', self.TopGrp + '.' + 'PVLocatorSyncTarget')
 
 
 
@@ -428,8 +443,8 @@ class RigHumanLeg(RigHumanLimb):
 
         cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
 
-        # Save delegates to top group.
-        self.saveDelegates()
+        # Create delegate message attributes on top group.
+        self.createDelegateAttributes()
 
 
     def attachFootHelperJoints(
@@ -821,8 +836,8 @@ class RigHumanArm(RigHumanLimb):
 
         cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
 
-        # Save delegates to top group.
-        self.saveDelegates()
+        # Create delegate message attributes on top group.
+        self.createDelegateAttributes()
 
 
 #-----------------------------------------------------------------------------
