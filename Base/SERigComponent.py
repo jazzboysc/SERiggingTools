@@ -34,9 +34,11 @@ class RigComponent():
         # Add component instance info to top group.
         cmds.addAttr(self.TopGrp, ln = 'RigSide', dt = 'string')
         cmds.addAttr(self.TopGrp, ln = 'RigType', dt = 'string')
+        cmds.addAttr(self.TopGrp, ln = 'Prefix', dt = 'string')
 
         cmds.setAttr(self.TopGrp + '.' + 'RigSide', SERigEnum.eRigSideStringTable[self.RigSide], type = 'string', l = 1)
         cmds.setAttr(self.TopGrp + '.' + 'RigType', SERigEnum.eRigTypeStringTable[self.RigType], type = 'string', l = 1)
+        cmds.setAttr(self.TopGrp + '.' + 'Prefix', self.Prefix, type = 'string', l = 1)
 
         # Parent this component to the rig base.
         if baseRig:

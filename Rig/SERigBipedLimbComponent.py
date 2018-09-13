@@ -31,6 +31,23 @@ class RigHumanLimb(RigComponent):
         self.LimbFKControls = []
         self.LimbFKControlSyncTargets = []
 
+    @staticmethod
+    def getFKSyncTargets(rigHumanLimb):
+
+        res = None
+        
+        if cmds.objExists(rigHumanLimb):
+            if cmds.attributeQuery('Prefix', n = rigHumanLimb, ex = 1):
+                attr = cmds.getAttr(rigHumanLimb + '.Prefix')
+                print(attr)
+            else:
+                cmds.error('Prefix attribute does not exist.')
+        else:
+            cmds.error('Rig component does not exist.')
+
+        return res
+
+
     def createPVLocatorSync(self, limbPVLocator, parentJoint):
 
         if cmds.objExists(limbPVLocator) and cmds.objExists(parentJoint):
@@ -65,6 +82,7 @@ class RigHumanLimb(RigComponent):
                 cmds.delete(cmds.orientConstraint(fkControlTarget, fkControl.ControlObject))
         else:
             print('The numbers of FK controls and control targets do not match.')
+
 
     def createDelegateAttributes(self):
 
