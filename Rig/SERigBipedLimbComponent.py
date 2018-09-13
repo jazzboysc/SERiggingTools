@@ -72,29 +72,33 @@ class RigHumanLimb(RigComponent):
         
         FKSyncTargetsAttr = self.Prefix + 'FKSyncTargets'
         FKSyncSourcesAttr = self.Prefix + 'FKSyncSources'
+        
         numTargets = len(self.LimbFKControlSyncTargets)
+        numSources = len(self.LimbFKControls)
+
+        if numTargets != numSources:
+            cmds.error('The number of FK sync targets does not match the number of FK sync sources')
+            return
+
+        # Create compound message attribute for FK sync targets.
         cmds.addAttr(self.TopGrp, ln = FKSyncTargetsAttr, nc = numTargets, at = 'compound')
-        cmds.addAttr(self.TopGrp, ln = FKSyncSourcesAttr, nc = numTargets, at = 'compound')
-
-        # Create compound message attributes for FK sync targets and sources.
         for i in range(numTargets):
-
             curTargetAttr = self.Prefix + 'FKSyncTarget' + str(i)
             cmds.addAttr(self.TopGrp, ln = curTargetAttr, at = 'message', p = FKSyncTargetsAttr)
 
+        # Create compound message attributes for FK sync sources.
+        cmds.addAttr(self.TopGrp, ln = FKSyncSourcesAttr, nc = numSources, at = 'compound')
+        for i in range(numSources):
             curSourceAttr = self.Prefix + 'FKSyncSource' + str(i)
             cmds.addAttr(self.TopGrp, ln = curSourceAttr, at = 'message', p = FKSyncSourcesAttr)
 
         # Connect sub message attributes to sync targets and sources.
         i = 0
         for fkControl, fkControlTarget in zip(self.LimbFKControls, self.LimbFKControlSyncTargets):
-
             curTargetAttr = self.Prefix + 'FKSyncTarget' + str(i)
             cmds.connectAttr(fkControlTarget + '.message', self.TopGrp + '.' + curTargetAttr)
-
             curSourceAttr = self.Prefix + 'FKSyncSource' + str(i)
             cmds.connectAttr(fkControl.ControlObject + '.message', self.TopGrp + '.' + curSourceAttr)
-
             i += 1
 
         # IK to FK
