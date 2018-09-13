@@ -34,12 +34,23 @@ class RigHumanLimb(RigComponent):
     @staticmethod
     def getFKSyncTargets(rigHumanLimb):
 
-        res = None
+        res = []
         
         if cmds.objExists(rigHumanLimb):
-            if cmds.attributeQuery('Prefix', n = rigHumanLimb, ex = 1):
-                attr = cmds.getAttr(rigHumanLimb + '.Prefix')
-                print(attr)
+            if cmds.attributeQuery(SERigNaming.sPrefixAttr, n = rigHumanLimb, ex = 1):
+
+                prefixAttr = cmds.getAttr(rigHumanLimb + '.' + SERigNaming.sPrefixAttr)
+                FKSyncTargetsAttr = prefixAttr + SERigNaming.sFKSyncTargets
+
+                if cmds.attributeQuery(FKSyncTargetsAttr, n = rigHumanLimb, ex = 1):
+                    compoundRes = cmds.getAttr(rigHumanLimb + '.' + FKSyncTargetsAttr)[0]
+                    for i in range(len(compoundRes)):
+                        curAttr = prefixAttr + SERigNaming.sFKSyncTarget + str(i)
+                        curAttrValue = cmds.listConnections(rigHumanLimb + '.' + curAttr)
+                        res.append(curAttrValue[0])
+                else:
+                    cmds.error('FKSyncTargets attribute does not exist.')
+
             else:
                 cmds.error('Prefix attribute does not exist.')
         else:
