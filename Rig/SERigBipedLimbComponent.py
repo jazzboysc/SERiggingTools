@@ -31,6 +31,7 @@ class RigHumanLimb(RigComponent):
         self.LimbFKControls = []
         self.LimbFKControlSyncTargets = []
 
+
     @staticmethod
     def getFKSyncTargets(rigHumanLimb):
 
@@ -49,10 +50,113 @@ class RigHumanLimb(RigComponent):
                         curAttrValue = cmds.listConnections(rigHumanLimb + '.' + curAttr)
                         res.append(curAttrValue[0])
                 else:
-                    cmds.error('FKSyncTargets attribute does not exist.')
+                    cmds.error('Attribute does not exist.')
 
             else:
-                cmds.error('Prefix attribute does not exist.')
+                cmds.error('Attribute does not exist.')
+        else:
+            cmds.error('Rig component does not exist.')
+
+        return res
+
+
+    @staticmethod
+    def getFKSyncSources(rigHumanLimb):
+
+        res = []
+        
+        if cmds.objExists(rigHumanLimb):
+            if cmds.attributeQuery(SERigNaming.sPrefixAttr, n = rigHumanLimb, ex = 1):
+
+                prefixAttr = cmds.getAttr(rigHumanLimb + '.' + SERigNaming.sPrefixAttr)
+                FKSyncSourcesAttr = prefixAttr + SERigNaming.sFKSyncSources
+
+                if cmds.attributeQuery(FKSyncSourcesAttr, n = rigHumanLimb, ex = 1):
+                    compoundRes = cmds.getAttr(rigHumanLimb + '.' + FKSyncSourcesAttr)[0]
+                    for i in range(len(compoundRes)):
+                        curAttr = prefixAttr + SERigNaming.sFKSyncSource + str(i)
+                        curAttrValue = cmds.listConnections(rigHumanLimb + '.' + curAttr)
+                        res.append(curAttrValue[0])
+                else:
+                    cmds.error('Attribute does not exist.')
+
+            else:
+                cmds.error('Attribute does not exist.')
+        else:
+            cmds.error('Rig component does not exist.')
+
+        return res
+
+
+    @staticmethod
+    def getIKMainControl(rigHumanLimb):
+
+        res = None
+        if cmds.objExists(rigHumanLimb):
+            if cmds.attributeQuery(SERigNaming.sIKMainControl, n = rigHumanLimb, ex = 1):
+                res = cmds.listConnections(rigHumanLimb + '.' + SERigNaming.sIKMainControl)[0]
+            else:
+                cmds.error('Attribute does not exist.')
+        else:
+            cmds.error('Rig component does not exist.')
+
+        return res
+
+
+    @staticmethod
+    def getIKMainRotationControl(rigHumanLimb):
+
+        res = None
+        if cmds.objExists(rigHumanLimb):
+            if cmds.attributeQuery(SERigNaming.sIKMainRotationControl, n = rigHumanLimb, ex = 1):
+                res = cmds.listConnections(rigHumanLimb + '.' + SERigNaming.sIKMainRotationControl)[0]
+            else:
+                cmds.error('Attribute does not exist.')
+        else:
+            cmds.error('Rig component does not exist.')
+
+        return res
+
+
+    @staticmethod
+    def getPVControl(rigHumanLimb):
+
+        res = None
+        if cmds.objExists(rigHumanLimb):
+            if cmds.attributeQuery(SERigNaming.sPVControl, n = rigHumanLimb, ex = 1):
+                res = cmds.listConnections(rigHumanLimb + '.' + SERigNaming.sPVControl)[0]
+            else:
+                cmds.error('Attribute does not exist.')
+        else:
+            cmds.error('Rig component does not exist.')
+
+        return res
+
+
+    @staticmethod
+    def getIKMainControlSyncTarget(rigHumanLimb):
+
+        res = None
+        if cmds.objExists(rigHumanLimb):
+            if cmds.attributeQuery(SERigNaming.sIKMainControlSyncTarget, n = rigHumanLimb, ex = 1):
+                res = cmds.listConnections(rigHumanLimb + '.' + SERigNaming.sIKMainControlSyncTarget)[0]
+            else:
+                cmds.error('Attribute does not exist.')
+        else:
+            cmds.error('Rig component does not exist.')
+
+        return res
+
+
+    @staticmethod
+    def getPVLocatorSyncTarget(rigHumanLimb):
+
+        res = None
+        if cmds.objExists(rigHumanLimb):
+            if cmds.attributeQuery(SERigNaming.sPVLocatorSyncTarget, n = rigHumanLimb, ex = 1):
+                res = cmds.listConnections(rigHumanLimb + '.' + SERigNaming.sPVLocatorSyncTarget)[0]
+            else:
+                cmds.error('Attribute does not exist.')
         else:
             cmds.error('Rig component does not exist.')
 
