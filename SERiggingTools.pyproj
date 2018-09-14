@@ -42,7 +42,7 @@
     <Compile Include="Character\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Plugins\SERigMetaNode.py">
+    <Compile Include="Plugins\SERigCharacterType.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rig\SERigBipedLimbComponent.py">
