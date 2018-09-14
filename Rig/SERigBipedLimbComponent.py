@@ -176,27 +176,41 @@ class RigHumanLimb(RigComponent):
         else:
             print('Cannot create limb PV locator sync.')
 
-    def syncIKToFK(self):
 
-        if self.LimbIKMainControl and self.LimbIKMainControlSyncTarget and self.LimbPVControl and self.PVLocatorSync and self.LimbIKMainRotationControl:
+    @staticmethod
+    def syncIKToFK(rigHumanLimb):
 
-            cmds.delete(cmds.pointConstraint(self.PVLocatorSync, self.LimbPVControl.ControlObject))
-            cmds.delete(cmds.pointConstraint(self.LimbIKMainControlSyncTarget.ControlObject, self.LimbIKMainControl.ControlObject))
-            cmds.delete(cmds.orientConstraint(self.LimbIKMainControlSyncTarget.ControlObject, self.LimbIKMainRotationControl.ControlObject))
+        LimbIKMainControl = RigHumanLimb.getIKMainControl(rigHumanLimb)
+        LimbIKMainControlSyncTarget = RigHumanLimb.getIKMainControlSyncTarget(rigHumanLimb)
+        LimbPVControl = RigHumanLimb.getPVControl(rigHumanLimb)
+        PVLocatorSync = RigHumanLimb.getPVLocatorSyncTarget(rigHumanLimb)
+        LimbIKMainRotationControl = RigHumanLimb.getIKMainRotationControl(rigHumanLimb)
+
+        if LimbIKMainControl and LimbIKMainControlSyncTarget and LimbPVControl and PVLocatorSync and LimbIKMainRotationControl:
+
+            cmds.delete(cmds.pointConstraint(PVLocatorSync, LimbPVControl))
+            cmds.delete(cmds.pointConstraint(LimbIKMainControlSyncTarget, LimbIKMainControl))
+            cmds.delete(cmds.orientConstraint(LimbIKMainControlSyncTarget, LimbIKMainRotationControl))
 
         else:
             print('Delegates not created.')
 
-    def syncFKToIK(self):
+
+    @staticmethod
+    def syncFKToIK(rigHumanLimb):
         
-        numFKControls = len(self.LimbFKControls)
-        numFKControlTargets = len(self.LimbFKControlSyncTargets)
+        LimbFKControls = RigHumanLimb.getFKSyncSources(rigHumanLimb)
+        LimbFKControlSyncTargets = RigHumanLimb.getFKSyncTargets(rigHumanLimb)
+        numFKControls = len(LimbFKControls)
+        numFKControlTargets = len(LimbFKControlSyncTargets)
 
         if numFKControls == numFKControlTargets:
-            for fkControl, fkControlTarget in zip(self.LimbFKControls, self.LimbFKControlSyncTargets):
-                cmds.delete(cmds.orientConstraint(fkControlTarget, fkControl.ControlObject))
+
+            for fkControl, fkControlTarget in zip(LimbFKControls, LimbFKControlSyncTargets):
+                cmds.delete(cmds.orientConstraint(fkControlTarget, fkControl))
+
         else:
-            print('The numbers of FK controls and control targets do not match.')
+            print('The numbers of FK control sources and targets do not match.')
 
 
     def createDelegateAttributes(self):
