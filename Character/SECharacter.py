@@ -28,7 +28,6 @@ class RigBipedCharacter():
                  self,
                  characterName
                  ):
-
         # Rig info.
         self.CharacterName = characterName
 
@@ -79,6 +78,11 @@ class RigBipedCharacter():
                           scale = sceneScale, mainCtrlAttachObject = headJnt, 
                           mainCtrlOffset = mainCtrlOffset)
         self.BaseRig = baseRig
+
+        # Create character type node.
+        myType = cmds.createNode('RigCharacterType')
+        cmds.addAttr(self.BaseRig.TopGrp, ln = 'myType', at = 'message')
+        cmds.connectAttr(myType + '.message', self.BaseRig.TopGrp + '.myType')
 
         # Parent the imported model to the rig base.
         modelGrp = ('%s' + SERigNaming.s_ModelGroup) % self.CharacterName

@@ -45,6 +45,8 @@
     <Compile Include="Plugins\SERigCharacterType.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Plugins\SERigComponentType.py" />
+    <Compile Include="Plugins\SERigControlType.py" />
     <Compile Include="Rig\SERigBipedLimbComponent.py">
       <SubType>Code</SubType>
     </Compile>
