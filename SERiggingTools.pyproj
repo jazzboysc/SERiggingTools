@@ -42,11 +42,9 @@
     <Compile Include="Character\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Plugins\SERigCharacterType.py">
+    <Compile Include="Plugins\SERiggingToolsPlugin.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Plugins\SERigComponentType.py" />
-    <Compile Include="Plugins\SERigControlType.py" />
     <Compile Include="Rig\SERigBipedLimbComponent.py">
       <SubType>Code</SubType>
     </Compile>
@@ -61,6 +59,9 @@
     <Compile Include="ThirdParty\__init__.py" />
     <Compile Include="Utils\SEJointHelper.py" />
     <Compile Include="Utils\SEMathHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\SERigObjectTypeHelper.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\SEStringHelper.py" />

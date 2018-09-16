@@ -1,6 +1,7 @@
 import maya.cmds as cmds
 from . import SERigEnum
 from . import SERigNaming
+from ..Utils import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
 # Rig Component Class
@@ -44,3 +45,6 @@ class RigComponent():
         if baseRig:
             cmds.parent(self.TopGrp, baseRig.RigCompsGrp)
             baseRig.RigComponents.append(self)
+
+        # Create component type node.
+        SERigObjectTypeHelper.createRigObjectTypeAttr(self.TopGrp, 'RigComponentType')

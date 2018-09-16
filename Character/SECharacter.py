@@ -6,6 +6,7 @@ from ..Base import SERigEnum
 from ..Rig import SERigSpineComponent
 from ..Rig import SERigBipedLimbComponent
 from ..Rig import SERigBipedNeckComponent
+from ..Utils import SERigObjectTypeHelper
 from . import SECharacterDeform
 
 import maya.cmds as cmds
@@ -80,9 +81,7 @@ class RigBipedCharacter():
         self.BaseRig = baseRig
 
         # Create character type node.
-        myType = cmds.createNode('RigCharacterType')
-        cmds.addAttr(self.BaseRig.TopGrp, ln = 'myType', at = 'message')
-        cmds.connectAttr(myType + '.message', self.BaseRig.TopGrp + '.myType')
+        SERigObjectTypeHelper.createRigObjectTypeAttr(self.BaseRig.TopGrp, 'RigCharacterType')
 
         # Parent the imported model to the rig base.
         modelGrp = ('%s' + SERigNaming.s_ModelGroup) % self.CharacterName

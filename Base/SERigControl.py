@@ -1,6 +1,7 @@
 import maya.cmds as cmds
 from . import SERigEnum
 from . import SERigNaming
+from ..Utils import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
 # Rig Control Class
@@ -84,6 +85,9 @@ class RigControl():
 
         cmds.setAttr(self.ControlGroup + '.' + 'RigSide', SERigEnum.eRigSideStringTable[self.RigSide], type = 'string', l = 1)
         cmds.setAttr(self.ControlGroup + '.' + 'RigType', SERigEnum.eRigTypeStringTable[self.RigType], type = 'string', l = 1)
+
+        # Create control type node.
+        SERigObjectTypeHelper.createRigObjectTypeAttr(self.ControlGroup, 'RigControlType')
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
         return None
