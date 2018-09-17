@@ -959,7 +959,16 @@ class RigHumanArm(RigHumanLimb):
             # Attach FK arm controls to base rig attach point.
             fkArmAttachPoint = SEJointHelper.getFirstParentJoint(armJoints[0])
             if fkArmAttachPoint and len(self.FKArmControls) > 0:
-                cmds.parentConstraint(fkArmAttachPoint, self.FKArmControls[0].ControlGroup, mo = 1)
+                locatorShoulderLocal = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_ShoulderLocal')
+                cmds.delete(cmds.parentConstraint(armJoints[0], locatorShoulderLocal))
+                cmds.parent(locatorShoulderLocal, self.RigPartsGrp)
+                cmds.hide(locatorShoulderLocal)
+
+                locatorShoulderWorld = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_ShoulderWorld')
+                cmds.delete(cmds.parentConstraint(armJoints[0], locatorShoulderWorld))
+                cmds.parent(locatorShoulderWorld, self.RigPartsGrp)
+                cmds.hide(locatorShoulderWorld)
+
 
         # Create IK/FK control group auto hide expression.
 
