@@ -956,18 +956,33 @@ class RigHumanArm(RigHumanLimb):
                 blenderControlAttr = self.BaseRig.getArmIKFKSwitch(self.RigSide)
                 cmds.connectAttr(blenderControlAttr, blender + '.blender')
 
-            # Attach FK arm controls to base rig attach point.
+            # Attach FK arm control 0 to the clavicle.
             fkArmAttachPoint = SEJointHelper.getFirstParentJoint(armJoints[0])
             if fkArmAttachPoint and len(self.FKArmControls) > 0:
-                locatorShoulderLocal = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_ShoulderLocal')
+                locatorShoulderLocal = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_ShoulderLocal')[0]
                 cmds.delete(cmds.parentConstraint(armJoints[0], locatorShoulderLocal))
                 cmds.parent(locatorShoulderLocal, self.RigPartsGrp)
+                cmds.parentConstraint(fkArmAttachPoint, locatorShoulderLocal, mo = 1)
                 cmds.hide(locatorShoulderLocal)
 
-                locatorShoulderWorld = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_ShoulderWorld')
+                locatorShoulderWorld = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_ShoulderWorld')[0]
                 cmds.delete(cmds.parentConstraint(armJoints[0], locatorShoulderWorld))
                 cmds.parent(locatorShoulderWorld, self.RigPartsGrp)
                 cmds.hide(locatorShoulderWorld)
+
+                # FK arm control 0 follows the position of locatorShoulderLocal.
+                cmds.pointConstraint(locatorShoulderLocal, self.FKArmControls[0].ControlGroup, mo = 0)
+
+                blender = cmds.createNode("blendColors")
+                cmds.connectAttr(locatorShoulderLocal + '.r', blender + '.color2', f = 1)
+                cmds.connectAttr(locatorShoulderWorld + '.r', blender + '.color1', f = 1)
+                cmds.connectAttr(blender + '.output', self.FKArmControls[0].ControlGroup + '.r', f = 1)
+
+                blenderControlAttr = self.BaseRig.getArmFKLocalToWorldSwitch(self.RigSide)
+                if blenderControlAttr:
+                    cmds.connectAttr(blenderControlAttr, blender + '.blender')
+                else:
+                    cmds.error('Blender Control Attribute not found.')
 
 
         # Create IK/FK control group auto hide expression.

@@ -63,6 +63,11 @@ sRightLegIKFKSwitch = 'rightLegIKFKSwitch'
 sLeftArmIKFKSwitch  = 'leftArmIKFKSwitch'
 sRightArmIKFKSwitch = 'rightArmIKFKSwitch'
 
+sLeftLegFKLocalToWorldSwitch  = 'leftLegFKLocalToWorldSwitch'
+sRightLegFKLocalToWorldSwitch = 'rightLegFKLocalToWorldSwitch'
+sLeftArmFKLocalToWorldSwitch  = 'leftArmFKLocalToWorldSwitch'
+sRightArmFKLocalToWorldSwitch = 'rightArmFKLocalToWorldSwitch'
+
 sLeftLegIKFKAutoHide  = 'leftLegIKFKAutoHide'
 sRightLegIKFKAutoHide = 'rightLegIKFKAutoHide'
 sLeftArmIKFKAutoHide  = 'leftArmIKFKAutoHide'

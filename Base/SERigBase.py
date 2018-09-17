@@ -109,6 +109,14 @@ class RigBase():
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
         self.MainIKFKSwitchAts = mainIKFKSwitchAts
 
+        # Add FK arm/leg local to world rotation switches.
+        mainFKLocalToWorldSwitchAts = [SERigNaming.sLeftLegFKLocalToWorldSwitch, SERigNaming.sRightLegFKLocalToWorldSwitch,
+                                       SERigNaming.sLeftArmFKLocalToWorldSwitch, SERigNaming.sRightArmFKLocalToWorldSwitch]
+        for at in mainFKLocalToWorldSwitchAts:
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'float', k = 1, dv = 1.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+            cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
+        self.MainFKLocalToWorldSwitchAts = mainFKLocalToWorldSwitchAts
+
         # Add IK/FK auto hide options.
         mainIKFKAutoHideAts = [SERigNaming.sLeftLegIKFKAutoHide, SERigNaming.sRightLegIKFKAutoHide, 
                              SERigNaming.sLeftArmIKFKAutoHide, SERigNaming.sRightArmIKFKAutoHide]
@@ -133,6 +141,24 @@ class RigBase():
             return self.MainControl.ControlObject + '.' + self.MainIKFKSwitchAts[2]
         elif rigSide == SERigEnum.eRigSide.RS_Right:
             return self.MainControl.ControlObject + '.' + self.MainIKFKSwitchAts[3]
+        else:
+            return None
+
+    def getLegFKLocalToWorldSwitch(self, rigSide = SERigEnum.eRigSide.RS_Unknown):
+
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            return self.MainControl.ControlObject + '.' + self.MainFKLocalToWorldSwitchAts[0]
+        elif rigSide == SERigEnum.eRigSide.RS_Right:
+            return self.MainControl.ControlObject + '.' + self.MainFKLocalToWorldSwitchAts[1]
+        else:
+            return None
+
+    def getArmFKLocalToWorldSwitch(self, rigSide = SERigEnum.eRigSide.RS_Unknown):
+
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            return self.MainControl.ControlObject + '.' + self.MainFKLocalToWorldSwitchAts[2]
+        elif rigSide == SERigEnum.eRigSide.RS_Right:
+            return self.MainControl.ControlObject + '.' + self.MainFKLocalToWorldSwitchAts[3]
         else:
             return None
 
