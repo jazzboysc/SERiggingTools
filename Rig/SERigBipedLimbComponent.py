@@ -540,9 +540,33 @@ class RigHumanLeg(RigHumanLimb):
                 blenderControlAttr = self.BaseRig.getLegIKFKSwitch(self.RigSide)
                 cmds.connectAttr(blenderControlAttr, blender + '.blender')
 
+            # Attach FK controls to the pelvis.
             fkAttachPoint = SEJointHelper.getFirstParentJoint(legJoints[0])
             if fkAttachPoint:
-                cmds.parentConstraint(fkAttachPoint, self.FKControlGroup, mo = 1)
+                locatorHipLocal = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_HipLocal')[0]
+                cmds.delete(cmds.parentConstraint(legJoints[0], locatorHipLocal))
+                cmds.parent(locatorHipLocal, self.RigPartsGrp)
+                cmds.parentConstraint(fkAttachPoint, locatorHipLocal, mo = 1)
+                cmds.hide(locatorHipLocal)
+
+                locatorHipWorld = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_HipWorld')[0]
+                cmds.delete(cmds.parentConstraint(legJoints[0], locatorHipWorld))
+                cmds.parent(locatorHipWorld, self.RigPartsGrp)
+                cmds.hide(locatorHipWorld)
+
+                # FK leg control 0 follows the position of locatorHipLocal.
+                cmds.pointConstraint(locatorHipLocal, self.FKLegControls[0].ControlGroup, mo = 0)
+
+                blender = cmds.createNode("blendColors")
+                cmds.connectAttr(locatorHipLocal + '.r', blender + '.color2', f = 1)
+                cmds.connectAttr(locatorHipWorld + '.r', blender + '.color1', f = 1)
+                cmds.connectAttr(blender + '.output', self.FKLegControls[0].ControlGroup + '.r', f = 1)
+
+                blenderControlAttr = self.BaseRig.getLegFKLocalToWorldSwitch(self.RigSide)
+                if blenderControlAttr:
+                    cmds.connectAttr(blenderControlAttr, blender + '.blender')
+                else:
+                    cmds.error('Blender Control Attribute not found.')
 
         # Create foot swive control expressions.
         footBaseSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootBaseSwive'
@@ -983,7 +1007,6 @@ class RigHumanArm(RigHumanLimb):
                     cmds.connectAttr(blenderControlAttr, blender + '.blender')
                 else:
                     cmds.error('Blender Control Attribute not found.')
-
 
         # Create IK/FK control group auto hide expression.
 
