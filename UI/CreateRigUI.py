@@ -11,15 +11,18 @@ import os
 import time
 
 import cPickle
+
+import UIConfig
 #"E:/Users/admin/Documents/GitHub/SERiggingTools/UI/LoadRiggingUI.ui"
-uifile_path = "E:/Users/admin/Documents/GitHub/SERiggingTools/UI/ControlRig.ui"
+
+uiRootFile = os.path.dirname(UIConfig.__file__)
+uifile_path = uiRootFile + "/ControlRig.ui"
 
 def OpenMayaWindow():
 	''' todo: stop open more than one window'''
 	# global ui
 	# ui = loadUI(uifile_path)
 	# ui.show()
-
 
 	global mainWin
 	mainWin = mainRigWindow()
