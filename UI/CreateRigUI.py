@@ -14,7 +14,7 @@ import cPickle
 #"E:/Users/admin/Documents/GitHub/SERiggingTools/UI/LoadRiggingUI.ui"
 uifile_path = "E:/Users/admin/Documents/GitHub/SERiggingTools/UI/ControlRig.ui"
 
-def OpenMayaWindow():
+def openMayaWindow():
 	''' todo: stop open more than one window'''
 	# global ui
 	# ui = loadUI(uifile_path)
@@ -47,48 +47,24 @@ def getMayaWindow():
 
 class mainRigWindow(QtWidgets.QDialog):
 	"""docstring for mainWindow"""
-	def __init__(self, parent=getMayaWindow()):
+	def __init__(self, parent = getMayaWindow()):
 		super(mainRigWindow, self).__init__(parent)
-		self.setWindowTitle('Load Rigging File')
-		self.descLabel = QtWidgets.QLabel("Please choose the model and rig", parent=self)
-		#self.arg = arg
+		self.setWindowTitle('Create Character Rig')
+		self.descLabel = QtWidgets.QLabel("Please choose the main project path", parent = self)
 
-		# ButtonOne = QtWidgets.QPushButton("Button1")
-		# ButtonTwo = QtWidgets.QPushButton("Button2")
-
-		# ButtonHLayout = QtWidgets.QHBoxLayout()
-		# ButtonHLayout.addWidget(ButtonOne)
-		# ButtonHLayout.addWidget(ButtonTwo)
-		#ButtonHLayout.setParent(self)
-
-		# LayoutOne = self.addLayoutOne()
-		# LayoutTwo = self.addLayoutOne()
-		
-
-		TextLayoutModel = QtWidgets.QHBoxLayout()
-		self.modelLine = QtWidgets.QLineEdit()
-		TextLayoutModel.addWidget(QtWidgets.QLabel("model :"))
-		TextLayoutModel.addWidget(self.modelLine)
-		self.SetModelFileButton = QtWidgets.QPushButton("Set File")
-		TextLayoutModel.addWidget(self.SetModelFileButton)
-
-		TextLayoutRig = QtWidgets.QHBoxLayout()
-		self.buliderLine = QtWidgets.QLineEdit()
-		TextLayoutRig.addWidget(QtWidgets.QLabel("bulider   :"))
-		TextLayoutRig.addWidget(self.buliderLine)
-		self.SetBuilderFileButton = QtWidgets.QPushButton("Set File")
-		TextLayoutRig.addWidget(self.SetBuilderFileButton)
+		TextLayoutMainProjectPath = QtWidgets.QHBoxLayout()
+		self.MainProjectPathLine = QtWidgets.QLineEdit()
+		TextLayoutMainProjectPath.addWidget(QtWidgets.QLabel("Main Project Path :"))
+		TextLayoutMainProjectPath.addWidget(self.MainProjectPathLine)
+		self.SetMainProjectPathButton = QtWidgets.QPushButton("Set Path")
+		TextLayoutMainProjectPath.addWidget(self.SetMainProjectPathButton)
 
 		mainLayout = QtWidgets.QVBoxLayout(self)
 		mainLayout.addWidget(self.descLabel)
-		# mainLayout.addLayout(LayoutOne)
-		# mainLayout.addLayout(LayoutTwo)
-		mainLayout.addLayout(TextLayoutModel)
-		mainLayout.addLayout(TextLayoutRig)
+		mainLayout.addLayout(TextLayoutMainProjectPath)
 		self.SetBuilderConfigWeight(mainLayout)
 
-		self.connect(self.SetModelFileButton, QtCore.SIGNAL("clicked()"), self.selectModelFile)
-		self.connect(self.SetBuilderFileButton, QtCore.SIGNAL("clicked()"), self.selectBuilderFile)
+		self.connect(self.SetMainProjectPathButton, QtCore.SIGNAL("clicked()"), self.selectMainProjectPath)
 
 		confirmLayout = QtWidgets.QHBoxLayout()
 		self.ConfirmButton = QtWidgets.QPushButton("Create Rig")
@@ -97,7 +73,7 @@ class mainRigWindow(QtWidgets.QDialog):
 		confirmLayout.addWidget(self.CancelButton)
 		mainLayout.addLayout(confirmLayout)
 
-		self.connect(self.ConfirmButton, QtCore.SIGNAL("clicked()"), self.CreateRig)
+		self.connect(self.ConfirmButton, QtCore.SIGNAL("clicked()"), self.createRig)
 		self.connect(self.CancelButton, QtCore.SIGNAL("clicked()"), self.close)
 		#mainLayout.addLayout(ButtonHLayout)
 		#self.addLayout(ButtonHLayout)
@@ -117,29 +93,17 @@ class mainRigWindow(QtWidgets.QDialog):
 		return ButtonHLayout
 		pass
 
-	def selectModelFile(self):
-		fileResult = cmds.fileDialog2( fm = 1 )
+	def selectMainProjectPath(self):
+		fileResult = cmds.fileDialog2(fm = 3)
 		if fileResult != None:
 			print(fileResult[0])
-			self.modelLine.setText(fileResult[0])
-			#mainWin.show()
-			mainWin.update()
-			#cmds.file( fileResult[0], i=True );
-
-	def selectBuilderFile(self):
-		fileResult = cmds.fileDialog2( fm = 1 )
-		if fileResult != None:
-			print(fileResult[0])
-			self.buliderLine.setText(fileResult[0])
+			self.MainProjectPathLine.setText(fileResult[0])
 			mainWin.update()
 
-	def CreateRig(self):
-		modelStr = self.modelLine.text()
-		buliderStr = self.buliderLine.text()
+	def createRig(self):
+		modelStr = self.MainProjectPathLine.text()
 		print(modelStr)
-		cmds.file( modelStr, i=True );
-		cmds.file( buliderStr, i=True );
-		return
+
 
 	#upperBodyUpperLimbKnobCount = 2, 
  	#upperBodyLowerLimbKnobCount = 2,
