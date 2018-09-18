@@ -18,7 +18,7 @@ import UIConfig
 uiRootFile = os.path.dirname(UIConfig.__file__)
 uifile_path = uiRootFile + "/ControlRig.ui"
 
-def OpenMayaWindow():
+def openMayaWindow():
 	''' todo: stop open more than one window'''
 	# global ui
 	# ui = loadUI(uifile_path)
@@ -50,48 +50,24 @@ def getMayaWindow():
 
 class mainRigWindow(QtWidgets.QDialog):
 	"""docstring for mainWindow"""
-	def __init__(self, parent=getMayaWindow()):
+	def __init__(self, parent = getMayaWindow()):
 		super(mainRigWindow, self).__init__(parent)
-		self.setWindowTitle('Load Rigging File')
-		self.descLabel = QtWidgets.QLabel("Please choose the model and rig", parent=self)
-		#self.arg = arg
+		self.setWindowTitle('Create Character Rig')
+		self.descLabel = QtWidgets.QLabel("Please choose the main project path", parent = self)
 
-		# ButtonOne = QtWidgets.QPushButton("Button1")
-		# ButtonTwo = QtWidgets.QPushButton("Button2")
-
-		# ButtonHLayout = QtWidgets.QHBoxLayout()
-		# ButtonHLayout.addWidget(ButtonOne)
-		# ButtonHLayout.addWidget(ButtonTwo)
-		#ButtonHLayout.setParent(self)
-
-		# LayoutOne = self.addLayoutOne()
-		# LayoutTwo = self.addLayoutOne()
-		
-
-		TextLayoutModel = QtWidgets.QHBoxLayout()
-		self.modelLine = QtWidgets.QLineEdit()
-		TextLayoutModel.addWidget(QtWidgets.QLabel("model :"))
-		TextLayoutModel.addWidget(self.modelLine)
-		self.SetModelFileButton = QtWidgets.QPushButton("Set File")
-		TextLayoutModel.addWidget(self.SetModelFileButton)
-
-		TextLayoutRig = QtWidgets.QHBoxLayout()
-		self.buliderLine = QtWidgets.QLineEdit()
-		TextLayoutRig.addWidget(QtWidgets.QLabel("bulider   :"))
-		TextLayoutRig.addWidget(self.buliderLine)
-		self.SetBuilderFileButton = QtWidgets.QPushButton("Set File")
-		TextLayoutRig.addWidget(self.SetBuilderFileButton)
+		TextLayoutMainProjectPath = QtWidgets.QHBoxLayout()
+		self.MainProjectPathLine = QtWidgets.QLineEdit()
+		TextLayoutMainProjectPath.addWidget(QtWidgets.QLabel("Main Project Path :"))
+		TextLayoutMainProjectPath.addWidget(self.MainProjectPathLine)
+		self.SetMainProjectPathButton = QtWidgets.QPushButton("Set Path")
+		TextLayoutMainProjectPath.addWidget(self.SetMainProjectPathButton)
 
 		mainLayout = QtWidgets.QVBoxLayout(self)
 		mainLayout.addWidget(self.descLabel)
-		# mainLayout.addLayout(LayoutOne)
-		# mainLayout.addLayout(LayoutTwo)
-		mainLayout.addLayout(TextLayoutModel)
-		mainLayout.addLayout(TextLayoutRig)
+		mainLayout.addLayout(TextLayoutMainProjectPath)
 		self.SetBuilderConfigWeight(mainLayout)
 
-		self.connect(self.SetModelFileButton, QtCore.SIGNAL("clicked()"), self.selectModelFile)
-		self.connect(self.SetBuilderFileButton, QtCore.SIGNAL("clicked()"), self.selectBuilderFile)
+		self.connect(self.SetMainProjectPathButton, QtCore.SIGNAL("clicked()"), self.selectMainProjectPath)
 
 		confirmLayout = QtWidgets.QHBoxLayout()
 		self.ConfirmButton = QtWidgets.QPushButton("Create Rig")
@@ -100,7 +76,7 @@ class mainRigWindow(QtWidgets.QDialog):
 		confirmLayout.addWidget(self.CancelButton)
 		mainLayout.addLayout(confirmLayout)
 
-		self.connect(self.ConfirmButton, QtCore.SIGNAL("clicked()"), self.CreateRig)
+		self.connect(self.ConfirmButton, QtCore.SIGNAL("clicked()"), self.createRig)
 		self.connect(self.CancelButton, QtCore.SIGNAL("clicked()"), self.close)
 		#mainLayout.addLayout(ButtonHLayout)
 		#self.addLayout(ButtonHLayout)
@@ -120,52 +96,27 @@ class mainRigWindow(QtWidgets.QDialog):
 		return ButtonHLayout
 		pass
 
-	def selectModelFile(self):
-		fileResult = cmds.fileDialog2( fm = 1 )
+	def selectMainProjectPath(self):
+		fileResult = cmds.fileDialog2(fm = 3)
 		if fileResult != None:
 			print(fileResult[0])
-			self.modelLine.setText(fileResult[0])
-			#mainWin.show()
-			mainWin.update()
-			#cmds.file( fileResult[0], i=True );
-
-	def selectBuilderFile(self):
-		fileResult = cmds.fileDialog2( fm = 1 )
-		if fileResult != None:
-			print(fileResult[0])
-			self.buliderLine.setText(fileResult[0])
+			self.MainProjectPathLine.setText(fileResult[0])
 			mainWin.update()
 
-	def CreateRig(self):
-		modelStr = self.modelLine.text()
-		buliderStr = self.buliderLine.text()
+	def createRig(self):
+		modelStr = self.MainProjectPathLine.text()
 		print(modelStr)
-		cmds.file( modelStr, i=True );
-		cmds.file( buliderStr, i=True );
-		return
 
-	#upperBodyUpperLimbKnobCount = 2, 
- 	#upperBodyLowerLimbKnobCount = 2,
- 	#lowerBodyUpperLimbKnobCount = 2,
- 	#lowerBodyLowerLimbKnobCount = 1,
 	def SetBuilderConfigWeight(self , mainLayout ):
 		groupBox = QtWidgets.QVBoxLayout()
 		upperBodyUpperLayout = QtWidgets.QHBoxLayout()
 		upperBodyUpperLayout.addWidget(QtWidgets.QLabel("upperArmTwist :"))
 		self.upperBodyUpperLine = QtWidgets.QLineEdit()
-		#ValidatorOne = QtGui.QIntValidator(1,5)
 		self.upperBodyUpperLine.setValidator(QtGui.QIntValidator(1,5))
 		upperBodyUpperLayout.addWidget(self.upperBodyUpperLine)
 		self.upperBodyUpperLine.setText(str(1))
 		upperBodyUpperLayout.addWidget(QtWidgets.QLabel("( 1 - 5)"))
 		upperBodyUpperLayout.addSpacing(220)
-		# self.upperBodyUpperSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-		# self.upperBodyUpperSlider.setMaximum(5)
-		# self.upperBodyUpperSlider.setMinimum(1)
-		# self.connect(self.upperBodyUpperSlider, QtCore.SIGNAL('valueChanged(int)'),self.upperBodyUpperSliderChangeValue)
-		# self.upperBodyUpperNum = QtWidgets.QLabel( str( self.upperBodyUpperSlider.value() ))
-		# upperBodyUpperLayout.addWidget(self.upperBodyUpperNum)
-		# upperBodyUpperLayout.addWidget(self.upperBodyUpperSlider)
 		groupBox.addLayout(upperBodyUpperLayout)
 
 		upperBodyLowerLayout = QtWidgets.QHBoxLayout()
@@ -176,13 +127,6 @@ class mainRigWindow(QtWidgets.QDialog):
 		self.upperBodyLowerLine.setText(str(1))
 		upperBodyLowerLayout.addWidget(QtWidgets.QLabel("( 1 - 5)"))
 		upperBodyLowerLayout.addSpacing(220)
-		# self.upperBodyLowerSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-		# self.upperBodyLowerSlider.setMaximum(5)
-		# self.upperBodyLowerSlider.setMinimum(1)
-		# self.connect(self.upperBodyLowerSlider, QtCore.SIGNAL('valueChanged(int)'),self.upperBodyLowerSliderChangeValue)
-		# self.upperBodyLowerNum = QtWidgets.QLabel( str( self.upperBodyLowerSlider.value() ))
-		# upperBodyLowerLayout.addWidget(self.upperBodyLowerNum)
-		# upperBodyLowerLayout.addWidget(self.upperBodyLowerSlider)
 		groupBox.addLayout(upperBodyLowerLayout)
 
 		lowerBodyUpperLayout = QtWidgets.QHBoxLayout()
@@ -193,13 +137,6 @@ class mainRigWindow(QtWidgets.QDialog):
 		self.lowerBodyUpperLine.setText(str(1))
 		lowerBodyUpperLayout.addWidget(QtWidgets.QLabel("( 1 - 5)"))
 		lowerBodyUpperLayout.addSpacing(220)
-		# self.lowerBodyUpperSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-		# self.lowerBodyUpperSlider.setMaximum(5)
-		# self.lowerBodyUpperSlider.setMinimum(1)
-		# self.connect(self.lowerBodyUpperSlider, QtCore.SIGNAL('valueChanged(int)'),self.lowerBodyUpperSliderChangeValue)
-		# self.lowerBodyUpperNum = QtWidgets.QLabel( str( self.lowerBodyUpperSlider.value() ))
-		# lowerBodyUpperLayout.addWidget(self.lowerBodyUpperNum)
-		# lowerBodyUpperLayout.addWidget(self.lowerBodyUpperSlider)
 		groupBox.addLayout(lowerBodyUpperLayout)
 
 		lowerBodyLowerLayout = QtWidgets.QHBoxLayout()
@@ -210,39 +147,8 @@ class mainRigWindow(QtWidgets.QDialog):
 		self.lowerBodyLowerLine.setText(str(1))
 		lowerBodyLowerLayout.addWidget(QtWidgets.QLabel("( 1 - 5)"))
 		lowerBodyLowerLayout.addSpacing(220)
-		# self.lowerBodyLowerSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-		# self.lowerBodyLowerSlider.setMaximum(5)
-		# self.lowerBodyLowerSlider.setMinimum(1)
-		# self.connect(self.lowerBodyLowerSlider, QtCore.SIGNAL('valueChanged(int)'),self.lowerBodyLowerSliderChangeValue)
-		# self.lowerBodyLowerNum = QtWidgets.QLabel( str( self.lowerBodyLowerSlider.value() ))
-		# lowerBodyLowerLayout.addWidget(self.lowerBodyLowerNum)
-		# lowerBodyLowerLayout.addWidget(self.lowerBodyLowerSlider)
 		groupBox.addLayout(lowerBodyLowerLayout)
 		mainLayout.addLayout(groupBox)
 		return
-	'''
-	def upperBodyUpperSliderChangeValue(self):
-		pos = self.upperBodyUpperSlider.value()
-		print(pos)
-		self.upperBodyUpperNum.setText(str(pos))
-		return		
 
-	def upperBodyLowerSliderChangeValue(self):
-		pos = self.upperBodyLowerSlider.value()
-		print(pos)
-		self.upperBodyLowerNum.setText(str(pos))
-		return
-
-	def lowerBodyUpperSliderChangeValue(self):
-		pos = self.lowerBodyUpperSlider.value()
-		print(pos)
-		self.lowerBodyUpperNum.setText(str(pos))
-		return
-
-	def lowerBodyLowerSliderChangeValue(self):
-		pos = self.lowerBodyLowerSlider.value()
-		print(pos)
-		self.lowerBodyLowerNum.setText(str(pos))
-		return
-	'''
 		
