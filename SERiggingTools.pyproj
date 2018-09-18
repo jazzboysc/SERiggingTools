@@ -57,6 +57,9 @@
     <Compile Include="Rig\__init__.py" />
     <Compile Include="ThirdParty\bSkinSaver.py" />
     <Compile Include="ThirdParty\__init__.py" />
+    <Compile Include="UI\CreateRigUI.py" />
+    <Compile Include="UI\UIConfig.py" />
+    <Compile Include="UI\__init__.py" />
     <Compile Include="Utils\SEJointHelper.py" />
     <Compile Include="Utils\SEMathHelper.py">
       <SubType>Code</SubType>
@@ -75,6 +78,7 @@
     <Folder Include="Plugins\" />
     <Folder Include="ThirdParty\" />
     <Folder Include="Rig" />
+    <Folder Include="UI\" />
     <Folder Include="Utils" />
   </ItemGroup>
   <ItemGroup>
