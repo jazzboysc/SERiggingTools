@@ -1,2 +1,2 @@
-#import UITest
+import UITest
 import CreateRigUI
