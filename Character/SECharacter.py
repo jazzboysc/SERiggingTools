@@ -240,6 +240,7 @@ class RigBipedCharacter():
                     rigScale = sceneScale
                     )
         self.Spine = spine
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Spine.TopGrp, 'SpineComponent')
 
         # Left Leg.
         leftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = self.BaseRig,
@@ -259,6 +260,7 @@ class RigBipedCharacter():
                 toeIKTwistRight = toeIKTwistRight
                 )
         self.LeftLeg = leftLeg
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftLeg.TopGrp, 'LeftLegComponent')
 
         # Right Leg.
         rightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = self.BaseRig,
@@ -278,6 +280,7 @@ class RigBipedCharacter():
                 toeIKTwistRight = toeIKTwistRight
                 )
         self.RightLeg = rightLeg
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightLeg.TopGrp, 'RightLegComponent')
 
         # Left arm.
         leftArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'L_Arm', baseRig = self.BaseRig,
@@ -293,6 +296,7 @@ class RigBipedCharacter():
                 fkControlTransparency = fkArmControlTransparency
                 )
         self.LeftArm = leftArm
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftArm.TopGrp, 'LeftArmComponent')
 
         # Right arm.
         rightArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'R_Arm', baseRig = self.BaseRig,
@@ -308,6 +312,7 @@ class RigBipedCharacter():
                 fkControlTransparency = fkArmControlTransparency
                 )
         self.RightArm = rightArm
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightArm.TopGrp, 'RightArmComponent')
 
         # Left hand.
         leftHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'L_Hand', baseRig = self.BaseRig,
@@ -319,6 +324,7 @@ class RigBipedCharacter():
                 rigScale = sceneScale
                 )
         self.LeftHand = leftHand
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftHand.TopGrp, 'LeftHandComponent')
 
         # Right hand.
         rightHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'R_Hand', baseRig = self.BaseRig,
@@ -330,6 +336,7 @@ class RigBipedCharacter():
                 rigScale = sceneScale
                 )
         self.RightHand = rightHand
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightHand.TopGrp, 'RightHandComponent')
 
         # Neck.
         neck = SERigBipedNeckComponent.RigHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
@@ -341,4 +348,5 @@ class RigBipedCharacter():
                 rigScale = sceneScale
                 )
         self.Neck = neck
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Neck.TopGrp, 'NeckComponent')
 

@@ -6,6 +6,7 @@ from ..Base import SERigNaming
 from ..Utils import SEStringHelper
 from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
+from ..Utils import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
 # Rig Human Limb Base Class
@@ -339,6 +340,7 @@ class RigHumanLeg(RigHumanLimb):
                                 )
         self.FootIKMainControl = footIKMainControl
         self.LimbIKMainControl = footIKMainControl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootIKMainControl.ControlGroup, 'FootIKMainControl')
 
         if self.RigSide == SERigEnum.eRigSide.RS_Right:
             ikMainControlOffsetX = -0.5
@@ -363,6 +365,7 @@ class RigHumanLeg(RigHumanLimb):
                                 )
         self.AnkleIKRotationControl = ankleIKRotationControl
         self.LimbIKMainRotationControl = ankleIKRotationControl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.AnkleIKRotationControl.ControlGroup, 'AnkleIKRotationControl')
 
         # Create foot base swive control.
         flipScaleX = False
@@ -381,6 +384,7 @@ class RigHumanLeg(RigHumanLimb):
                                 flipScaleX = flipScaleX
                                 )
         self.FootBaseSwiveControl = footBaseSwiveControl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootBaseSwiveControl.ControlGroup, 'FootBaseSwiveControl')
 
         # Create foot toe swive control.
         footToeSwiveControl = SERigControl.RigCircleControl(
@@ -395,6 +399,7 @@ class RigHumanLeg(RigHumanLimb):
                                 flipScaleX = flipScaleX
                                 )
         self.FootToeSwiveControl = footToeSwiveControl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootToeSwiveControl.ControlGroup, 'FootToeSwiveControl')
 
         # Create foot rotation control.
         footRotationControl = SERigControl.RigRotationControl(
@@ -409,6 +414,7 @@ class RigHumanLeg(RigHumanLimb):
                                  flipScaleX = flipScaleX
                                  )
         self.FootRotationControl = footRotationControl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootRotationControl.ControlGroup, 'FootRotationControl')
 
         footRotationControl.adjustControlGroupOffset(0, 8, -15)
 
@@ -426,6 +432,7 @@ class RigHumanLeg(RigHumanLimb):
                                  )
         self.LegPVControl = legPVControl
         self.LimbPVControl = legPVControl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.LegPVControl.ControlGroup, 'LegPVControl')
         
         # Move leg PV locator from builder scene to this component.
         cmds.parent(legPVLocator, self.RigPartsGrp)
@@ -501,6 +508,7 @@ class RigHumanLeg(RigHumanLimb):
                                     transparency = fkControlTransparency
                                     )
             self.FKLegControls.append(curFKControl)
+            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKLegControl' + str(i))
 
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
