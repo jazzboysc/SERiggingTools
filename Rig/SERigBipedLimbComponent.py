@@ -814,6 +814,7 @@ class RigHumanArm(RigHumanLimb):
                                      )
             clavRotationControl.adjustControlGroupOffset(offsetX, 10, -10)
             self.ClavRotationControl = clavRotationControl
+            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ClavRotationControl.ControlGroup, 'ClavRotationControl')
 
             # Control the clavicle joint.
             cmds.orientConstraint(clavRotationControl.ControlObject, armParent, mo = 1)
@@ -843,6 +844,7 @@ class RigHumanArm(RigHumanLimb):
         self.ArmIKMainControl = armIKMainControl
         self.LimbIKMainControl = armIKMainControl
         self.LimbIKMainRotationControl = armIKMainControl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ArmIKMainControl.ControlGroup, 'ArmIKMainControl')
 
         # Create IK arm joints.
         ikShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sIKPrefix + armJoints[0], parentOnly = True)[0]
@@ -909,6 +911,7 @@ class RigHumanArm(RigHumanLimb):
                                     transparency = fkControlTransparency
                                     )
             self.FKArmControls.append(curFKControl)
+            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKArmControl' + str(i))
 
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
@@ -932,6 +935,7 @@ class RigHumanArm(RigHumanLimb):
                                 transparency = fkControlTransparency
                                 )
         self.FKArmControls.append(curFKControl)
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKWristControl')
 
         cmds.orientConstraint(curFKControl.ControlObject, nextFKJnt)
         cmds.pointConstraint(curFKControl.ControlObject, nextFKJnt)
@@ -964,6 +968,7 @@ class RigHumanArm(RigHumanLimb):
                                  )
         self.ArmPVControl = armPVControl
         self.LimbPVControl = armPVControl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ArmPVControl.ControlGroup, 'ArmPVControl')
         
         # Move arm PV locator from builder scene to this component.
         cmds.parent(armPVLocator, self.RigPartsGrp)
@@ -1112,6 +1117,8 @@ class RigHumanHand(RigComponent):
                                         transparency = 0.75
                                         )
                 curFKFingerControls.append(curFKControl)
+                curAttrPrefix = finger[:-1]
+                SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, curAttrPrefix + 'FKControl' + str(i))
 
                 cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
                 cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
