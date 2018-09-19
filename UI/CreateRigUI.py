@@ -20,6 +20,8 @@ import UIConfig
 uiRootFile = os.path.dirname(UIConfig.__file__)
 uifile_path = uiRootFile + "/ControlRig.ui"
 
+mainWin = None
+
 def openMayaWindow():
     ''' todo: stop open more than one window'''
     # global ui
@@ -27,9 +29,11 @@ def openMayaWindow():
     # ui.show()
 
     global mainWin
+    if mainWin != None:
+        mainWin.close()
     mainWin = mainRigWindow()
     mainWin.show()
-    pass
+
 
 def loadUI(uifile_path):
     QtCore.QResource.addSearchPath("E:/Users/admin/Documents/GitHub/SERiggingTools/UI")
