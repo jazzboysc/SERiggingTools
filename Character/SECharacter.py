@@ -68,10 +68,12 @@ class RigBipedCharacter():
 
         # Import model.
         modelFile = modelFilePath % (mainProjectPath, self.CharacterName, self.CharacterName)
+        print('Importing model file: ' + modelFile)
         cmds.file(modelFile, i = 1)
 
         # Import builder scene.
         builderFile = builderFilePath % (mainProjectPath, self.CharacterName, self.CharacterName)
+        print('Importing builder file: ' + builderFile)
         cmds.file(builderFile, i = 1)
 
         # Create rig base.

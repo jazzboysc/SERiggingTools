@@ -64,6 +64,12 @@ class mainRigWindow(QtWidgets.QDialog):
         self.SetMainProjectPathButton = QtWidgets.QPushButton("Set Path")
         TextLayoutMainProjectPath.addWidget(self.SetMainProjectPathButton)
 
+        #TextLayoutCharacterName = QtWidgets.QHBoxLayout()
+        #self.CharacterNameLine = QtWidgets.QLineEdit()
+        #TextLayoutCharacterName.addWidget(QtWidgets.QLabel("Character Name :"))
+        #TextLayoutCharacterName.addWidget(self.CharacterNameLine)
+        #TextLayoutCharacterName.addSpacing(220)
+
         mainLayout = QtWidgets.QVBoxLayout(self)
         mainLayout.addWidget(self.descLabel)
         mainLayout.addLayout(TextLayoutMainProjectPath)
@@ -96,7 +102,6 @@ class mainRigWindow(QtWidgets.QDialog):
         ButtonHLayout.addWidget(ButtonOne)
         ButtonHLayout.addWidget(ButtonTwo)
         return ButtonHLayout
-        pass
 
     def selectMainProjectPath(self):
         fileResult = cmds.fileDialog2(fm = 3)
@@ -107,16 +112,19 @@ class mainRigWindow(QtWidgets.QDialog):
 
     def createRig(self):
         mainProjectPath = self.MainProjectPathLine.text()
+        res = os.path.split(mainProjectPath)
+        mainProjectPath = res[0]
+        characterName = res[1]
 
-        character = SECharacter.RigBipedCharacter(characterName = 'Elisa')
+        character = SECharacter.RigBipedCharacter(characterName = characterName)
         character.build(  
-                            mainProjectPath = mainProjectPath, 
-                            upperBodyUpperLimbKnobCount = 2, 
-                            upperBodyLowerLimbKnobCount = 2, 
-                            lowerBodyUpperLimbKnobCount = 2, 
-                            lowerBodyLowerLimbKnobCount = 1, 
-                            mainCtrlOffset = 30
-                            )
+                        mainProjectPath = mainProjectPath, 
+                        upperBodyUpperLimbKnobCount = 2, 
+                        upperBodyLowerLimbKnobCount = 2, 
+                        lowerBodyUpperLimbKnobCount = 2, 
+                        lowerBodyLowerLimbKnobCount = 1, 
+                        mainCtrlOffset = 30
+                        )
         
         self.close()
 
