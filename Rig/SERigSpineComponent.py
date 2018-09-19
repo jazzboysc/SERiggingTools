@@ -3,6 +3,7 @@ from ..Base.SERigComponent import RigComponent
 from ..Base import SERigControl
 from ..Base import SERigEnum
 from ..Base import SERigNaming
+from ..Utils import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
 # Rig Simple IK Spine Class
@@ -42,6 +43,7 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleZ = 40.0,
                                 transparency = 0.8
                                 )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl')
 
         # Create pelvis and chest proxy joints.
         pelvisProxyJoint = cmds.duplicate(spineJoints[0], n = spineJoints[0] + SERigNaming.s_Proxy, parentOnly = True)[0]
@@ -57,6 +59,7 @@ class RigSimpleIKSpine(RigComponent):
                                     scale = rigScale*20,
                                     parent = upperBodyCtrl.ControlObject
                                     )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl')
 
         pelvisCtrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
@@ -67,6 +70,7 @@ class RigSimpleIKSpine(RigComponent):
                                 scale = rigScale*25,
                                 parent = upperBodyCtrl.ControlObject
                                 )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl')
 
         cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
 
@@ -154,6 +158,8 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleZ = 35.0,
                                 transparency = 0.75
                                 )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl')
+
         cmds.orientConstraint(FKSpine0Ctrl.ControlObject, jnt1)
 
         # Create FK spine_1 control.
@@ -171,66 +177,11 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleZ = 28.0,
                                 transparency = 0.75
                                 )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl')
+
         cmds.orientConstraint(FKSpine1Ctrl.ControlObject, jnt2)
 
         # Attach IK_ChestBegin control to FK spine_1 control.
         cmds.parent(chestBeginCtrl.ControlGroup, FKSpine1Ctrl.ControlObject)
 
         cmds.hide(jnt0, pelvisProxyJoint, chestBeginProxyJoint)
-
-    #def build(
-    #        baseRig = None,
-    #        spineJoints = [],
-    #        rootJoint = '',
-    #        spineCurve = '',
-    #        bodyLocator = '',
-    #        chestLocator = '',
-    #        pelvisLocator = '',
-    #        prefix = 'spine',
-    #        rigScale = 1.0,
-    #        spineIKTwist = 0.0
-    #        ):
-    #    # Create rig component.
-    #    rigComp = SERigComponent.SERigComponent(prefix = prefix, baseRig = baseRig)
-
-    #    # Create spine curve clusters.
-    #    spineCurveCVs = cmds.ls(spineCurve + '.cv[*]', fl = 1)
-    #    numSpineCVs = len(spineCurveCVs)
-    #    middleCVIndex = numSpineCVs / 2
-    #    spineCurveClusters = []
-
-    #    for i in range(numSpineCVs):
-    #        cluster = cmds.cluster(spineCurveCVs[i], n = prefix + 'Cluster%d' % (i + 1))[1]
-    #        spineCurveClusters.append(cluster)
-
-    #    cmds.hide(spineCurveClusters)
-
-
-    #    # Create IK handle.
-    #    spineIK = cmds.ikHandle(n = prefix + '_ikh', sol = 'ikSplineSolver', sj = spineJoints[0], ee = spineJoints[-1], 
-    #                            c = spineCurve, ccv = 0, parentCurve = 0)[0]
-
-    #    cmds.hide(spineIK)
-    #    cmds.parent(spineIK, rigComp.RigPartsFixedGrp)
-
-    #    cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
-    #    cmds.setAttr(spineIK + '.dWorldUpType', 4)
-    #    cmds.connectAttr(chestCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
-    #    cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
-
-    #    cmds.setAttr(spineIK + '.twist', spineIKTwist)
-
-    #    # Attach root joint.
-    #    cmds.parentConstraint(pelvisCtrl.ControlObject, rootJoint, mo = 1)
-
-    #    cmds.parent(spineCurve, rigComp.RigPartsFixedGrp)
-
-    #    return {'RigComponent':rigComp}
-
-    #def _adjustBodyCtrlShape(bodyCtrl, spineJoints, rigScale):
-    #    offsetGrp = cmds.group(em = 1, p = bodyCtrl.ControlObject)
-    #    cmds.parent(offsetGrp, spineJoints[2])
-    #    cluster = cmds.cluster(cmds.listRelatives(bodyCtrl.ControlObject, s = 1))[1]
-    #    cmds.parent(cluster, offsetGrp)
-    #    cmds.move(-40*rigScale, offsetGrp, moveZ = 1, relative = 1, objectSpace = 1)
-    #    cmds.delete(bodyCtrl.ControlObject, ch = 1)

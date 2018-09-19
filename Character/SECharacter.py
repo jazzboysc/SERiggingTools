@@ -200,7 +200,12 @@ class RigBipedCharacter():
                                 rootJnt
                                 )
 
-        cmds.select(cl=1)
+        # Delete imported builder group.
+        builderGrp = ('%s' + SERigNaming.s_BuilderGroup) % self.CharacterName
+        if cmds.objExists(builderGrp):
+            cmds.delete(builderGrp)
+
+        cmds.select(cl = 1)
 
 
     def _createRigComponents(

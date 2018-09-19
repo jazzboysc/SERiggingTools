@@ -6,6 +6,7 @@ from ..Base import SERigNaming
 from ..Utils import SEStringHelper
 from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
+from ..Utils import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
 # Rig Human Neck Class
@@ -73,6 +74,7 @@ class RigHumanNeck(RigComponent):
                                     transparency = 0.75
                                     )
             self.FKNeckControls.append(curFKControl)
+            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKControl' + str(i))
 
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
