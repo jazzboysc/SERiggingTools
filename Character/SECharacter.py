@@ -10,6 +10,7 @@ from ..Utils import SERigObjectTypeHelper
 from . import SECharacterDeform
 
 import maya.cmds as cmds
+import os
 
 sceneScale = 1.0
 
@@ -66,15 +67,31 @@ class RigBipedCharacter():
               fkArmControlTransparency = 0.85
               ):
 
-        # Import model.
+        # Import model scene.
         modelFile = modelFilePath % (mainProjectPath, self.CharacterName, self.CharacterName)
-        print('Importing model file: ' + modelFile)
-        cmds.file(modelFile, i = 1)
+        if os.path.isfile(modelFile):
+            print('Importing model file: ' + modelFile)
+            try:
+                cmds.file(modelFile, i = 1)
+            except:
+                print('Invalid model file: ' + modelFile)
+                return
+        else:
+            print(modelFile + ' does not exist.')
+            return
 
         # Import builder scene.
         builderFile = builderFilePath % (mainProjectPath, self.CharacterName, self.CharacterName)
-        print('Importing builder file: ' + builderFile)
-        cmds.file(builderFile, i = 1)
+        if os.path.isfile(builderFile):
+            print('Importing builder file: ' + builderFile)
+            try:
+                cmds.file(builderFile, i = 1)
+            except:
+                print('Invalid builder file: ' + builderFile)
+                return
+        else:
+            print(builderFile + ' does not exist.')
+            return
 
         # Create rig base.
         baseRig = RigBase(characterName = self.CharacterName, 
