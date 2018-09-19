@@ -36,6 +36,9 @@ class RigControl():
             ctrlGrp = cmds.group(n = prefix + SERigNaming.sControlGroup, em = 1)
             cmds.parent(ctrlObj, ctrlGrp)
 
+            # Link to control group.
+            SERigObjectTypeHelper.linkRigObjects(ctrlGrp, ctrlObj, 'ControlObject')
+
             # Translate control group to target translation object.
             if cmds.objExists(translateTo):
                 cmds.delete(cmds.pointConstraint(translateTo, ctrlGrp))
