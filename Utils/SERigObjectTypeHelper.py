@@ -57,10 +57,26 @@ def getRigControlObjectFromGroup(rigControl):
         return None 
         
 def getControlOwner(rigControl):
-    pass
+    if cmds.objExists(rigControl):
+        ControlOwner = cmds.listConnections(rigControl + '.ControlOwner')
+        if ControlOwner:
+            return ControlOwner[0]
+        else:
+            return None
+
+    else:
+        return None
 
 def getComponentOwner(rigComponent):
-    pass                  
+    if cmds.objExists(rigComponent):
+        ComponentOwner = cmds.listConnections(rigComponent + '.ComponentOwner')
+        if ComponentOwner:
+            return ComponentOwner[0]
+        else:
+            return None
+
+    else:
+        return None
 
 def getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex):
     links = cmds.ls(type = 'RigControlType')
