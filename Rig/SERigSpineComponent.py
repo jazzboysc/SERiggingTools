@@ -52,7 +52,7 @@ class RigSimpleIKSpine(RigComponent):
         # Create IK controls.
         chestBeginCtrl = SERigControl.RigCircleControl(
                                     rigSide = SERigEnum.eRigSide.RS_Center,
-                                    rigType = SERigEnum.eRigType.RT_Spine,
+                                    rigType = SERigEnum.eRigType.RT_SpineChest,
                                     prefix = self.Prefix + 'Chest', 
                                     translateTo = chestBeginProxyJoint,
                                     rotateTo = chestBeginProxyJoint,
@@ -63,7 +63,7 @@ class RigSimpleIKSpine(RigComponent):
 
         pelvisCtrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
-                                rigType = SERigEnum.eRigType.RT_Spine,
+                                rigType = SERigEnum.eRigType.RT_SpinePelvis,
                                 prefix = self.Prefix + 'Pelvis', 
                                 translateTo = pelvisProxyJoint,
                                 rotateTo = pelvisProxyJoint,
@@ -146,7 +146,8 @@ class RigSimpleIKSpine(RigComponent):
         # Create FK spine_0 control.
         FKSpine0Ctrl = SERigControl.RigCubeControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
-                                rigType = SERigEnum.eRigType.RT_Spine,
+                                rigType = SERigEnum.eRigType.RT_SpineFK,
+                                rigControlIndex = 0,
                                 prefix = SERigNaming.sFKPrefix + self.Prefix + '_0', 
                                 translateTo = jnt1,
                                 rotateTo = jnt1,
@@ -165,7 +166,8 @@ class RigSimpleIKSpine(RigComponent):
         # Create FK spine_1 control.
         FKSpine1Ctrl = SERigControl.RigCubeControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
-                                rigType = SERigEnum.eRigType.RT_Spine,
+                                rigType = SERigEnum.eRigType.RT_SpineFK,
+                                rigControlIndex = 1,
                                 prefix = SERigNaming.sFKPrefix + self.Prefix + '_1', 
                                 translateTo = jnt2,
                                 rotateTo = jnt2,

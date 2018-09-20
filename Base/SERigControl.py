@@ -13,6 +13,7 @@ class RigControl():
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,
                  rigFacing = SERigEnum.eRigFacing.RF_X,
+                 rigControlIndex = 0,
                  prefix = 'new', 
                  scale = 1.0, 
                  matchBoundingBoxScale = False,
@@ -78,6 +79,7 @@ class RigControl():
         self.ControlGroup = ctrlGrp
         self.RigSide = rigSide
         self.RigType = rigType
+        self.RigControlIndex = rigControlIndex
         self.FlipScaleX = flipScaleX
         self.FlipScaleY = flipScaleY
         self.FlipScaleZ = flipScaleZ
@@ -85,9 +87,11 @@ class RigControl():
         # Add component instance info to top group.
         cmds.addAttr(self.ControlGroup, ln = 'RigSide', dt = 'string')
         cmds.addAttr(self.ControlGroup, ln = 'RigType', dt = 'string')
+        cmds.addAttr(self.ControlGroup, ln = 'RigControlIndex', dt = 'string')
 
         cmds.setAttr(self.ControlGroup + '.' + 'RigSide', SERigEnum.eRigSideStringTable[self.RigSide], type = 'string', l = 1)
         cmds.setAttr(self.ControlGroup + '.' + 'RigType', SERigEnum.eRigTypeStringTable[self.RigType], type = 'string', l = 1)
+        cmds.setAttr(self.ControlGroup + '.' + 'RigControlIndex', str(self.RigControlIndex), type = 'string', l = 1)
 
         # Create control type node.
         SERigObjectTypeHelper.createRigObjectTypeAttr(self.ControlGroup, 'RigControlType')
@@ -108,6 +112,7 @@ class RigCircleControl(RigControl):
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,
                  rigFacing = SERigEnum.eRigFacing.RF_X,
+                 rigControlIndex = 0,
                  prefix = 'new', 
                  scale = 1.0, 
                  matchBoundingBoxScale = False,
@@ -120,7 +125,7 @@ class RigCircleControl(RigControl):
                  flipScaleZ = False
                  ):
 
-        RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
+        RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels,
                             flipScaleX, flipScaleY, flipScaleZ)
 
@@ -164,6 +169,7 @@ class RigCubeControl(RigControl):
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,
                  rigFacing = SERigEnum.eRigFacing.RF_X,
+                 rigControlIndex = 0,
                  prefix = 'new', 
                  scale = 1.0, 
                  matchBoundingBoxScale = False,
@@ -182,7 +188,7 @@ class RigCubeControl(RigControl):
         self.CubeScaleZ = cubeScaleZ
         self.Transparency = transparency
 
-        RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
+        RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
@@ -230,6 +236,7 @@ class RigSpikeCrossControl(RigControl):
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,
                  rigFacing = SERigEnum.eRigFacing.RF_Y,
+                 rigControlIndex = 0,
                  prefix = 'new', 
                  scale = 1.0, 
                  matchBoundingBoxScale = False,
@@ -244,7 +251,7 @@ class RigSpikeCrossControl(RigControl):
         self.ScaleX = scaleX
         self.ScaleZ = scaleZ
 
-        RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
+        RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
@@ -327,6 +334,7 @@ class RigFootControl(RigControl):
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,
                  rigFacing = SERigEnum.eRigFacing.RF_Y,
+                 rigControlIndex = 0,
                  prefix = 'new', 
                  scale = 1.0, 
                  matchBoundingBoxScale = False,
@@ -344,7 +352,7 @@ class RigFootControl(RigControl):
         self.ScaleX = scaleX
         self.ScaleZ = scaleZ
 
-        RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
+        RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, flipScaleX, flipScaleY, flipScaleZ)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
@@ -410,6 +418,7 @@ class RigRotationControl(RigControl):
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,
                  rigFacing = SERigEnum.eRigFacing.RF_Z,
+                 rigControlIndex = 0,
                  prefix = 'new', 
                  scale = 1.0, 
                  matchBoundingBoxScale = False,
@@ -422,7 +431,7 @@ class RigRotationControl(RigControl):
                  flipScaleZ = False
                  ):
 
-        RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
+        RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, flipScaleX, flipScaleY, flipScaleZ)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
@@ -482,6 +491,7 @@ class RigDiamondControl(RigControl):
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
                  rigType = SERigEnum.eRigType.RT_Unknown,
                  rigFacing = SERigEnum.eRigFacing.RF_Y,
+                 rigControlIndex = 0,
                  prefix = 'new', 
                  scale = 1.0, 
                  matchBoundingBoxScale = False,
@@ -494,7 +504,7 @@ class RigDiamondControl(RigControl):
                  flipScaleZ = False
                  ):
 
-        RigControl.__init__(self, rigSide, rigType, rigFacing, prefix, 
+        RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, flipScaleX, flipScaleY, flipScaleZ)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale):
