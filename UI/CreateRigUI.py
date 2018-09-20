@@ -298,6 +298,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fkBodyArmControlScaleYZMultiplierLine.setText('0.9')
         fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("(0 - 1)"))
         fkBodyArmControlScaleYZMultiplierLayout.addSpacing(215)
+        groupBox.addLayout(fkBodyArmControlScaleYZMultiplierLayout)
 
         fkBodyArmControlTransparencyLayout = QtWidgets.QHBoxLayout()
         fkBodyArmControlTransparencyLayout.addWidget(QtWidgets.QLabel("FKArmControlTransparency :"))
@@ -307,6 +308,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fkBodyArmControlTransparencyLine.setText('0.85')
         fkBodyArmControlTransparencyLayout.addWidget(QtWidgets.QLabel("(0 - 1)"))
         fkBodyArmControlTransparencyLayout.addSpacing(215)
+        groupBox.addLayout(fkBodyArmControlTransparencyLayout)
 
 
         mainLayout.addLayout(groupBox)
