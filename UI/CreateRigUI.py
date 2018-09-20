@@ -100,7 +100,6 @@ class mainRigWindow(QtWidgets.QDialog):
         ButtonHLayout.addWidget(ButtonOne)
         ButtonHLayout.addWidget(ButtonTwo)
         return ButtonHLayout
-        pass
 
     def selectMainProjectPath(self):
         fileResult = cmds.fileDialog2(fm = 3)
@@ -110,18 +109,30 @@ class mainRigWindow(QtWidgets.QDialog):
             mainWin.update()
 
     def createRig(self):
+        # Get project path and extract character name.
         mainProjectPath = self.MainProjectPathLine.text()
+        res = os.path.split(mainProjectPath)
+        mainProjectPath = res[0]
+        characterName = res[1]
 
-        character = SECharacter.RigBipedCharacter(characterName = 'Elisa')
+        # Get building parameters.
+        upperBodyUpperLimbKnobCount = int(self.upperBodyUpperLine.text())
+        upperBodyLowerLimbKnobCount = int(self.upperBodyLowerLine.text())
+        lowerBodyUpperLimbKnobCount = int(self.lowerBodyUpperLine.text())
+        lowerBodyLowerLimbKnobCount = int(self.lowerBodyLowerLine.text())
+
+        # Build character rig.
+        character = SECharacter.RigBipedCharacter(characterName = characterName)
         character.build(  
-                            mainProjectPath = mainProjectPath, 
-                            upperBodyUpperLimbKnobCount = 2, 
-                            upperBodyLowerLimbKnobCount = 2, 
-                            lowerBodyUpperLimbKnobCount = 2, 
-                            lowerBodyLowerLimbKnobCount = 1, 
-                            mainCtrlOffset = 30
-                            )
+                        mainProjectPath = mainProjectPath, 
+                        upperBodyUpperLimbKnobCount = upperBodyUpperLimbKnobCount, 
+                        upperBodyLowerLimbKnobCount = upperBodyLowerLimbKnobCount, 
+                        lowerBodyUpperLimbKnobCount = lowerBodyUpperLimbKnobCount, 
+                        lowerBodyLowerLimbKnobCount = lowerBodyLowerLimbKnobCount, 
+                        mainCtrlOffset = 30
+                        )
         
+        # Close the create rig window.
         self.close()
 
     def SetBuilderConfigWeight(self , mainLayout ):
@@ -131,7 +142,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.upperBodyUpperLine = QtWidgets.QLineEdit()
         self.upperBodyUpperLine.setValidator(QtGui.QIntValidator(1,5))
         upperBodyUpperLayout.addWidget(self.upperBodyUpperLine)
-        self.upperBodyUpperLine.setText(str(1))
+        self.upperBodyUpperLine.setText('2')
         upperBodyUpperLayout.addWidget(QtWidgets.QLabel("( 1 - 5)"))
         upperBodyUpperLayout.addSpacing(220)
         groupBox.addLayout(upperBodyUpperLayout)
@@ -141,7 +152,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.upperBodyLowerLine = QtWidgets.QLineEdit()
         self.upperBodyLowerLine.setValidator(QtGui.QIntValidator(1,5))
         upperBodyLowerLayout.addWidget(self.upperBodyLowerLine)
-        self.upperBodyLowerLine.setText(str(1))
+        self.upperBodyLowerLine.setText('2')
         upperBodyLowerLayout.addWidget(QtWidgets.QLabel("( 1 - 5)"))
         upperBodyLowerLayout.addSpacing(220)
         groupBox.addLayout(upperBodyLowerLayout)
@@ -151,7 +162,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.lowerBodyUpperLine = QtWidgets.QLineEdit()
         self.lowerBodyUpperLine.setValidator(QtGui.QIntValidator(1,5))
         lowerBodyUpperLayout.addWidget(self.lowerBodyUpperLine)
-        self.lowerBodyUpperLine.setText(str(1))
+        self.lowerBodyUpperLine.setText('2')
         lowerBodyUpperLayout.addWidget(QtWidgets.QLabel("( 1 - 5)"))
         lowerBodyUpperLayout.addSpacing(220)
         groupBox.addLayout(lowerBodyUpperLayout)
@@ -161,7 +172,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.lowerBodyLowerLine = QtWidgets.QLineEdit()
         self.lowerBodyUpperLine.setValidator(QtGui.QIntValidator(1,5))
         lowerBodyLowerLayout.addWidget(self.lowerBodyLowerLine)
-        self.lowerBodyLowerLine.setText(str(1))
+        self.lowerBodyLowerLine.setText('1')
         lowerBodyLowerLayout.addWidget(QtWidgets.QLabel("( 1 - 5)"))
         lowerBodyLowerLayout.addSpacing(220)
         groupBox.addLayout(lowerBodyLowerLayout)
