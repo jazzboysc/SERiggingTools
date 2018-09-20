@@ -310,5 +310,4 @@ class mainRigWindow(QtWidgets.QDialog):
         fkBodyArmControlTransparencyLayout.addSpacing(215)
         groupBox.addLayout(fkBodyArmControlTransparencyLayout)
 
-
         mainLayout.addLayout(groupBox)
