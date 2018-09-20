@@ -43,7 +43,7 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleZ = 40.0,
                                 transparency = 0.8
                                 )
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl', 'ControlOwner')
 
         # Create pelvis and chest proxy joints.
         pelvisProxyJoint = cmds.duplicate(spineJoints[0], n = spineJoints[0] + SERigNaming.s_Proxy, parentOnly = True)[0]
@@ -59,7 +59,7 @@ class RigSimpleIKSpine(RigComponent):
                                     scale = rigScale*20,
                                     parent = upperBodyCtrl.ControlObject
                                     )
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl', 'ControlOwner')
 
         pelvisCtrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
@@ -70,7 +70,7 @@ class RigSimpleIKSpine(RigComponent):
                                 scale = rigScale*25,
                                 parent = upperBodyCtrl.ControlObject
                                 )
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl', 'ControlOwner')
 
         cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
 
@@ -159,7 +159,7 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleZ = 35.0,
                                 transparency = 0.75
                                 )
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl', 'ControlOwner')
 
         cmds.orientConstraint(FKSpine0Ctrl.ControlObject, jnt1)
 
@@ -179,7 +179,7 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleZ = 28.0,
                                 transparency = 0.75
                                 )
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl', 'ControlOwner')
 
         cmds.orientConstraint(FKSpine1Ctrl.ControlObject, jnt2)
 

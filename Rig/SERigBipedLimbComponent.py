@@ -340,7 +340,7 @@ class RigHumanLeg(RigHumanLimb):
                                 )
         self.FootIKMainControl = footIKMainControl
         self.LimbIKMainControl = footIKMainControl
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootIKMainControl.ControlGroup, 'FootIKMainControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootIKMainControl.ControlGroup, 'FootIKMainControl', 'ControlOwner')
 
         if self.RigSide == SERigEnum.eRigSide.RS_Right:
             ikMainControlOffsetX = -0.5
@@ -365,7 +365,7 @@ class RigHumanLeg(RigHumanLimb):
                                 )
         self.AnkleIKRotationControl = ankleIKRotationControl
         self.LimbIKMainRotationControl = ankleIKRotationControl
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.AnkleIKRotationControl.ControlGroup, 'AnkleIKRotationControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.AnkleIKRotationControl.ControlGroup, 'AnkleIKRotationControl', 'ControlOwner')
 
         # Create foot base swive control.
         flipScaleX = False
@@ -384,7 +384,7 @@ class RigHumanLeg(RigHumanLimb):
                                 flipScaleX = flipScaleX
                                 )
         self.FootBaseSwiveControl = footBaseSwiveControl
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootBaseSwiveControl.ControlGroup, 'FootBaseSwiveControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootBaseSwiveControl.ControlGroup, 'FootBaseSwiveControl', 'ControlOwner')
 
         # Create foot toe swive control.
         footToeSwiveControl = SERigControl.RigCircleControl(
@@ -399,7 +399,7 @@ class RigHumanLeg(RigHumanLimb):
                                 flipScaleX = flipScaleX
                                 )
         self.FootToeSwiveControl = footToeSwiveControl
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootToeSwiveControl.ControlGroup, 'FootToeSwiveControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootToeSwiveControl.ControlGroup, 'FootToeSwiveControl', 'ControlOwner')
 
         # Create foot rotation control.
         footRotationControl = SERigControl.RigRotationControl(
@@ -414,7 +414,7 @@ class RigHumanLeg(RigHumanLimb):
                                  flipScaleX = flipScaleX
                                  )
         self.FootRotationControl = footRotationControl
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootRotationControl.ControlGroup, 'FootRotationControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootRotationControl.ControlGroup, 'FootRotationControl', 'ControlOwner')
 
         footRotationControl.adjustControlGroupOffset(0, 8, -15)
 
@@ -432,7 +432,7 @@ class RigHumanLeg(RigHumanLimb):
                                  )
         self.LegPVControl = legPVControl
         self.LimbPVControl = legPVControl
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.LegPVControl.ControlGroup, 'LegPVControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.LegPVControl.ControlGroup, 'LegPVControl', 'ControlOwner')
         
         # Move leg PV locator from builder scene to this component.
         cmds.parent(legPVLocator, self.RigPartsGrp)
@@ -509,7 +509,7 @@ class RigHumanLeg(RigHumanLimb):
                                     transparency = fkControlTransparency
                                     )
             self.FKLegControls.append(curFKControl)
-            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKLegControl' + str(i))
+            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKLegControl' + str(i), 'ControlOwner')
 
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
@@ -815,7 +815,7 @@ class RigHumanArm(RigHumanLimb):
                                      )
             clavRotationControl.adjustControlGroupOffset(offsetX, 10, -10)
             self.ClavRotationControl = clavRotationControl
-            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ClavRotationControl.ControlGroup, 'ClavRotationControl')
+            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ClavRotationControl.ControlGroup, 'ClavRotationControl', 'ControlOwner')
 
             # Control the clavicle joint.
             cmds.orientConstraint(clavRotationControl.ControlObject, armParent, mo = 1)
@@ -845,7 +845,7 @@ class RigHumanArm(RigHumanLimb):
         self.ArmIKMainControl = armIKMainControl
         self.LimbIKMainControl = armIKMainControl
         self.LimbIKMainRotationControl = armIKMainControl
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ArmIKMainControl.ControlGroup, 'ArmIKMainControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ArmIKMainControl.ControlGroup, 'ArmIKMainControl', 'ControlOwner')
 
         # Create IK arm joints.
         ikShoulderJoint = cmds.duplicate(armJoints[0], n = SERigNaming.sIKPrefix + armJoints[0], parentOnly = True)[0]
@@ -912,7 +912,7 @@ class RigHumanArm(RigHumanLimb):
                                     transparency = fkControlTransparency
                                     )
             self.FKArmControls.append(curFKControl)
-            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKArmControl' + str(i))
+            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKArmControl' + str(i), 'ControlOwner')
 
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
@@ -936,7 +936,7 @@ class RigHumanArm(RigHumanLimb):
                                 transparency = fkControlTransparency
                                 )
         self.FKArmControls.append(curFKControl)
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKWristControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKWristControl', 'ControlOwner')
 
         cmds.orientConstraint(curFKControl.ControlObject, nextFKJnt)
         cmds.pointConstraint(curFKControl.ControlObject, nextFKJnt)
@@ -969,7 +969,7 @@ class RigHumanArm(RigHumanLimb):
                                  )
         self.ArmPVControl = armPVControl
         self.LimbPVControl = armPVControl
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ArmPVControl.ControlGroup, 'ArmPVControl')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ArmPVControl.ControlGroup, 'ArmPVControl', 'ControlOwner')
         
         # Move arm PV locator from builder scene to this component.
         cmds.parent(armPVLocator, self.RigPartsGrp)
@@ -1123,7 +1123,7 @@ class RigHumanHand(RigComponent):
                                         )
                 curFKFingerControls.append(curFKControl)
                 curAttrPrefix = finger[:-1]
-                SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, curAttrPrefix + 'FKControl' + str(i))
+                SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, curAttrPrefix + 'FKControl' + str(i), 'ControlOwner')
 
                 cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
                 cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
