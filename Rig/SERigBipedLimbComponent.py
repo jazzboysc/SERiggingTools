@@ -769,7 +769,7 @@ class RigHumanArm(RigHumanLimb):
                  prefix = 'new',
                  baseRig = None,
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
-                 rigType = SERigEnum.eRigType.RT_Unknown
+                 rigType = SERigEnum.eRigType.RT_ArmComponent
                  ):
 
         RigHumanLimb.__init__(self, prefix, baseRig, rigSide, rigType)
@@ -830,7 +830,7 @@ class RigHumanArm(RigHumanLimb):
             flipScaleXYZ = True
         armIKMainControl = SERigControl.RigCircleControl(
                                 rigSide = self.RigSide,
-                                rigType = SERigEnum.eRigType.RT_Wrist,
+                                rigType = SERigEnum.eRigType.RT_ArmIKMain,
                                 rigFacing = SERigEnum.eRigFacing.RF_X,
                                 prefix = self.Prefix + '_IK_Main', 
                                 scale = rigScale * 8, 
@@ -883,7 +883,7 @@ class RigHumanArm(RigHumanLimb):
         cmds.hide(fkShoulderJoint)
 
         fkJoints = [fkShoulderJoint, fkElbowJoint, fkWristJoint]
-        fkRigTypes = [SERigEnum.eRigType.RT_Shoulder, SERigEnum.eRigType.RT_Elbow, SERigEnum.eRigType.RT_Wrist]
+        fkRigTypes = [SERigEnum.eRigType.RT_ShoulderFK, SERigEnum.eRigType.RT_ElbowFK, SERigEnum.eRigType.RT_WristFK]
 
         # Create FK arm controls.
         preParent = self.FKControlGroup
@@ -1062,7 +1062,7 @@ class RigHumanHand(RigComponent):
                  prefix = 'new',
                  baseRig = None,
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
-                 rigType = SERigEnum.eRigType.RT_Unknown
+                 rigType = SERigEnum.eRigType.RT_HandComponent
                  ):
 
         RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
@@ -1085,6 +1085,9 @@ class RigHumanHand(RigComponent):
         if cmds.objExists(armFKFingerAttachPoint):
             cmds.parentConstraint(armFKFingerAttachPoint, fkFingerControlGroup)
 
+        fkFingerTypes = [SERigEnum.eRigType.RT_ThumbFK, SERigEnum.eRigType.RT_IndexFK, SERigEnum.eRigType.RT_MiddleFK, 
+                         SERigEnum.eRigType.RT_RingFK, SERigEnum.eRigType.RT_PinkyFK]
+        curFingerTypeIndex = 0
         for finger in fingers:
 
             fingerJoints = SEJointHelper.listHierarchy(finger, withEndJoints = True)
@@ -1105,7 +1108,8 @@ class RigHumanHand(RigComponent):
 
                 curFKControl = SERigControl.RigCubeControl(
                                         rigSide = self.RigSide,
-                                        rigType = SERigEnum.eRigType.RT_Hand,
+                                        rigType = fkFingerTypes[curFingerTypeIndex],
+                                        rigControlIndex = i,
                                         prefix = SERigNaming.sFKPrefix + fingerJoints[0] + str(i), 
                                         translateTo = curFKJnt,
                                         rotateTo = curFKJnt,
@@ -1127,3 +1131,5 @@ class RigHumanHand(RigComponent):
                 preParent = curFKControl.ControlObject
 
             self.FKFingerControls.append(curFKFingerControls)
+
+            curFingerTypeIndex += 1
