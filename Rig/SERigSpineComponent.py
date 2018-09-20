@@ -32,7 +32,7 @@ class RigSimpleIKSpine(RigComponent):
         # Create upper body control.
         upperBodyCtrl = SERigControl.RigCubeControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
-                                rigType = SERigEnum.eRigType.RT_Spine,
+                                rigType = SERigEnum.eRigType.RT_SpineUpperBody,
                                 prefix = self.Prefix + 'UpperBody', 
                                 translateTo = spineJoints[0],
                                 rotateTo = spineJoints[0],
