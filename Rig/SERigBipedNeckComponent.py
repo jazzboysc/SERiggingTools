@@ -18,7 +18,7 @@ class RigHumanNeck(RigComponent):
                  prefix = 'new',
                  baseRig = None,
                  rigSide = SERigEnum.eRigSide.RS_Center,
-                 rigType = SERigEnum.eRigType.RT_Neck
+                 rigType = SERigEnum.eRigType.RT_NeckComponent
                  ):
 
         RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
@@ -61,7 +61,8 @@ class RigHumanNeck(RigComponent):
 
             curFKControl = SERigControl.RigCubeControl(
                                     rigSide = self.RigSide,
-                                    rigType = self.RigType,
+                                    rigType = SERigEnum.eRigType.RT_NeckFK,
+                                    rigControlIndex = i,
                                     prefix = SERigNaming.sFKPrefix + fkJoints[i], 
                                     translateTo = curFKJnt,
                                     rotateTo = curFKJnt,

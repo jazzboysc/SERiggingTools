@@ -277,7 +277,7 @@ class RigHumanLeg(RigHumanLimb):
                  prefix = 'new',
                  baseRig = None,
                  rigSide = SERigEnum.eRigSide.RS_Unknown,
-                 rigType = SERigEnum.eRigType.RT_Unknown
+                 rigType = SERigEnum.eRigType.RT_LegComponent
                  ):
 
         RigHumanLimb.__init__(self, prefix, baseRig, rigSide, rigType)
@@ -324,7 +324,7 @@ class RigHumanLeg(RigHumanLimb):
 
         footIKMainControl = SERigControl.RigFootControl(
                                 rigSide = self.RigSide,
-                                rigType = SERigEnum.eRigType.RT_Foot,
+                                rigType = SERigEnum.eRigType.RT_FootIKMain,
                                 prefix = self.Prefix + '_IK_Main', 
                                 scale = rigScale * 55, 
                                 matchBoundingBoxScale = True,
@@ -354,7 +354,7 @@ class RigHumanLeg(RigHumanLimb):
         # Create ankle IK rotation control.
         ankleIKRotationControl = SERigControl.RigCircleControl(
                                 rigSide = self.RigSide,
-                                rigType = SERigEnum.eRigType.RT_Ankle,
+                                rigType = SERigEnum.eRigType.RT_AnkleIKRotation,
                                 rigFacing = SERigEnum.eRigFacing.RF_X,
                                 prefix = self.Prefix + '_IK_Rotation', 
                                 scale = rigScale * 9, 
@@ -374,7 +374,7 @@ class RigHumanLeg(RigHumanLimb):
 
         footBaseSwiveControl = SERigControl.RigCircleControl(
                                 rigSide = self.RigSide,
-                                rigType = SERigEnum.eRigType.RT_Foot,
+                                rigType = SERigEnum.eRigType.RT_FootBaseSwive,
                                 rigFacing = SERigEnum.eRigFacing.RF_Y,
                                 prefix = self.Prefix + '_FootBaseSwive', 
                                 scale = rigScale * 3.5, 
@@ -389,7 +389,7 @@ class RigHumanLeg(RigHumanLimb):
         # Create foot toe swive control.
         footToeSwiveControl = SERigControl.RigCircleControl(
                                 rigSide = self.RigSide,
-                                rigType = SERigEnum.eRigType.RT_Foot,
+                                rigType = SERigEnum.eRigType.RT_FootToeSwive,
                                 rigFacing = SERigEnum.eRigFacing.RF_Y,
                                 prefix = self.Prefix + '_ToeSwive', 
                                 scale = rigScale * 6, 
@@ -404,7 +404,7 @@ class RigHumanLeg(RigHumanLimb):
         # Create foot rotation control.
         footRotationControl = SERigControl.RigRotationControl(
                                  rigSide = self.RigSide,
-                                 rigType = SERigEnum.eRigType.RT_Foot,
+                                 rigType = SERigEnum.eRigType.RT_FootRotation,
                                  rigFacing = SERigEnum.eRigFacing.RF_Z,
                                  prefix = self.Prefix + '_Rotation', 
                                  scale = rigScale * 6, 
@@ -495,7 +495,8 @@ class RigHumanLeg(RigHumanLimb):
 
             curFKControl = SERigControl.RigCubeControl(
                                     rigSide = self.RigSide,
-                                    rigType = SERigEnum.eRigType.RT_Foot,
+                                    rigType = SERigEnum.eRigType.RT_LegFK,
+                                    rigControlIndex = i,
                                     prefix = SERigNaming.sFKPrefix + self.Prefix + str(i), 
                                     translateTo = curFKJnt,
                                     rotateTo = curFKJnt,
