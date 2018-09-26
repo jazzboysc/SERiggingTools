@@ -15,7 +15,7 @@ def linkRigObjects(ownerObject, linkedObject, linkAttrStr, linkedAttrStr = ''):
 
         cmds.connectAttr(ownerObject + '.' + linkAttrStr, linkedObject + '.' + linkedAttrStr)
     else:
-        cmds.error('Cannot create link attribute.')
+        cmds.error('Cannot create link attribute.') 
 
 
 def getRigType(rigObject):
@@ -103,3 +103,57 @@ def getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex):
                         return controlObject
     
     return None
+
+def listRigCharacters(includeNamespace = False):
+    characterNames = []
+    links = cmds.ls(type = 'RigCharacterType')
+    for link in links:
+        character = cmds.listConnections(link + '.message')
+        if character:
+            characterName = cmds.getAttr(character[0] +'.characterName')
+            characterNames.append(characterName)
+
+    return characterNames
+
+def listRigCharacterControls(characterName):
+    characterControls = [{}, {}]
+    links = cmds.ls(type = 'RigControlType')
+    for link in links:
+        controlGroup = cmds.listConnections(link + '.message')[0]
+
+        try:
+            # Local controls have component owner.
+            componentsGroup = cmds.listConnections(controlGroup + '.ControlOwner')[0]
+            rigGroup = cmds.listConnections(componentsGroup + '.ComponentOwner')[0]
+            curCharacterName = cmds.getAttr(rigGroup + '.characterName')
+
+            if characterName == curCharacterName:
+                control = cmds.listConnections(controlGroup + '.ControlObject')[0]
+                rigSide = getRigSide(controlGroup)
+                rigType = getRigType(controlGroup)
+                rigControlIndex = getRigControlIndex(controlGroup)
+
+                curKey = (rigSide, rigType, rigControlIndex)
+                characterControls[0][curKey] = control
+        except:
+            # Gloabl controls do not have component owner.
+            rigGroup = cmds.listConnections(controlGroup + '.GlobalControlOwner')[0]
+            curCharacterName = cmds.getAttr(rigGroup + '.characterName')
+            
+            if characterName == curCharacterName:
+                control = cmds.listConnections(controlGroup + '.ControlObject')[0]
+                rigSide = getRigSide(controlGroup)
+                rigType = getRigType(controlGroup)
+                rigControlIndex = getRigControlIndex(controlGroup)
+
+                curKey = (rigSide, rigType, rigControlIndex)
+                characterControls[1][curKey] = control
+
+    return characterControls
+                
+
+            
+            
+        
+        
+
