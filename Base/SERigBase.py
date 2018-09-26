@@ -2,6 +2,7 @@ import maya.cmds as cmds
 from . import SERigEnum
 from . import SERigNaming
 from . import SERigControl
+from ..Utils import SERigObjectTypeHelper
 
 sceneObjectType = 'rig'
 
@@ -43,6 +44,7 @@ class RigBase():
                                 scale = scale * 40, 
                                 parent = self.RigGrp, 
                                 lockChannels = ['v'])
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, global1Ctrl.ControlGroup, 'GlobalControl01', 'GlobalControlOwner')
 
         global2Ctrl = SERigControl.RigSpikeCrossControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
@@ -51,6 +53,7 @@ class RigBase():
                                 scale = scale * 30, 
                                 parent = global1Ctrl.ControlObject, 
                                 lockChannels = ['s', 'v'])
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, global2Ctrl.ControlGroup, 'GlobalControl02', 'GlobalControlOwner')
 
         self._flattenGlobalCtrlShape(global1Ctrl.ControlObject)
 
@@ -76,6 +79,7 @@ class RigBase():
                             translateTo = mainCtrlAttachObject,
                             lockChannels = ['t', 'r', 's', 'v'])
         self.MainControl = mainCtrl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, mainCtrl.ControlGroup, 'MainControl', 'GlobalControlOwner')
 
         # Adjust main control position and orientation.
         self._adjustMainCtrlShape(mainCtrl, scale, mainCtrlOffset)
