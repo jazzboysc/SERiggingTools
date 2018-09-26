@@ -40,6 +40,7 @@ class RigBase():
         global1Ctrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_Global,
+                                rigControlIndex = 1,
                                 prefix = 'Global_01', 
                                 scale = scale * 40, 
                                 parent = self.RigGrp, 
@@ -49,6 +50,7 @@ class RigBase():
         global2Ctrl = SERigControl.RigSpikeCrossControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_Global,
+                                rigControlIndex = 2,
                                 prefix = 'Global_02', 
                                 scale = scale * 30, 
                                 parent = global1Ctrl.ControlObject, 
@@ -73,6 +75,7 @@ class RigBase():
         mainCtrl = SERigControl.RigCircleControl(
                             rigSide = SERigEnum.eRigSide.RS_Center,
                             rigType = SERigEnum.eRigType.RT_Global,
+                            rigControlIndex = 0,
                             prefix = SERigNaming.sMainControlPrefix, 
                             scale = scale * 4, 
                             parent = global2Ctrl.ControlObject, 
