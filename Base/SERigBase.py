@@ -2,6 +2,7 @@ import maya.cmds as cmds
 from . import SERigEnum
 from . import SERigNaming
 from . import SERigControl
+from ..Utils import SERigObjectTypeHelper
 
 sceneObjectType = 'rig'
 
@@ -39,18 +40,22 @@ class RigBase():
         global1Ctrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_Global,
+                                rigControlIndex = 1,
                                 prefix = 'Global_01', 
                                 scale = scale * 40, 
                                 parent = self.RigGrp, 
                                 lockChannels = ['v'])
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, global1Ctrl.ControlGroup, 'GlobalControl01', 'GlobalControlOwner')
 
         global2Ctrl = SERigControl.RigSpikeCrossControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_Global,
+                                rigControlIndex = 2,
                                 prefix = 'Global_02', 
                                 scale = scale * 30, 
                                 parent = global1Ctrl.ControlObject, 
                                 lockChannels = ['s', 'v'])
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, global2Ctrl.ControlGroup, 'GlobalControl02', 'GlobalControlOwner')
 
         self._flattenGlobalCtrlShape(global1Ctrl.ControlObject)
 
@@ -70,12 +75,14 @@ class RigBase():
         mainCtrl = SERigControl.RigCircleControl(
                             rigSide = SERigEnum.eRigSide.RS_Center,
                             rigType = SERigEnum.eRigType.RT_Global,
+                            rigControlIndex = 0,
                             prefix = SERigNaming.sMainControlPrefix, 
                             scale = scale * 4, 
                             parent = global2Ctrl.ControlObject, 
                             translateTo = mainCtrlAttachObject,
                             lockChannels = ['t', 'r', 's', 'v'])
         self.MainControl = mainCtrl
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, mainCtrl.ControlGroup, 'MainControl', 'GlobalControlOwner')
 
         # Adjust main control position and orientation.
         self._adjustMainCtrlShape(mainCtrl, scale, mainCtrlOffset)

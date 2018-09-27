@@ -6,6 +6,7 @@ from ..Base import SERigNaming
 from ..Utils import SEStringHelper
 from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
+from ..Utils import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
 # Rig Human Neck Class
@@ -17,7 +18,7 @@ class RigHumanNeck(RigComponent):
                  prefix = 'new',
                  baseRig = None,
                  rigSide = SERigEnum.eRigSide.RS_Center,
-                 rigType = SERigEnum.eRigType.RT_Neck
+                 rigType = SERigEnum.eRigType.RT_NeckComponent
                  ):
 
         RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
@@ -60,7 +61,8 @@ class RigHumanNeck(RigComponent):
 
             curFKControl = SERigControl.RigCubeControl(
                                     rigSide = self.RigSide,
-                                    rigType = self.RigType,
+                                    rigType = SERigEnum.eRigType.RT_NeckFK,
+                                    rigControlIndex = i,
                                     prefix = SERigNaming.sFKPrefix + fkJoints[i], 
                                     translateTo = curFKJnt,
                                     rotateTo = curFKJnt,
@@ -73,6 +75,7 @@ class RigHumanNeck(RigComponent):
                                     transparency = 0.75
                                     )
             self.FKNeckControls.append(curFKControl)
+            SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKControl' + str(i), 'ControlOwner')
 
             cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)

@@ -4,6 +4,7 @@ sControlGroup       = '_CtrlGrp'
 sRigGroup           = 'RigGrp'
 sJointsGroup        = 'JointsGrp'
 sModelGroup         = 'ModelGrp'
+sBuilderGroup       = 'BuilderGrp'
 sRigCompsGroup      = 'RigComponentsGrp'
 sRigPartsGroup      = 'RigPartsGrp'
 sRigPartsFixedGroup = 'RigPartsFixedGrp'
@@ -27,6 +28,7 @@ sDeformationGroup   = 'DeformationGrp'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
+s_BuilderGroup       = '_' + sBuilderGroup
 s_RigGroup           = '_' + sRigGroup
 s_RigCompsGroup      = '_' + sRigCompsGroup
 s_RigPartsGroup      = '_' + sRigPartsGroup
