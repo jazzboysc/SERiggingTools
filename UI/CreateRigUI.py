@@ -35,20 +35,20 @@ def openMayaWindow():
     mainWin.show()
 
 
-def loadUI(uifile_path):
-    QtCore.QResource.addSearchPath("E:/Users/admin/Documents/GitHub/SERiggingTools/UI")
-    uifile = QtCore.QFile(uifile_path)
-    print(uifile)
-    uifile.open(QtCore.QFile.ReadOnly)
-    #QtCore.QResource.registerResource("E:/Users/admin/Documents/GitHub/SERiggingTools/UI/UIResource.qrc")
-    uiWindow = QtUiTools.QUiLoader().load(uifile)
-    uifile.close()
+# def loadUI(uifile_path):
+#     #QtCore.QResource.addSearchPath("E:/Users/admin/Documents/GitHub/SERiggingTools/UI")
+#     uifile = QtCore.QFile(uifile_path)
+#     print(uifile)
+#     uifile.open(QtCore.QFile.ReadOnly)
+#     #QtCore.QResource.registerResource("E:/Users/admin/Documents/GitHub/SERiggingTools/UI/UIResource.qrc")
+#     uiWindow = QtUiTools.QUiLoader().load(uifile)
+#     uifile.close()
 
-    rrr = QtCore.QResource.searchPaths()
-    print(rrr)
+#     rrr = QtCore.QResource.searchPaths()
+#     print(rrr)
 
-    #uiWindow.label.setPixmap(QtGui.QPixmap(("E:/Users/admin/Documents/GitHub/SERiggingTools/UI/equipment_11_1.png")))
-    return uiWindow
+#     #uiWindow.label.setPixmap(QtGui.QPixmap(("E:/Users/admin/Documents/GitHub/SERiggingTools/UI/equipment_11_1.png")))
+#     return uiWindow
 
 def getMayaWindow():
     ptr = mui.MQtUtil.mainWindow()
