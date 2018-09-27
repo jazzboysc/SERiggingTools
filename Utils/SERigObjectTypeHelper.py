@@ -150,7 +150,59 @@ def listRigCharacterControls(characterName):
                 characterControls[1][curKey] = control
 
     return characterControls
-                
+
+def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex):
+    '''
+    @param characterName: 
+    '''
+
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
+    if control == None: return None;
+    if cmds.objExists(control):
+        translateX = cmds.getAttr(control +'.translateX')
+        translateY = cmds.getAttr(control +'.translateY')
+        translateZ = cmds.getAttr(control +'.translateZ')
+        rotateX = cmds.getAttr(control + '.rotateX')
+        rotateY = cmds.getAttr(control + '.rotateY')
+        rotateZ = cmds.getAttr(control + '.rotateZ')
+
+        return (translateX, translateY, translateZ, rotateX, rotateY, rotateZ)
+               
+    else:
+        return None
+
+def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
+                             translateX, translateY, translateZ):
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
+    if control == None: return;
+
+    if cmds.objExists(control):
+        try:
+            cmds.setAttr(control + '.translateX', translateX)
+            cmds.setAttr(control + '.translateY', translateY)
+            cmds.setAttr(control + '.translateZ', translateZ)
+        except:
+            if 0:
+                cmds.warning('Translation channel is locked on control: ' + control)
+    else:
+        pass
+
+def setRigControlRotation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
+                             rotateX, rotateY, rotateZ):
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)   
+    if control == None: return;
+
+    if cmds.objExists(control):
+        try:
+            cmds.setAttr(control + '.rotateX', rotateX)
+            cmds.setAttr(control + '.rotateY', rotateY)
+            cmds.setAttr(control + '.rotateZ', rotateZ)
+        except:
+            if 0:
+                cmds.warning('Rotation channel is locked on control: ' + control)
+    else:
+        pass
+
 
             
             
