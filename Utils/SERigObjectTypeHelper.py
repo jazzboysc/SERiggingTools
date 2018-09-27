@@ -153,7 +153,10 @@ def listRigCharacterControls(characterName):
 
 def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex):
     '''
-    @param characterName: 
+    @param characterName: str, input a character name
+    @param rigSideStr: str, Proprietary attributes of the controller
+    @param rigTypeStr: str, Proprietary attributes of the controller
+    @param rigControlIndex: str, Proprietary attributes of the controller
     '''
 
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
@@ -173,6 +176,16 @@ def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlInde
 
 def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
                              translateX, translateY, translateZ):
+    '''
+    @param characterName: str, input a character name
+    @param rigSideStr: str, Proprietary attributes of the controller
+    @param rigTypeStr: str, Proprietary attributes of the controller
+    @param rigControlIndex: str, Proprietary attributes of the controller
+    @param translateX: str, reference object for control position
+    @param translateY: str, reference object for control position
+    @param translateZ: str, reference object for control position
+
+    '''
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
     if control == None: return;
 
@@ -189,6 +202,16 @@ def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIn
 
 def setRigControlRotation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
                              rotateX, rotateY, rotateZ):
+    '''
+    @param characterName: str, input a character name
+    @param rigSideStr: str, Proprietary attributes of the controller
+    @param rigTypeStr: str, Proprietary attributes of the controller
+    @param rigControlIndex: str, Proprietary attributes of the controller
+    @param rotateX: str, reference object for control position
+    @param rotateY: str, reference object for control position
+    @param rotateZ: str, reference object for control position
+
+    '''
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)   
     if control == None: return;
 
