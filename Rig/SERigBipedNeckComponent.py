@@ -41,7 +41,7 @@ class RigHumanNeck(RigComponent):
         if cmds.objExists(fkNeckAttachPoint):
             cmds.parentConstraint(fkNeckAttachPoint, fkNeckControlGroup)
 
-        # Create FK neck controls.
+        # Create FK neck and head controls.
         preParent = fkNeckControlGroup
         curFKJnt = None
         nextFKJnt = None
@@ -52,17 +52,25 @@ class RigHumanNeck(RigComponent):
             curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
             nextFKJntLoc = SEMathHelper.getWorldPosition(nextFKJnt)
             distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
+            curRigType = 0
+            curRigControlIndex = 0
             if i != (len(fkJoints) - 2):
+                # Neck FK.
                 distance *= 0.618
                 curScaleYZ = 14
+                curRigType = SERigEnum.eRigType.RT_NeckFK
+                curRigControlIndex = i
             else:
+                # Head FK.
                 distance *= 3
                 curScaleYZ = 18
+                curRigType = SERigEnum.eRigType.RT_HeadFK
+                curRigControlIndex = 0
 
             curFKControl = SERigControl.RigCubeControl(
                                     rigSide = self.RigSide,
-                                    rigType = SERigEnum.eRigType.RT_NeckFK,
-                                    rigControlIndex = i,
+                                    rigType = curRigType,
+                                    rigControlIndex = curRigControlIndex,
                                     prefix = SERigNaming.sFKPrefix + fkJoints[i], 
                                     translateTo = curFKJnt,
                                     rotateTo = curFKJnt,

@@ -150,7 +150,82 @@ def listRigCharacterControls(characterName):
                 characterControls[1][curKey] = control
 
     return characterControls
-                
+
+def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex):
+    '''
+    @param characterName: str, input a character name
+    @param rigSideStr: str, Proprietary attributes of the controller
+    @param rigTypeStr: str, Proprietary attributes of the controller
+    @param rigControlIndex: str, Proprietary attributes of the controller
+    '''
+
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
+    if control == None: return None;
+    if cmds.objExists(control):
+        translateX = cmds.getAttr(control +'.translateX')
+        translateY = cmds.getAttr(control +'.translateY')
+        translateZ = cmds.getAttr(control +'.translateZ')
+        rotateX = cmds.getAttr(control + '.rotateX')
+        rotateY = cmds.getAttr(control + '.rotateY')
+        rotateZ = cmds.getAttr(control + '.rotateZ')
+
+        return (translateX, translateY, translateZ, rotateX, rotateY, rotateZ)
+               
+    else:
+        return None
+
+def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
+                             translateX, translateY, translateZ):
+    '''
+    @param characterName: str, input a character name
+    @param rigSideStr: str, Proprietary attributes of the controller
+    @param rigTypeStr: str, Proprietary attributes of the controller
+    @param rigControlIndex: str, Proprietary attributes of the controller
+    @param translateX: str, reference object for control position
+    @param translateY: str, reference object for control position
+    @param translateZ: str, reference object for control position
+
+    '''
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
+    if control == None: return;
+
+    if cmds.objExists(control):
+        try:
+            cmds.setAttr(control + '.translateX', translateX)
+            cmds.setAttr(control + '.translateY', translateY)
+            cmds.setAttr(control + '.translateZ', translateZ)
+        except:
+            if 0:
+                cmds.warning('Translation channel is locked on control: ' + control)
+    else:
+        pass
+
+def setRigControlRotation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
+                             rotateX, rotateY, rotateZ):
+    '''
+    @param characterName: str, input a character name
+    @param rigSideStr: str, Proprietary attributes of the controller
+    @param rigTypeStr: str, Proprietary attributes of the controller
+    @param rigControlIndex: str, Proprietary attributes of the controller
+    @param rotateX: str, reference object for control position
+    @param rotateY: str, reference object for control position
+    @param rotateZ: str, reference object for control position
+
+    '''
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)   
+    if control == None: return;
+
+    if cmds.objExists(control):
+        try:
+            cmds.setAttr(control + '.rotateX', rotateX)
+            cmds.setAttr(control + '.rotateY', rotateY)
+            cmds.setAttr(control + '.rotateZ', rotateZ)
+        except:
+            if 0:
+                cmds.warning('Rotation channel is locked on control: ' + control)
+    else:
+        pass
+
 
             
             
