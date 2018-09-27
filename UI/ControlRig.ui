@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>553</width>
-    <height>973</height>
+    <width>552</width>
+    <height>985</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -92,7 +92,7 @@ background-color: rgb(85, 170, 255);</string>
           <x>60</x>
           <y>30</y>
           <width>160</width>
-          <height>177</height>
+          <height>191</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -323,7 +323,7 @@ background-color: rgb(85, 170, 255);</string>
           <x>40</x>
           <y>30</y>
           <width>160</width>
-          <height>173</height>
+          <height>189</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -494,10 +494,6 @@ background-color: rgb(85, 170, 255);</string>
          </item>
         </layout>
        </widget>
-       <zorder>widget_2</zorder>
-       <zorder>widget_2</zorder>
-       <zorder>verticalLayoutWidget_8</zorder>
-       <zorder>verticalLayoutWidget_7</zorder>
       </widget>
      </item>
     </layout>
@@ -521,10 +517,10 @@ background-color: rgb(85, 170, 255);</string>
    <widget class="QWidget" name="verticalLayoutWidget_10">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>390</y>
-      <width>172</width>
-      <height>282</height>
+      <x>180</x>
+      <y>380</y>
+      <width>181</width>
+      <height>291</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -697,7 +693,7 @@ background-color: rgb(85, 170, 255);</string>
    <widget class="QWidget" name="verticalLayoutWidget_15">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>360</x>
       <y>180</y>
       <width>62</width>
       <height>198</height>
@@ -759,6 +755,9 @@ background-color: rgb(85, 170, 255);</string>
          <height>60</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -769,7 +768,7 @@ background-color: rgb(85, 170, 255);</string>
    <widget class="QWidget" name="verticalLayoutWidget_16">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>110</x>
       <y>180</y>
       <width>71</width>
       <height>198</height>
@@ -831,6 +830,9 @@ background-color: rgb(85, 170, 255);</string>
          <height>60</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -844,12 +846,12 @@ background-color: rgb(85, 170, 255);</string>
       <x>190</x>
       <y>180</y>
       <width>160</width>
-      <height>186</height>
+      <height>200</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_23">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <layout class="QHBoxLayout" name="BodyUp">
        <item>
         <widget class="QPushButton" name="pushButton_33">
          <property name="minimumSize">
@@ -864,11 +866,22 @@ background-color: rgb(85, 170, 255);</string>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
+        <layout class="QVBoxLayout" name="verticalLayout_24">
+         <item>
+          <widget class="QPushButton" name="Neck_1">
+           <property name="text">
+            <string>1</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="FK_C_Neck_0_Ctrl">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_34">
@@ -999,26 +1012,13 @@ background-color: rgb(85, 170, 255);</string>
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <zorder>characterSelector</zorder>
-   <zorder>widget_3</zorder>
-   <zorder>horizontalLayoutWidget</zorder>
-   <zorder>pushButton_12</zorder>
-   <zorder>pushButton_40</zorder>
-   <zorder>pushButton</zorder>
-   <zorder>verticalLayoutWidget_10</zorder>
-   <zorder>verticalLayoutWidget_15</zorder>
-   <zorder>verticalLayoutWidget_16</zorder>
-   <zorder>verticalLayoutWidget_17</zorder>
-   <zorder>hand</zorder>
-   <zorder>line_2</zorder>
-   <zorder>line_3</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>553</width>
+     <width>552</width>
      <height>23</height>
     </rect>
    </property>
