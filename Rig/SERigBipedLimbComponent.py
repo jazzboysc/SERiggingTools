@@ -31,7 +31,8 @@ class RigHumanLimb(RigComponent):
         self.PVLocatorSync = None
         self.LimbFKControls = []
         self.LimbFKControlSyncTargets = []
-
+        self.LimbGuideCurveStart = None
+        self.LimbGuideCurveEnd = None
 
     @staticmethod
     def getFKSyncTargets(rigHumanLimb):
@@ -213,6 +214,15 @@ class RigHumanLimb(RigComponent):
         else:
             print('The numbers of FK control sources and targets do not match.')
 
+    def createGuideCurve(self):
+        if self.LimbGuideCurveStart and self.LimbGuideCurveEnd and self.LimbPVControl:
+            guideCurveStart = cmds.xform(self.LimbGuideCurveStart, q = 1, t = 1, ws = 1)
+            guideCurveEnd = cmds.xform(self.LimbGuideCurveEnd, q = 1, t = 1, ws = 1)
+            pvGuideCurve = cmds.curve(n = self.Prefix + '_PVGuideCurve', d = 1, p = [guideCurveStart, guideCurveEnd])
+            cmds.cluster(pvGuideCurve + '.cv[0]', n = self.Prefix + '_PVGuideCurveStart_Cls', wn = [self.LimbGuideCurveStart, self.LimbGuideCurveStart], bs = True)
+            cmds.cluster(pvGuideCurve + '.cv[1]', n = self.Prefix + '_PVGuideCurveEnd_Cls', wn = [self.LimbPVControl.ControlObject, self.LimbPVControl.ControlObject], bs = True)
+            cmds.setAttr(pvGuideCurve + '.template', 1)
+            cmds.parent(pvGuideCurve, self.RigPartsGrp)
 
     def createDelegateAttributes(self):
 
@@ -576,6 +586,11 @@ class RigHumanLeg(RigHumanLimb):
                     cmds.connectAttr(blenderControlAttr, blender + '.blender')
                 else:
                     cmds.error('Blender Control Attribute not found.')
+
+        # Create leg PV guide curve.
+        self.LimbGuideCurveStart = legJoints[1]
+        self.LimbGuideCurveEnd = legPVLocator
+        self.createGuideCurve()
 
         # Create foot swive control expressions.
         footBaseSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootBaseSwive'
@@ -1021,6 +1036,11 @@ class RigHumanArm(RigHumanLimb):
                     cmds.connectAttr(blenderControlAttr, blender + '.blender')
                 else:
                     cmds.error('Blender Control Attribute not found.')
+
+        # Create arm PV guide curve.
+        self.LimbGuideCurveStart = armJoints[1]
+        self.LimbGuideCurveEnd = armPVLocator
+        self.createGuideCurve()
 
         # Create IK/FK control group auto hide expression.
 
