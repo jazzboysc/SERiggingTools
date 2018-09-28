@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>552</width>
+    <width>551</width>
     <height>985</height>
    </rect>
   </property>
@@ -37,7 +37,7 @@
      <item>
       <widget class="QWidget" name="widget_2" native="true">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(202, 255, 187);</string>
+        <string notr="true">background-color: rgb(175, 55, 55);</string>
        </property>
        <widget class="QWidget" name="verticalLayoutWidget_6">
         <property name="geometry">
@@ -268,7 +268,7 @@ background-color: rgb(85, 170, 255);</string>
      <item>
       <widget class="QWidget" name="widget_3" native="true">
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 213, 252);</string>
+        <string notr="true">background-color: rgb(55, 55, 175);</string>
        </property>
        <widget class="QWidget" name="verticalLayoutWidget_8">
         <property name="geometry">
@@ -498,7 +498,7 @@ background-color: rgb(85, 170, 255);</string>
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="FK_C_Head_Ctrl">
     <property name="geometry">
      <rect>
       <x>200</x>
@@ -508,7 +508,8 @@ background-color: rgb(85, 170, 255);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true"/>
+     <string notr="true">selection-background-color: rgb(255, 255, 127);
+selection-color: rgb(255, 255, 127);</string>
     </property>
     <property name="text">
      <string>Head</string>
@@ -519,15 +520,19 @@ background-color: rgb(85, 170, 255);</string>
      <rect>
       <x>180</x>
       <y>380</y>
-      <width>181</width>
+      <width>202</width>
       <height>291</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_14">
      <item>
-      <widget class="QPushButton" name="pushButton_40">
+      <widget class="QPushButton" name="C_SpineUpperBody_Ctrl">
+       <property name="styleSheet">
+        <string notr="true">selection-background-color: rgb(255, 255, 127);
+selection-color: rgb(255, 255, 127);</string>
+       </property>
        <property name="text">
-        <string/>
+        <string>SpineUpperBody</string>
        </property>
       </widget>
      </item>
@@ -556,7 +561,7 @@ background-color: rgb(85, 170, 255);</string>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_17">
              <item>
-              <widget class="QPushButton" name="pushButton_44">
+              <widget class="QPushButton" name="FK_R_Leg0_Ctrl">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -569,7 +574,7 @@ background-color: rgb(85, 170, 255);</string>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_45">
+              <widget class="QPushButton" name="FK_R_Leg1_Ctrl">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -588,14 +593,14 @@ background-color: rgb(85, 170, 255);</string>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
-            <widget class="QPushButton" name="pushButton_46">
+            <widget class="QPushButton" name="FK_R_Leg3_Ctrl">
              <property name="text">
               <string/>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_47">
+            <widget class="QPushButton" name="FK_R_Leg2_Ctrl">
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -618,7 +623,7 @@ background-color: rgb(85, 170, 255);</string>
            <item>
             <layout class="QVBoxLayout" name="verticalLayout_15">
              <item>
-              <widget class="QPushButton" name="pushButton_38">
+              <widget class="QPushButton" name="FK_L_Leg0_Ctrl">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -631,7 +636,7 @@ background-color: rgb(85, 170, 255);</string>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_39">
+              <widget class="QPushButton" name="FK_L_Leg1_Ctrl">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -663,7 +668,7 @@ background-color: rgb(85, 170, 255);</string>
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <widget class="QPushButton" name="pushButton_42">
+            <widget class="QPushButton" name="FK_L_Leg2_Ctrl">
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -676,7 +681,7 @@ background-color: rgb(85, 170, 255);</string>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_43">
+            <widget class="QPushButton" name="FK_L_Leg3_Ctrl">
              <property name="text">
               <string/>
              </property>
@@ -705,7 +710,7 @@ background-color: rgb(85, 170, 255);</string>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_16">
          <item>
-          <widget class="QPushButton" name="pushButton_41">
+          <widget class="QPushButton" name="FK_L_Arm0_Ctrl">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -718,7 +723,7 @@ background-color: rgb(85, 170, 255);</string>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_48">
+          <widget class="QPushButton" name="FK_L_Arm1_Ctrl">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -748,7 +753,7 @@ background-color: rgb(85, 170, 255);</string>
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_49">
+      <widget class="QPushButton" name="FK_L_Arm2_Ctrl">
        <property name="minimumSize">
         <size>
          <width>60</width>
@@ -793,7 +798,7 @@ background-color: rgb(85, 170, 255);</string>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_22">
          <item>
-          <widget class="QPushButton" name="pushButton_50">
+          <widget class="QPushButton" name="FK_R_Arm0_Ctrl">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -806,7 +811,7 @@ background-color: rgb(85, 170, 255);</string>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_51">
+          <widget class="QPushButton" name="FK_R_Arm1_Ctrl">
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -823,7 +828,7 @@ background-color: rgb(85, 170, 255);</string>
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_52">
+      <widget class="QPushButton" name="FK_R_Arm2_Ctrl">
        <property name="minimumSize">
         <size>
          <width>60</width>
@@ -853,7 +858,7 @@ background-color: rgb(85, 170, 255);</string>
      <item>
       <layout class="QHBoxLayout" name="BodyUp">
        <item>
-        <widget class="QPushButton" name="pushButton_33">
+        <widget class="QPushButton" name="R_Arm_Clav_Rotation_Ctrl">
          <property name="minimumSize">
           <size>
            <width>20</width>
@@ -866,25 +871,33 @@ background-color: rgb(85, 170, 255);</string>
         </widget>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_24">
+        <layout class="QVBoxLayout" name="NeckVerticalLayout">
          <item>
-          <widget class="QPushButton" name="Neck_1">
+          <widget class="QPushButton" name="FK_C_Neck_1_Ctrl">
+           <property name="styleSheet">
+            <string notr="true">selection-background-color: rgb(255, 255, 127);
+selection-color: rgb(255, 255, 127);</string>
+           </property>
            <property name="text">
-            <string>1</string>
+            <string>Neck_1</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="FK_C_Neck_0_Ctrl">
+           <property name="styleSheet">
+            <string notr="true">selection-background-color: rgb(255, 255, 127);
+selection-color: rgb(255, 255, 127);</string>
+           </property>
            <property name="text">
-            <string>0</string>
+            <string>Neck_0</string>
            </property>
           </widget>
          </item>
         </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_34">
+        <widget class="QPushButton" name="L_Arm_Clav_Rotation_Ctrl">
          <property name="minimumSize">
           <size>
            <width>20</width>
@@ -916,41 +929,36 @@ background-color: rgb(85, 170, 255);</string>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_13">
          <item>
-          <widget class="QPushButton" name="pushButton_36">
+          <widget class="QPushButton" name="FK_C_Spine_1_Ctrl">
            <property name="minimumSize">
             <size>
              <width>60</width>
              <height>40</height>
             </size>
            </property>
+           <property name="styleSheet">
+            <string notr="true">selection-background-color: rgb(255, 255, 127);
+selection-color: rgb(255, 255, 127);</string>
+           </property>
            <property name="text">
-            <string/>
+            <string>Spine_1</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_35">
+          <widget class="QPushButton" name="FK_C_Spine_0_Ctrl">
            <property name="minimumSize">
             <size>
              <width>60</width>
              <height>40</height>
             </size>
            </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_37">
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>40</height>
-            </size>
+           <property name="styleSheet">
+            <string notr="true">selection-background-color: rgb(255, 255, 127);
+selection-color: rgb(255, 255, 127);</string>
            </property>
            <property name="text">
-            <string/>
+            <string>Spine_0</string>
            </property>
           </widget>
          </item>
@@ -1018,7 +1026,7 @@ background-color: rgb(85, 170, 255);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>552</width>
+     <width>551</width>
      <height>23</height>
     </rect>
    </property>
