@@ -208,3 +208,40 @@ class RigComplexIKSpine(RigComponent):
             rigScale = 1.0
             ):
         chestBeginNewParent = SEJointHelper.createNewParentJoint(spineJoints[-1])
+        spine0NewParent = SEJointHelper.createNewParentJoint(spineJoints[1], True)
+
+        cmds.parent(spineJoints[-1], w = 1)
+        newSpineJoints = SEJointHelper.listHierarchy(spine0NewParent)
+        cmds.parent(spineJoints[-1], chestBeginNewParent)
+        
+        ikSpineJoints = []
+        preParent = None
+        for joint in newSpineJoints:
+            ikSpineJoint = cmds.createNode('joint', n = SERigNaming.sIKPrefix + joint)
+            cmds.delete(cmds.parentConstraint(joint, ikSpineJoint))
+            
+            if preParent:
+                cmds.parent(ikSpineJoint, preParent)
+
+            preParent = ikSpineJoint
+            ikSpineJoints.append(ikSpineJoint)
+
+        cmds.parent(ikSpineJoints[0], self.JointsGrp)
+        cmds.makeIdentity(ikSpineJoints[0], apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+        # Create IK handle.
+        resList = cmds.ikHandle(n = self.Prefix + SERigNaming.s_SplineIKHandle, 
+                                sol = 'ikSplineSolver', sj = ikSpineJoints[0], ee = ikSpineJoints[-1], ccv = 1, parentCurve = 0, numSpans = 4)
+        spineIK = resList[0]
+        spineCurve = resList[2]
+
+        spineCurveNewName = self.Prefix + SERigNaming.s_Curve
+        cmds.rename(spineCurve, spineCurveNewName)
+                                                
+        cmds.hide(spineIK)
+        cmds.hide(spineCurveNewName)
+        cmds.parent(spineIK, spineCurveNewName, self.RigPartsFixedGrp)
+
+        for ikSpineJoint, spineJoint in zip(ikSpineJoints, newSpineJoints):
+            cmds.orientConstraint(ikSpineJoint, spineJoint, mo = 1)
+            cmds.pointConstraint(ikSpineJoint, spineJoint, mo = 1)

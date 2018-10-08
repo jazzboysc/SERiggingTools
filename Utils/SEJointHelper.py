@@ -62,14 +62,18 @@ def getFirstParentJoint(child):
 
     return parentJoint
 
-def createNewParentJoint(child):
+def createNewParentJoint(child, alignNewParentToOldParent = False):
     newParent = None
     if cmds.objExists(child):
         oldParent = getFirstParentJoint(child)
 
         # Create a new parent for the child.
-        newParent = cmds.joint(n = child + '_Par')
-        cmds.delete(cmds.parentConstraint(child, newParent, mo = 0))
+        newParent = cmds.createNode('joint', n = child + '_Par')
+        if alignNewParentToOldParent and oldParent:
+            cmds.delete(cmds.parentConstraint(oldParent, newParent, mo = 0))
+        else:
+            cmds.delete(cmds.parentConstraint(child, newParent, mo = 0))
+
         cmds.parent(child, newParent)
         cmds.makeIdentity(newParent, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
