@@ -158,7 +158,8 @@ class RigBipedCharacter():
                                 toeIKTwistRight,
                                 fkArmControlScaleYZ,
                                 fkArmControlScaleYZMultiplier,
-                                fkArmControlTransparency
+                                fkArmControlTransparency,
+                                False
                                 )
 
         # Setup model deformation.
@@ -229,19 +230,23 @@ class RigBipedCharacter():
                             toeIKTwistRight,
                             fkArmControlScaleYZ,
                             fkArmControlScaleYZMultiplier,
-                            fkArmControlTransparency
+                            fkArmControlTransparency,
+                            createSimpleSpine
                             ):
 
         # Spine.
-        spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = self.BaseRig, 
-                                                     rigSide = SERigEnum.eRigSide.RS_Center, 
-                                                     rigType = SERigEnum.eRigType.RT_SpineComponent)
+        spine = None
+        if createSimpleSpine:
+            spine = SERigSpineComponent.RigSimpleIKSpine(prefix = 'C_Spine', baseRig = self.BaseRig, 
+                                                         rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                         rigType = SERigEnum.eRigType.RT_SpineComponent)
+        else:
+            spine = SERigSpineComponent.RigComplexIKSpine(prefix = 'C_Spine', baseRig = self.BaseRig, 
+                                                         rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                         rigType = SERigEnum.eRigType.RT_SpineComponent)
         spine.build(
                     spineJoints = spineJnts,
                     rootJoint = rootJnt,
-                    bodyLocator = 'locator_Body',
-                    chestLocator = 'locator_Chest',
-                    pelvisLocator = 'locator_Pelvis',
                     rigScale = sceneScale
                     )
         self.Spine = spine

@@ -4,6 +4,7 @@ from ..Base import SERigControl
 from ..Base import SERigEnum
 from ..Base import SERigNaming
 from ..Utils import SERigObjectTypeHelper
+from ..Utils import SEJointHelper
 
 #-----------------------------------------------------------------------------
 # Rig Simple IK Spine Class
@@ -23,9 +24,6 @@ class RigSimpleIKSpine(RigComponent):
             self,
             spineJoints = [],
             rootJoint = '',
-            bodyLocator = '',
-            chestLocator = '',
-            pelvisLocator = '',
             rigScale = 1.0
             ):
 
@@ -187,3 +185,26 @@ class RigSimpleIKSpine(RigComponent):
         cmds.parent(chestBeginCtrl.ControlGroup, FKSpine1Ctrl.ControlObject)
 
         cmds.hide(jnt0, pelvisProxyJoint, chestBeginProxyJoint)
+
+
+#-----------------------------------------------------------------------------
+# Rig Complex IK Spine Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigComplexIKSpine(RigComponent):
+    def __init__(
+                 self, 
+                 prefix = 'new',
+                 baseRig = None,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown
+                 ):
+        RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
+
+    def build(
+            self,
+            spineJoints = [],
+            rootJoint = '',
+            rigScale = 1.0
+            ):
+        chestBeginNewParent = SEJointHelper.createNewParentJoint(spineJoints[-1])
