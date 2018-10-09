@@ -331,3 +331,33 @@ class RigFixedEndsIKSpine(RigComponent):
         # Control original pelvis joint via pelvis local control.
         cmds.orientConstraint(pelvisLocalCtrl.ControlObject, spineJoints[0], mo = 1)
         cmds.pointConstraint(pelvisLocalCtrl.ControlObject, spineJoints[0], mo = 1)
+
+        # Create stretching spine.
+        curveInfoNode = cmds.arclen(spineCurveNewName, ch = 1)
+        curveLen = cmds.getAttr(curveInfoNode + '.arcLength')
+        divNode = cmds.createNode('multiplyDivide')
+        cmds.setAttr(divNode + '.operation', 2)
+        cmds.setAttr(divNode + '.input2X', curveLen)
+        cmds.setAttr(divNode + '.i2', l = 1)
+        cmds.connectAttr(curveInfoNode + '.arcLength', divNode + '.input1X', f = 1)
+        blender = cmds.createNode('blendColors')
+        cmds.connectAttr(divNode + '.outputX', blender + '.color1R', f = 1)
+        cmds.setAttr(blender + '.color2R', 1.0)
+
+        if self.BaseRig:
+            stretchSpineAttr = self.BaseRig.addStretchSpineAttr()
+            mainControlObj = self.BaseRig.getMainControlObject()
+
+            if mainControlObj and stretchSpineAttr:
+                cmds.connectAttr(mainControlObj + '.' + stretchSpineAttr, blender + '.blender')
+
+                for i in range(len(ikSpineJoints) - 1):
+                    curIKSpineJoint = ikSpineJoints[i + 1]
+                    curDefaultTransX = cmds.getAttr(curIKSpineJoint + '.translateX')
+                    curMulNode = cmds.createNode('multiplyDivide')
+                    cmds.setAttr(curMulNode + '.input2X', curDefaultTransX)
+                    cmds.setAttr(curMulNode + '.i2', l = 1)
+                    cmds.connectAttr(blender + '.outputR', curMulNode + '.input1X', f = 1)
+                    cmds.connectAttr(curMulNode + '.outputX', curIKSpineJoint + '.translateX', f = 1)
+            else:
+                cmds.warning('Failed creating stretching spine attribute for the main control.')

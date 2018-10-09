@@ -133,6 +133,24 @@ class RigBase():
         self.MainIKFKAutoHideAts = mainIKFKAutoHideAts
 
         
+    def getMainControlObject(self):
+        if self.MainControl:
+            return self.MainControl.ControlObject
+        else:
+            return None
+
+    def addStretchSpineAttr(self):
+        if self.MainControl:
+            attrName = 'stretchSpine'
+            try:
+                cmds.addAttr(self.MainControl.ControlObject, ln = attrName, at = 'float', k = 1, dv = 1.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+            except:
+                pass
+
+            return attrName
+        else:
+            return None
+
     def getLegIKFKSwitch(self, rigSide = SERigEnum.eRigSide.RS_Unknown):
 
         if rigSide == SERigEnum.eRigSide.RS_Left:

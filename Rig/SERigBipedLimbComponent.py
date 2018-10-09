@@ -222,7 +222,7 @@ class RigHumanLimb(RigComponent):
             cmds.cluster(pvGuideCurve + '.cv[0]', n = self.Prefix + '_PVGuideCurveStart_Cls', wn = [self.LimbGuideCurveStart, self.LimbGuideCurveStart], bs = True)
             cmds.cluster(pvGuideCurve + '.cv[1]', n = self.Prefix + '_PVGuideCurveEnd_Cls', wn = [self.LimbPVControl.ControlObject, self.LimbPVControl.ControlObject], bs = True)
             cmds.setAttr(pvGuideCurve + '.template', 1)
-            cmds.parent(pvGuideCurve, self.RigPartsGrp)
+            cmds.parent(pvGuideCurve, self.RigPartsFixedGrp)
 
     def createDelegateAttributes(self):
 
