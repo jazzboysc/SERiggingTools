@@ -1,0 +1,1656 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>550</width>
+    <height>998</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QComboBox" name="characterSelector">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>531</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_C_Head_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>90</y>
+      <width>51</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;HeadFK&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);
+border-left-color: rgba(255, 255, 255, 0);
+border-top-color: rgba(255, 255, 255, 0);
+border-bottom-color: rgba(255, 255, 255, 0);
+border-right-color: rgba(255, 255, 255, 0);
+border-color: rgba(255, 255, 255, 0);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="Line" name="hand">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>670</y>
+      <width>531</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>531</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>940</y>
+      <width>531</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="BodyBG">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>60</y>
+      <width>431</width>
+      <height>621</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>ControllUIBG.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_C_Neck_1_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>150</y>
+      <width>31</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_C_Neck_0_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>180</y>
+      <width>31</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="L_Arm_Clav_Rotation_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>160</y>
+      <width>41</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>20</width>
+      <height>40</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="R_Arm_Clav_Rotation_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>160</y>
+      <width>41</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>20</width>
+      <height>40</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Arm0_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>250</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string>background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Arm1_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>290</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string>background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Arm2_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>320</y>
+      <width>60</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Arm0_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>250</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string>background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Arm1_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>290</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string>background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Arm2_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>320</y>
+      <width>60</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_C_Spine_1_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>249</y>
+      <width>70</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);
+border-left-color: rgba(255, 255, 255, 0);
+border-top-color: rgba(255, 255, 255, 0);
+border-bottom-color: rgba(255, 255, 255, 0);
+border-right-color: rgba(255, 255, 255, 0);
+border-color: rgba(255, 255, 255, 0);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_C_Spine_0_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>280</y>
+      <width>70</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);
+border-left-color: rgba(255, 255, 255, 0);
+border-top-color: rgba(255, 255, 255, 0);
+border-bottom-color: rgba(255, 255, 255, 0);
+border-right-color: rgba(255, 255, 255, 0);
+border-color: rgba(255, 255, 255, 0);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="C_SpineUpperBody_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>340</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);
+border-left-color: rgba(255, 255, 255, 0);
+border-top-color: rgba(255, 255, 255, 0);
+border-bottom-color: rgba(255, 255, 255, 0);
+border-right-color: rgba(255, 255, 255, 0);
+border-color: rgba(255, 255, 255, 0);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg0_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>291</x>
+      <y>370</y>
+      <width>41</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>480</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg3_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>640</y>
+      <width>39</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg2_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>600</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>60</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Leg0_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>370</y>
+      <width>41</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Leg1_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>480</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Leg3_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>640</y>
+      <width>40</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Leg2_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>600</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>60</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="RHandBG">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>690</y>
+      <width>250</width>
+      <height>250</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>ControllUIRHandBG.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LHandBG">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>690</y>
+      <width>250</width>
+      <height>250</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>ControllUILHandBG.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Thumb_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>720</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Thumb_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>750</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Thumb_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>780</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Index_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>760</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Index_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>790</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Index_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>820</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Index_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>850</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Middle_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>820</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Middle_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>790</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Middle_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>850</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Middle_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>760</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Ring_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>820</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Ring_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>790</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Ring_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>850</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Ring_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>760</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Pinky_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>820</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Pinky_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>790</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Pinky_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>850</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Pinky_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>760</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Pinky_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>760</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Thumb_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>750</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Middle_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>760</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Index_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>850</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Index_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>820</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Ring_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>820</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Middle_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>790</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Middle_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>820</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Index_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>790</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Pinky_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>790</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Thumb_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>780</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Ring_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>790</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Pinky_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>820</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Middle_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>850</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Pinky_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>850</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Ring_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>760</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Thumb_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>720</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Ring_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>850</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Index_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>760</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Index_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>900</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Middle_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>900</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Ring_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>900</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Pinky_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>900</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Middle_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>900</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Ring_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>900</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Index_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>900</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Pinky_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>900</y>
+      <width>32</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Finger_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>850</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Finger_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>790</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Finger_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>820</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Finger_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>760</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Finger_00_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>760</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Finger_01_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>790</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Finger_03_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>850</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_Finger_02_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>820</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_FourFinger_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>700</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_R_FourFinger_Ctrl">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>700</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>BodyBG</zorder>
+   <zorder>characterSelector</zorder>
+   <zorder>FK_C_Head_Ctrl</zorder>
+   <zorder>hand</zorder>
+   <zorder>line_2</zorder>
+   <zorder>line_3</zorder>
+   <zorder>FK_C_Neck_1_Ctrl</zorder>
+   <zorder>FK_C_Neck_0_Ctrl</zorder>
+   <zorder>L_Arm_Clav_Rotation_Ctrl</zorder>
+   <zorder>R_Arm_Clav_Rotation_Ctrl</zorder>
+   <zorder>FK_L_Arm0_Ctrl</zorder>
+   <zorder>FK_L_Arm1_Ctrl</zorder>
+   <zorder>FK_L_Arm2_Ctrl</zorder>
+   <zorder>FK_R_Arm0_Ctrl</zorder>
+   <zorder>FK_R_Arm1_Ctrl</zorder>
+   <zorder>FK_R_Arm2_Ctrl</zorder>
+   <zorder>FK_C_Spine_1_Ctrl</zorder>
+   <zorder>FK_C_Spine_0_Ctrl</zorder>
+   <zorder>C_SpineUpperBody_Ctrl</zorder>
+   <zorder>FK_L_Leg0_Ctrl</zorder>
+   <zorder>FK_L_Leg1_Ctrl</zorder>
+   <zorder>FK_L_Leg3_Ctrl</zorder>
+   <zorder>FK_L_Leg2_Ctrl</zorder>
+   <zorder>FK_R_Leg0_Ctrl</zorder>
+   <zorder>FK_R_Leg1_Ctrl</zorder>
+   <zorder>FK_R_Leg3_Ctrl</zorder>
+   <zorder>FK_R_Leg2_Ctrl</zorder>
+   <zorder>RHandBG</zorder>
+   <zorder>LHandBG</zorder>
+   <zorder>FK_L_Thumb_00_Ctrl</zorder>
+   <zorder>FK_L_Thumb_01_Ctrl</zorder>
+   <zorder>FK_L_Thumb_02_Ctrl</zorder>
+   <zorder>FK_L_Index_00_Ctrl</zorder>
+   <zorder>FK_L_Index_01_Ctrl</zorder>
+   <zorder>FK_L_Index_02_Ctrl</zorder>
+   <zorder>FK_L_Index_03_Ctrl</zorder>
+   <zorder>FK_L_Middle_02_Ctrl</zorder>
+   <zorder>FK_L_Middle_01_Ctrl</zorder>
+   <zorder>FK_L_Middle_03_Ctrl</zorder>
+   <zorder>FK_L_Middle_00_Ctrl</zorder>
+   <zorder>FK_L_Ring_02_Ctrl</zorder>
+   <zorder>FK_L_Ring_01_Ctrl</zorder>
+   <zorder>FK_L_Ring_03_Ctrl</zorder>
+   <zorder>FK_L_Ring_00_Ctrl</zorder>
+   <zorder>FK_L_Pinky_02_Ctrl</zorder>
+   <zorder>FK_L_Pinky_01_Ctrl</zorder>
+   <zorder>FK_L_Pinky_03_Ctrl</zorder>
+   <zorder>FK_L_Pinky_00_Ctrl</zorder>
+   <zorder>FK_R_Pinky_00_Ctrl</zorder>
+   <zorder>FK_R_Thumb_01_Ctrl</zorder>
+   <zorder>FK_R_Middle_00_Ctrl</zorder>
+   <zorder>FK_R_Index_03_Ctrl</zorder>
+   <zorder>FK_R_Index_02_Ctrl</zorder>
+   <zorder>FK_R_Ring_02_Ctrl</zorder>
+   <zorder>FK_R_Middle_01_Ctrl</zorder>
+   <zorder>FK_R_Middle_02_Ctrl</zorder>
+   <zorder>FK_R_Index_01_Ctrl</zorder>
+   <zorder>FK_R_Pinky_01_Ctrl</zorder>
+   <zorder>FK_R_Thumb_02_Ctrl</zorder>
+   <zorder>FK_R_Ring_01_Ctrl</zorder>
+   <zorder>FK_R_Pinky_02_Ctrl</zorder>
+   <zorder>FK_R_Middle_03_Ctrl</zorder>
+   <zorder>FK_R_Pinky_03_Ctrl</zorder>
+   <zorder>FK_R_Ring_00_Ctrl</zorder>
+   <zorder>FK_R_Thumb_00_Ctrl</zorder>
+   <zorder>FK_R_Ring_03_Ctrl</zorder>
+   <zorder>FK_R_Index_00_Ctrl</zorder>
+   <zorder>FK_L_Index_Ctrl</zorder>
+   <zorder>FK_L_Middle_Ctrl</zorder>
+   <zorder>FK_L_Ring_Ctrl</zorder>
+   <zorder>FK_L_Pinky_Ctrl</zorder>
+   <zorder>FK_R_Middle_Ctrl</zorder>
+   <zorder>FK_R_Ring_Ctrl</zorder>
+   <zorder>FK_R_Index_Ctrl</zorder>
+   <zorder>FK_R_Pinky_Ctrl</zorder>
+   <zorder>FK_L_Finger_03_Ctrl</zorder>
+   <zorder>FK_L_Finger_01_Ctrl</zorder>
+   <zorder>FK_L_Finger_02_Ctrl</zorder>
+   <zorder>FK_L_Finger_00_Ctrl</zorder>
+   <zorder>FK_R_Finger_00_Ctrl</zorder>
+   <zorder>FK_R_Finger_01_Ctrl</zorder>
+   <zorder>FK_R_Finger_03_Ctrl</zorder>
+   <zorder>FK_R_Finger_02_Ctrl</zorder>
+   <zorder>FK_L_FourFinger_Ctrl</zorder>
+   <zorder>FK_R_FourFinger_Ctrl</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>550</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

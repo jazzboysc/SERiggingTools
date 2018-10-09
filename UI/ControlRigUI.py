@@ -21,7 +21,7 @@ import UIConfig
 #"E:/Users/admin/Documents/GitHub/SERiggingTools/UI/LoadRiggingUI.ui"
 
 uiRootFile = os.path.dirname(UIConfig.__file__)
-uifile_path = uiRootFile + "/ControlRig.ui"
+uifile_path = uiRootFile + "/Control2Rig.ui"
 
 def openControlRigWindow():
     ''' todo: stop open more than one window'''
@@ -38,11 +38,15 @@ def loadUI(uifile_path):
     uiWindow = QtUiTools.QUiLoader().load(uifile)
     uifile.close()
 
+    uiWindow.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
     setControlToButtonMap(uiWindow)
     setSelectorCallBack(uiWindow)
     setButtonCallback(uiWindow)
+    setMutiSelectedButtonCallback(uiWindow)
 
-    #uiWindow.label.setPixmap(QtGui.QPixmap(("E:/Users/admin/Documents/GitHub/SERiggingTools/UI/equipment_11_1.png")))
+    uiWindow.BodyBG.setPixmap(QtGui.QPixmap((uiRootFile +"/ControllUIBG.png")))
+    uiWindow.RHandBG.setPixmap(QtGui.QPixmap((uiRootFile +"/ControllUIRHandBG.png")))
+    uiWindow.LHandBG.setPixmap(QtGui.QPixmap((uiRootFile +"/ControllUILHandBG.png")))
     refreshCharacterInSelector(uiWindow)
     return uiWindow
 
@@ -74,85 +78,86 @@ def getAllControllRigByName(charName):
 
 def setControlToButtonMap(uiWindow):
     global ControlToButton
-    ControlToButton = {(u'RS_Right', u'RT_LegPV', 0): u'R_Leg_PV_Ctrl',
-                    (u'RS_Left', u'RT_MiddleFK', 2): u'FK_L_Middle_02_Ctrl',
-                    (u'RS_Right', u'RT_PinkyFK', 2): u'FK_R_Pinky_02_Ctrl', 
-                    (u'RS_Right', u'RT_ThumbFK', 2): u'FK_R_Thumb_02_Ctrl',
-                    (u'RS_Left', u'RT_PinkyFK', 2): u'FK_L_Pinky_02_Ctrl',
-                    (u'RS_Right', u'RT_ArmPV', 0): u'R_Arm_PV_Ctrl', 
-                    (u'RS_Left', u'RT_MiddleFK', 1): u'FK_L_Middle_01_Ctrl', 
-                    (u'RS_Right', u'RT_PinkyFK', 3): u'FK_R_Pinky_03_Ctrl',
-                    (u'RS_Left', u'RT_PinkyFK', 3): u'FK_L_Pinky_03_Ctrl',
-                    (u'RS_Center', u'RT_SpineFK', 0): uiWindow.FK_C_Spine_0_Ctrl, 
-                    (u'RS_Left', u'RT_MiddleFK', 0): u'FK_L_Middle_00_Ctrl',
+    ControlToButton = {
+                    (u'RS_Center', u'RT_SpineFK', 0): uiWindow.FK_C_Spine_0_Ctrl,
                     (u'RS_Right', u'RT_WristFK', 0): uiWindow.FK_R_Arm2_Ctrl, 
                     (u'RS_Center', u'RT_SpineFK', 1): uiWindow.FK_C_Spine_1_Ctrl,
-                    (u'RS_Left', u'RT_ThumbFK', 2): u'FK_L_Thumb_02_Ctrl',
                     (u'RS_Right', u'RT_Clavicle', 0): uiWindow.R_Arm_Clav_Rotation_Ctrl,
-                    (u'RS_Left', u'RT_PinkyFK', 1): u'FK_L_Pinky_01_Ctrl',
-                    (u'RS_Right', u'RT_PinkyFK', 1): u'FK_R_Pinky_01_Ctrl',
                     (u'RS_Center', u'RT_NeckFK', 0): uiWindow.FK_C_Neck_0_Ctrl,
-                    (u'RS_Right', u'RT_AnkleIKRotation', 0): u'R_Leg_IK_Rotation_Ctrl',
-                    (u'RS_Left', u'RT_ThumbFK', 1): u'FK_L_Thumb_01_Ctrl', 
-                    (u'RS_Left', u'RT_AnkleIKRotation', 0): u'L_Leg_IK_Rotation_Ctrl', 
-                    (u'RS_Left', u'RT_IndexFK', 3): u'FK_L_Index_03_Ctrl',
-                    (u'RS_Right', u'RT_ArmIKMain', 0): u'R_Arm_IK_Main_Ctrl', 
-                    (u'RS_Left', u'RT_ArmPV', 0): u'L_Arm_PV_Ctrl', 
                     (u'RS_Left', u'RT_ShoulderFK', 0): uiWindow.FK_L_Arm0_Ctrl,
-                    (u'RS_Left', u'RT_ThumbFK', 0): u'FK_L_Thumb_00_Ctrl',
-                    (u'RS_Left', u'RT_RingFK', 0): u'FK_L_Ring_00_Ctrl', 
-                    (u'RS_Left', u'RT_IndexFK', 2): u'FK_L_Index_02_Ctrl',
-                    (u'RS_Left', u'RT_FootIKMain', 0): u'L_Leg_IK_Main_Ctrl', 
-                    (u'RS_Right', u'RT_MiddleFK', 0): u'FK_R_Middle_00_Ctrl',
-                    (u'RS_Left', u'RT_RingFK', 1): u'FK_L_Ring_01_Ctrl',
-                    (u'RS_Left', u'RT_IndexFK', 1): u'FK_L_Index_01_Ctrl',
-                    (u'RS_Left', u'RT_LegFK', 1): uiWindow.FK_L_Leg1_Ctrl, 
-                    (u'RS_Left', u'RT_RingFK', 3): u'FK_L_Ring_03_Ctrl',
-                    (u'RS_Right', u'RT_MiddleFK', 3): u'FK_R_Middle_03_Ctrl', 
-                    (u'RS_Left', u'RT_IndexFK', 0): u'FK_L_Index_00_Ctrl',
+                    (u'RS_Left', u'RT_LegFK', 1): uiWindow.FK_L_Leg1_Ctrl,
                     (u'RS_Left', u'RT_LegFK', 0): uiWindow.FK_L_Leg0_Ctrl,
-                    (u'RS_Right', u'RT_MiddleFK', 2): u'FK_R_Middle_02_Ctrl', 
-                    (u'RS_Right', u'RT_FootToeSwive', 0): u'R_Leg_ToeSwive_Ctrl',
                     (u'RS_Left', u'RT_LegFK', 3): uiWindow.FK_L_Leg3_Ctrl, 
-                    (u'RS_Right', u'RT_ThumbFK', 0): u'FK_R_Thumb_00_Ctrl', 
-                    (u'RS_Center', u'RT_SpinePelvis', 0): u'C_SpinePelvis_Ctrl', 
                     (u'RS_Left', u'RT_LegFK', 2): uiWindow.FK_L_Leg2_Ctrl, 
-                    (u'RS_Left', u'RT_PinkyFK', 0): u'FK_L_Pinky_00_Ctrl', 
-                    (u'RS_Right', u'RT_FootRotation', 0): u'R_Leg_Rotation_Ctrl',
-                    (u'RS_Right', u'RT_FootBaseSwive', 0): u'R_Leg_FootBaseSwive_Ctrl',
-                    (u'RS_Right', u'RT_IndexFK', 3): u'FK_R_Index_03_Ctrl',
-                    (u'RS_Left', u'RT_FootBaseSwive', 0): u'L_Leg_FootBaseSwive_Ctrl',
                     (u'RS_Right', u'RT_LegFK', 3): uiWindow.FK_R_Leg3_Ctrl,
-                    (u'RS_Left', u'RT_RingFK', 2): u'FK_L_Ring_02_Ctrl',
                     (u'RS_Right', u'RT_LegFK', 2): uiWindow.FK_R_Leg2_Ctrl,
-                    (u'RS_Right', u'RT_LegFK', 1): uiWindow.FK_R_Leg1_Ctrl,  
-                    (u'RS_Right', u'RT_ThumbFK', 1): u'FK_R_Thumb_01_Ctrl',
-                    (u'RS_Right', u'RT_FootIKMain', 0): u'R_Leg_IK_Main_Ctrl',
-                    (u'RS_Right', u'RT_MiddleFK', 1): u'FK_R_Middle_01_Ctrl', 
-                    (u'RS_Right', u'RT_PinkyFK', 0): u'FK_R_Pinky_00_Ctrl',
-                    (u'RS_Right', u'RT_RingFK', 0): u'FK_R_Ring_00_Ctrl', 
+                    (u'RS_Right', u'RT_LegFK', 1): uiWindow.FK_R_Leg1_Ctrl,
                     (u'RS_Right', u'RT_LegFK', 0): uiWindow.FK_R_Leg0_Ctrl,
                     (u'RS_Right', u'RT_ShoulderFK', 0): uiWindow.FK_R_Arm0_Ctrl, 
-                    (u'RS_Center', u'RT_SpineUpperBody', 0): uiWindow.C_SpineUpperBody_Ctrl, 
-                    (u'RS_Left', u'RT_LegPV', 0): u'L_Leg_PV_Ctrl', 
-                    (u'RS_Right', u'RT_RingFK', 2): u'FK_R_Ring_02_Ctrl',
-                    (u'RS_Right', u'RT_RingFK', 1): u'FK_R_Ring_01_Ctrl',
+                    (u'RS_Center', u'RT_SpineUpperBody', 0): uiWindow.C_SpineUpperBody_Ctrl,
                     (u'RS_Center', u'RT_HeadFK', 0): uiWindow.FK_C_Head_Ctrl, 
                     (u'RS_Center', u'RT_NeckFK', 1): uiWindow.FK_C_Neck_1_Ctrl, 
-                    (u'RS_Left', u'RT_ElbowFK', 0): uiWindow.FK_L_Arm1_Ctrl, 
-                    (u'RS_Left', u'RT_FootRotation', 0): u'L_Leg_Rotation_Ctrl',
+                    (u'RS_Left', u'RT_ElbowFK', 0): uiWindow.FK_L_Arm1_Ctrl,
                     (u'RS_Left', u'RT_Clavicle', 0): uiWindow.L_Arm_Clav_Rotation_Ctrl,
-                    (u'RS_Right', u'RT_IndexFK', 2): u'FK_R_Index_02_Ctrl', 
-                    (u'RS_Center', u'RT_SpineChest', 0): u'C_SpineChest_Ctrl', 
                     (u'RS_Left', u'RT_WristFK', 0): uiWindow.FK_L_Arm2_Ctrl,
-                    (u'RS_Right', u'RT_RingFK', 3): u'FK_R_Ring_03_Ctrl', 
-                    (u'RS_Right', u'RT_ElbowFK', 0): uiWindow.FK_R_Arm1_Ctrl, 
+                    (u'RS_Right', u'RT_ElbowFK', 0): uiWindow.FK_R_Arm1_Ctrl,                    
+                    (u'RS_Left', u'RT_MiddleFK', 2): uiWindow.FK_L_Middle_02_Ctrl,
+                    (u'RS_Right', u'RT_PinkyFK', 2): uiWindow.FK_R_Pinky_02_Ctrl, 
+                    (u'RS_Right', u'RT_ThumbFK', 2): uiWindow.FK_R_Thumb_02_Ctrl,
+                    (u'RS_Left', u'RT_PinkyFK', 2): uiWindow.FK_L_Pinky_02_Ctrl,                   
+                    (u'RS_Left', u'RT_MiddleFK', 1): uiWindow.FK_L_Middle_01_Ctrl, 
+                    (u'RS_Right', u'RT_PinkyFK', 3): uiWindow.FK_R_Pinky_03_Ctrl,
+                    (u'RS_Left', u'RT_PinkyFK', 3): uiWindow.FK_L_Pinky_03_Ctrl, 
+                    (u'RS_Left', u'RT_MiddleFK', 0): uiWindow.FK_L_Middle_00_Ctrl,                    
+                    (u'RS_Left', u'RT_ThumbFK', 2): uiWindow.FK_L_Thumb_02_Ctrl,                    
+                    (u'RS_Left', u'RT_PinkyFK', 1): uiWindow.FK_L_Pinky_01_Ctrl,
+                    (u'RS_Right', u'RT_PinkyFK', 1): uiWindow.FK_R_Pinky_01_Ctrl,                                        
+                    (u'RS_Left', u'RT_ThumbFK', 1): uiWindow.FK_L_Thumb_01_Ctrl,                     
+                    (u'RS_Left', u'RT_IndexFK', 3): uiWindow.FK_L_Index_03_Ctrl,                                                            
+                    (u'RS_Left', u'RT_ThumbFK', 0): uiWindow.FK_L_Thumb_00_Ctrl,
+                    (u'RS_Left', u'RT_RingFK', 0): uiWindow.FK_L_Ring_00_Ctrl, 
+                    (u'RS_Left', u'RT_IndexFK', 2): uiWindow.FK_L_Index_02_Ctrl,                    
+                    (u'RS_Right', u'RT_MiddleFK', 0): uiWindow.FK_R_Middle_00_Ctrl,
+                    (u'RS_Left', u'RT_RingFK', 1): uiWindow.FK_L_Ring_01_Ctrl,
+                    (u'RS_Left', u'RT_IndexFK', 1): uiWindow.FK_L_Index_01_Ctrl,                     
+                    (u'RS_Left', u'RT_RingFK', 3): uiWindow.FK_L_Ring_03_Ctrl,
+                    (u'RS_Right', u'RT_MiddleFK', 3): uiWindow.FK_R_Middle_03_Ctrl, 
+                    (u'RS_Left', u'RT_IndexFK', 0): uiWindow.FK_L_Index_00_Ctrl,                    
+                    (u'RS_Right', u'RT_MiddleFK', 2): uiWindow.FK_R_Middle_02_Ctrl,                                       
+                    (u'RS_Right', u'RT_ThumbFK', 0): uiWindow.FK_R_Thumb_00_Ctrl,                                          
+                    (u'RS_Left', u'RT_PinkyFK', 0): uiWindow.FK_L_Pinky_00_Ctrl,                                       
+                    (u'RS_Right', u'RT_IndexFK', 3): uiWindow.FK_R_Index_03_Ctrl,                                       
+                    (u'RS_Left', u'RT_RingFK', 2): uiWindow.FK_L_Ring_02_Ctrl,                      
+                    (u'RS_Right', u'RT_ThumbFK', 1): uiWindow.FK_R_Thumb_01_Ctrl,                    
+                    (u'RS_Right', u'RT_MiddleFK', 1): uiWindow.FK_R_Middle_01_Ctrl, 
+                    (u'RS_Right', u'RT_PinkyFK', 0): uiWindow.FK_R_Pinky_00_Ctrl,
+                    (u'RS_Right', u'RT_RingFK', 0): uiWindow.FK_R_Ring_00_Ctrl,                                           
+                    (u'RS_Right', u'RT_RingFK', 2): uiWindow.FK_R_Ring_02_Ctrl,
+                    (u'RS_Right', u'RT_RingFK', 1): uiWindow.FK_R_Ring_01_Ctrl,                                                          
+                    (u'RS_Right', u'RT_IndexFK', 2): uiWindow.FK_R_Index_02_Ctrl,                                          
+                    (u'RS_Right', u'RT_RingFK', 3): uiWindow.FK_R_Ring_03_Ctrl,                                       
+                    (u'RS_Left', u'RT_MiddleFK', 3): uiWindow.FK_L_Middle_03_Ctrl,
+                    (u'RS_Right', u'RT_IndexFK', 0): uiWindow.FK_R_Index_00_Ctrl, 
+                    (u'RS_Right', u'RT_IndexFK', 1): uiWindow.FK_R_Index_01_Ctrl,
+                    (u'RS_Right', u'RT_FootToeSwive', 0): u'R_Leg_ToeSwive_Ctrl', 
+                    (u'RS_Center', u'RT_SpinePelvis', 0): u'C_SpinePelvis_Ctrl',
+                    (u'RS_Right', u'RT_FootRotation', 0): u'R_Leg_Rotation_Ctrl',
+                    (u'RS_Right', u'RT_FootBaseSwive', 0): u'R_Leg_FootBaseSwive_Ctrl',
+                    (u'RS_Left', u'RT_FootBaseSwive', 0): u'L_Leg_FootBaseSwive_Ctrl', 
+                    (u'RS_Right', u'RT_FootIKMain', 0): u'R_Leg_IK_Main_Ctrl',
+                    (u'RS_Left', u'RT_LegPV', 0): u'L_Leg_PV_Ctrl',
+                    (u'RS_Left', u'RT_FootRotation', 0): u'L_Leg_Rotation_Ctrl', 
+                    (u'RS_Center', u'RT_SpineChest', 0): u'C_SpineChest_Ctrl',
                     (u'RS_Left', u'RT_ArmIKMain', 0): u'L_Arm_IK_Main_Ctrl',
-                    (u'RS_Left', u'RT_MiddleFK', 3): u'FK_L_Middle_03_Ctrl',
-                    (u'RS_Right', u'RT_IndexFK', 0): u'FK_R_Index_00_Ctrl', 
-                    (u'RS_Left', u'RT_FootToeSwive', 0): u'L_Leg_ToeSwive_Ctrl', 
-                    (u'RS_Right', u'RT_IndexFK', 1): u'FK_R_Index_01_Ctrl'
-    }
+                    (u'RS_Left', u'RT_FootToeSwive', 0): u'L_Leg_ToeSwive_Ctrl',
+                    (u'RS_Right', u'RT_LegPV', 0): u'R_Leg_PV_Ctrl',
+                    (u'RS_Right', u'RT_ArmPV', 0): u'R_Arm_PV_Ctrl', 
+                    (u'RS_Right', u'RT_AnkleIKRotation', 0): u'R_Leg_IK_Rotation_Ctrl',
+                    (u'RS_Left', u'RT_AnkleIKRotation', 0): u'L_Leg_IK_Rotation_Ctrl',
+                    (u'RS_Right', u'RT_ArmIKMain', 0): u'R_Arm_IK_Main_Ctrl',
+                    (u'RS_Left', u'RT_ArmPV', 0): u'L_Arm_PV_Ctrl',
+                    (u'RS_Left', u'RT_FootIKMain', 0): u'L_Leg_IK_Main_Ctrl',
+                        }
 
     global ButtonToControl
     ButtonToControl = {
@@ -178,6 +183,73 @@ def setControlToButtonMap(uiWindow):
         uiWindow.FK_L_Arm0_Ctrl:(u'RS_Left', u'RT_ShoulderFK', 0),
         uiWindow.L_Arm_Clav_Rotation_Ctrl:(u'RS_Left', u'RT_Clavicle', 0),
         uiWindow.R_Arm_Clav_Rotation_Ctrl:(u'RS_Right', u'RT_Clavicle', 0),
+        uiWindow.FK_L_Thumb_00_Ctrl:(u'RS_Left', u'RT_ThumbFK', 0),
+        uiWindow.FK_L_Thumb_01_Ctrl:(u'RS_Left', u'RT_ThumbFK', 1),
+        uiWindow.FK_L_Thumb_02_Ctrl:(u'RS_Left', u'RT_ThumbFK', 2),
+        uiWindow.FK_L_Index_03_Ctrl:(u'RS_Left', u'RT_IndexFK', 3),
+        uiWindow.FK_L_Index_02_Ctrl:(u'RS_Left', u'RT_IndexFK', 2),
+        uiWindow.FK_L_Index_01_Ctrl:(u'RS_Left', u'RT_IndexFK', 1),                     
+        uiWindow.FK_L_Index_00_Ctrl:(u'RS_Left', u'RT_IndexFK', 0),
+        uiWindow.FK_L_Middle_02_Ctrl:(u'RS_Left', u'RT_MiddleFK', 2),
+        uiWindow.FK_L_Middle_01_Ctrl:(u'RS_Left', u'RT_MiddleFK', 1), 
+        uiWindow.FK_L_Middle_00_Ctrl:(u'RS_Left', u'RT_MiddleFK', 0),                    
+        uiWindow.FK_L_Middle_03_Ctrl:(u'RS_Left', u'RT_MiddleFK', 3),
+        uiWindow.FK_L_Ring_00_Ctrl:(u'RS_Left', u'RT_RingFK', 0), 
+        uiWindow.FK_L_Ring_01_Ctrl:(u'RS_Left', u'RT_RingFK', 1),
+        uiWindow.FK_L_Ring_03_Ctrl:(u'RS_Left', u'RT_RingFK', 3),
+        uiWindow.FK_L_Ring_02_Ctrl:(u'RS_Left', u'RT_RingFK', 2), 
+        uiWindow.FK_R_Thumb_02_Ctrl:(u'RS_Right', u'RT_ThumbFK', 2),
+        uiWindow.FK_R_Thumb_00_Ctrl:(u'RS_Right', u'RT_ThumbFK', 0), 
+        uiWindow.FK_R_Thumb_01_Ctrl:(u'RS_Right', u'RT_ThumbFK', 1),
+        uiWindow.FK_R_Index_03_Ctrl:(u'RS_Right', u'RT_IndexFK', 3),
+        uiWindow.FK_R_Index_02_Ctrl:(u'RS_Right', u'RT_IndexFK', 2), 
+        uiWindow.FK_R_Index_00_Ctrl:(u'RS_Right', u'RT_IndexFK', 0), 
+        uiWindow.FK_R_Index_01_Ctrl:(u'RS_Right', u'RT_IndexFK', 1),
+        uiWindow.FK_R_Middle_00_Ctrl:(u'RS_Right', u'RT_MiddleFK', 0),
+        uiWindow.FK_R_Middle_03_Ctrl:(u'RS_Right', u'RT_MiddleFK', 3), 
+        uiWindow.FK_R_Middle_02_Ctrl:(u'RS_Right', u'RT_MiddleFK', 2), 
+        uiWindow.FK_R_Middle_01_Ctrl:(u'RS_Right', u'RT_MiddleFK', 1),
+        uiWindow.FK_R_Ring_00_Ctrl:(u'RS_Right', u'RT_RingFK', 0),                      
+        uiWindow.FK_R_Ring_02_Ctrl:(u'RS_Right', u'RT_RingFK', 2),
+        uiWindow.FK_R_Ring_01_Ctrl:(u'RS_Right', u'RT_RingFK', 1),                     
+        uiWindow.FK_R_Ring_03_Ctrl:(u'RS_Right', u'RT_RingFK', 3),                    
+        uiWindow.FK_R_Pinky_02_Ctrl:(u'RS_Right', u'RT_PinkyFK', 2), 
+        uiWindow.FK_R_Pinky_03_Ctrl:(u'RS_Right', u'RT_PinkyFK', 3),
+        uiWindow.FK_R_Pinky_01_Ctrl:(u'RS_Right', u'RT_PinkyFK', 1),                    
+        uiWindow.FK_R_Pinky_00_Ctrl:(u'RS_Right', u'RT_PinkyFK', 0),
+        uiWindow.FK_L_Pinky_02_Ctrl:(u'RS_Left', u'RT_PinkyFK', 2),
+        uiWindow.FK_L_Pinky_03_Ctrl:(u'RS_Left', u'RT_PinkyFK', 3), 
+        uiWindow.FK_L_Pinky_01_Ctrl:(u'RS_Left', u'RT_PinkyFK', 1),
+        uiWindow.FK_L_Pinky_00_Ctrl:(u'RS_Left', u'RT_PinkyFK', 0),                            
+    }
+    global MultiVerticalButtonToControl
+    MultiVerticalButtonToControl = {
+    uiWindow.FK_L_Pinky_Ctrl:[(u'RS_Left', u'RT_PinkyFK', 0),(u'RS_Left', u'RT_PinkyFK', 1),(u'RS_Left', u'RT_PinkyFK', 2),(u'RS_Left', u'RT_PinkyFK', 3)],
+    uiWindow.FK_R_Pinky_Ctrl:[(u'RS_Right', u'RT_PinkyFK', 0),(u'RS_Right', u'RT_PinkyFK', 1),(u'RS_Right', u'RT_PinkyFK', 2),(u'RS_Right', u'RT_PinkyFK', 3)],
+    uiWindow.FK_R_Ring_Ctrl:[(u'RS_Right', u'RT_RingFK', 0),(u'RS_Right', u'RT_RingFK', 1),(u'RS_Right', u'RT_RingFK', 2),(u'RS_Right', u'RT_RingFK', 3)],
+    uiWindow.FK_L_Ring_Ctrl:[(u'RS_Left', u'RT_RingFK', 0),(u'RS_Left', u'RT_RingFK', 1),(u'RS_Left', u'RT_RingFK', 2),(u'RS_Left', u'RT_RingFK', 3)],
+    uiWindow.FK_R_Index_Ctrl:[(u'RS_Right', u'RT_IndexFK', 0),(u'RS_Right', u'RT_IndexFK', 1),(u'RS_Right', u'RT_IndexFK', 2),(u'RS_Right', u'RT_IndexFK', 3)],
+    uiWindow.FK_L_Index_Ctrl:[(u'RS_Left', u'RT_IndexFK', 0),(u'RS_Left', u'RT_IndexFK', 1),(u'RS_Left', u'RT_IndexFK', 2),(u'RS_Left', u'RT_IndexFK', 3)],
+    uiWindow.FK_R_Middle_Ctrl:[(u'RS_Right', u'RT_MiddleFK', 0),(u'RS_Right', u'RT_MiddleFK', 1),(u'RS_Right', u'RT_MiddleFK', 2),(u'RS_Right', u'RT_MiddleFK', 3)],
+    uiWindow.FK_L_Middle_Ctrl:[(u'RS_Left', u'RT_MiddleFK', 0),(u'RS_Left', u'RT_MiddleFK', 1),(u'RS_Left', u'RT_MiddleFK', 2),(u'RS_Left', u'RT_MiddleFK', 3)],
+    uiWindow.FK_L_Finger_00_Ctrl:[(u'RS_Left', u'RT_IndexFK', 0),(u'RS_Left', u'RT_MiddleFK', 0),(u'RS_Left', u'RT_RingFK', 0),(u'RS_Left', u'RT_PinkyFK', 0)],
+    uiWindow.FK_L_Finger_01_Ctrl:[(u'RS_Left', u'RT_IndexFK', 1),(u'RS_Left', u'RT_MiddleFK', 1),(u'RS_Left', u'RT_RingFK', 1),(u'RS_Left', u'RT_PinkyFK', 1)],
+    uiWindow.FK_L_Finger_02_Ctrl:[(u'RS_Left', u'RT_IndexFK', 2),(u'RS_Left', u'RT_MiddleFK', 2),(u'RS_Left', u'RT_RingFK', 2),(u'RS_Left', u'RT_PinkyFK', 2)],
+    uiWindow.FK_L_Finger_03_Ctrl:[(u'RS_Left', u'RT_IndexFK', 3),(u'RS_Left', u'RT_MiddleFK', 3),(u'RS_Left', u'RT_RingFK', 3),(u'RS_Left', u'RT_PinkyFK', 3)],
+    uiWindow.FK_R_Finger_00_Ctrl:[(u'RS_Right', u'RT_IndexFK', 0),(u'RS_Right', u'RT_MiddleFK', 0),(u'RS_Right', u'RT_RingFK', 0),(u'RS_Right', u'RT_PinkyFK', 0)],
+    uiWindow.FK_R_Finger_01_Ctrl:[(u'RS_Right', u'RT_IndexFK', 1),(u'RS_Right', u'RT_MiddleFK', 1),(u'RS_Right', u'RT_RingFK', 1),(u'RS_Right', u'RT_PinkyFK', 1)],
+    uiWindow.FK_R_Finger_02_Ctrl:[(u'RS_Right', u'RT_IndexFK', 2),(u'RS_Right', u'RT_MiddleFK', 2),(u'RS_Right', u'RT_RingFK', 2),(u'RS_Right', u'RT_PinkyFK', 2)],
+    uiWindow.FK_R_Finger_03_Ctrl:[(u'RS_Right', u'RT_IndexFK', 3),(u'RS_Right', u'RT_MiddleFK', 3),(u'RS_Right', u'RT_RingFK', 3),(u'RS_Right', u'RT_PinkyFK', 3)],
+
+    uiWindow.FK_R_FourFinger_Ctrl:[(u'RS_Right', u'RT_IndexFK', 0),(u'RS_Right', u'RT_MiddleFK', 0),(u'RS_Right', u'RT_RingFK', 0),(u'RS_Right', u'RT_PinkyFK', 0),
+    (u'RS_Right', u'RT_IndexFK', 1),(u'RS_Right', u'RT_MiddleFK', 1),(u'RS_Right', u'RT_RingFK', 1),(u'RS_Right', u'RT_PinkyFK', 1),
+    (u'RS_Right', u'RT_IndexFK', 2),(u'RS_Right', u'RT_MiddleFK', 2),(u'RS_Right', u'RT_RingFK', 2),(u'RS_Right', u'RT_PinkyFK', 2),
+    (u'RS_Right', u'RT_IndexFK', 3),(u'RS_Right', u'RT_MiddleFK', 3),(u'RS_Right', u'RT_RingFK', 3),(u'RS_Right', u'RT_PinkyFK', 3)],
+
+    uiWindow.FK_L_FourFinger_Ctrl:[(u'RS_Left', u'RT_IndexFK', 0),(u'RS_Left', u'RT_MiddleFK', 0),(u'RS_Left', u'RT_RingFK', 0),(u'RS_Left', u'RT_PinkyFK', 0),
+    (u'RS_Left', u'RT_IndexFK', 1),(u'RS_Left', u'RT_MiddleFK', 1),(u'RS_Left', u'RT_RingFK', 1),(u'RS_Left', u'RT_PinkyFK', 1),
+    (u'RS_Left', u'RT_IndexFK', 2),(u'RS_Left', u'RT_MiddleFK', 2),(u'RS_Left', u'RT_RingFK', 2),(u'RS_Left', u'RT_PinkyFK', 2),
+    (u'RS_Left', u'RT_IndexFK', 3),(u'RS_Left', u'RT_MiddleFK', 3),(u'RS_Left', u'RT_RingFK', 3),(u'RS_Left', u'RT_PinkyFK', 3)],
     }
 
 def getCurrentSelecterName(uiWindow):
@@ -187,12 +259,14 @@ def getCurrentSelecterName(uiWindow):
         return name
     return name
 
-def setButtonCallback(uiWindow):
-    def selectControl(CurrWidget):
-        data = ButtonToControl[CurrWidget]
-        name = getCurrentSelecterName(uiWindow)
-        currentRig = RigObjectHelper.getRigControlObject(name, data[0], data[1], data[2])
-        cmds.select(currentRig)
+
+
+
+    # def selectControl(CurrWidget):
+    #     data = ButtonToControl[CurrWidget]
+    #     name = getCurrentSelecterName(uiWindow)
+    #     currentRig = RigObjectHelper.getRigControlObject(name, data[0], data[1], data[2])
+    #     cmds.select(currentRig)
         
     # uiWindow.FK_C_Neck_0_Ctrl.clicked.connect(lambda *arg:selectControl(uiWindow.FK_C_Neck_0_Ctrl))
     # uiWindow.FK_C_Neck_1_Ctrl.clicked.connect(lambda *arg:selectControl(uiWindow.FK_C_Neck_1_Ctrl))
@@ -219,6 +293,12 @@ def setButtonCallback(uiWindow):
     #         lambda *arg:selectControl(aaa.key)
     #     key.clicked.connect(lambda *arg:selectControl(aaa.key))
 
+def setMutiSelectedButtonCallback(uiWindow):
+    for key in MultiVerticalButtonToControl:
+        callback = multiCallbackobj(key , uiWindow)
+        key.clicked.connect(functools.partial(callback.functor, callback))
+
+def setButtonCallback(uiWindow):
     for key in ButtonToControl:
         callback = callbackobj(key , uiWindow)
         key.clicked.connect(functools.partial(callback.functor, callback))
@@ -229,10 +309,27 @@ class callbackobj():
         self.uiWindow = uiWindow
 
     def functor(self , *arg):
-        # print self.key
+        print self.key
         self.selectControl()
     def selectControl(self):
         data = ButtonToControl[self.key]
         name = getCurrentSelecterName(self.uiWindow)
         currentRig = RigObjectHelper.getRigControlObject(name, data[0], data[1], data[2])
+        print currentRig
         cmds.select(currentRig)
+
+class multiCallbackobj():
+    def __init__(self, key , uiWindow):
+        self.key = key
+        self.uiWindow = uiWindow
+
+    def functor(self , *arg):
+        # print self.key
+        self.selectControl()
+    def selectControl(self):
+        dataArray = MultiVerticalButtonToControl[self.key]
+        name = getCurrentSelecterName(self.uiWindow)
+        cmds.select( clear=True )
+        for data in dataArray:
+            currentRig = RigObjectHelper.getRigControlObject(name, data[0], data[1], data[2])
+            cmds.select(currentRig , add=True)

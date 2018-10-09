@@ -69,5 +69,5 @@ def saveDataToFile(PoseData):
     #PoseList.append(PoseSaveData)
     print "PoseList : " 
     print PoseList
-    pickle.dump(PoseList, f)
+    cPickle.dump(PoseList, f)
     f.close();

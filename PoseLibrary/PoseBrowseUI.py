@@ -45,17 +45,33 @@ class mainPoseBrowseWindow(QtWidgets.QDialog):
         self.listWidget.setIconSize(QtCore.QSize(80 , 80));
         mainLayout.addWidget(self.listWidget)
 
-        item = QtWidgets.QListWidgetItem()
-        item.setIcon( QtGui.QIcon(PoseFilePath + "1111.bmp") )
-        item.setText("1111")
-        #item.setSizeHint(QtCore.QSize(80 , 80))
-        self.listWidget.addItem(item)
+        allPoseData = SavePose.openPoseLibraryFile()
 
-        item = QtWidgets.QListWidgetItem()
-        item.setIcon( QtGui.QIcon(PoseFilePath + "Input a vaild pose name!!!.bmp") )
-        item.setText("2222")
-        #item.setSizeHint(QtCore.QSize(80 , 80))
-        self.listWidget.addItem(item)
+        print allPoseData
+
+        for oneData in allPoseData:
+            print "oneData"
+            print oneData
+            item = QtWidgets.QListWidgetItem()
+            for key, value in oneData.items():
+                print "value"
+                print value
+                item.setIcon( QtGui.QIcon(value["icon"]) )
+                item.setText(value["poseName"])
+                #item.setSizeHint(QtCore.QSize(80 , 80))
+                self.listWidget.addItem(item)
+
+        # item = QtWidgets.QListWidgetItem()
+        # item.setIcon( QtGui.QIcon(PoseFilePath + "1111.bmp") )
+        # item.setText("1111")
+        # #item.setSizeHint(QtCore.QSize(80 , 80))
+        # self.listWidget.addItem(item)
+
+        # item = QtWidgets.QListWidgetItem()
+        # item.setIcon( QtGui.QIcon(PoseFilePath + "Input a vaild pose name!!!.bmp") )
+        # item.setText("2222")
+        # #item.setSizeHint(QtCore.QSize(80 , 80))
+        # self.listWidget.addItem(item)
 
         confirmLayout = QtWidgets.QHBoxLayout()
         self.ConfirmButton = QtWidgets.QPushButton("Use Pose")

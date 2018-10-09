@@ -14,6 +14,8 @@ import functools
 import PoseConfig
 import SavePose
 
+from ..Utils import SERigObjectTypeHelper as RigObjectHelper
+
 reload(SavePose)
 
 PoseRootPath = os.path.dirname(PoseConfig.__file__)
@@ -30,6 +32,7 @@ class SnapShotWindow():
         #self.arg = arg
         if cmds.window("ScreenShotPoseWindow", exists = True):
             cmds.deleteUI("ScreenShotPoseWindow")
+        self.poseCharacterName = "None"
         self.ScreenShotPoseWindow = cmds.window('ScreenShotPoseWindow' , cc = self.windowCloseCallBack )
         '''from minmum size'''
         mainLayout = cmds.rowColumnLayout( numberOfColumns = 1)
@@ -38,6 +41,7 @@ class SnapShotWindow():
         cmds.separator( height=10, style='in' )
         cmds.setParent( mainLayout )
         # todo add a name inpput text widget
+        self.CreateOptionMenu(mainLayout)
         self.CreateViewWindow()
 
         cmds.setParent( mainLayout ) 
@@ -72,6 +76,18 @@ class SnapShotWindow():
         cmds.modelEditor(self.editorShot, edit = True, nurbsCurves = False, displayAppearance = "smoothShaded", 
             displayTextures = True, headsUpDisplay = False, cameras = False, grid = False, joints = False, textures = True )
 
+    def CreateOptionMenu(self,parentUI):
+        # optionMenu = cmds.optionMenu("Choose character name", label = "Project:", w =300, h = 40, parent = parentUI , '''cc = functools.partial(self.savePoseButtonCallback, self)''' )
+        optionMenu = cmds.optionMenu("Choose character name", label = "Character:", w =300, h = 40, parent = parentUI , cc = functools.partial(self.setCharNameCallback, self))
+        cmds.menuItem( label='None' )
+        cha = RigObjectHelper.listRigCharacters()
+        for x in range(len(cha)):
+            cmds.menuItem( label= cha[x] )
+        # cmds.menuItem( label='Yellow' )
+        # cmds.menuItem( label='Purple' )
+        # cmds.menuItem( label='Orange' )
+        cmds.setParent( '..' )
+
     def windowCloseCallBack(self):
         cmds.delete(self.camera[0])
         print "Snapshot window close"
@@ -80,6 +96,10 @@ class SnapShotWindow():
         if self.canSavePose() == True:
             self.savePoseMain()
         print "save button is clicked"
+
+    def setCharNameCallback(self , *args):
+        print args[1]
+        self.poseCharacterName = args[1]
 
     def canSavePose(self):
         name = cmds.textField(self.NameInput , q = True , tx = True)
@@ -110,10 +130,17 @@ class SnapShotWindow():
             return 
         currentTime = cmds.currentTime( query=True )
         cmds.playblast(frame = currentTime, format = "image", cf = fullNamePath , v = False, wh = [100, 100], p = 100 , compression ="bmp" )
-        savePoseDataToFile(name , fullNamePath)
+        self.savePoseDataToFile(name , fullNamePath)
         # todo save this icon to a config file
 
-    def savePoseDataToFile(name , fullNamePath ):
-        poseData = dict(poseName = name , icon = fullNamePath , rigData = dict( root = [1,1,1] ) , characterName = "Elisa")
+    def savePoseDataToFile(self , name , fullNamePath ):
+        if self.poseCharacterName == "None":
+            cmds.warning(self.poseCharacterName + " is not a vaild name")
+            return
+        ctrlData = RigObjectHelper.genRigCharacterData(self.poseCharacterName)
+        print ctrlData
+        poseData = dict(poseName = name , icon = fullNamePath , rigData = ctrlData , characterName = self.poseCharacterName)
         SavePose.savePose(poseData)
         print "save pose from screen shot succeed"
+
+    
