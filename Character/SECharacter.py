@@ -241,7 +241,7 @@ class RigBipedCharacter():
                                                          rigSide = SERigEnum.eRigSide.RS_Center, 
                                                          rigType = SERigEnum.eRigType.RT_SpineComponent)
         else:
-            spine = SERigSpineComponent.RigComplexIKSpine(prefix = 'C_Spine', baseRig = self.BaseRig, 
+            spine = SERigSpineComponent.RigFixedEndsIKSpine(prefix = 'C_Spine', baseRig = self.BaseRig, 
                                                          rigSide = SERigEnum.eRigSide.RS_Center, 
                                                          rigType = SERigEnum.eRigType.RT_SpineComponent)
         spine.build(

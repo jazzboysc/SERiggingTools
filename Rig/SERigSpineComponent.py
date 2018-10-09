@@ -90,7 +90,7 @@ class RigSimpleIKSpine(RigComponent):
         cmds.select(pelvisProxyJoint, chestBeginProxyJoint, spineCurveNewName)
         cmds.skinCluster(toSelectedBones = 1, bindMethod = 0, nw = 1, wd = 0, mi = 5, omi = True, dr = 4, rui = True)
 
-        # Make the spine twistable.
+        # Make spine twistable.
         cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
         cmds.setAttr(spineIK + '.dWorldUpType', 4)
         cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
@@ -188,10 +188,10 @@ class RigSimpleIKSpine(RigComponent):
 
 
 #-----------------------------------------------------------------------------
-# Rig Complex IK Spine Class
+# Rig Fixed Ends IK Spine Class
 # Sun Che
 #-----------------------------------------------------------------------------
-class RigComplexIKSpine(RigComponent):
+class RigFixedEndsIKSpine(RigComponent):
     def __init__(
                  self, 
                  prefix = 'new',
@@ -207,13 +207,66 @@ class RigComplexIKSpine(RigComponent):
             rootJoint = '',
             rigScale = 1.0
             ):
+
+        # Create upper body control.
+        upperBodyCtrl = SERigControl.RigCubeControl(
+                                rigSide = SERigEnum.eRigSide.RS_Center,
+                                rigType = SERigEnum.eRigType.RT_SpineUpperBody,
+                                prefix = self.Prefix + 'UpperBody', 
+                                translateTo = spineJoints[0],
+                                rotateTo = spineJoints[0],
+                                scale = rigScale*20,
+                                parent = self.ControlsGrp,
+                                cubeScaleX = 2.0,
+                                cubeScaleY = 40.0,
+                                cubeScaleZ = 40.0,
+                                transparency = 0.8
+                                )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl', 'ControlOwner')
+
+        # Create pelvis and chest proxy joints.
+        pelvisProxyJoint = cmds.duplicate(spineJoints[0], n = spineJoints[0] + SERigNaming.s_Proxy, parentOnly = True)[0]
+        chestBeginProxyJoint = cmds.duplicate(spineJoints[-1], n = spineJoints[-1] + SERigNaming.s_Proxy, parentOnly = True)[0]
+        cmds.hide(pelvisProxyJoint, chestBeginProxyJoint)
+
+        # Create IK controls.
+        chestBeginCtrl = SERigControl.RigCircleControl(
+                                    rigSide = SERigEnum.eRigSide.RS_Center,
+                                    rigType = SERigEnum.eRigType.RT_SpineChest,
+                                    prefix = self.Prefix + 'Chest', 
+                                    translateTo = chestBeginProxyJoint,
+                                    rotateTo = chestBeginProxyJoint,
+                                    scale = rigScale*20,
+                                    parent = upperBodyCtrl.ControlObject
+                                    )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl', 'ControlOwner')
+
+        pelvisCtrl = SERigControl.RigCircleControl(
+                                rigSide = SERigEnum.eRigSide.RS_Center,
+                                rigType = SERigEnum.eRigType.RT_SpinePelvis,
+                                prefix = self.Prefix + 'Pelvis', 
+                                translateTo = pelvisProxyJoint,
+                                rotateTo = pelvisProxyJoint,
+                                scale = rigScale*25,
+                                parent = upperBodyCtrl.ControlObject
+                                )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl', 'ControlOwner')
+
+        cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
+
+        cmds.parentConstraint(chestBeginCtrl.ControlObject, chestBeginProxyJoint)
+        cmds.parentConstraint(pelvisCtrl.ControlObject, pelvisProxyJoint)
+
+        # Insert two new parents for the spine end joints.
         chestBeginNewParent = SEJointHelper.createNewParentJoint(spineJoints[-1])
         spine0NewParent = SEJointHelper.createNewParentJoint(spineJoints[1], True)
 
+        # Get spine joints on which IK joints shall be created.
         cmds.parent(spineJoints[-1], w = 1)
         newSpineJoints = SEJointHelper.listHierarchy(spine0NewParent)
         cmds.parent(spineJoints[-1], chestBeginNewParent)
         
+        # Create IK spine joints.
         ikSpineJoints = []
         preParent = None
         for joint in newSpineJoints:
@@ -226,10 +279,12 @@ class RigComplexIKSpine(RigComponent):
             preParent = ikSpineJoint
             ikSpineJoints.append(ikSpineJoint)
 
+        # Move IK spine joints to component's joint group.
         cmds.parent(ikSpineJoints[0], self.JointsGrp)
         cmds.makeIdentity(ikSpineJoints[0], apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+        cmds.hide(ikSpineJoints[0])
 
-        # Create IK handle.
+        # Create IK handle on IK spine joints.
         resList = cmds.ikHandle(n = self.Prefix + SERigNaming.s_SplineIKHandle, 
                                 sol = 'ikSplineSolver', sj = ikSpineJoints[0], ee = ikSpineJoints[-1], ccv = 1, parentCurve = 0, numSpans = 4)
         spineIK = resList[0]
@@ -242,6 +297,22 @@ class RigComplexIKSpine(RigComponent):
         cmds.hide(spineCurveNewName)
         cmds.parent(spineIK, spineCurveNewName, self.RigPartsFixedGrp)
 
+        cmds.select(pelvisProxyJoint, chestBeginProxyJoint, spineCurveNewName)
+        cmds.skinCluster(toSelectedBones = 1, bindMethod = 0, nw = 1, wd = 0, mi = 5, omi = True, dr = 4, rui = True)
+
+        # Make spine twistable.
+        cmds.setAttr(spineIK + '.dTwistControlEnable', 1)
+        cmds.setAttr(spineIK + '.dWorldUpType', 4)
+        cmds.connectAttr(pelvisCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrix')
+        cmds.connectAttr(chestBeginCtrl.ControlObject + '.worldMatrix[0]', spineIK + '.dWorldUpMatrixEnd')
+
+        # Control original spine in-between joints via IK spine joints.
         for ikSpineJoint, spineJoint in zip(ikSpineJoints, newSpineJoints):
             cmds.orientConstraint(ikSpineJoint, spineJoint, mo = 1)
             cmds.pointConstraint(ikSpineJoint, spineJoint, mo = 1)
+
+        # Control original spine end joints via spine proxy end joints.
+        cmds.orientConstraint(chestBeginProxyJoint, spineJoints[-1], mo = 1)
+        cmds.pointConstraint(chestBeginProxyJoint, spineJoints[-1], mo = 1)
+        cmds.orientConstraint(pelvisProxyJoint, spineJoints[0], mo = 1)
+        cmds.pointConstraint(pelvisProxyJoint, spineJoints[0], mo = 1)
