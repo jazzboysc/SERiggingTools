@@ -217,9 +217,9 @@ class RigFixedEndsIKSpine(RigComponent):
                                 rotateTo = spineJoints[0],
                                 scale = rigScale*20,
                                 parent = self.ControlsGrp,
-                                cubeScaleX = 2.0,
-                                cubeScaleY = 40.0,
-                                cubeScaleZ = 40.0,
+                                cubeScaleX = 6.0,
+                                cubeScaleY = 36.0,
+                                cubeScaleZ = 36.0,
                                 transparency = 0.8
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl', 'ControlOwner')
@@ -236,7 +236,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                     prefix = self.Prefix + 'Chest', 
                                     translateTo = chestBeginProxyJoint,
                                     rotateTo = chestBeginProxyJoint,
-                                    scale = rigScale*20,
+                                    scale = rigScale*22,
                                     parent = upperBodyCtrl.ControlObject
                                     )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl', 'ControlOwner')
@@ -247,15 +247,28 @@ class RigFixedEndsIKSpine(RigComponent):
                                 prefix = self.Prefix + 'Pelvis', 
                                 translateTo = pelvisProxyJoint,
                                 rotateTo = pelvisProxyJoint,
-                                scale = rigScale*25,
+                                scale = rigScale*26,
                                 parent = upperBodyCtrl.ControlObject
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl', 'ControlOwner')
+
+        pelvisLocalCtrl = SERigControl.RigCircleControl(
+                                rigSide = SERigEnum.eRigSide.RS_Center,
+                                rigType = SERigEnum.eRigType.RT_SpinePelvisLocal,
+                                prefix = self.Prefix + 'PelvisLocal', 
+                                translateTo = pelvisProxyJoint,
+                                rotateTo = pelvisProxyJoint,
+                                scale = rigScale*22,
+                                parent = upperBodyCtrl.ControlObject,
+                                lockChannels = ['s', 't', 'v']
+                                )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisLocalCtrl.ControlGroup, 'PelvisLocalCtrl', 'ControlOwner')
 
         cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
 
         cmds.parentConstraint(chestBeginCtrl.ControlObject, chestBeginProxyJoint)
         cmds.parentConstraint(pelvisCtrl.ControlObject, pelvisProxyJoint)
+        cmds.parentConstraint(pelvisCtrl.ControlObject, pelvisLocalCtrl.ControlGroup)
 
         # Insert two new parents for the spine end joints.
         chestBeginNewParent = SEJointHelper.createNewParentJoint(spineJoints[-1])
@@ -311,8 +324,10 @@ class RigFixedEndsIKSpine(RigComponent):
             cmds.orientConstraint(ikSpineJoint, spineJoint, mo = 1)
             cmds.pointConstraint(ikSpineJoint, spineJoint, mo = 1)
 
-        # Control original spine end joints via spine proxy end joints.
+        # Control original chest begin joint via chest begin proxy joint.
         cmds.orientConstraint(chestBeginProxyJoint, spineJoints[-1], mo = 1)
         cmds.pointConstraint(chestBeginProxyJoint, spineJoints[-1], mo = 1)
-        cmds.orientConstraint(pelvisProxyJoint, spineJoints[0], mo = 1)
-        cmds.pointConstraint(pelvisProxyJoint, spineJoints[0], mo = 1)
+
+        # Control original pelvis joint via pelvis local control.
+        cmds.orientConstraint(pelvisLocalCtrl.ControlObject, spineJoints[0], mo = 1)
+        cmds.pointConstraint(pelvisLocalCtrl.ControlObject, spineJoints[0], mo = 1)
