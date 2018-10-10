@@ -64,7 +64,9 @@ class RigBipedCharacter():
               toeIKTwistRight = 0,
               fkArmControlScaleYZ = 10,
               fkArmControlScaleYZMultiplier = 0.9,
-              fkArmControlTransparency = 0.85
+              fkArmControlTransparency = 0.85,
+              createSimpleSpine = False,
+              createSpineFKSystem = True
               ):
 
         # Import model scene.
@@ -159,7 +161,8 @@ class RigBipedCharacter():
                                 fkArmControlScaleYZ,
                                 fkArmControlScaleYZMultiplier,
                                 fkArmControlTransparency,
-                                False
+                                createSimpleSpine,
+                                createSpineFKSystem
                                 )
 
         # Setup model deformation.
@@ -231,7 +234,8 @@ class RigBipedCharacter():
                             fkArmControlScaleYZ,
                             fkArmControlScaleYZMultiplier,
                             fkArmControlTransparency,
-                            createSimpleSpine
+                            createSimpleSpine,
+                            createSpineFKSystem
                             ):
 
         # Spine.
@@ -247,7 +251,8 @@ class RigBipedCharacter():
         spine.build(
                     spineJoints = spineJnts,
                     rootJoint = rootJnt,
-                    rigScale = sceneScale
+                    rigScale = sceneScale,
+                    createFKSystem = createSpineFKSystem
                     )
         self.Spine = spine
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Spine.TopGrp, 'SpineComponent', 'ComponentOwner')
