@@ -62,6 +62,7 @@
     <Compile Include="Rig\__init__.py" />
     <Compile Include="ThirdParty\bSkinSaver.py" />
     <Compile Include="ThirdParty\__init__.py" />
+    <Compile Include="UI\ControlRigUI.py" />
     <Compile Include="UI\CreateRigUI.py" />
     <Compile Include="UI\UIConfig.py" />
     <Compile Include="UI\__init__.py" />

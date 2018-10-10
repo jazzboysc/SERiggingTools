@@ -49,6 +49,7 @@ class mainPoseBrowseWindow(QtWidgets.QDialog):
 
     def addPoseDataToList(self):
         allPoseData = SavePose.openPoseLibraryFile()
+        print allPoseData
         self.poseDataMap = dict()
         for oneData in allPoseData:
             # print "oneData"

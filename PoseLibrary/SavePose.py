@@ -4,6 +4,8 @@ import PoseConfig
 import maya.cmds as cmds
 
 PoseRootPath = os.path.dirname(PoseConfig.__file__)
+print "PoseRootPath :"
+print PoseRootPath
 
 def savePose( PoseData ):
     print'try save pose!!!'
@@ -11,6 +13,7 @@ def savePose( PoseData ):
     saveDataToFile(PoseData)
 
 def openPoseLibraryFile():
+    print PoseRootPath + "\\PoseLibrary.txt"
     try: f = open( PoseRootPath + "\\PoseLibrary.txt" , "r");
     except:
         cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseRootPath + "\\PoseLibrary.txt" )

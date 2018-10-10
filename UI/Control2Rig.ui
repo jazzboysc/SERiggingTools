@@ -41,6 +41,7 @@
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 85, 255, 90);
+background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));
 border-left-color: rgba(255, 255, 255, 0);
 border-top-color: rgba(255, 255, 255, 0);
 border-bottom-color: rgba(255, 255, 255, 0);
@@ -119,7 +120,13 @@ border-color: rgba(255, 255, 255, 0);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: rgba(255, 85, 255, 90);
+background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));
+border-left-color: rgba(255, 255, 255, 0);
+border-top-color: rgba(255, 255, 255, 0);
+border-bottom-color: rgba(255, 255, 255, 0);
+border-right-color: rgba(255, 255, 255, 0);
+border-color: rgba(255, 255, 255, 0);</string>
     </property>
     <property name="text">
      <string/>
@@ -135,7 +142,13 @@ border-color: rgba(255, 255, 255, 0);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: rgba(255, 85, 255, 90);
+background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));
+border-left-color: rgba(255, 255, 255, 0);
+border-top-color: rgba(255, 255, 255, 0);
+border-bottom-color: rgba(255, 255, 255, 0);
+border-right-color: rgba(255, 255, 255, 0);
+border-color: rgba(255, 255, 255, 0);</string>
     </property>
     <property name="text">
      <string/>
@@ -144,20 +157,20 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="L_Arm_Clav_Rotation_Ctrl">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>160</y>
-      <width>41</width>
-      <height>40</height>
+      <x>300</x>
+      <y>170</y>
+      <width>21</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>20</width>
-      <height>40</height>
+      <width>0</width>
+      <height>0</height>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -166,20 +179,20 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="R_Arm_Clav_Rotation_Ctrl">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>160</y>
-      <width>41</width>
-      <height>40</height>
+      <x>230</x>
+      <y>169</y>
+      <width>21</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>20</width>
-      <height>40</height>
+      <width>0</width>
+      <height>0</height>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -188,8 +201,8 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="FK_L_Arm0_Ctrl">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>250</y>
+      <x>340</x>
+      <y>210</y>
       <width>32</width>
       <height>31</height>
      </rect>
@@ -201,7 +214,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string>background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -210,8 +223,8 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="FK_L_Arm1_Ctrl">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>290</y>
+      <x>390</x>
+      <y>270</y>
       <width>32</width>
       <height>31</height>
      </rect>
@@ -223,7 +236,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string>background-color: rgba(255, 85, 255, 90);</string>
+     <string>background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -232,23 +245,23 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="FK_L_Arm2_Ctrl">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>320</y>
-      <width>60</width>
-      <height>60</height>
+      <x>440</x>
+      <y>300</y>
+      <width>21</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>0</width>
+      <height>0</height>
      </size>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -257,8 +270,8 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="FK_R_Arm0_Ctrl">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>250</y>
+      <x>180</x>
+      <y>210</y>
       <width>32</width>
       <height>31</height>
      </rect>
@@ -270,7 +283,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string>background-color: rgba(255, 85, 255, 90);</string>
+     <string>background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -279,8 +292,8 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="FK_R_Arm1_Ctrl">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>290</y>
+      <x>130</x>
+      <y>270</y>
       <width>32</width>
       <height>31</height>
      </rect>
@@ -292,7 +305,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string>background-color: rgba(255, 85, 255, 90);</string>
+     <string>background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -301,20 +314,20 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="FK_R_Arm2_Ctrl">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>320</y>
-      <width>60</width>
-      <height>60</height>
+      <x>90</x>
+      <y>300</y>
+      <width>21</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>60</width>
-      <height>60</height>
+      <width>0</width>
+      <height>0</height>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -341,7 +354,8 @@ border-left-color: rgba(255, 255, 255, 0);
 border-top-color: rgba(255, 255, 255, 0);
 border-bottom-color: rgba(255, 255, 255, 0);
 border-right-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);</string>
+border-color: rgba(255, 255, 255, 0);
+background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));</string>
     </property>
     <property name="text">
      <string/>
@@ -364,6 +378,7 @@ border-color: rgba(255, 255, 255, 0);</string>
     </property>
     <property name="styleSheet">
      <string notr="true">background-color: rgba(255, 85, 255, 90);
+background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));
 border-left-color: rgba(255, 255, 255, 0);
 border-top-color: rgba(255, 255, 255, 0);
 border-bottom-color: rgba(255, 255, 255, 0);
@@ -389,7 +404,8 @@ border-left-color: rgba(255, 255, 255, 0);
 border-top-color: rgba(255, 255, 255, 0);
 border-bottom-color: rgba(255, 255, 255, 0);
 border-right-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);</string>
+border-color: rgba(255, 255, 255, 0);
+background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));</string>
     </property>
     <property name="text">
      <string/>
@@ -411,7 +427,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -433,7 +449,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -449,7 +465,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -471,7 +487,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -493,7 +509,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -515,7 +531,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -537,7 +553,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -565,7 +581,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
     </property>
     <property name="text">
      <string/>
@@ -1645,7 +1661,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      <x>0</x>
      <y>0</y>
      <width>550</width>
-     <height>23</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
