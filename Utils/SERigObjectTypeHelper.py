@@ -151,16 +151,43 @@ def listRigCharacterControls(characterName):
 
     return characterControls
 
-def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex):
-    '''
-    @param characterName: str, input a character name
-    @param rigSideStr: str, Proprietary attributes of the controller
-    @param rigTypeStr: str, Proprietary attributes of the controller
-    @param rigControlIndex: str, Proprietary attributes of the controller
-    '''
+def genRigCharacterData(characterName):
+    characterControls = [{}, {}]
+    links = cmds.ls(type = 'RigControlType')
+    for link in links:
+        controlGroup = cmds.listConnections(link + '.message')[0]
 
-    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
-    if control == None: return None;
+        try:
+            # Local controls have component owner.
+            componentsGroup = cmds.listConnections(controlGroup + '.ControlOwner')[0]
+            rigGroup = cmds.listConnections(componentsGroup + '.ComponentOwner')[0]
+            curCharacterName = cmds.getAttr(rigGroup + '.characterName')
+
+            if characterName == curCharacterName:
+                control = cmds.listConnections(controlGroup + '.ControlObject')[0]
+                rigSide = getRigSide(controlGroup)
+                rigType = getRigType(controlGroup)
+                rigControlIndex = getRigControlIndex(controlGroup)
+
+                curKey = (rigSide, rigType, rigControlIndex)
+                characterControls[0][curKey] = getRigCtrlTransByCtrlName(control)
+        except:
+            # Gloabl controls do not have component owner.
+            rigGroup = cmds.listConnections(controlGroup + '.GlobalControlOwner')[0]
+            curCharacterName = cmds.getAttr(rigGroup + '.characterName')
+            
+            if characterName == curCharacterName:
+                control = cmds.listConnections(controlGroup + '.ControlObject')[0]
+                rigSide = getRigSide(controlGroup)
+                rigType = getRigType(controlGroup)
+                rigControlIndex = getRigControlIndex(controlGroup)
+
+                curKey = (rigSide, rigType, rigControlIndex)
+                characterControls[1][curKey] = getRigCtrlTransByCtrlName(control)
+
+    return characterControls
+
+def getRigCtrlTransByCtrlName(control):
     if cmds.objExists(control):
         translateX = cmds.getAttr(control +'.translateX')
         translateY = cmds.getAttr(control +'.translateY')
@@ -173,6 +200,30 @@ def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlInde
                
     else:
         return None
+
+def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex):
+    '''
+    @param characterName: str, input a character name
+    @param rigSideStr: str, Proprietary attributes of the controller
+    @param rigTypeStr: str, Proprietary attributes of the controller
+    @param rigControlIndex: str, Proprietary attributes of the controller
+    '''
+
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
+    if control == None: return None;
+    return getRigCtrlTransByCtrlName(control)
+    # if cmds.objExists(control):
+    #     translateX = cmds.getAttr(control +'.translateX')
+    #     translateY = cmds.getAttr(control +'.translateY')
+    #     translateZ = cmds.getAttr(control +'.translateZ')
+    #     rotateX = cmds.getAttr(control + '.rotateX')
+    #     rotateY = cmds.getAttr(control + '.rotateY')
+    #     rotateZ = cmds.getAttr(control + '.rotateZ')
+
+    #     return (translateX, translateY, translateZ, rotateX, rotateY, rotateZ)
+               
+    # else:
+    #     return None
 
 def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
                              translateX, translateY, translateZ):
@@ -225,6 +276,40 @@ def setRigControlRotation(characterName, rigSideStr, rigTypeStr, rigControlIndex
                 cmds.warning('Rotation channel is locked on control: ' + control)
     else:
         pass
+
+def setRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex, translateX, translateY, translateZ, rotateX, rotateY, rotateZ):
+    '''
+    @param characterName: str, input a character name
+    @param rigSideStr: str, Proprietary attributes of the controller
+    @param rigTypeStr: str, Proprietary attributes of the controller
+    @param rigControlIndex: str, Proprietary attributes of the controller
+    @param translateX: str, reference object for control position
+    @param translateY: str, reference object for control position
+    @param translateZ: str, reference object for control position
+    @param rotateX: str, reference object for control position
+    @param rotateY: str, reference object for control position
+    @param rotateZ: str, reference object for control position
+    '''
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)   
+    if control == None: return;
+    if cmds.objExists(control):
+        try:
+            cmds.setAttr(control + '.rotateX', rotateX)
+            cmds.setAttr(control + '.rotateY', rotateY)
+            cmds.setAttr(control + '.rotateZ', rotateZ)
+        except:
+            if 0:
+                cmds.warning('Rotation channel is locked on control: ' + control)
+        try:
+            cmds.setAttr(control + '.translateX', translateX)
+            cmds.setAttr(control + '.translateY', translateY)
+            cmds.setAttr(control + '.translateZ', translateZ)
+        except:
+            if 0:
+                cmds.warning('Translation channel is locked on control: ' + control)
+    else:
+        pass
+        
 
 
             
