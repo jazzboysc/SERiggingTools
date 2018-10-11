@@ -4,6 +4,7 @@ import PoseConfig
 import maya.cmds as cmds
 
 PoseRootPath = os.path.dirname(PoseConfig.__file__)
+PoseDataParh = PoseRootPath + "\\PoseFile\\"
 print "PoseRootPath :"
 print PoseRootPath
 
@@ -13,64 +14,28 @@ def savePose( PoseData ):
     saveDataToFile(PoseData)
 
 def openPoseLibraryFile():
-    print PoseRootPath + "\\PoseLibrary.txt"
-    try: f = open( PoseRootPath + "\\PoseLibrary.txt" , "r");
-    except:
-        cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseRootPath + "\\PoseLibrary.txt" )
-        print "openfail"
-        raise;
-    #PoseLibrary = cPickle.load(f)
-    try: PoseLibrary = cPickle.load(f);
-    except:
-        #cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseRootPath + "\\PoseLibrary.txt" )
-        print "openfail"
-        return None
-        raise;
-    f.close();
-
-    # if os.path.exists(PoseRootPath + "\\PoseLibrary.txt"):
-    #     f = open(PoseRootPath + "\\PoseLibrary.txt", 'r')
-    #     if f.read() == '':
-    #         return None
-    #     else:
-    #         print "djaksjdlasjdlkjaslkdjaslkdjals"
-            
-    #         try:PoseLibrary = cPickle.load(f)
-    #         except :
-    #             cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseRootPath + "\\PoseLibrary.txt" )
-    #         #print PoseLibrary
-    #     f.close();
-    # else:
-    #     cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseRootPath + "\\PoseLibrary.txt" )
+    Paths = os.listdir(PoseDataParh)
+    PoseLibrary = []
+    for x in Paths:
+        PoseLibrary.append(x.split('.')[0])
     return PoseLibrary
 
-def saveDataToFile(PoseData):
-    # print PoseData
-    # print PoseData['poseName']
-    # print "11111111111111111111111111111111111111111111111111"
-    # PoseLibraryData = openPoseLibraryFile()
-    if os.path.exists(PoseRootPath + "\\PoseLibrary.txt"):
-        PoseList = openPoseLibraryFile()
-    else:
-        PoseList = []
-
-    try: f = open( PoseRootPath + "\\PoseLibrary.txt" , "w");
+def getDataByName(PoseName):
+    try: f = open( PoseDataParh + PoseName + ".pose" , "r");
     except:
-        cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseRootPath + "\\PoseLibrary.txt" )
-        raise;
+        cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseDataParh + PoseName + ".pose" )
+        return
+    try:PoseData = cPickle.load(f)
+    except :
+        cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to Load" + PoseDataParh + PoseName + ".pose" )
+    f.close()
+    return PoseData
 
-    
-    PoseSaveData = {}
-    PoseSaveData[PoseData["poseName"]] = PoseData
-    if PoseList == None:
-        PoseList = [PoseSaveData]
-    else :
-        #PoseList = PoseLibraryData.get("PoseLibrary")
-        # todo add unique
-        PoseList.append(PoseSaveData)
-
-    #PoseList.append(PoseSaveData)
-    print "PoseList : " 
-    print PoseList
-    cPickle.dump(PoseList, f)
+def saveDataToFile(PoseData):
+    try:
+        f = open( PoseRootPath + "\\PoseFile\\" + PoseData["poseName"]+".pose" , "w");
+    except :
+        cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseRootPath + "\\PoseFile\\" + PoseData["poseName"]+".txt" )
+        raise 
+    cPickle.dump(PoseData, f)
     f.close();

@@ -15,9 +15,11 @@ from ..Utils import SERigObjectTypeHelper as RigObjectHelper
 
 import PoseConfig
 import SavePose
+reload(SavePose)
 
 PoseRootPath = os.path.dirname(PoseConfig.__file__)
 PoseFilePath = PoseRootPath + "\\PoseFile\\"
+PoseIconPath = PoseRootPath + "\\icon\\"
 
 mainPoseWin = None
 
@@ -50,19 +52,12 @@ class mainPoseBrowseWindow(QtWidgets.QDialog):
     def addPoseDataToList(self):
         allPoseData = SavePose.openPoseLibraryFile()
         print allPoseData
-        self.poseDataMap = dict()
-        for oneData in allPoseData:
-            # print "oneData"
-            # print oneData
+        for file in allPoseData:
             item = QtWidgets.QListWidgetItem()
-            for key, value in oneData.items():
-                # print "value"
-                # print value
-                item.setIcon( QtGui.QIcon(value["icon"]))
-                item.setText(value["poseName"])
-                #item.setSizeHint(QtCore.QSize(80 , 80))
-                self.listWidget.addItem(item)
-                self.poseDataMap[value["poseName"]] = oneData[value["poseName"]]
+            item.setIcon( QtGui.QIcon(PoseIconPath + file + ".bmp"))
+            item.setText(file)
+            #item.setSizeHint(QtCore.QSize(80 , 80))
+            self.listWidget.addItem(item)
 
     def addConfirmLayout(self , parent):
         confirmLayout = QtWidgets.QHBoxLayout()
@@ -98,6 +93,7 @@ class mainPoseBrowseWindow(QtWidgets.QDialog):
     def usePoseDataToCharacter(self):
         chooseCha =  self.characterSelector.currentText()
         choosePose = self.listWidget.currentItem().text()
-        poseData =  self.poseDataMap[choosePose]["rigData"]
+        poseData =  SavePose.getDataByName(choosePose)["rigData"]
+        print poseData
         for ctrl, ctrlData in poseData[0].items():
             RigObjectHelper.setRigControlTransform(chooseCha , ctrl[0] , ctrl[1] , ctrl[2] , ctrlData[0] ,ctrlData[1] ,ctrlData[2] ,ctrlData[3] ,ctrlData[4] ,ctrlData[5] )

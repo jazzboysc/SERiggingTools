@@ -13,13 +13,12 @@ import functools
 
 import PoseConfig
 import SavePose
+reload(SavePose)
 
 from ..Utils import SERigObjectTypeHelper as RigObjectHelper
 
-reload(SavePose)
-
 PoseRootPath = os.path.dirname(PoseConfig.__file__)
-PoseFilePath = PoseRootPath + "\\PoseFile\\"
+PoseIconPath = PoseRootPath + "\\icon\\"
 #ScreenShotPoseIns = None
 
 def createSnapShotWindow():
@@ -121,7 +120,9 @@ class SnapShotWindow():
         
         try:
             name = cmds.textField(self.NameInput , q = True , tx = True)
-            fullNamePath = PoseFilePath + name +  ".bmp"
+            if not os.path.exists(PoseIconPath):
+                os.makedirs(PoseIconPath)
+            fullNamePath = PoseIconPath + name +  ".bmp"
             f = open(fullNamePath, 'w')
             f.close()               
             success = True
