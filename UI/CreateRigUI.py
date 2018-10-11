@@ -131,6 +131,8 @@ class mainRigWindow(QtWidgets.QDialog):
         fkArmControlScaleYZ = int(self.fkBodyArmControlScaleYZLine.text())
         fkArmControlScaleYZMultiplier = float(self.fkBodyArmControlScaleYZMultiplierLine.text())
         fkArmControlTransparency = float(self.fkBodyArmControlTransparencyLine.text())
+        createSimpleSpine = self.fixedEndsSpineOptionCheckBox.isChecked()
+        createSpineFKSystem = self.createSpineFKSystemCheckBox.isChecked()
 
         # Build character rig.
         character = SECharacter.RigBipedCharacter(characterName = characterName)
@@ -150,15 +152,15 @@ class mainRigWindow(QtWidgets.QDialog):
                         toeIKTwistRight = toeIKTwistRight,
                         fkArmControlScaleYZ = fkArmControlScaleYZ,
                         fkArmControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
-                        fkArmControlTransparency = fkArmControlTransparency
-
-
+                        fkArmControlTransparency = fkArmControlTransparency,
+                        createSimpleSpine = createSimpleSpine,
+                        createSpineFKSystem = createSpineFKSystem
                         )
         
         # Close the create rig window.
         self.close()
 
-    def SetBuilderConfigWeight(self, mainLayout ):
+    def SetBuilderConfigWeight(self, mainLayout ):            
         groupBox = QtWidgets.QVBoxLayout()
         upperBodyUpperLayout = QtWidgets.QHBoxLayout()
         upperBodyUpperLayout.addWidget(QtWidgets.QLabel("UpperArmTwist :"))
@@ -199,7 +201,20 @@ class mainRigWindow(QtWidgets.QDialog):
         lowerBodyLowerLayout.addWidget(QtWidgets.QLabel("(1 - 5)"))
         lowerBodyLowerLayout.addSpacing(220)
         groupBox.addLayout(lowerBodyLowerLayout)
-               
+
+        spineOptionLayout = QtWidgets.QHBoxLayout()
+        spineOptionLayout.addWidget(QtWidgets.QLabel("createSimpleSpine:"))
+        self.fixedEndsSpineOptionCheckBox = QtWidgets.QCheckBox()
+        self.fixedEndsSpineOptionCheckBox.setChecked(False)
+        spineOptionLayout.addWidget(self.fixedEndsSpineOptionCheckBox)
+        spineOptionLayout.addSpacing(30)
+        spineOptionLayout.addWidget(QtWidgets.QLabel("createSpineFKSystem:"))
+        self.createSpineFKSystemCheckBox = QtWidgets.QCheckBox()
+        self.createSpineFKSystemCheckBox.setChecked(True)
+        spineOptionLayout.addWidget(self.createSpineFKSystemCheckBox)
+        spineOptionLayout.addSpacing(270)
+        groupBox.addLayout(spineOptionLayout)
+
         mainBodyCtrlOffsetLayout = QtWidgets.QHBoxLayout()
         mainBodyCtrlOffsetLayout.addWidget(QtWidgets.QLabel("MainCtrlOffset :"))
         self.mainBodyCtrlOffsetLine = QtWidgets.QLineEdit()
@@ -309,5 +324,11 @@ class mainRigWindow(QtWidgets.QDialog):
         fkBodyArmControlTransparencyLayout.addWidget(QtWidgets.QLabel("(0 - 1)"))
         fkBodyArmControlTransparencyLayout.addSpacing(215)
         groupBox.addLayout(fkBodyArmControlTransparencyLayout)
+
+        #spineOptionLayout = QtWidgets.QHBoxLayout()
+        #spineOptionLayout.addWidget(QtWidgets.QLabel("createSimpleSpine:"))
+        #fixedEndsSpineOptionCheckBox = QtWidgets.QCheckBox()
+        #spineOptionLayout.addWidget(fixedEndsSpineOptionCheckBox)
+        #groupBox.addLayout(spineOptionLayout)
 
         mainLayout.addLayout(groupBox)
