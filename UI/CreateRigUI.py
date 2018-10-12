@@ -325,10 +325,4 @@ class mainRigWindow(QtWidgets.QDialog):
         fkBodyArmControlTransparencyLayout.addSpacing(215)
         groupBox.addLayout(fkBodyArmControlTransparencyLayout)
 
-        #spineOptionLayout = QtWidgets.QHBoxLayout()
-        #spineOptionLayout.addWidget(QtWidgets.QLabel("createSimpleSpine:"))
-        #fixedEndsSpineOptionCheckBox = QtWidgets.QCheckBox()
-        #spineOptionLayout.addWidget(fixedEndsSpineOptionCheckBox)
-        #groupBox.addLayout(spineOptionLayout)
-
         mainLayout.addLayout(groupBox)
