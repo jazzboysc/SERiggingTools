@@ -43,6 +43,8 @@ def loadUI(uifile_path):
     setSelectorCallBack(uiWindow)
     setButtonCallback(uiWindow)
     setMutiSelectedButtonCallback(uiWindow)
+    setResetToModelBasePose(uiWindow)
+    setIKFKShow(uiWindow)
 
     uiWindow.BodyBG.setPixmap(QtGui.QPixmap((uiRootFile +"/ControllUIBG.png")))
     uiWindow.RHandBG.setPixmap(QtGui.QPixmap((uiRootFile +"/ControllUIRHandBG.png")))
@@ -54,7 +56,6 @@ def setSelectorCallBack(uiWindow):
     def selecterChangeCallback(index):
         name = uiWindow.characterSelector.currentText()
         getAllControllRigByName(name)
-        print name
     uiWindow.characterSelector.currentIndexChanged.connect(selecterChangeCallback) 
 
 def refreshCharacterInSelector(uiWindow):
@@ -63,7 +64,6 @@ def refreshCharacterInSelector(uiWindow):
     for x in range(len(CharacterArray)):
         uiWindow.characterSelector.addItem(CharacterArray[x])
     index = uiWindow.characterSelector.currentText()
-    print index
 
 def getCurrentHaveCharacter():
     cha = RigObjectHelper.listRigCharacters()
@@ -72,11 +72,17 @@ def getCurrentHaveCharacter():
 def getAllControllRigByName(charName):
     if charName != "None":
         characterControls = RigObjectHelper.listRigCharacterControls(charName)
-        print characterControls
         return characterControls
     return None
 
 def setControlToButtonMap(uiWindow):
+    '''{(u'RS_Center', u'RT_Global', 1): u'Global_01_Ctrl', (u'RS_Center', u'RT_Global', 0): u'Main_Ctrl', (u'RS_Center', u'RT_Global', 2): u'Global_02_Ctrl'}'''
+    # global MainControllToButton 
+    # MainControllToButton = {(u'RS_Center', u'RT_Global', 1): uiWindow.Global_01_Ctrl, (u'RS_Center', u'RT_Global', 0): uiWindow.Main_Ctrl, (u'RS_Center', u'RT_Global', 2): uiWindow.Global_02_Ctrl}
+    # global ButtonToMainControll 
+    # ButtonToMainControll = {uiWindow.Global_01_Ctrl:(u'RS_Center', u'RT_Global', 1), 
+    #                         uiWindow.Main_Ctrl:(u'RS_Center', u'RT_Global', 0), 
+    #                         uiWindow.Global_02_Ctrl:(u'RS_Center', u'RT_Global', 2)}
     global ControlToButton
     ControlToButton = {
                     (u'RS_Center', u'RT_SpineFK', 0): uiWindow.FK_C_Spine_0_Ctrl,
@@ -302,6 +308,42 @@ def setButtonCallback(uiWindow):
     for key in ButtonToControl:
         callback = callbackobj(key , uiWindow)
         key.clicked.connect(functools.partial(callback.functor, callback))
+
+def setResetToModelBasePose(uiWindow):
+    print "setResetToModelBasePose"
+    def resetToBasePoseCallback():
+        print resetToBasePoseCallback
+        name = uiWindow.characterSelector.currentText()
+        controllrigs = getAllControllRigByName(name)
+        for key , rig in controllrigs[0].items():
+            RigObjectHelper.setOneRigRotAndTrans(rig ,0,0,0,0,0,0)
+    uiWindow.ResetPoseButton.clicked.connect(resetToBasePoseCallback)
+
+def setIKFKShow(uiWindow):
+    def setLeftLegIKFK(bIsChecked):
+        print bIsChecked
+        if bIsChecked == 0:bIsChecked = 1 
+        if bIsChecked == 2:bIsChecked = 0
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , bIsChecked , 'leftLegIKFKSwitch')
+    def setLeftArmIKFK(bIsChecked):
+        print bIsChecked
+        if bIsChecked == 0:bIsChecked = 1 
+        if bIsChecked == 2:bIsChecked = 0
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , bIsChecked , 'leftArmIKFKSwitch')
+    def setRightLegIKFK(bIsChecked):
+        print bIsChecked
+        if bIsChecked == 0:bIsChecked = 1 
+        if bIsChecked == 2:bIsChecked = 0
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , bIsChecked , 'rightLegIKFKSwitch')
+    def setRightArmIKFK(bIsChecked):
+        print bIsChecked
+        if bIsChecked == 0:bIsChecked = 1 
+        if bIsChecked == 2:bIsChecked = 0
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , bIsChecked , 'rightArmIKFKSwitch')
+    # uiWindow.LeftLegShow.stateChanged.connect(setLeftLegIKFK)
+    # uiWindow.LeftArmShow.stateChanged.connect(setLeftArmIKFK)
+    # uiWindow.RightLegShow.stateChanged.connect(setRightLegIKFK)
+    # uiWindow.RightArmShow.stateChanged.connect(setRightArmIKFK)
 
 class callbackobj():
     def __init__(self, key ,uiWindow):

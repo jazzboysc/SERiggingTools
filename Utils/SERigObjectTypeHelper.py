@@ -55,10 +55,21 @@ def getRigControlObjectFromGroup(rigControl):
             return None
     else:
         return None 
-        
+
 def getControlOwner(rigControl):
     if cmds.objExists(rigControl):
         ControlOwner = cmds.listConnections(rigControl + '.ControlOwner')
+        if ControlOwner:
+            return ControlOwner[0]
+        else:
+            return None
+
+    else:
+        return None
+
+def getGlobalControlOwner(rigControl):
+    if cmds.objExists(rigControl):
+        ControlOwner = cmds.listConnections(rigControl + '.GlobalControlOwner')
         if ControlOwner:
             return ControlOwner[0]
         else:
@@ -99,6 +110,26 @@ def getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex):
                 if controlObject and controlCharacter:
                     name = getRigCharacterName(controlCharacter)
                     
+                    if name == characterName:
+                        return controlObject
+    
+    return None
+
+def getRigGlobalControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex):
+    links = cmds.ls(type = 'RigControlType')
+    for link in links:
+        control = cmds.listConnections(link + '.message')
+        if control:
+
+            rs = getRigSide(control[0])
+            rt = getRigType(control[0])
+            index = getRigControlIndex(control[0])
+
+            if rs == rigSideStr and rt == rigTypeStr and index == rigControlIndex:
+                controlObject = getRigControlObjectFromGroup(control[0])                
+                controlCharacter = getGlobalControlOwner(control[0])
+                if controlObject and controlCharacter:
+                    name = getRigCharacterName(controlCharacter)
                     if name == characterName:
                         return controlObject
     
@@ -196,8 +227,7 @@ def getRigCtrlTransByCtrlName(control):
         rotateY = cmds.getAttr(control + '.rotateY')
         rotateZ = cmds.getAttr(control + '.rotateZ')
 
-        return (translateX, translateY, translateZ, rotateX, rotateY, rotateZ)
-               
+        return (translateX, translateY, translateZ, rotateX, rotateY, rotateZ)      
     else:
         return None
 
@@ -212,18 +242,6 @@ def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlInde
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
     if control == None: return None;
     return getRigCtrlTransByCtrlName(control)
-    # if cmds.objExists(control):
-    #     translateX = cmds.getAttr(control +'.translateX')
-    #     translateY = cmds.getAttr(control +'.translateY')
-    #     translateZ = cmds.getAttr(control +'.translateZ')
-    #     rotateX = cmds.getAttr(control + '.rotateX')
-    #     rotateY = cmds.getAttr(control + '.rotateY')
-    #     rotateZ = cmds.getAttr(control + '.rotateZ')
-
-    #     return (translateX, translateY, translateZ, rotateX, rotateY, rotateZ)
-               
-    # else:
-    #     return None
 
 def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
                              translateX, translateY, translateZ):
@@ -239,15 +257,8 @@ def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIn
     '''
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
     if control == None: return;
-
     if cmds.objExists(control):
-        try:
-            cmds.setAttr(control + '.translateX', translateX)
-            cmds.setAttr(control + '.translateY', translateY)
-            cmds.setAttr(control + '.translateZ', translateZ)
-        except:
-            if 0:
-                cmds.warning('Translation channel is locked on control: ' + control)
+        setOneRigTrans(control, translateX, translateY, translateZ)
     else:
         pass
 
@@ -265,15 +276,8 @@ def setRigControlRotation(characterName, rigSideStr, rigTypeStr, rigControlIndex
     '''
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)   
     if control == None: return;
-
     if cmds.objExists(control):
-        try:
-            cmds.setAttr(control + '.rotateX', rotateX)
-            cmds.setAttr(control + '.rotateY', rotateY)
-            cmds.setAttr(control + '.rotateZ', rotateZ)
-        except:
-            if 0:
-                cmds.warning('Rotation channel is locked on control: ' + control)
+        setOneRigRot(control, rotateX, rotateY, rotateZ)
     else:
         pass
 
@@ -290,26 +294,42 @@ def setRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlInde
     @param rotateY: str, reference object for control position
     @param rotateZ: str, reference object for control position
     '''
-    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)   
+    control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex) 
+    setOneRigRotAndTrans(control,translateX, translateY, translateZ, rotateX, rotateY, rotateZ)  
+
+def setOneRigRotAndTrans(control, translateX, translateY, translateZ, rotateX, rotateY, rotateZ):
     if control == None: return;
     if cmds.objExists(control):
-        try:
-            cmds.setAttr(control + '.rotateX', rotateX)
-            cmds.setAttr(control + '.rotateY', rotateY)
-            cmds.setAttr(control + '.rotateZ', rotateZ)
-        except:
-            if 0:
-                cmds.warning('Rotation channel is locked on control: ' + control)
-        try:
-            cmds.setAttr(control + '.translateX', translateX)
-            cmds.setAttr(control + '.translateY', translateY)
-            cmds.setAttr(control + '.translateZ', translateZ)
-        except:
-            if 0:
-                cmds.warning('Translation channel is locked on control: ' + control)
+        setOneRigRot(control, rotateX, rotateY, rotateZ)
+        setOneRigTrans(control, translateX, translateY, translateZ)
     else:
         pass
-        
+
+def setOneRigRot(control, rotateX, rotateY, rotateZ):
+    try:
+        cmds.setAttr(control + '.rotateX', rotateX)
+        cmds.setAttr(control + '.rotateY', rotateY)
+        cmds.setAttr(control + '.rotateZ', rotateZ)
+    except:
+        if 0:
+            cmds.warning('Rotation channel is locked on control: ' + control)
+
+def setOneRigTrans(control, translateX, translateY, translateZ):
+    try:
+        cmds.setAttr(control + '.translateX', translateX)
+        cmds.setAttr(control + '.translateY', translateY)
+        cmds.setAttr(control + '.translateZ', translateZ)
+    except:
+        if 0:
+            cmds.warning('Translation channel is locked on control: ' + control)
+
+def hideCharacterIKFKByName(characterName , bIsHide , attrName):
+    print characterName , bIsHide
+    if characterName == "None":return
+    mainCtrl = getRigGlobalControlObject(characterName , u'RS_Center', u'RT_Global', 0)
+    print mainCtrl  
+    if mainCtrl:
+        cmds.setAttr(mainCtrl + '.'+ attrName, bIsHide)
 
 
             

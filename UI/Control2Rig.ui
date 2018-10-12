@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>550</width>
+    <width>549</width>
     <height>998</height>
    </rect>
   </property>
@@ -40,13 +40,20 @@
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);
-background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));
-border-left-color: rgba(255, 255, 255, 0);
-border-top-color: rgba(255, 255, 255, 0);
-border-bottom-color: rgba(255, 255, 255, 0);
-border-right-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -120,13 +127,20 @@ border-color: rgba(255, 255, 255, 0);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);
-background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));
-border-left-color: rgba(255, 255, 255, 0);
-border-top-color: rgba(255, 255, 255, 0);
-border-bottom-color: rgba(255, 255, 255, 0);
-border-right-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 9px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -142,13 +156,20 @@ border-color: rgba(255, 255, 255, 0);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);
-background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));
-border-left-color: rgba(255, 255, 255, 0);
-border-top-color: rgba(255, 255, 255, 0);
-border-bottom-color: rgba(255, 255, 255, 0);
-border-right-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 9px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -159,7 +180,7 @@ border-color: rgba(255, 255, 255, 0);</string>
      <rect>
       <x>300</x>
       <y>170</y>
-      <width>21</width>
+      <width>31</width>
       <height>31</height>
      </rect>
     </property>
@@ -170,7 +191,19 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -179,9 +212,9 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="R_Arm_Clav_Rotation_Ctrl">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>220</x>
       <y>169</y>
-      <width>21</width>
+      <width>31</width>
       <height>31</height>
      </rect>
     </property>
@@ -192,7 +225,21 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -214,7 +261,19 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -236,7 +295,19 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string>background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string>QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -246,9 +317,9 @@ border-color: rgba(255, 255, 255, 0);</string>
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>300</y>
-      <width>21</width>
-      <height>21</height>
+      <y>310</y>
+      <width>31</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -261,7 +332,19 @@ border-color: rgba(255, 255, 255, 0);</string>
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -283,7 +366,21 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string>background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string>QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -305,7 +402,21 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string>background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string>QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -314,10 +425,10 @@ border-color: rgba(255, 255, 255, 0);</string>
    <widget class="QPushButton" name="FK_R_Arm2_Ctrl">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>300</y>
-      <width>21</width>
-      <height>21</height>
+      <x>80</x>
+      <y>310</y>
+      <width>31</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -327,7 +438,21 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -349,13 +474,20 @@ border-color: rgba(255, 255, 255, 0);</string>
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);
-border-left-color: rgba(255, 255, 255, 0);
-border-top-color: rgba(255, 255, 255, 0);
-border-bottom-color: rgba(255, 255, 255, 0);
-border-right-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);
-background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 9px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -377,13 +509,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);
-background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));
-border-left-color: rgba(255, 255, 255, 0);
-border-top-color: rgba(255, 255, 255, 0);
-border-bottom-color: rgba(255, 255, 255, 0);
-border-right-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 9px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -399,13 +538,20 @@ border-color: rgba(255, 255, 255, 0);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);
-border-left-color: rgba(255, 255, 255, 0);
-border-top-color: rgba(255, 255, 255, 0);
-border-bottom-color: rgba(255, 255, 255, 0);
-border-right-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);
-background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 0, 69), stop:0.375 rgba(255, 255, 0, 69), stop:0.423533 rgba(251, 255, 0, 145), stop:0.45 rgba(247, 255, 0, 208), stop:0.477581 rgba(255, 244, 71, 130), stop:0.518717 rgba(255, 218, 71, 130), stop:0.55 rgba(255, 255, 0, 255), stop:0.57754 rgba(255, 203, 0, 130), stop:0.625 rgba(255, 255, 0, 69), stop:1 rgba(255, 255, 0, 69));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 9px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -427,7 +573,19 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -449,7 +607,19 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -458,14 +628,26 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
    <widget class="QPushButton" name="FK_L_Leg3_Ctrl">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>310</x>
       <y>640</y>
-      <width>39</width>
-      <height>23</height>
+      <width>51</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -487,7 +669,19 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(0, 0, 255, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -509,7 +703,21 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -531,7 +739,21 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -542,8 +764,8 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      <rect>
       <x>190</x>
       <y>640</y>
-      <width>40</width>
-      <height>23</height>
+      <width>51</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -553,7 +775,21 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -581,7 +817,21 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 0, 0, 190), stop:1 rgba(255, 255, 255, 190));</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1249,7 +1499,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -1271,7 +1534,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -1293,7 +1569,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -1315,7 +1604,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -1337,7 +1639,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -1359,7 +1674,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -1381,7 +1709,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -1403,7 +1744,20 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      </size>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 255, 127, 125);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255, 255, 0, 100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 255, 0, 200); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
     </property>
     <property name="text">
      <string/>
@@ -1569,6 +1923,514 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="ResetPoseButton">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>80</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset to model base pose&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(255, 0, 127 ,200);
+border-style: outset;
+border-width: 0px;
+border-radius: 9px;
+border-color: red;
+}
+QPushButton:hover{
+background-color: rgba(255, 0, 127 ,100);
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+	</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QSlider" name="horizontalSlider">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>511</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>10</number>
+    </property>
+    <property name="pageStep">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>10</number>
+    </property>
+    <property name="sliderPosition">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_2">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>540</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_3">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>570</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>542</y>
+      <width>54</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IKToFK</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>570</y>
+      <width>54</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FKToIK</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>540</y>
+      <width>54</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IKToFK</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_4">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>538</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>568</y>
+      <width>54</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FKToIK</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="horizontalSlider_2">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>509</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>10</number>
+    </property>
+    <property name="pageStep">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>10</number>
+    </property>
+    <property name="sliderPosition">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_5">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>568</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>192</y>
+      <width>54</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IKToFK</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_6">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>190</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>220</y>
+      <width>54</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FKToIK</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="horizontalSlider_3">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>161</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>10</number>
+    </property>
+    <property name="pageStep">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>10</number>
+    </property>
+    <property name="sliderPosition">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_7">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>220</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>192</y>
+      <width>54</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IKToFK</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_8">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>190</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>220</y>
+      <width>54</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FKToIK</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="horizontalSlider_4">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>161</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>10</number>
+    </property>
+    <property name="pageStep">
+     <number>1</number>
+    </property>
+    <property name="value">
+     <number>10</number>
+    </property>
+    <property name="sliderPosition">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_9">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>220</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>BodyBG</zorder>
    <zorder>characterSelector</zorder>
    <zorder>FK_C_Head_Ctrl</zorder>
@@ -1654,14 +2516,35 @@ background-color: qconicalgradient(cx:0, cy:0, angle:270, stop:0 rgba(255, 255, 
    <zorder>FK_R_Finger_02_Ctrl</zorder>
    <zorder>FK_L_FourFinger_Ctrl</zorder>
    <zorder>FK_R_FourFinger_Ctrl</zorder>
+   <zorder>ResetPoseButton</zorder>
+   <zorder>horizontalSlider</zorder>
+   <zorder>FK_L_Leg1_Ctrl_2</zorder>
+   <zorder>FK_L_Leg1_Ctrl_3</zorder>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>label_3</zorder>
+   <zorder>FK_L_Leg1_Ctrl_4</zorder>
+   <zorder>label_4</zorder>
+   <zorder>horizontalSlider_2</zorder>
+   <zorder>FK_L_Leg1_Ctrl_5</zorder>
+   <zorder>label_5</zorder>
+   <zorder>FK_L_Leg1_Ctrl_6</zorder>
+   <zorder>label_6</zorder>
+   <zorder>horizontalSlider_3</zorder>
+   <zorder>FK_L_Leg1_Ctrl_7</zorder>
+   <zorder>label_7</zorder>
+   <zorder>FK_L_Leg1_Ctrl_8</zorder>
+   <zorder>label_8</zorder>
+   <zorder>horizontalSlider_4</zorder>
+   <zorder>FK_L_Leg1_Ctrl_9</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>550</width>
-     <height>26</height>
+     <width>549</width>
+     <height>23</height>
     </rect>
    </property>
   </widget>
