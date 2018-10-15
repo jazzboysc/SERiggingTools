@@ -16,6 +16,7 @@ import cPickle
 from ..Character import SECharacter
 
 from ..Utils import SERigObjectTypeHelper as RigObjectHelper
+from ..Rig import SERigBipedLimbComponent
 
 import UIConfig
 #"E:/Users/admin/Documents/GitHub/SERiggingTools/UI/LoadRiggingUI.ui"
@@ -320,30 +321,32 @@ def setResetToModelBasePose(uiWindow):
     uiWindow.ResetPoseButton.clicked.connect(resetToBasePoseCallback)
 
 def setIKFKShow(uiWindow):
-    def setLeftLegIKFK(bIsChecked):
-        print bIsChecked
-        if bIsChecked == 0:bIsChecked = 1 
-        if bIsChecked == 2:bIsChecked = 0
-        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , bIsChecked , 'leftLegIKFKSwitch')
-    def setLeftArmIKFK(bIsChecked):
-        print bIsChecked
-        if bIsChecked == 0:bIsChecked = 1 
-        if bIsChecked == 2:bIsChecked = 0
-        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , bIsChecked , 'leftArmIKFKSwitch')
-    def setRightLegIKFK(bIsChecked):
-        print bIsChecked
-        if bIsChecked == 0:bIsChecked = 1 
-        if bIsChecked == 2:bIsChecked = 0
-        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , bIsChecked , 'rightLegIKFKSwitch')
-    def setRightArmIKFK(bIsChecked):
-        print bIsChecked
-        if bIsChecked == 0:bIsChecked = 1 
-        if bIsChecked == 2:bIsChecked = 0
-        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , bIsChecked , 'rightArmIKFKSwitch')
-    # uiWindow.LeftLegShow.stateChanged.connect(setLeftLegIKFK)
-    # uiWindow.LeftArmShow.stateChanged.connect(setLeftArmIKFK)
-    # uiWindow.RightLegShow.stateChanged.connect(setRightLegIKFK)
-    # uiWindow.RightArmShow.stateChanged.connect(setRightArmIKFK)
+    def modifyValue(SliderValue):
+        return SliderValue / 10.0
+    def setLeftLegIKFK(SliderValue):
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , 'leftLegIKFKSwitch')
+    def setLeftArmIKFK(SliderValue):
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , 'leftArmIKFKSwitch')
+    def setRightLegIKFK(SliderValue):
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , 'rightLegIKFKSwitch')
+    def setRightArmIKFK(SliderValue):
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , 'rightArmIKFKSwitch')
+    uiWindow.IKFKLLeg.valueChanged.connect(setLeftLegIKFK)        
+    uiWindow.IKFKLHand.valueChanged.connect(setLeftArmIKFK)
+    uiWindow.IKFKRLeg.valueChanged.connect(setRightLegIKFK)
+    uiWindow.IKFKRHand.valueChanged.connect(setRightArmIKFK)
+    
+    uiWindow.IKToFKRHandBtn.clicked.connect(lambda *arg:SERigBipedLimbComponent.RigHumanLimb.syncIKToFK('R_Arm_RigComponentsGrp'))
+    uiWindow.FKToIKRHandBtn.clicked.connect(lambda *arg:SERigBipedLimbComponent.RigHumanLimb.syncFKToIK('R_Arm_RigComponentsGrp')) 
+
+    uiWindow.IKToFKLHandBtn.clicked.connect(lambda *arg:SERigBipedLimbComponent.RigHumanLimb.syncIKToFK('L_Arm_RigComponentsGrp'))
+    uiWindow.FKToIKLHandBtn.clicked.connect(lambda *arg:SERigBipedLimbComponent.RigHumanLimb.syncFKToIK('L_Arm_RigComponentsGrp'))
+
+    uiWindow.IKToFKRLegBtn.clicked.connect(lambda *arg:SERigBipedLimbComponent.RigHumanLimb.syncIKToFK('R_Leg_RigComponentsGrp'))
+    uiWindow.FKToIKRLegBtn.clicked.connect(lambda *arg:SERigBipedLimbComponent.RigHumanLimb.syncFKToIK('R_Leg_RigComponentsGrp')) 
+
+    uiWindow.IKToFKLLegBtn.clicked.connect(lambda *arg:SERigBipedLimbComponent.RigHumanLimb.syncIKToFK('L_Leg_RigComponentsGrp'))
+    uiWindow.FKToIKLLegBtn.clicked.connect(lambda *arg:SERigBipedLimbComponent.RigHumanLimb.syncFKToIK('L_Leg_RigComponentsGrp'))    
 
 class callbackobj():
     def __init__(self, key ,uiWindow):

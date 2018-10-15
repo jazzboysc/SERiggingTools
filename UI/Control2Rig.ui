@@ -878,14 +878,26 @@ border-style: inset; }
    <widget class="QPushButton" name="FK_L_Thumb_00_Ctrl">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>720</y>
+      <x>460</x>
+      <y>740</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 7px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -895,13 +907,25 @@ border-style: inset; }
     <property name="geometry">
      <rect>
       <x>470</x>
-      <y>750</y>
+      <y>760</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 7px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -910,14 +934,26 @@ border-style: inset; }
    <widget class="QPushButton" name="FK_L_Thumb_02_Ctrl">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>480</x>
       <y>780</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 7px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -933,7 +969,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -949,7 +997,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -965,7 +1025,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -981,7 +1053,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -997,7 +1081,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1013,7 +1109,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1029,7 +1137,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1045,7 +1165,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1061,7 +1193,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1077,7 +1221,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1093,7 +1249,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1109,7 +1277,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1125,7 +1305,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1141,7 +1333,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1157,7 +1361,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1173,7 +1389,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1189,7 +1417,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1199,13 +1441,27 @@ border-style: inset; }
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>750</y>
+      <y>770</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 7px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1221,7 +1477,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1237,7 +1507,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1253,7 +1537,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1269,7 +1567,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1285,7 +1597,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1301,7 +1627,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1317,7 +1657,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1333,7 +1687,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1342,14 +1710,28 @@ border-style: inset; }
    <widget class="QPushButton" name="FK_R_Thumb_02_Ctrl">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>780</y>
+      <x>50</x>
+      <y>790</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 7px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1365,7 +1747,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1381,7 +1777,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1397,7 +1807,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1413,7 +1837,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1429,7 +1867,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1438,14 +1890,28 @@ border-style: inset; }
    <widget class="QPushButton" name="FK_R_Thumb_00_Ctrl">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>720</y>
+      <x>70</x>
+      <y>750</y>
       <width>21</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 7px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1461,7 +1927,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1477,7 +1957,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1773,7 +2267,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,255,0,80);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,255,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1789,7 +2295,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,255,0,80);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,255,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1805,7 +2323,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,255,0,80);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,255,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1821,7 +2351,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,255,0,80);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,255,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1837,7 +2379,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,255,0,80);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,255,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1853,7 +2407,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,255,0,80);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,255,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1869,7 +2435,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,255,0,80);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,255,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1885,7 +2463,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 255, 127, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,255,0,80);
+border-style: outset;
+border-width: 0px;
+border-radius: 5px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,255,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1901,7 +2491,19 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(0,0,255,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(0,0,255,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }</string>
     </property>
     <property name="text">
      <string/>
@@ -1917,7 +2519,21 @@ border-style: inset; }
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 85, 255, 90);</string>
+     <string notr="true">QPushButton{
+background-color: rgba(255,0,0,100);
+border-style: outset;
+border-width: 0px;
+border-radius: 15px;
+border-color: red;
+}
+QPushButton:hover{
+background-color:rgba(255,0,0,255); 
+color: black;}
+QPushButton:pressed{
+background-color: rgba(255, 0, 127 ,150);
+border-style: inset; }
+
+</string>
     </property>
     <property name="text">
      <string/>
@@ -1955,13 +2571,13 @@ border-style: inset; }
      <string/>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider">
+   <widget class="QSlider" name="IKFKLLeg">
     <property name="geometry">
      <rect>
       <x>380</x>
-      <y>511</y>
+      <y>501</y>
       <width>71</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="maximum">
@@ -1980,7 +2596,7 @@ border-style: inset; }
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_2">
+   <widget class="QPushButton" name="IKToFKLLegBtn">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -2014,7 +2630,7 @@ border-style: inset; }</string>
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_3">
+   <widget class="QPushButton" name="FKToIKLLegBtn">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -2087,7 +2703,7 @@ border-style: inset; }</string>
      <string>IKToFK</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_4">
+   <widget class="QPushButton" name="IKToFKRLegBtn">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -2134,13 +2750,13 @@ border-style: inset; }</string>
      <string>FKToIK</string>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider_2">
+   <widget class="QSlider" name="IKFKRLeg">
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>509</y>
+      <y>499</y>
       <width>71</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="maximum">
@@ -2159,7 +2775,7 @@ border-style: inset; }</string>
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_5">
+   <widget class="QPushButton" name="FKToIKRLegBtn">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -2193,7 +2809,7 @@ border-style: inset; }</string>
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="IKToFKLHand">
     <property name="geometry">
      <rect>
       <x>430</x>
@@ -2206,7 +2822,7 @@ border-style: inset; }</string>
      <string>IKToFK</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_6">
+   <widget class="QPushButton" name="IKToFKLHandBtn">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -2253,13 +2869,13 @@ border-style: inset; }</string>
      <string>FKToIK</string>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider_3">
+   <widget class="QSlider" name="IKFKRHand">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>161</y>
+      <x>80</x>
+      <y>150</y>
       <width>71</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="maximum">
@@ -2278,7 +2894,7 @@ border-style: inset; }</string>
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_7">
+   <widget class="QPushButton" name="FKToIKLHandBtn">
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -2325,7 +2941,7 @@ border-style: inset; }</string>
      <string>IKToFK</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_8">
+   <widget class="QPushButton" name="IKToFKRHandBtn">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -2372,14 +2988,17 @@ border-style: inset; }</string>
      <string>FKToIK</string>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider_4">
+   <widget class="QSlider" name="IKFKLHand">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>161</y>
+      <x>400</x>
+      <y>151</y>
       <width>71</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="maximum">
      <number>10</number>
@@ -2397,7 +3016,7 @@ border-style: inset; }</string>
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="FK_L_Leg1_Ctrl_9">
+   <widget class="QPushButton" name="FKToIKRHandBtn">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -2517,26 +3136,26 @@ border-style: inset; }</string>
    <zorder>FK_L_FourFinger_Ctrl</zorder>
    <zorder>FK_R_FourFinger_Ctrl</zorder>
    <zorder>ResetPoseButton</zorder>
-   <zorder>horizontalSlider</zorder>
-   <zorder>FK_L_Leg1_Ctrl_2</zorder>
-   <zorder>FK_L_Leg1_Ctrl_3</zorder>
+   <zorder>IKFKLLeg</zorder>
+   <zorder>IKToFKLLegBtn</zorder>
+   <zorder>FKToIKLLegBtn</zorder>
    <zorder>label</zorder>
    <zorder>label_2</zorder>
    <zorder>label_3</zorder>
-   <zorder>FK_L_Leg1_Ctrl_4</zorder>
+   <zorder>IKToFKRLegBtn</zorder>
    <zorder>label_4</zorder>
-   <zorder>horizontalSlider_2</zorder>
-   <zorder>FK_L_Leg1_Ctrl_5</zorder>
-   <zorder>label_5</zorder>
-   <zorder>FK_L_Leg1_Ctrl_6</zorder>
+   <zorder>IKFKRLeg</zorder>
+   <zorder>FKToIKRLegBtn</zorder>
+   <zorder>IKToFKLHand</zorder>
+   <zorder>IKToFKLHandBtn</zorder>
    <zorder>label_6</zorder>
-   <zorder>horizontalSlider_3</zorder>
-   <zorder>FK_L_Leg1_Ctrl_7</zorder>
+   <zorder>IKFKRHand</zorder>
+   <zorder>FKToIKLHandBtn</zorder>
    <zorder>label_7</zorder>
-   <zorder>FK_L_Leg1_Ctrl_8</zorder>
+   <zorder>IKToFKRHandBtn</zorder>
    <zorder>label_8</zorder>
-   <zorder>horizontalSlider_4</zorder>
-   <zorder>FK_L_Leg1_Ctrl_9</zorder>
+   <zorder>IKFKLHand</zorder>
+   <zorder>FKToIKRHandBtn</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
