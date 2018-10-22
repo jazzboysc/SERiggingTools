@@ -38,9 +38,8 @@ class RigBipedCharacterDeform():
         
             pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
             oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
-            sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-            curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
+            curSlaveJntsInfo = (curSlaveJoint, pc, oc)
             slaveJnts.append(curSlaveJntsInfo)
 
             if preParent:
@@ -69,9 +68,8 @@ class RigBipedCharacterDeform():
         
             pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
             oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
-            sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-            curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
+            curSlaveJntsInfo = (curSlaveJoint, pc, oc)
             slaveJnts.append(curSlaveJntsInfo)
 
             if preParent:
@@ -93,9 +91,8 @@ class RigBipedCharacterDeform():
         
             pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
             oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
-            sc = cmds.scaleConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-            curSlaveJntsInfo = (curSlaveJoint, pc, oc, sc)
+            curSlaveJntsInfo = (curSlaveJoint, pc, oc)
             slaveJnts.append(curSlaveJntsInfo)
 
         return slaveJnts
@@ -229,6 +226,13 @@ class RigBipedCharacterDeform():
 
         cmds.parent(leftFootSlaveJnts[0][0], leftLowerLegSlaveJnts[-1][0])
         cmds.parent(rightFootSlaveJnts[0][0], rightLowerLegSlaveJnts[-1][0])
+
+        # Create slave joint scale constraints.
+        ocList = cmds.listRelatives('Slave_Root', ad = 1, type = 'orientConstraint')
+        for i in ocList:
+            oldJnt = cmds.listConnections(i + '.target', s = 1)[0]
+            slJnt = cmds.listConnections(i, d = 1)[0]
+            cmds.scaleConstraint(oldJnt, slJnt, mo = 0)
 
         # Create deformation group and parent the slave root to it.
         cmds.parent(rootSlaveJnt[0][0], baseRig.DeformationGrp)
