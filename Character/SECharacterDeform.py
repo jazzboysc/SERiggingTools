@@ -228,7 +228,7 @@ class RigBipedCharacterDeform():
         cmds.parent(rightFootSlaveJnts[0][0], rightLowerLegSlaveJnts[-1][0])
 
         # Create slave joint scale constraints.
-        ocList = cmds.listRelatives('Slave_Root', ad = 1, type = 'orientConstraint')
+        ocList = cmds.listRelatives(rootSlaveJnt[0][0], ad = 1, type = 'orientConstraint')
         for i in ocList:
             oldJnt = cmds.listConnections(i + '.target', s = 1)[0]
             slJnt = cmds.listConnections(i, d = 1)[0]
