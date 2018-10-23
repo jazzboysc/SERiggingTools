@@ -337,11 +337,24 @@ class RigFixedEndsIKSpine(RigComponent):
         # Create stretching spine.
         curveInfoNode = cmds.arclen(spineCurveNewName, ch = 1)
         curveLen = cmds.getAttr(curveInfoNode + '.arcLength')
+
+        globalScaleAttr = None
+        if self.BaseRig:
+            globalScaleAttr = self.BaseRig.getGlobalScaleAttrName()
+
+        mulNode = cmds.createNode('multiplyDivide')
+        cmds.setAttr(mulNode + '.operation', 1)
+        cmds.setAttr(mulNode + '.input1X', curveLen)
+        cmds.setAttr(mulNode + '.i1', l = 1)
+
+        if globalScaleAttr:
+            cmds.connectAttr(globalScaleAttr, mulNode + '.input2X', f = 1)
+
         divNode = cmds.createNode('multiplyDivide')
         cmds.setAttr(divNode + '.operation', 2)
-        cmds.setAttr(divNode + '.input2X', curveLen)
-        cmds.setAttr(divNode + '.i2', l = 1)
         cmds.connectAttr(curveInfoNode + '.arcLength', divNode + '.input1X', f = 1)
+        cmds.connectAttr(mulNode + '.outputX', divNode + '.input2X', f = 1)
+
         blender = cmds.createNode('blendColors')
         cmds.connectAttr(divNode + '.outputX', blender + '.color1R', f = 1)
         cmds.setAttr(blender + '.color2R', 1.0)

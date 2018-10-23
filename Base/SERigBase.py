@@ -28,6 +28,8 @@ class RigBase():
         self.RigGrp = cmds.group(n = SERigNaming.sRigGroup, em = 1, p = self.TopGrp)
         self.ModelGrp = cmds.group(n = SERigNaming.sModelGroup, em = 1, p = self.TopGrp)
         self.DeformationGrp = cmds.group(n = SERigNaming.sDeformationGroup, em = 1, p = self.RigGrp)
+        self.Global01Control = None
+        self.Global02Control = None
 
         # Add custom attributes for the TopGrp object.
         for attr in [characterNameAttr, sceneObjectTypeAttr]:
@@ -46,6 +48,7 @@ class RigBase():
                                 parent = self.RigGrp, 
                                 lockChannels = ['v'])
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, global1Ctrl.ControlGroup, 'GlobalControl01', 'GlobalControlOwner')
+        self.Global01Control = global1Ctrl
 
         global2Ctrl = SERigControl.RigSpikeCrossControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
@@ -56,6 +59,7 @@ class RigBase():
                                 parent = global1Ctrl.ControlObject, 
                                 lockChannels = ['s', 'v'])
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, global2Ctrl.ControlGroup, 'GlobalControl02', 'GlobalControlOwner')
+        self.Global02Control = global2Ctrl
 
         self._flattenGlobalCtrlShape(global1Ctrl.ControlObject)
 
@@ -132,6 +136,11 @@ class RigBase():
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
         self.MainIKFKAutoHideAts = mainIKFKAutoHideAts
 
+    def getGlobalScaleAttrName(self):
+        if self.Global01Control:
+            return self.Global01Control.ControlObject + '.scaleX'
+        else:
+            return None
         
     def getMainControlObject(self):
         if self.MainControl:
