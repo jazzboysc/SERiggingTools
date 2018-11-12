@@ -50,6 +50,7 @@ def loadUI(uifile_path):
     uiWindow.BodyBG.setPixmap(QtGui.QPixmap((uiRootFile +"/ControllUIBG.png")))
     uiWindow.RHandBG.setPixmap(QtGui.QPixmap((uiRootFile +"/ControllUIRHandBG.png")))
     uiWindow.LHandBG.setPixmap(QtGui.QPixmap((uiRootFile +"/ControllUILHandBG.png")))
+    uiWindow.FootBG.setPixmap(QtGui.QPixmap((uiRootFile +"/Foot.png")))
     refreshCharacterInSelector(uiWindow)
     return uiWindow
 
@@ -146,24 +147,24 @@ def setControlToButtonMap(uiWindow):
                     (u'RS_Left', u'RT_MiddleFK', 3): uiWindow.FK_L_Middle_03_Ctrl,
                     (u'RS_Right', u'RT_IndexFK', 0): uiWindow.FK_R_Index_00_Ctrl, 
                     (u'RS_Right', u'RT_IndexFK', 1): uiWindow.FK_R_Index_01_Ctrl,
-                    (u'RS_Right', u'RT_FootToeSwive', 0): u'R_Leg_ToeSwive_Ctrl', 
-                    (u'RS_Center', u'RT_SpinePelvis', 0): u'C_SpinePelvis_Ctrl',
-                    (u'RS_Right', u'RT_FootRotation', 0): u'R_Leg_Rotation_Ctrl',
-                    (u'RS_Right', u'RT_FootBaseSwive', 0): u'R_Leg_FootBaseSwive_Ctrl',
-                    (u'RS_Left', u'RT_FootBaseSwive', 0): u'L_Leg_FootBaseSwive_Ctrl', 
-                    (u'RS_Right', u'RT_FootIKMain', 0): u'R_Leg_IK_Main_Ctrl',
-                    (u'RS_Left', u'RT_LegPV', 0): u'L_Leg_PV_Ctrl',
-                    (u'RS_Left', u'RT_FootRotation', 0): u'L_Leg_Rotation_Ctrl', 
-                    (u'RS_Center', u'RT_SpineChest', 0): u'C_SpineChest_Ctrl',
-                    (u'RS_Left', u'RT_ArmIKMain', 0): u'L_Arm_IK_Main_Ctrl',
-                    (u'RS_Left', u'RT_FootToeSwive', 0): u'L_Leg_ToeSwive_Ctrl',
-                    (u'RS_Right', u'RT_LegPV', 0): u'R_Leg_PV_Ctrl',
-                    (u'RS_Right', u'RT_ArmPV', 0): u'R_Arm_PV_Ctrl', 
-                    (u'RS_Right', u'RT_AnkleIKRotation', 0): u'R_Leg_IK_Rotation_Ctrl',
-                    (u'RS_Left', u'RT_AnkleIKRotation', 0): u'L_Leg_IK_Rotation_Ctrl',
-                    (u'RS_Right', u'RT_ArmIKMain', 0): u'R_Arm_IK_Main_Ctrl',
-                    (u'RS_Left', u'RT_ArmPV', 0): u'L_Arm_PV_Ctrl',
-                    (u'RS_Left', u'RT_FootIKMain', 0): u'L_Leg_IK_Main_Ctrl',
+                    (u'RS_Right', u'RT_FootToeSwive', 0): uiWindow.R_Leg_ToeSwive_Ctrl, 
+                    (u'RS_Center', u'RT_SpinePelvis', 0): uiWindow.C_SpinePelvis_Ctrl,
+                    (u'RS_Right', u'RT_FootRotation', 0): uiWindow.R_Leg_Rotation_Ctrl,
+                    (u'RS_Right', u'RT_FootBaseSwive', 0): uiWindow.R_Leg_FootBaseSwive_Ctrl,
+                    (u'RS_Left', u'RT_FootBaseSwive', 0): uiWindow.L_Leg_FootBaseSwive_Ctrl, 
+                    (u'RS_Right', u'RT_FootIKMain', 0): uiWindow.R_Leg_IK_Main_Ctrl,
+                    (u'RS_Left', u'RT_LegPV', 0): uiWindow.L_Leg_PV_Ctrl,
+                    (u'RS_Left', u'RT_FootRotation', 0): uiWindow.L_Leg_Rotation_Ctrl, 
+                    (u'RS_Center', u'RT_SpineChest', 0): uiWindow.C_SpineChest_Ctrl,
+                    (u'RS_Left', u'RT_ArmIKMain', 0): uiWindow.L_Arm_IK_Main_Ctrl,
+                    (u'RS_Left', u'RT_FootToeSwive', 0): uiWindow.L_Leg_ToeSwive_Ctrl,
+                    (u'RS_Right', u'RT_LegPV', 0): uiWindow.R_Leg_PV_Ctrl,
+                    (u'RS_Right', u'RT_ArmPV', 0): uiWindow.R_Arm_PV_Ctrl, 
+                    (u'RS_Right', u'RT_AnkleIKRotation', 0): uiWindow.R_Leg_IK_Rotation_Ctrl,
+                    (u'RS_Left', u'RT_AnkleIKRotation', 0): uiWindow.L_Leg_IK_Rotation_Ctrl,
+                    (u'RS_Right', u'RT_ArmIKMain', 0): uiWindow.R_Arm_IK_Main_Ctrl,
+                    (u'RS_Left', u'RT_ArmPV', 0): uiWindow.L_Arm_PV_Ctrl,
+                    (u'RS_Left', u'RT_FootIKMain', 0): uiWindow.L_Leg_IK_Main_Ctrl,
                         }
 
     global ButtonToControl
@@ -227,7 +228,25 @@ def setControlToButtonMap(uiWindow):
         uiWindow.FK_L_Pinky_02_Ctrl:(u'RS_Left', u'RT_PinkyFK', 2),
         uiWindow.FK_L_Pinky_03_Ctrl:(u'RS_Left', u'RT_PinkyFK', 3), 
         uiWindow.FK_L_Pinky_01_Ctrl:(u'RS_Left', u'RT_PinkyFK', 1),
-        uiWindow.FK_L_Pinky_00_Ctrl:(u'RS_Left', u'RT_PinkyFK', 0),                            
+        uiWindow.FK_L_Pinky_00_Ctrl:(u'RS_Left', u'RT_PinkyFK', 0),
+        uiWindow.L_Leg_PV_Ctrl:(u'RS_Left', u'RT_LegPV', 0), 
+        uiWindow.R_Leg_PV_Ctrl:(u'RS_Right', u'RT_LegPV', 0),
+        uiWindow.R_Arm_PV_Ctrl:(u'RS_Right', u'RT_ArmPV', 0), 
+        uiWindow.L_Arm_PV_Ctrl:(u'RS_Left', u'RT_ArmPV', 0), 
+        uiWindow.L_Leg_IK_Main_Ctrl:(u'RS_Left', u'RT_FootIKMain', 0),
+        uiWindow.L_Arm_IK_Main_Ctrl:(u'RS_Left', u'RT_ArmIKMain', 0), 
+        uiWindow.R_Leg_IK_Main_Ctrl:(u'RS_Right', u'RT_FootIKMain', 0), 
+        uiWindow.R_Arm_IK_Main_Ctrl:(u'RS_Right', u'RT_ArmIKMain', 0), 
+        uiWindow.R_Leg_Rotation_Ctrl:(u'RS_Right', u'RT_FootRotation', 0),
+        uiWindow.L_Leg_Rotation_Ctrl:(u'RS_Left', u'RT_FootRotation', 0),
+        uiWindow.R_Leg_ToeSwive_Ctrl:(u'RS_Right', u'RT_FootToeSwive', 0),
+        uiWindow.L_Leg_ToeSwive_Ctrl:(u'RS_Left', u'RT_FootToeSwive', 0), 
+        uiWindow.R_Leg_FootBaseSwive_Ctrl:(u'RS_Right', u'RT_FootBaseSwive', 0), 
+        uiWindow.L_Leg_FootBaseSwive_Ctrl:(u'RS_Left', u'RT_FootBaseSwive', 0), 
+        uiWindow.R_Leg_IK_Rotation_Ctrl:(u'RS_Right', u'RT_AnkleIKRotation', 0),
+        uiWindow.L_Leg_IK_Rotation_Ctrl:(u'RS_Left', u'RT_AnkleIKRotation', 0), 
+        uiWindow.C_SpinePelvis_Ctrl:(u'RS_Center', u'RT_SpinePelvis', 0), 
+        uiWindow.C_SpineChest_Ctrl:(u'RS_Center', u'RT_SpineChest', 0),                   
     }
     global MultiVerticalButtonToControl
     MultiVerticalButtonToControl = {
