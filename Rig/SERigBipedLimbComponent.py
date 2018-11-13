@@ -312,11 +312,7 @@ class RigHumanLeg(RigHumanLimb):
             rigScale = 1.0,
             fkControlScaleYZ = 19,
             fkControlScaleYZMultiplier = 0.75,
-            fkControlTransparency = 0.85,
-            ballIKTwistLeft = 90,
-            ballIKTwistRight = 270,
-            toeIKTwistLeft = 90,
-            toeIKTwistRight = 0
+            fkControlTransparency = 0.85
             ):
 
         self.FootHelperJoints = self.attachFootHelperJoints(footHelperJoints)
@@ -468,20 +464,16 @@ class RigHumanLeg(RigHumanLimb):
         cmds.parent(ballIK, self.RigPartsGrp)
         cmds.pointConstraint(self.FootHelperJoints[SERigNaming.sFootBallProxy], ballIK, mo = 0)
         cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sBallProxyPVlocator], ballIK)
-        if self.RigSide == SERigEnum.eRigSide.RS_Left:
-            cmds.setAttr(ballIK + '.twist', ballIKTwistLeft)
-        else:
-            cmds.setAttr(ballIK + '.twist', ballIKTwistRight)
+
+        self._adjustIKTwist(ballIK, ikJoints[2])
 
         toeIK = cmds.ikHandle(n = self.Prefix + 'Toe' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = ikJoints[3], ee = ikJoints[4])[0]
         cmds.hide(toeIK)
         cmds.parent(toeIK, self.RigPartsGrp)
         cmds.pointConstraint(self.FootHelperJoints[SERigNaming.sFootToeProxy], toeIK, mo = 0)
         cmds.poleVectorConstraint(self.FootHelperJoints[SERigNaming.sToeProxyPVlocator], toeIK)
-        if self.RigSide == SERigEnum.eRigSide.RS_Left:
-            cmds.setAttr(toeIK + '.twist', toeIKTwistLeft)
-        else:
-            cmds.setAttr(toeIK + '.twist', toeIKTwistRight)
+
+        self._adjustIKTwist(toeIK, ikJoints[3])
 
         # Attach ik joints to current rig component.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
@@ -644,6 +636,30 @@ class RigHumanLeg(RigHumanLimb):
 
         # Create delegate message attributes on top group.
         self.createDelegateAttributes()
+
+
+    def _adjustIKTwist(self, 
+                       ikHandle, 
+                       startJoint, 
+                       startTwistValue = -270, 
+                       endTwistValue = 270, 
+                       twistValueStep = 90,
+                       epsilon = 0.01):
+        isZeroRotation = SEJointHelper.isZeroRotation(startJoint, epsilon = epsilon)
+        if isZeroRotation:
+            print('No need twisting IK value for: %s' % startJoint)
+            return
+
+        twistValues = range(startTwistValue, endTwistValue + twistValueStep, twistValueStep)
+        for twistValue in twistValues:
+            cmds.setAttr(ikHandle + '.twist', twistValue)
+            isZeroRotation = SEJointHelper.isZeroRotation(startJoint, epsilon = epsilon)
+            if isZeroRotation:
+                print('Twisting IK value succeeded for: %s' % startJoint)
+                break
+
+        if isZeroRotation == False:
+            cmds.error('Twisting IK value failed for: %s' % startJoint)
 
 
     def attachFootHelperJoints(

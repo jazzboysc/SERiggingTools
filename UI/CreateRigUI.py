@@ -124,10 +124,6 @@ class mainRigWindow(QtWidgets.QDialog):
         fkLegControlScaleYZ = int(self.fkLegBodyControlScaleYZLine.text())
         fkLegControlScaleYZMultiplier = float(self.fkLegBodyControlScaleYZMultiplierLine.text())
         fkLegControlTransparency = float(self.fkLegControlTransparencyLine.text())
-        ballIKTwistLeft = int(self.ballBodyIKTwistLeftLine.text())
-        ballIKTwistRight = int(self.ballBodyIKTwistRightLine.text())
-        toeIKTwistLeft = int(self.toeBodyIKTwistLeftLine.text())
-        toeIKTwistRight = int(self.toeBodyIKTwistRightLine.text())
         fkArmControlScaleYZ = int(self.fkBodyArmControlScaleYZLine.text())
         fkArmControlScaleYZMultiplier = float(self.fkBodyArmControlScaleYZMultiplierLine.text())
         fkArmControlTransparency = float(self.fkBodyArmControlTransparencyLine.text())
@@ -146,10 +142,6 @@ class mainRigWindow(QtWidgets.QDialog):
                         fkLegControlScaleYZ = fkLegControlScaleYZ,
                         fkLegControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
                         fkLegControlTransparency = fkLegControlTransparency,
-                        ballIKTwistLeft = ballIKTwistLeft,
-                        ballIKTwistRight = ballIKTwistRight,
-                        toeIKTwistLeft = toeIKTwistLeft,
-                        toeIKTwistRight = toeIKTwistRight,
                         fkArmControlScaleYZ = fkArmControlScaleYZ,
                         fkArmControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
                         fkArmControlTransparency = fkArmControlTransparency,
@@ -255,46 +247,6 @@ class mainRigWindow(QtWidgets.QDialog):
         fkLegControlTransparencyLayout.addSpacing(215)
         groupBox.addLayout(fkLegControlTransparencyLayout)
                                                                                                                                                              
-        ballBodyIKTwistLeftLayout = QtWidgets.QHBoxLayout()
-        ballBodyIKTwistLeftLayout.addWidget(QtWidgets.QLabel("BallIKTwistLeft :"))
-        self.ballBodyIKTwistLeftLine = QtWidgets.QLineEdit()
-        self.ballBodyIKTwistLeftLine.setValidator(QtGui.QIntValidator(0, 100))
-        ballBodyIKTwistLeftLayout.addWidget(self.ballBodyIKTwistLeftLine)
-        self.ballBodyIKTwistLeftLine.setText('90')
-        ballBodyIKTwistLeftLayout.addWidget(QtWidgets.QLabel("(0 - 100)"))
-        ballBodyIKTwistLeftLayout.addSpacing(215)
-        groupBox.addLayout(ballBodyIKTwistLeftLayout)
-
-        ballBodyIKTwistRightLayout = QtWidgets.QHBoxLayout()
-        ballBodyIKTwistRightLayout.addWidget(QtWidgets.QLabel("BallIKTwistRightLayout :"))
-        self.ballBodyIKTwistRightLine = QtWidgets.QLineEdit()
-        self.ballBodyIKTwistRightLine.setValidator(QtGui.QIntValidator(0, 270))
-        ballBodyIKTwistRightLayout.addWidget(self.ballBodyIKTwistRightLine)
-        self.ballBodyIKTwistRightLine.setText('270')
-        ballBodyIKTwistRightLayout.addWidget(QtWidgets.QLabel("(0 - 270)"))
-        ballBodyIKTwistRightLayout.addSpacing(215)
-        groupBox.addLayout(ballBodyIKTwistRightLayout)
-
-        toeBodyIKTwistLeftLayout = QtWidgets.QHBoxLayout()
-        toeBodyIKTwistLeftLayout.addWidget(QtWidgets.QLabel("ToeIKTwistLeftLayout :"))
-        self.toeBodyIKTwistLeftLine = QtWidgets.QLineEdit()
-        self.toeBodyIKTwistLeftLine.setValidator(QtGui.QIntValidator(0, 90))
-        toeBodyIKTwistLeftLayout.addWidget(self.toeBodyIKTwistLeftLine)
-        self.toeBodyIKTwistLeftLine.setText('90')
-        toeBodyIKTwistLeftLayout.addWidget(QtWidgets.QLabel("(0 - 90)"))
-        toeBodyIKTwistLeftLayout.addSpacing(215)
-        groupBox.addLayout(toeBodyIKTwistLeftLayout)
-
-        toeBodyIKTwistRightLayout = QtWidgets.QHBoxLayout()
-        toeBodyIKTwistRightLayout.addWidget(QtWidgets.QLabel("ToeIKTwistRightLayout :"))
-        self.toeBodyIKTwistRightLine = QtWidgets.QLineEdit()
-        self.toeBodyIKTwistRightLine.setValidator(QtGui.QIntValidator(0, 0))
-        toeBodyIKTwistRightLayout.addWidget(self.toeBodyIKTwistRightLine)
-        self.toeBodyIKTwistRightLine.setText('0')
-        toeBodyIKTwistRightLayout.addWidget(QtWidgets.QLabel("(0 - 0)"))
-        toeBodyIKTwistRightLayout.addSpacing(215)
-        groupBox.addLayout(toeBodyIKTwistRightLayout)
-
         fkBodyArmControlScaleYZLayout = QtWidgets.QHBoxLayout()
         fkBodyArmControlScaleYZLayout.addWidget(QtWidgets.QLabel("FKArmControlScaleYZ :"))
         self.fkBodyArmControlScaleYZLine = QtWidgets.QLineEdit()
@@ -306,7 +258,7 @@ class mainRigWindow(QtWidgets.QDialog):
         groupBox.addLayout(fkBodyArmControlScaleYZLayout)
 
         fkBodyArmControlScaleYZMultiplierLayout = QtWidgets.QHBoxLayout()
-        fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FKArmControlScaleYZMultiplierLayout :"))
+        fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FKArmControlScaleYZMultiplier :"))
         self.fkBodyArmControlScaleYZMultiplierLine = QtWidgets.QLineEdit()
         self.fkBodyArmControlScaleYZMultiplierLine.setValidator(QtGui.QDoubleValidator(0.0, 1.0, 4.0))
         fkBodyArmControlScaleYZMultiplierLayout.addWidget(self.fkBodyArmControlScaleYZMultiplierLine)

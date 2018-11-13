@@ -82,3 +82,19 @@ def createNewParentJoint(child, alignNewParentToOldParent = False):
             cmds.parent(newParent, oldParent)
 
     return newParent
+
+def isZeroRotation(joint, epsilon = 0.0001):
+    res = False
+
+    if cmds.objExists(joint):
+        rx = cmds.getAttr(joint + '.rotateX')
+        ry = cmds.getAttr(joint + '.rotateY')
+        rz = cmds.getAttr(joint + '.rotateZ')
+        dx = abs(rx)
+        dy = abs(ry)
+        dz = abs(rz)
+
+        if dx <= epsilon and dy <= epsilon and dz <= epsilon:
+            res = True
+
+    return res

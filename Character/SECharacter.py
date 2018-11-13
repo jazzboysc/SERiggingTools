@@ -154,10 +154,6 @@ class RigBipedCharacter():
                                 fkLegControlScaleYZ,
                                 fkLegControlScaleYZMultiplier,
                                 fkLegControlTransparency,
-                                ballIKTwistLeft,
-                                ballIKTwistRight,
-                                toeIKTwistLeft,
-                                toeIKTwistRight,
                                 fkArmControlScaleYZ,
                                 fkArmControlScaleYZMultiplier,
                                 fkArmControlTransparency,
@@ -227,10 +223,6 @@ class RigBipedCharacter():
                             fkLegControlScaleYZ,
                             fkLegControlScaleYZMultiplier,
                             fkLegControlTransparency,
-                            ballIKTwistLeft,
-                            ballIKTwistRight,
-                            toeIKTwistLeft,
-                            toeIKTwistRight,
                             fkArmControlScaleYZ,
                             fkArmControlScaleYZMultiplier,
                             fkArmControlTransparency,
@@ -268,11 +260,7 @@ class RigBipedCharacter():
                 rigScale = sceneScale,
                 fkControlScaleYZ = fkLegControlScaleYZ,
                 fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
-                fkControlTransparency = fkLegControlTransparency,
-                ballIKTwistLeft = ballIKTwistLeft,
-                ballIKTwistRight = ballIKTwistRight,
-                toeIKTwistLeft = toeIKTwistLeft,
-                toeIKTwistRight = toeIKTwistRight
+                fkControlTransparency = fkLegControlTransparency
                 )
         self.LeftLeg = leftLeg
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftLeg.TopGrp, 'LeftLegComponent', 'ComponentOwner')
@@ -288,11 +276,7 @@ class RigBipedCharacter():
                 rigScale = sceneScale,
                 fkControlScaleYZ = fkLegControlScaleYZ,
                 fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
-                fkControlTransparency = fkLegControlTransparency,
-                ballIKTwistLeft = ballIKTwistLeft,
-                ballIKTwistRight = ballIKTwistRight,
-                toeIKTwistLeft = toeIKTwistLeft,
-                toeIKTwistRight = toeIKTwistRight
+                fkControlTransparency = fkLegControlTransparency
                 )
         self.RightLeg = rightLeg
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightLeg.TopGrp, 'RightLegComponent', 'ComponentOwner')
