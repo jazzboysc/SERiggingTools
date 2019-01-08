@@ -351,5 +351,15 @@ def getCharacterDeformationGroup(characterGroup):
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
     
-        
+
+def bakeSlaveJointAnimation(characterGroup, timeRange):
+    deformationGrp = getCharacterDeformationGroup(characterGroup)
+    if deformationGrp:
+        slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
+        cmds.bakeResults(slaveJoints, simulation = True, t = timeRange, sampleBy = 1,
+                         oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True,
+                         sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
+                         bakeOnOverrideLayer = False, minimizeRotation = True, controlPoints = False, shape = True)
+
+        cmds.select(cl = 1)
 
