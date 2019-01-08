@@ -45,7 +45,8 @@ def getRigCharacterName(rigCharacter):
         return name
     else:
         return None            
-        
+
+# Return the actual rig control of current rig control group.
 def getRigControlObjectFromGroup(rigControl):
     if cmds.objExists(rigControl):
         controlObjectLink = cmds.listConnections(rigControl + '.ControlObject')
@@ -56,6 +57,7 @@ def getRigControlObjectFromGroup(rigControl):
     else:
         return None 
 
+# Return the owner rig component group of current rig control group.
 def getControlOwner(rigControl):
     if cmds.objExists(rigControl):
         ControlOwner = cmds.listConnections(rigControl + '.ControlOwner')
@@ -100,7 +102,7 @@ def getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex):
             index = getRigControlIndex(control[0])
 
             if rs == rigSideStr and rt == rigTypeStr and index == rigControlIndex:
-                controlObject = getRigControlObjectFromGroup(control[0])                
+                controlObject = getRigControlObjectFromGroup(control[0])
                 controlComponent = getControlOwner(control[0])
                 
                 controlCharacter = None

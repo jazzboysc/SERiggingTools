@@ -31,6 +31,8 @@ class RigBase():
         self.Global01Control = None
         self.Global02Control = None
 
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.DeformationGrp, SERigNaming.sDeformationGroupAttr, SERigNaming.sDeformationGroupOwnerAttr)
+
         # Add custom attributes for the TopGrp object.
         for attr in [characterNameAttr, sceneObjectTypeAttr]:
             cmds.addAttr(self.TopGrp, ln = attr, dt = 'string')
@@ -135,6 +137,7 @@ class RigBase():
             cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
         self.MainIKFKAutoHideAts = mainIKFKAutoHideAts
+
 
     def getGlobalScaleAttrName(self):
         if self.Global01Control:

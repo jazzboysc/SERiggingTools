@@ -26,6 +26,9 @@ sPoleVector         = 'PV'
 sSync               = 'Sync'
 sDeformationGroup   = 'DeformationGrp'
 
+sDeformationGroupAttr      = 'DeformationGroup'
+sDeformationGroupOwnerAttr = 'DeformationGroupOwner'
+
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
 s_BuilderGroup       = '_' + sBuilderGroup
