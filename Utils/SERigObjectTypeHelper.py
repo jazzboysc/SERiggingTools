@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+from ..Base import SERigNaming
 
 def createRigObjectTypeAttr(rigObjectTopGroup, rigObjectTypeNodeStr):
     rigObjectTypeNode = cmds.createNode(rigObjectTypeNodeStr)
@@ -147,6 +148,16 @@ def listRigCharacters(includeNamespace = False):
             characterNames.append(characterName)
 
     return characterNames
+
+def listRigCharacterGroups():
+    characterGroups = []
+    links = cmds.ls(type = 'RigCharacterType')
+    for link in links:
+        character = cmds.listConnections(link + '.message')
+        if character:
+            characterGroups.append(character[0])
+
+    return characterGroups
 
 def listRigCharacterControls(characterName):
     characterControls = [{}, {}]
@@ -327,15 +338,18 @@ def setOneRigTrans(control, translateX, translateY, translateZ):
 
 def hideCharacterIKFKByName(characterName , bIsHide , attrName):
     print characterName , bIsHide
-    if characterName == "None":return
+    if characterName == None: return
     mainCtrl = getRigGlobalControlObject(characterName , u'RS_Center', u'RT_Global', 0)
     print mainCtrl  
     if mainCtrl:
         cmds.setAttr(mainCtrl + '.'+ attrName, bIsHide)
 
-
-            
-            
-        
+def getCharacterDeformationGroup(characterGroup):
+    if cmds.objExists(characterGroup):
+        return cmds.listConnections(characterGroup + '.' + SERigNaming.sDeformationGroupAttr)[0]
+    else:
+        cmds.warning('Cannot find character group: ' + characterGroup)
+        return None
+    
         
 
