@@ -192,14 +192,14 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -233,7 +233,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -262,14 +262,14 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -296,14 +296,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string>QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -333,14 +333,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -374,7 +374,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -410,7 +410,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -446,7 +446,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -574,14 +574,14 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -608,14 +608,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -636,14 +636,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -670,14 +670,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -711,7 +711,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -747,7 +747,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -783,7 +783,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -825,7 +825,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -886,14 +886,14 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 7px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -914,14 +914,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 7px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -942,14 +942,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 7px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -970,14 +970,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -998,14 +998,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1026,14 +1026,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1054,14 +1054,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1082,14 +1082,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1110,14 +1110,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1138,14 +1138,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1166,14 +1166,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1194,14 +1194,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1222,14 +1222,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1250,14 +1250,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1278,14 +1278,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1306,14 +1306,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1334,14 +1334,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1362,14 +1362,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1390,14 +1390,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1425,7 +1425,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1455,7 +1455,7 @@ border-radius: 7px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1485,7 +1485,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1515,7 +1515,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1545,7 +1545,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1575,7 +1575,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1605,7 +1605,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1635,7 +1635,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1665,7 +1665,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1695,7 +1695,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1725,7 +1725,7 @@ border-radius: 7px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1755,7 +1755,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1785,7 +1785,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1815,7 +1815,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1845,7 +1845,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1875,7 +1875,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1905,7 +1905,7 @@ border-radius: 7px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1935,7 +1935,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1965,7 +1965,7 @@ border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -1994,17 +1994,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(255, 255, 0, 100);
+background-color: rgba(255, 255, 255, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color: rgba(255, 255, 0, 200); 
+background-color: rgba(255, 255, 255, 200); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255, 150);
 border-style: inset; }
 	</string>
     </property>
@@ -2029,17 +2029,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(255, 255, 0, 100);
+background-color: rgba(255, 255, 255, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color: rgba(255, 255, 0, 200); 
+background-color: rgba(255, 255, 255, 200); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255, 150);
 border-style: inset; }
 	</string>
     </property>
@@ -2064,17 +2064,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(255, 255, 0, 100);
+background-color: rgba(255, 255, 255, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color: rgba(255, 255, 0, 200); 
+background-color: rgba(255, 255, 255, 200); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255, 150);
 border-style: inset; }
 	</string>
     </property>
@@ -2099,17 +2099,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(255, 255, 0, 100);
+background-color: rgba(255, 255, 255, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color: rgba(255, 255, 0, 200); 
+background-color: rgba(255, 255, 255, 200); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255, 150);
 border-style: inset; }
 	</string>
     </property>
@@ -2134,17 +2134,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(255, 255, 0, 100);
+background-color: rgba(255, 255, 255, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color: rgba(255, 255, 0, 200); 
+background-color: rgba(255, 255, 255, 200); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255, 150);
 border-style: inset; }
 	</string>
     </property>
@@ -2169,17 +2169,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(255, 255, 0, 100);
+background-color: rgba(255, 255, 255, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color: rgba(255, 255, 0, 200); 
+background-color: rgba(255, 255, 255, 200); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255, 150);
 border-style: inset; }
 	</string>
     </property>
@@ -2204,17 +2204,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(255, 255, 0, 100);
+background-color: rgba(255, 255, 255, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color: rgba(255, 255, 0, 200); 
+background-color: rgba(255, 255, 255, 200); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255, 150);
 border-style: inset; }
 	</string>
     </property>
@@ -2239,17 +2239,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(255, 255, 0, 100);
+background-color: rgba(255, 255, 255, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color: rgba(255, 255, 0, 200); 
+background-color: rgba(255, 255, 255, 200); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255, 150);
 border-style: inset; }
 	</string>
     </property>
@@ -2268,17 +2268,17 @@ border-style: inset; }
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,255,0,80);
+background-color: rgba(255,255,255,80);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,255,0,255); 
+background-color:rgba(255,255,255,255); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -2296,17 +2296,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,255,0,80);
+background-color: rgba(255,255,255,80);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,255,0,255); 
+background-color:rgba(255,255,255,255); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -2324,17 +2324,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,255,0,80);
+background-color: rgba(255,255,255,80);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,255,0,255); 
+background-color:rgba(255,255,255,255); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -2352,17 +2352,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,255,0,80);
+background-color: rgba(255,255,255,80);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,255,0,255); 
+background-color:rgba(255,255,255,255); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -2380,17 +2380,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,255,0,80);
+background-color: rgba(255,255,255,80);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,255,0,255); 
+background-color:rgba(255,255,255,255); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -2408,17 +2408,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,255,0,80);
+background-color: rgba(255,255,255,80);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,255,0,255); 
+background-color:rgba(255,255,255,255); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -2436,17 +2436,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,255,0,80);
+background-color: rgba(255,255,255,80);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,255,0,255); 
+background-color:rgba(255,255,255,255); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -2464,17 +2464,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,255,0,80);
+background-color: rgba(255,255,255,80);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,255,0,255); 
+background-color:rgba(255,255,255,255); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(255, 0, 127 ,150);
+background-color: rgba(255, 255, 255,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -2492,14 +2492,14 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(0,0,255,100);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -2527,7 +2527,7 @@ border-radius: 15px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255); 
+background-color:rgba(255,0,0,180); 
 color: black;}
 QPushButton:pressed{
 background-color: rgba(255, 0, 127 ,150);
@@ -3410,17 +3410,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(170,85,255,150);
+background-color: rgba(255,0,0,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255);
+background-color:rgba(255,0,0,180);
 color: black;}
 QPushButton:pressed{
-background-color: rgba(170, 85, 255 ,200);
+background-color: rgba(255, 0, 127 ,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -3444,17 +3444,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(170,85,255,150);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(170, 85, 255 ,200);
+background-color: rgba(255, 0, 127 ,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -3481,17 +3481,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(170,85,255,150);
+background-color: rgba(255,0,0,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255);
+background-color:rgba(255,0,0,180);
 color: black;}
 QPushButton:pressed{
-background-color: rgba(170, 85, 255 ,200);
+background-color: rgba(255, 0, 127 ,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -3518,17 +3518,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(170,85,255,150);
+background-color: rgba(0, 0, 128, 100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(170, 85, 255 ,200);
+background-color: rgba(255, 0, 127 ,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -3555,17 +3555,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(170,85,255,150);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(170, 85, 255 ,200);
+background-color: rgba(255, 0, 127 ,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -3592,17 +3592,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(170,85,255,150);
+background-color: rgba(255,0,0,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 5px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255);
+background-color:rgba(255,0,0,180);
 color: black;}
 QPushButton:pressed{
-background-color: rgba(170, 85, 255 ,200);
+background-color: rgba(255, 0, 127 ,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -3629,17 +3629,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(170,85,255,150);
+background-color: rgba(255,0,0,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 25px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(255,0,0,255);
+background-color:rgba(255,0,0,180);
 color: black;}
 QPushButton:pressed{
-background-color: rgba(170, 85, 255 ,200);
+background-color: rgba(255, 0, 127 ,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
@@ -3666,17 +3666,17 @@ border-style: inset; }</string>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton{
-background-color: rgba(170,85,255,150);
+background-color: rgba(0,0,128,100);
 border-style: outset;
 border-width: 0px;
 border-radius: 25px;
 border-color: red;
 }
 QPushButton:hover{
-background-color:rgba(0,0,255,255); 
+background-color:rgba(0,0,128,180); 
 color: black;}
 QPushButton:pressed{
-background-color: rgba(170, 85, 255 ,200);
+background-color: rgba(255, 0, 127 ,150);
 border-style: inset; }</string>
     </property>
     <property name="text">
