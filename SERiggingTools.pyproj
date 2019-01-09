@@ -66,6 +66,7 @@
     <Compile Include="UI\CreateRigUI.py" />
     <Compile Include="UI\UIConfig.py" />
     <Compile Include="UI\__init__.py" />
+    <Compile Include="Utils\SEBakeAnimationHelper.py" />
     <Compile Include="Utils\SEJointHelper.py" />
     <Compile Include="Utils\SEMathHelper.py">
       <SubType>Code</SubType>
