@@ -2,7 +2,19 @@ import maya.cmds as cmds
 from . import SERigObjectTypeHelper
 from ..Base import SERigNaming
 
-def bakeSlaveJointAnimation(characterGroup, timeRange = (0, 0), useTimeSliderRange = True):
+def bakeSlaveJointAnimation(characterGroup, timeRange = (0, 0), useTimeSliderRange = True, importReference = True, reloadReference = False):
+    refs = cmds.file(q = True, r = True)
+
+    if reloadReference:
+        for ref in refs:
+            curRN = cmds.referenceQuery(ref, referenceNode = True)
+            cmds.file(ref, loadReferenceDepth = 'asPrefs', loadReference = curRN)
+    
+    if importReference:
+        for ref in refs:
+            curRN = cmds.referenceQuery(ref, referenceNode = True)
+            cmds.file(importReference = True, referenceNode = curRN)
+
     deformationGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
     if deformationGrp:
         slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
