@@ -1,22 +1,46 @@
 import maya.cmds as cmds
+import pymel.core as pm
+
 from . import SERigObjectTypeHelper
 from ..Base import SERigNaming
 
-def bakeSlaveJointAnimation(characterGroup, timeRange = (0, 0), useTimeSliderRange = True, importReference = True, reloadReference = False):
+def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, timeRange = (0, 0), useTimeSliderRange = True, 
+                              importReference = True, reloadReference = False):
+    # Get selected rig character and its namespace.
+    selected = cmds.ls(sl = True)
+    if selected:
+        selected = selected[0]
+    else:
+        print('Please select a rig character top group.')
+        return
+
+    curNS = ''
+    characterGroup = ''
+    if SERigObjectTypeHelper.isRigCharacterGroup(selected):
+        curNS = pm.selected()[0].namespace()
+        characterGroup = selected
+    else:
+        print('Please select a rig character top group.')
+        return
+    
+    # Query all the rig reference.
     refs = cmds.file(q = True, r = True)
 
+    # Possibly reload reference.
     if reloadReference:
         for ref in refs:
             curRN = cmds.referenceQuery(ref, referenceNode = True)
             cmds.file(ref, loadReferenceDepth = 'asPrefs', loadReference = curRN)
     
+    # Possibly import reference.
     if importReference:
         for ref in refs:
             curRN = cmds.referenceQuery(ref, referenceNode = True)
             cmds.file(importReference = True, referenceNode = curRN)
 
+    # Possibly bake slave joints animation.
     deformationGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
-    if deformationGrp:
+    if deformationGrp and bakeSlaveJoints:
         slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
         
         newTimeRange = timeRange
@@ -29,3 +53,7 @@ def bakeSlaveJointAnimation(characterGroup, timeRange = (0, 0), useTimeSliderRan
                          oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True,
                          sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
                          bakeOnOverrideLayer = False, minimizeRotation = True, controlPoints = False, shape = True)
+
+    if bakeBlendshapes:
+        blendShapes = SERigObjectTypeHelper.getSpecificObjectsUnderNamespace(type = 'blendShape', namespace = curNS)
+        print(blendShapes)

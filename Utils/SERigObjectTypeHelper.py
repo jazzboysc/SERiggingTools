@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import pymel.core as pm
 from ..Base import SERigNaming
 
 def createRigObjectTypeAttr(rigObjectTopGroup, rigObjectTypeNodeStr):
@@ -351,3 +352,33 @@ def getCharacterDeformationGroup(characterGroup):
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
     
+def isRigCharacterGroup(inputObject):
+    if cmds.objExists(inputObject):
+        try:
+            rigObjectTypeNode = cmds.listConnections(inputObject + '.RigObjectType')[0]
+            if cmds.nodeType(rigObjectTypeNode) == 'RigCharacterType':
+                return True
+            else:
+                # This is not a rig character.
+                return False
+        except:
+            # Attribute doesn't exist.
+            return False
+    else:
+        # Object doesn't exist.
+        return False
+
+def getSpecificObjectsUnderNamespace(type = '', namespace = ''):
+    res = []
+
+    allObjects = cmds.ls(l = True)
+    for obj in allObjects:
+       if cmds.nodeType(obj) == type:
+           cmds.select(obj)
+           objNS = pm.selected()[0].namespace()
+
+           if objNS == namespace:
+               res.append(obj)
+
+    cmds.select(cl = True)
+    return res
