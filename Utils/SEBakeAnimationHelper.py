@@ -38,22 +38,31 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
             curRN = cmds.referenceQuery(ref, referenceNode = True)
             cmds.file(importReference = True, referenceNode = curRN)
 
-    # Possibly bake slave joints animation.
+
+    newTimeRange = timeRange
+    if useTimeSliderRange:
+        minTime = cmds.playbackOptions(q = True, minTime = True)
+        maxTime = cmds.playbackOptions(q = True, maxTime = True)
+        newTimeRange = (minTime, maxTime)
+
+    # Possibly bake slave joints' animation.
     deformationGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
     if deformationGrp and bakeSlaveJoints:
         slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
         
-        newTimeRange = timeRange
-        if useTimeSliderRange:
-            minTime = cmds.playbackOptions(q = True, minTime = True)
-            maxTime = cmds.playbackOptions(q = True, maxTime = True)
-            newTimeRange = (minTime, maxTime)
-
         cmds.bakeResults(slaveJoints, simulation = True, t = newTimeRange, sampleBy = 1,
                          oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True,
                          sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
                          bakeOnOverrideLayer = False, minimizeRotation = True, controlPoints = False, shape = True)
 
+    # Possibly bake blendshapes' animation.
     if bakeBlendshapes:
         blendShapes = SERigObjectTypeHelper.getSpecificObjectsUnderNamespace(type = 'blendShape', namespace = curNS)
-        print(blendShapes)
+        
+        for bs in blendShapes:
+            weightAttrNames = cmds.listAttr(bs + '.weight', m = True)
+
+            cmds.bakeResults(bs, at = weightAttrNames, simulation = True, t = newTimeRange, sampleBy = 1, 
+                             oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True, 
+                             sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
+                             bakeOnOverrideLayer = False, minimizeRotation = True)
