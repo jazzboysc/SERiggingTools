@@ -19,6 +19,8 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
     if SERigObjectTypeHelper.isRigCharacterGroup(selected):
         curNS = pm.selected()[0].namespace()
         characterGroup = selected
+        print('Selected namespace:' + curNS)
+        print('Selected rig character group:' + characterGroup)
     else:
         print('Please select a rig character top group.')
         return
@@ -30,13 +32,19 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
     if reloadReference:
         for ref in refs:
             curRN = cmds.referenceQuery(ref, referenceNode = True)
-            cmds.file(ref, loadReferenceDepth = 'asPrefs', loadReference = curRN)
+            rnNamespace = cmds.referenceQuery(curRN, namespace = True)
+            rnNamespace = rnNamespace[1:] + ':'
+            if rnNamespace == curNS:
+                cmds.file(ref, loadReferenceDepth = 'asPrefs', loadReference = curRN)
     
     # Possibly import reference.
     if importReference:
         for ref in refs:
             curRN = cmds.referenceQuery(ref, referenceNode = True)
-            cmds.file(importReference = True, referenceNode = curRN)
+            rnNamespace = cmds.referenceQuery(curRN, namespace = True)
+            rnNamespace = rnNamespace[1:] + ':'
+            if rnNamespace == curNS:
+                cmds.file(importReference = True, referenceNode = curRN)
 
 
     newTimeRange = timeRange

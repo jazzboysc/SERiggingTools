@@ -347,7 +347,12 @@ def hideCharacterIKFKByName(characterName , bIsHide , attrName):
 
 def getCharacterDeformationGroup(characterGroup):
     if cmds.objExists(characterGroup):
-        return cmds.listConnections(characterGroup + '.' + SERigNaming.sDeformationGroupAttr)[0]
+        try:
+            res = cmds.listConnections(characterGroup + '.' + SERigNaming.sDeformationGroupAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find character group: ' + characterGroup + ' deformation group')
+            return None
     else:
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
