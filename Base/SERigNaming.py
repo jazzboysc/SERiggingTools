@@ -28,6 +28,8 @@ sDeformationGroup   = 'DeformationGrp'
 
 sDeformationGroupAttr      = 'DeformationGroup'
 sDeformationGroupOwnerAttr = 'DeformationGroupOwner'
+sModelGroupAttr            = 'ModelGroup'
+sModelGroupOwnerAttr       = 'ModelGroupOwner'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup

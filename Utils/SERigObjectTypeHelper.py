@@ -356,6 +356,18 @@ def getCharacterDeformationGroup(characterGroup):
     else:
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
+
+def getCharacterModelGroup(characterGroup):
+    if cmds.objExists(characterGroup):
+        try:
+            res = cmds.listConnections(characterGroup + '.' + SERigNaming.sModelGroupAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find character group: ' + characterGroup + ' model group')
+            return None
+    else:
+        cmds.warning('Cannot find character group: ' + characterGroup)
+        return None
     
 def isRigCharacterGroup(inputObject):
     if cmds.objExists(inputObject):
