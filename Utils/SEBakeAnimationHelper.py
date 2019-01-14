@@ -2,10 +2,11 @@ import maya.cmds as cmds
 import pymel.core as pm
 
 from . import SERigObjectTypeHelper
+from . import SEJointHelper
 from ..Base import SERigNaming
 
 def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, timeRange = (0, 0), useTimeSliderRange = True, 
-                              importReference = True, reloadReference = False, createExportGroup = True):
+                              importReference = True, reloadReference = False, clearRig = True):
     # Get selected rig character and its namespace.
     selected = cmds.ls(sl = True)
     if selected:
@@ -75,11 +76,23 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
                              sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
                              bakeOnOverrideLayer = False, minimizeRotation = True)
 
-    if deformationGrp and importReference and createExportGroup:
-        cmds.parent(deformationGrp, w = True)
+        #cmds.bakeResults(blendShapes, simulation = True, t = newTimeRange, sampleBy = 1, 
+        #                 oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True,
+        #                 sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
+        #                 bakeOnOverrideLayer = False, minimizeRotation = True)
+
+    if deformationGrp and importReference and clearRig:
+        slaveRoot = SEJointHelper.getFirstChildJoint(deformationGrp)
+        if slaveRoot:
+            cmds.parent(slaveRoot, w = True)
+        else:
+            cmds.warning('Slave joint root not found for:' + deformationGrp)
 
         modelGrp = SERigObjectTypeHelper.getCharacterModelGroup(characterGroup)
         if modelGrp:
-            cmds.parent(modelGrp, w = True)
-            cmds.group(deformationGrp, modelGrp, name = curNS + 'ExportGrp')
+            modelRootGrp = SEJointHelper.getFirstChildGroup(modelGrp)
+            if modelRootGrp:
+                cmds.parent(modelRootGrp, w = True)
+            else:
+                cmds.warning('Model root not found for:' + modelGrp)
             cmds.delete(characterGroup)

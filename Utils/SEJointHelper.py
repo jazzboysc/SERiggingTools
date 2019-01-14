@@ -51,6 +51,17 @@ def getFirstChildJoint(parent):
 
     return childJoint
 
+def getFirstChildGroup(parent):
+
+    # Find child group.
+    childGroup = None
+
+    childGroupList = cmds.listRelatives(parent, c = 1, type = 'transform')
+    if childGroupList != None:
+        childGroup = childGroupList[0]
+
+    return childGroup
+
 def getFirstParentJoint(child):
 
     parentJoint = None
