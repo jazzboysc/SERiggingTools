@@ -61,20 +61,23 @@ class RigBipedCharacterDeform():
         preParent = None
         for masterJnt in masterJnts:
 
-            cmds.select(cl = 1)
-            curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
-            cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
-            cmds.makeIdentity(curSlaveJoint, apply = True)
+            if cmds.objExists(masterJnt):
+                cmds.select(cl = 1)
+                curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+                cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+                cmds.makeIdentity(curSlaveJoint, apply = True)
         
-            pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
-            oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+                pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+                oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-            curSlaveJntsInfo = (curSlaveJoint, pc, oc)
-            slaveJnts.append(curSlaveJntsInfo)
+                curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+                slaveJnts.append(curSlaveJntsInfo)
 
-            if preParent:
-                cmds.parent(curSlaveJoint, preParent)
-            preParent = curSlaveJoint
+                if preParent:
+                    cmds.parent(curSlaveJoint, preParent)
+                preParent = curSlaveJoint
+            else:
+                cmds.warning('Cannot find master joint:' + masterJnt)
 
         return slaveJnts
 
@@ -84,16 +87,19 @@ class RigBipedCharacterDeform():
 
         for masterJnt in masterJnts:
 
-            cmds.select(cl = 1)
-            curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
-            cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
-            cmds.makeIdentity(curSlaveJoint, apply = True)
+            if cmds.objExists(masterJnt):
+                cmds.select(cl = 1)
+                curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+                cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+                cmds.makeIdentity(curSlaveJoint, apply = True)
         
-            pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
-            oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+                pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+                oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-            curSlaveJntsInfo = (curSlaveJoint, pc, oc)
-            slaveJnts.append(curSlaveJntsInfo)
+                curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+                slaveJnts.append(curSlaveJntsInfo)
+            else:
+                cmds.warning('Cannot find master joint:' + masterJnt)
 
         return slaveJnts
 
