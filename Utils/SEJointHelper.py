@@ -109,3 +109,37 @@ def isZeroRotation(joint, epsilon = 0.0001):
             res = True
 
     return res
+
+def createJointAlongCurve(curve, jointCount = 2, jointName = ''):
+    joints = []
+
+    if cmds.objExists(curve):
+        if jointCount < 2:
+            jointCount = 2
+
+        preParent = None
+        for i in range(0, jointCount):
+            cmds.select(cl = True)
+            if jointName == '':
+                curJoint = cmds.joint()
+            else:
+                curJoint = cmds.joint(n = jointName + str(i))
+            motionPath = cmds.pathAnimation(curJoint, c = curve, fractionMode = True)
+            cmds.cutKey(motionPath + '.u', time = ())
+            cmds.setAttr(motionPath + '.u', i*(1.0/(jointCount - 1)))
+            cmds.delete(curJoint + '.tx', icn = True)
+            cmds.delete(curJoint + '.ty', icn = True)
+            cmds.delete(curJoint + '.tz', icn = True)
+            cmds.delete(motionPath)
+
+            if preParent:
+                cmds.parent(curJoint, preParent)
+
+            preParent = curJoint
+            joints.append(curJoint)
+
+        cmds.joint(joints[0], e = True, oj = 'xyz', sao = 'yup', ch = True, zso = True)
+    else:
+        cmds.warning('Cannot find curve:' + curve)
+
+    return joints
