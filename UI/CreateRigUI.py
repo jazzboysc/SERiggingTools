@@ -182,6 +182,12 @@ class mainRigWindow(QtWidgets.QDialog):
         pageHeadConfig.setLayout(headConfigTabPageLayout)
         tabs.addTab(pageHeadConfig, "Head Configuration")
 
+        # Weapon config tab page.
+        pageWeaponConfig = QtWidgets.QWidget()
+        weaponConfigTabPageLayout = QtWidgets.QVBoxLayout()
+        pageWeaponConfig.setLayout(weaponConfigTabPageLayout)
+        tabs.addTab(pageWeaponConfig, "Weapon Configuration")
+
         # Body config tab page layout.
         upperBodyUpperLayout = QtWidgets.QHBoxLayout()
         upperBodyUpperLayout.addWidget(QtWidgets.QLabel("Upper Arm Twist :"))
