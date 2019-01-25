@@ -14,6 +14,8 @@ import cPickle
 
 from ..Character import SECharacter
 
+#http://doc.qt.io/qt-5/qtwidgets-dialogs-tabdialog-example.html
+
 import UIConfig
 #"E:/Users/admin/Documents/GitHub/SERiggingTools/UI/LoadRiggingUI.ui"
 
@@ -54,6 +56,9 @@ def getMayaWindow():
     ptr = mui.MQtUtil.mainWindow()
     return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
 
+#class BodyConfigTab(QtWidgets.QWidget):
+#    def __init__(self, parent = getMayaWindow()):
+
 class mainRigWindow(QtWidgets.QDialog):
     """docstring for mainWindow"""
     def __init__(self, parent = getMayaWindow()):
@@ -71,7 +76,14 @@ class mainRigWindow(QtWidgets.QDialog):
         mainLayout = QtWidgets.QVBoxLayout(self)
         mainLayout.addWidget(self.descLabel)
         mainLayout.addLayout(TextLayoutMainProjectPath)
-        self.SetBuilderConfigWeight(mainLayout)
+
+        separator = QtWidgets.QFrame()
+        separator.setFrameShape(QtWidgets.QFrame.HLine)
+        separator.setFrameShadow(QtWidgets.QFrame.Sunken)
+
+        mainLayout.addWidget(separator)
+
+        self.createBuilderConfigLayout(mainLayout)
 
         self.connect(self.SetMainProjectPathButton, QtCore.SIGNAL("clicked()"), self.selectMainProjectPath)
 
@@ -152,8 +164,22 @@ class mainRigWindow(QtWidgets.QDialog):
         # Close the create rig window.
         self.close()
 
-    def SetBuilderConfigWeight(self, mainLayout ):            
-        groupBox = QtWidgets.QVBoxLayout()
+    def createBuilderConfigLayout(self, mainLayout):
+
+        tabs = QtWidgets.QTabWidget()
+
+        # Body config tab page.
+        pageBodyConfig = QtWidgets.QWidget()
+        bodyConfigTabPageLayout = QtWidgets.QVBoxLayout()
+        pageBodyConfig.setLayout(bodyConfigTabPageLayout)
+        tabs.addTab(pageBodyConfig, "Body Configuration")
+
+        # Head config tab page.
+        pageHeadConfig = QtWidgets.QWidget()
+        headConfigTabPageLayout = QtWidgets.QVBoxLayout()
+        pageHeadConfig.setLayout(headConfigTabPageLayout)
+        tabs.addTab(pageHeadConfig, "Head Configuration")
+
         upperBodyUpperLayout = QtWidgets.QHBoxLayout()
         upperBodyUpperLayout.addWidget(QtWidgets.QLabel("UpperArmTwist :"))
         self.upperBodyUpperLine = QtWidgets.QLineEdit()
@@ -162,7 +188,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.upperBodyUpperLine.setText('2')
         upperBodyUpperLayout.addWidget(QtWidgets.QLabel("(1 - 5)"))
         upperBodyUpperLayout.addSpacing(220)
-        groupBox.addLayout(upperBodyUpperLayout)
+        bodyConfigTabPageLayout.addLayout(upperBodyUpperLayout)
 
         upperBodyLowerLayout = QtWidgets.QHBoxLayout()
         upperBodyLowerLayout.addWidget(QtWidgets.QLabel("LowerArmTwist :"))
@@ -172,7 +198,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.upperBodyLowerLine.setText('2')
         upperBodyLowerLayout.addWidget(QtWidgets.QLabel("(1 - 5)"))
         upperBodyLowerLayout.addSpacing(220)
-        groupBox.addLayout(upperBodyLowerLayout)
+        bodyConfigTabPageLayout.addLayout(upperBodyLowerLayout)
 
         lowerBodyUpperLayout = QtWidgets.QHBoxLayout()
         lowerBodyUpperLayout.addWidget(QtWidgets.QLabel("UpperLegTwist :"))
@@ -182,7 +208,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.lowerBodyUpperLine.setText('2')
         lowerBodyUpperLayout.addWidget(QtWidgets.QLabel("(1 - 5)"))
         lowerBodyUpperLayout.addSpacing(220)
-        groupBox.addLayout(lowerBodyUpperLayout)
+        bodyConfigTabPageLayout.addLayout(lowerBodyUpperLayout)
 
         lowerBodyLowerLayout = QtWidgets.QHBoxLayout()
         lowerBodyLowerLayout.addWidget(QtWidgets.QLabel("LowerLegTwist :"))
@@ -192,7 +218,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.lowerBodyLowerLine.setText('1')
         lowerBodyLowerLayout.addWidget(QtWidgets.QLabel("(1 - 5)"))
         lowerBodyLowerLayout.addSpacing(220)
-        groupBox.addLayout(lowerBodyLowerLayout)
+        bodyConfigTabPageLayout.addLayout(lowerBodyLowerLayout)
 
         spineOptionLayout = QtWidgets.QHBoxLayout()
         spineOptionLayout.addWidget(QtWidgets.QLabel("createSimpleSpine:"))
@@ -205,7 +231,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.createSpineFKSystemCheckBox.setChecked(True)
         spineOptionLayout.addWidget(self.createSpineFKSystemCheckBox)
         spineOptionLayout.addSpacing(270)
-        groupBox.addLayout(spineOptionLayout)
+        bodyConfigTabPageLayout.addLayout(spineOptionLayout)
 
         mainBodyCtrlOffsetLayout = QtWidgets.QHBoxLayout()
         mainBodyCtrlOffsetLayout.addWidget(QtWidgets.QLabel("MainCtrlOffset :"))
@@ -215,7 +241,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.mainBodyCtrlOffsetLine.setText('30')
         mainBodyCtrlOffsetLayout.addWidget(QtWidgets.QLabel("(0 - 50)"))
         mainBodyCtrlOffsetLayout.addSpacing(215)
-        groupBox.addLayout(mainBodyCtrlOffsetLayout)
+        bodyConfigTabPageLayout.addLayout(mainBodyCtrlOffsetLayout)
         
         fkLegBodyControlScaleYZLayout = QtWidgets.QHBoxLayout()
         fkLegBodyControlScaleYZLayout.addWidget(QtWidgets.QLabel("FKLegControlScaleYZ :"))
@@ -225,7 +251,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fkLegBodyControlScaleYZLine.setText('19')
         fkLegBodyControlScaleYZLayout.addWidget(QtWidgets.QLabel("(0 - 30)"))
         fkLegBodyControlScaleYZLayout.addSpacing(215)
-        groupBox.addLayout(fkLegBodyControlScaleYZLayout)
+        bodyConfigTabPageLayout.addLayout(fkLegBodyControlScaleYZLayout)
 
         fkLegBodyControlScaleYZMultiplierLayout = QtWidgets.QHBoxLayout()
         fkLegBodyControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FKLegControlScaleYZMultiplier :"))
@@ -235,7 +261,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fkLegBodyControlScaleYZMultiplierLine.setText('0.75')
         fkLegBodyControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("(0 - 1)"))
         fkLegBodyControlScaleYZMultiplierLayout.addSpacing(215)
-        groupBox.addLayout(fkLegBodyControlScaleYZMultiplierLayout)
+        bodyConfigTabPageLayout.addLayout(fkLegBodyControlScaleYZMultiplierLayout)
 
         fkLegControlTransparencyLayout = QtWidgets.QHBoxLayout()
         fkLegControlTransparencyLayout.addWidget(QtWidgets.QLabel("FKLegControlTransparency :"))
@@ -245,7 +271,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fkLegControlTransparencyLine.setText('0.85')
         fkLegControlTransparencyLayout.addWidget(QtWidgets.QLabel("(0 - 1)"))
         fkLegControlTransparencyLayout.addSpacing(215)
-        groupBox.addLayout(fkLegControlTransparencyLayout)
+        bodyConfigTabPageLayout.addLayout(fkLegControlTransparencyLayout)
                                                                                                                                                              
         fkBodyArmControlScaleYZLayout = QtWidgets.QHBoxLayout()
         fkBodyArmControlScaleYZLayout.addWidget(QtWidgets.QLabel("FKArmControlScaleYZ :"))
@@ -255,7 +281,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fkBodyArmControlScaleYZLine.setText('10')
         fkBodyArmControlScaleYZLayout.addWidget(QtWidgets.QLabel("(0 - 10)"))
         fkBodyArmControlScaleYZLayout.addSpacing(215)
-        groupBox.addLayout(fkBodyArmControlScaleYZLayout)
+        bodyConfigTabPageLayout.addLayout(fkBodyArmControlScaleYZLayout)
 
         fkBodyArmControlScaleYZMultiplierLayout = QtWidgets.QHBoxLayout()
         fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FKArmControlScaleYZMultiplier :"))
@@ -265,7 +291,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fkBodyArmControlScaleYZMultiplierLine.setText('0.9')
         fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("(0 - 1)"))
         fkBodyArmControlScaleYZMultiplierLayout.addSpacing(215)
-        groupBox.addLayout(fkBodyArmControlScaleYZMultiplierLayout)
+        bodyConfigTabPageLayout.addLayout(fkBodyArmControlScaleYZMultiplierLayout)
 
         fkBodyArmControlTransparencyLayout = QtWidgets.QHBoxLayout()
         fkBodyArmControlTransparencyLayout.addWidget(QtWidgets.QLabel("FKArmControlTransparency :"))
@@ -275,6 +301,6 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fkBodyArmControlTransparencyLine.setText('0.85')
         fkBodyArmControlTransparencyLayout.addWidget(QtWidgets.QLabel("(0 - 1)"))
         fkBodyArmControlTransparencyLayout.addSpacing(215)
-        groupBox.addLayout(fkBodyArmControlTransparencyLayout)
+        bodyConfigTabPageLayout.addLayout(fkBodyArmControlTransparencyLayout)
 
-        mainLayout.addLayout(groupBox)
+        mainLayout.addWidget(tabs)
