@@ -1,0 +1,112 @@
+import SERiggingTools.Base.SERigBase              as RigBase
+import SERiggingTools.Base.SERigControl           as RigControl
+import SERiggingTools.Base.SERigComponent         as RigComp
+import SERiggingTools.Base.SERigEnum              as RigEnum
+import SERiggingTools.Base.SERigNaming            as RigNaming
+import SERiggingTools.Utils.SEJointHelper         as JointHelper
+import SERiggingTools.Utils.SEStringHelper        as StringHelper
+import SERiggingTools.Utils.SEMathHelper          as MathHelper
+import SERiggingTools.Utils.SERigObjectTypeHelper as RigObjectTypeHelper
+import SERiggingTools.Utils.SEBakeAnimationHelper as BakeAnimationHelper
+import SERiggingTools.Utils.SEConstraintHelper    as ConstraintHelper
+import SERiggingTools.Character.SECharacter       as RigCharacter
+import SERiggingTools.Character.SECharacterDeform as RigCharacterDeform 
+import SERiggingTools.ThirdParty.bSkinSaver       as RigSkinSaver
+import SERiggingTools.Rig.SERigSpineComponent     as RigSpineComponent
+import SERiggingTools.Rig.SERigBipedLimbComponent as RigBipedLimbComponent
+import SERiggingTools.Rig.SERigBipedNeckComponent as RigBipedNeckComponent
+import SERiggingTools.UI.CreateRigUI              as CreateRigUI
+import SERiggingTools.UI.ControlRigUI             as ControlRigUI
+
+
+from maya import cmds
+
+reload(RigEnum)
+reload(RigBase)
+reload(RigControl)
+reload(RigNaming)
+reload(RigComp)
+reload(JointHelper)
+reload(StringHelper)
+reload(MathHelper)
+reload(ConstraintHelper)
+reload(RigObjectTypeHelper)
+reload(BakeAnimationHelper)
+reload(RigCharacter)
+reload(RigCharacterDeform)
+reload(RigSkinSaver)
+reload(RigSpineComponent)
+reload(RigBipedLimbComponent)
+reload(RigBipedNeckComponent)
+reload(CreateRigUI)
+reload(ControlRigUI)
+
+CreateRigUI.openMayaWindow()
+
+ControlRigUI.openControlRigWindow()
+
+mainProjectPath = 'E:/Work/SERiggingTools/Assets'
+
+character = RigCharacter.RigBipedCharacter(characterName = 'Elisa')
+character.build(  
+                   mainProjectPath = mainProjectPath, 
+                   upperBodyUpperLimbKnobCount = 2, 
+                   upperBodyLowerLimbKnobCount = 2, 
+                   lowerBodyUpperLimbKnobCount = 2, 
+                   lowerBodyLowerLimbKnobCount = 1, 
+                   mainCtrlOffset = 30
+                   )
+
+
+
+characters = cmds.ls(type = 'RigCharacterType')
+for c in characters:
+    res = cmds.listConnections(c + '.message')
+    print res
+
+
+
+RigBipedLimbComponent.RigHumanLimb.syncIKToFK('L_Arm_RigComponentsGrp')
+RigBipedLimbComponent.RigHumanLimb.syncFKToIK('L_Arm_RigComponentsGrp')
+
+RigBipedLimbComponent.RigHumanLimb.syncIKToFK('R_Arm_RigComponentsGrp')
+RigBipedLimbComponent.RigHumanLimb.syncFKToIK('R_Arm_RigComponentsGrp')
+
+RigBipedLimbComponent.RigHumanLimb.syncIKToFK('L_Leg_RigComponentsGrp')
+RigBipedLimbComponent.RigHumanLimb.syncFKToIK('L_Leg_RigComponentsGrp')
+
+RigBipedLimbComponent.RigHumanLimb.syncIKToFK('R_Leg_RigComponentsGrp')
+RigBipedLimbComponent.RigHumanLimb.syncFKToIK('R_Leg_RigComponentsGrp')
+
+
+cmds.select(cmds.ls(sl = 1, type = 'joint'))
+
+
+RigObjectTypeHelper.listRigCharacters()
+RigObjectTypeHelper.listRigCharacterGroups()
+
+
+
+wBakeAnimationHelper.bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, 
+                                              importReference = True, reloadReference = False)
+
+
+c = JointHelper.getFirstChildGroup('null1')
+
+RigObjectTypeHelper.linkRigObjects('Danli_RigGrp', 'ModelGrp', 'ModelGroup', 'ModelGroupOwner')
+
+unknownPlugins = cmds.unknownPlugin(q = True, l = True)
+for p in unknownPlugins:
+    cmds.unknownPlugin(p, r = True)
+
+res = cmds.namespace(query = True, isRootNamespace = ":")
+res = cmds.namespaceInfo(currentNamespace = True)
+cmds.namespace(set = ':DanLi01')
+nt = cmds.nodeType('cMuscleSystem1')
+res = cmds.ls(type = 'cMuscleSpline')
+res = cmds.ls(type = 'cMuscleSplineDeformer')
+res = cmds.ls(type = 'cMuscleObject')
+res = cmds.ls(type = 'cMuscleSystem')        
+cmds.select('cMuscleSplineNeck_LShape')
+        
+ConstraintHelper.createRivetConstraint('pPlane1', 'pSphere1')
