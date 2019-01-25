@@ -66,7 +66,8 @@ class RigBipedCharacter():
               fkArmControlScaleYZMultiplier = 0.9,
               fkArmControlTransparency = 0.85,
               createSimpleSpine = False,
-              createSpineFKSystem = True
+              createSpineFKSystem = True,
+              createSimpleFKNeck = True
               ):
 
         # Import model scene.
@@ -158,7 +159,8 @@ class RigBipedCharacter():
                                 fkArmControlScaleYZMultiplier,
                                 fkArmControlTransparency,
                                 createSimpleSpine,
-                                createSpineFKSystem
+                                createSpineFKSystem,
+                                createSimpleFKNeck
                                 )
 
         # Setup model deformation.
@@ -227,7 +229,8 @@ class RigBipedCharacter():
                             fkArmControlScaleYZMultiplier,
                             fkArmControlTransparency,
                             createSimpleSpine,
-                            createSpineFKSystem
+                            createSpineFKSystem,
+                            createSimpleFKNeck
                             ):
 
         # Spine.
@@ -338,14 +341,20 @@ class RigBipedCharacter():
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightHand.TopGrp, 'RightHandComponent', 'ComponentOwner')
 
         # Neck.
-        neck = SERigBipedNeckComponent.RigHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
-                                                      rigSide = SERigEnum.eRigSide.RS_Center, 
-                                                      rigType = SERigEnum.eRigType.RT_NeckComponent)
-        neck.build(
-                neckJoints = neckJnts,
-                fkNeckAttachPoint = 'C_ChestEnd',
-                rigScale = sceneScale
-                )
-        self.Neck = neck
-        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Neck.TopGrp, 'NeckComponent', 'ComponentOwner')
+        neck = None
+        if createSimpleFKNeck:
+            neck = SERigBipedNeckComponent.RigHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
+                                                          rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                          rigType = SERigEnum.eRigType.RT_NeckComponent)
+        else:
+            pass
+
+        if neck:
+            neck.build(
+                    neckJoints = neckJnts,
+                    fkNeckAttachPoint = 'C_ChestEnd',
+                    rigScale = sceneScale
+                    )
+            self.Neck = neck
+            SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Neck.TopGrp, 'NeckComponent', 'ComponentOwner')
 

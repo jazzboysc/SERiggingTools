@@ -141,6 +141,7 @@ class mainRigWindow(QtWidgets.QDialog):
         fkArmControlTransparency = float(self.fkBodyArmControlTransparencyLine.text())
         createSimpleSpine = self.fixedEndsSpineOptionCheckBox.isChecked()
         createSpineFKSystem = self.createSpineFKSystemCheckBox.isChecked()
+        createSimpleFKNeck = self.simpleNeckOptionCheckBox.isChecked()
 
         # Build character rig.
         character = SECharacter.RigBipedCharacter(characterName = characterName)
@@ -158,7 +159,8 @@ class mainRigWindow(QtWidgets.QDialog):
                         fkArmControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
                         fkArmControlTransparency = fkArmControlTransparency,
                         createSimpleSpine = createSimpleSpine,
-                        createSpineFKSystem = createSpineFKSystem
+                        createSpineFKSystem = createSpineFKSystem,
+                        createSimpleFKNeck = createSimpleFKNeck
                         )
         
         # Close the create rig window.
@@ -180,8 +182,9 @@ class mainRigWindow(QtWidgets.QDialog):
         pageHeadConfig.setLayout(headConfigTabPageLayout)
         tabs.addTab(pageHeadConfig, "Head Configuration")
 
+        # Body config tab page layout.
         upperBodyUpperLayout = QtWidgets.QHBoxLayout()
-        upperBodyUpperLayout.addWidget(QtWidgets.QLabel("UpperArmTwist :"))
+        upperBodyUpperLayout.addWidget(QtWidgets.QLabel("Upper Arm Twist :"))
         self.upperBodyUpperLine = QtWidgets.QLineEdit()
         self.upperBodyUpperLine.setValidator(QtGui.QIntValidator(1, 5))
         upperBodyUpperLayout.addWidget(self.upperBodyUpperLine)
@@ -191,7 +194,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(upperBodyUpperLayout)
 
         upperBodyLowerLayout = QtWidgets.QHBoxLayout()
-        upperBodyLowerLayout.addWidget(QtWidgets.QLabel("LowerArmTwist :"))
+        upperBodyLowerLayout.addWidget(QtWidgets.QLabel("Lower Arm Twist :"))
         self.upperBodyLowerLine = QtWidgets.QLineEdit()
         self.upperBodyLowerLine.setValidator(QtGui.QIntValidator(1, 5))
         upperBodyLowerLayout.addWidget(self.upperBodyLowerLine)
@@ -201,7 +204,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(upperBodyLowerLayout)
 
         lowerBodyUpperLayout = QtWidgets.QHBoxLayout()
-        lowerBodyUpperLayout.addWidget(QtWidgets.QLabel("UpperLegTwist :"))
+        lowerBodyUpperLayout.addWidget(QtWidgets.QLabel("Upper Leg Twist :"))
         self.lowerBodyUpperLine = QtWidgets.QLineEdit()
         self.lowerBodyUpperLine.setValidator(QtGui.QIntValidator(1, 5))
         lowerBodyUpperLayout.addWidget(self.lowerBodyUpperLine)
@@ -211,7 +214,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(lowerBodyUpperLayout)
 
         lowerBodyLowerLayout = QtWidgets.QHBoxLayout()
-        lowerBodyLowerLayout.addWidget(QtWidgets.QLabel("LowerLegTwist :"))
+        lowerBodyLowerLayout.addWidget(QtWidgets.QLabel("Lower Leg Twist :"))
         self.lowerBodyLowerLine = QtWidgets.QLineEdit()
         self.lowerBodyUpperLine.setValidator(QtGui.QIntValidator(1, 5))
         lowerBodyLowerLayout.addWidget(self.lowerBodyLowerLine)
@@ -221,12 +224,12 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(lowerBodyLowerLayout)
 
         spineOptionLayout = QtWidgets.QHBoxLayout()
-        spineOptionLayout.addWidget(QtWidgets.QLabel("createSimpleSpine:"))
+        spineOptionLayout.addWidget(QtWidgets.QLabel("Create Simple Spine:"))
         self.fixedEndsSpineOptionCheckBox = QtWidgets.QCheckBox()
         self.fixedEndsSpineOptionCheckBox.setChecked(False)
         spineOptionLayout.addWidget(self.fixedEndsSpineOptionCheckBox)
         spineOptionLayout.addSpacing(30)
-        spineOptionLayout.addWidget(QtWidgets.QLabel("createSpineFKSystem:"))
+        spineOptionLayout.addWidget(QtWidgets.QLabel("Create Spine FK System:"))
         self.createSpineFKSystemCheckBox = QtWidgets.QCheckBox()
         self.createSpineFKSystemCheckBox.setChecked(True)
         spineOptionLayout.addWidget(self.createSpineFKSystemCheckBox)
@@ -234,7 +237,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(spineOptionLayout)
 
         mainBodyCtrlOffsetLayout = QtWidgets.QHBoxLayout()
-        mainBodyCtrlOffsetLayout.addWidget(QtWidgets.QLabel("MainCtrlOffset :"))
+        mainBodyCtrlOffsetLayout.addWidget(QtWidgets.QLabel("Main Control Offset :"))
         self.mainBodyCtrlOffsetLine = QtWidgets.QLineEdit()
         self.mainBodyCtrlOffsetLine.setValidator(QtGui.QIntValidator(0, 50))
         mainBodyCtrlOffsetLayout.addWidget(self.mainBodyCtrlOffsetLine)
@@ -244,7 +247,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(mainBodyCtrlOffsetLayout)
         
         fkLegBodyControlScaleYZLayout = QtWidgets.QHBoxLayout()
-        fkLegBodyControlScaleYZLayout.addWidget(QtWidgets.QLabel("FKLegControlScaleYZ :"))
+        fkLegBodyControlScaleYZLayout.addWidget(QtWidgets.QLabel("FK Leg Control Scale YZ :"))
         self.fkLegBodyControlScaleYZLine = QtWidgets.QLineEdit()
         self.fkLegBodyControlScaleYZLine.setValidator(QtGui.QIntValidator(0, 30))
         fkLegBodyControlScaleYZLayout.addWidget(self.fkLegBodyControlScaleYZLine)
@@ -254,7 +257,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(fkLegBodyControlScaleYZLayout)
 
         fkLegBodyControlScaleYZMultiplierLayout = QtWidgets.QHBoxLayout()
-        fkLegBodyControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FKLegControlScaleYZMultiplier :"))
+        fkLegBodyControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FK Leg Control Scale YZ Multiplier :"))
         self.fkLegBodyControlScaleYZMultiplierLine = QtWidgets.QLineEdit()
         self.fkLegBodyControlScaleYZMultiplierLine.setValidator(QtGui.QDoubleValidator(0.0, 1.0, 4))
         fkLegBodyControlScaleYZMultiplierLayout.addWidget(self.fkLegBodyControlScaleYZMultiplierLine)
@@ -264,7 +267,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(fkLegBodyControlScaleYZMultiplierLayout)
 
         fkLegControlTransparencyLayout = QtWidgets.QHBoxLayout()
-        fkLegControlTransparencyLayout.addWidget(QtWidgets.QLabel("FKLegControlTransparency :"))
+        fkLegControlTransparencyLayout.addWidget(QtWidgets.QLabel("FK Leg Control Transparency :"))
         self.fkLegControlTransparencyLine = QtWidgets.QLineEdit()
         self.fkLegControlTransparencyLine.setValidator(QtGui.QDoubleValidator(0.0, 1.0, 4))
         fkLegControlTransparencyLayout.addWidget(self.fkLegControlTransparencyLine)
@@ -274,7 +277,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(fkLegControlTransparencyLayout)
                                                                                                                                                              
         fkBodyArmControlScaleYZLayout = QtWidgets.QHBoxLayout()
-        fkBodyArmControlScaleYZLayout.addWidget(QtWidgets.QLabel("FKArmControlScaleYZ :"))
+        fkBodyArmControlScaleYZLayout.addWidget(QtWidgets.QLabel("FK Arm Control Scale YZ :"))
         self.fkBodyArmControlScaleYZLine = QtWidgets.QLineEdit()
         self.fkBodyArmControlScaleYZLine.setValidator(QtGui.QIntValidator(0, 10))
         fkBodyArmControlScaleYZLayout.addWidget(self.fkBodyArmControlScaleYZLine)
@@ -284,7 +287,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(fkBodyArmControlScaleYZLayout)
 
         fkBodyArmControlScaleYZMultiplierLayout = QtWidgets.QHBoxLayout()
-        fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FKArmControlScaleYZMultiplier :"))
+        fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FK Arm Control Scale YZ Multiplier :"))
         self.fkBodyArmControlScaleYZMultiplierLine = QtWidgets.QLineEdit()
         self.fkBodyArmControlScaleYZMultiplierLine.setValidator(QtGui.QDoubleValidator(0.0, 1.0, 4.0))
         fkBodyArmControlScaleYZMultiplierLayout.addWidget(self.fkBodyArmControlScaleYZMultiplierLine)
@@ -294,7 +297,7 @@ class mainRigWindow(QtWidgets.QDialog):
         bodyConfigTabPageLayout.addLayout(fkBodyArmControlScaleYZMultiplierLayout)
 
         fkBodyArmControlTransparencyLayout = QtWidgets.QHBoxLayout()
-        fkBodyArmControlTransparencyLayout.addWidget(QtWidgets.QLabel("FKArmControlTransparency :"))
+        fkBodyArmControlTransparencyLayout.addWidget(QtWidgets.QLabel("FK Arm Control Transparency :"))
         self.fkBodyArmControlTransparencyLine = QtWidgets.QLineEdit()
         self.fkBodyArmControlTransparencyLine.setValidator(QtGui.QDoubleValidator(0.0, 1.0, 4.0))
         fkBodyArmControlTransparencyLayout.addWidget(self.fkBodyArmControlTransparencyLine)
@@ -302,5 +305,15 @@ class mainRigWindow(QtWidgets.QDialog):
         fkBodyArmControlTransparencyLayout.addWidget(QtWidgets.QLabel("(0 - 1)"))
         fkBodyArmControlTransparencyLayout.addSpacing(215)
         bodyConfigTabPageLayout.addLayout(fkBodyArmControlTransparencyLayout)
+
+        # Head config tab page layout.
+        neckOptionLayout = QtWidgets.QHBoxLayout()
+        neckOptionLayout.addWidget(QtWidgets.QLabel("Create Simple FK Neck:"))
+        self.simpleNeckOptionCheckBox = QtWidgets.QCheckBox()
+        self.simpleNeckOptionCheckBox.setChecked(True)
+        neckOptionLayout.addWidget(self.simpleNeckOptionCheckBox)
+        neckOptionLayout.addSpacing(370)
+        headConfigTabPageLayout.addLayout(neckOptionLayout)
+        headConfigTabPageLayout.addSpacing(300)
 
         mainLayout.addWidget(tabs)
