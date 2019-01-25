@@ -9,10 +9,10 @@ from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
-# Rig Human Neck Class
+# Rig Simple Human Neck Class
 # Sun Che
 #-----------------------------------------------------------------------------
-class RigHumanNeck(RigComponent):
+class RigSimpleHumanNeck(RigComponent):
     def __init__(
                  self, 
                  prefix = 'new',
@@ -89,3 +89,30 @@ class RigHumanNeck(RigComponent):
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
 
             preParent = curFKControl.ControlObject
+
+
+#-----------------------------------------------------------------------------
+# Rig Muscle Spline Human Neck Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigMuscleSplineHumanNeck(RigComponent):
+    def __init__(
+                 self, 
+                 prefix = 'new',
+                 baseRig = None,
+                 rigSide = SERigEnum.eRigSide.RS_Center,
+                 rigType = SERigEnum.eRigType.RT_NeckComponent
+                 ):
+
+        RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
+
+        # Add public members.
+
+    def build(
+            self,
+            neckJoints = [],
+            rootJoint = '',
+            fkNeckAttachPoint = '',
+            rigScale = 1.0
+            ):
+        pass

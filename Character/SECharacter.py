@@ -343,7 +343,7 @@ class RigBipedCharacter():
         # Neck.
         neck = None
         if createSimpleFKNeck:
-            neck = SERigBipedNeckComponent.RigHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
+            neck = SERigBipedNeckComponent.RigSimpleHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
                                                           rigSide = SERigEnum.eRigSide.RS_Center, 
                                                           rigType = SERigEnum.eRigType.RT_NeckComponent)
         else:
