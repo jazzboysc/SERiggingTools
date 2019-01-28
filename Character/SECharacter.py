@@ -347,7 +347,9 @@ class RigBipedCharacter():
                                                           rigSide = SERigEnum.eRigSide.RS_Center, 
                                                           rigType = SERigEnum.eRigType.RT_NeckComponent)
         else:
-            pass
+            neck = SERigBipedNeckComponent.RigMuscleSplineHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
+                                                          rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                          rigType = SERigEnum.eRigType.RT_NeckComponent)
 
         if neck:
             neck.build(
