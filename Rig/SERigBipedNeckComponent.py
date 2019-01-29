@@ -28,9 +28,9 @@ class RigSimpleHumanNeck(RigComponent):
 
     def build(
             self,
-            neckJoints = [],
+            neckJoints = [],  # ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
             rootJoint = '',
-            fkNeckAttachPoint = '',
+            neckAttachPoint = '',
             rigScale = 1.0
             ):
         
@@ -38,8 +38,8 @@ class RigSimpleHumanNeck(RigComponent):
                                         p = self.FKControlGroup)
 
         # Attach fk neck to the spine.
-        if cmds.objExists(fkNeckAttachPoint):
-            cmds.parentConstraint(fkNeckAttachPoint, fkNeckControlGroup)
+        if cmds.objExists(neckAttachPoint):
+            cmds.parentConstraint(neckAttachPoint, fkNeckControlGroup)
 
         # Create FK neck and head controls.
         preParent = fkNeckControlGroup
@@ -111,18 +111,25 @@ class RigMuscleSplineHumanNeck(RigComponent):
 
     def build(
             self,
-            neckJoints = [],
+            neckJoints = [],  # ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
             rootJoint = '',
-            fkNeckAttachPoint = '',
+            neckAttachPoint = '',
             rigScale = 1.0
             ):
+        if not cmds.objExists(neckAttachPoint):
+            return
 
         fkNeckControlGroup = cmds.group(n = self.Prefix + SERigNaming.s_FKPrefix + 'Neck' + SERigNaming.sControlGroup, em = 1, 
                                         p = self.FKControlGroup)
 
-        # Attach fk neck to the spine.
-        if cmds.objExists(fkNeckAttachPoint):
-            cmds.parentConstraint(fkNeckAttachPoint, fkNeckControlGroup)
+        ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
+
+        # Attach neck to the spine.
+        if cmds.objExists(neckAttachPoint):
+            cmds.parentConstraint(neckAttachPoint, self.FKControlGroup, mo = 1)
+            cmds.parentConstraint(neckAttachPoint, self.IKControlGroup, mo = 1)
+            cmds.parentConstraint(neckAttachPoint, ikJointsGroup, mo = 1)
+            cmds.parentConstraint(neckAttachPoint, self.RigPartsGrp, mo = 1)
 
         # Create FK neck and head controls.
         preParent = fkNeckControlGroup
@@ -177,3 +184,24 @@ class RigMuscleSplineHumanNeck(RigComponent):
             drvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
             curFKControl.InsertNewGroup(drvGrpName)
 
+        # Create IK aim joints.
+        headJoint = neckJoints[2]
+        cmds.select(cl = True)
+        headAimJnt0 = cmds.joint(n = SERigNaming.sIKPrefix + 'C_HeadAim_0')
+        cmds.delete(cmds.pointConstraint(headJoint, headAimJnt0, mo = 0))
+        cmds.parent(headAimJnt0, ikJointsGroup)
+        cmds.setAttr(headAimJnt0 + '.jointOrientX', -90)
+        cmds.setAttr(headAimJnt0 + '.jointOrientY', -90)
+
+        cmds.select(cl = True)
+        headAimJnt1 = cmds.joint(n = SERigNaming.sIKPrefix + 'C_HeadAim_1')
+        cmds.delete(cmds.pointConstraint(headJoint, headAimJnt1, mo = 0))
+        cmds.parent(headAimJnt1, headAimJnt0)
+        cmds.setAttr(headAimJnt1 + '.translateX', 50)
+        cmds.setAttr(headAimJnt1 + '.jointOrientY', 90)
+
+        # Create neck rotation base locator.
+        locatorNeckRotationBase = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_RotationBase')[0]
+        cmds.delete(cmds.pointConstraint(neckAttachPoint, locatorNeckRotationBase, mo = 0))
+        cmds.delete(cmds.orientConstraint(headAimJnt1, locatorNeckRotationBase))
+        cmds.parent(locatorNeckRotationBase, self.RigPartsGrp)

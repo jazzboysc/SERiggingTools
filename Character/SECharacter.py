@@ -354,7 +354,7 @@ class RigBipedCharacter():
         if neck:
             neck.build(
                     neckJoints = neckJnts,
-                    fkNeckAttachPoint = 'C_ChestEnd',
+                    neckAttachPoint = 'C_ChestEnd',
                     rigScale = sceneScale
                     )
             self.Neck = neck
