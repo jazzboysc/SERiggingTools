@@ -1,6 +1,7 @@
 sMainControlPrefix  = 'Main'
 sControl            = '_Ctrl'
 sControlGroup       = '_CtrlGrp'
+sDriverGroup        = '_DrvGrp'
 sRigGroup           = 'RigGrp'
 sJointsGroup        = 'JointsGrp'
 sModelGroup         = 'ModelGrp'

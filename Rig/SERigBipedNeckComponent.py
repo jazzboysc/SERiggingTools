@@ -129,7 +129,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         curFKJnt = None
         nextFKJnt = None
         fkJoints = neckJoints
-        for i in range(len(fkJoints) - 3):
+        for i in range(len(fkJoints) - 2):
             curFKJnt = fkJoints[i]
             nextFKJnt = fkJoints[i + 1]
             curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
@@ -172,3 +172,8 @@ class RigMuscleSplineHumanNeck(RigComponent):
             cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
 
             preParent = curFKControl.ControlObject
+
+            # Create additional driver group for FK neck controls.
+            drvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
+            curFKControl.InsertNewGroup(drvGrpName)
+

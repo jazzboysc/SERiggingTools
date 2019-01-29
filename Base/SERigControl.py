@@ -83,6 +83,9 @@ class RigControl():
         self.FlipScaleX = flipScaleX
         self.FlipScaleY = flipScaleY
         self.FlipScaleZ = flipScaleZ
+        self.Prefix = prefix
+        self.TranslateTo = translateTo, 
+        self.RotateTo = rotateTo, 
 
         # Add component instance info to top group.
         cmds.addAttr(self.ControlGroup, ln = 'RigSide', dt = 'string')
@@ -101,6 +104,21 @@ class RigControl():
 
     def adjustControlGroupOffset(self, offsetX = 0, offsetY = 0, offsetZ = 0):
         cmds.move(offsetX, offsetY, offsetZ, self.ControlGroup, moveXYZ = True, relative = True)
+
+    def InsertNewGroup(self, groupName = ''):
+        if cmds.objExists(self.ControlObject):
+            # Create a new empty group.
+            newGrp = cmds.group(n = groupName, em = 1)
+            cmds.delete(cmds.parentConstraint(self.ControlObject, newGrp, mo = 0))
+
+            # Insert the new group into hierarchy.
+            parentGrp = cmds.listRelatives(self.ControlObject, p = 1, type = 'transform')
+            if parentGrp:
+                cmds.parent(newGrp, parentGrp)
+            cmds.parent(self.ControlObject, newGrp)
+        else:
+            cmds.warning('Cannot insert new group for:' + self.ControlObject)
+
 
 #-----------------------------------------------------------------------------
 # Rig Circle Control Class
