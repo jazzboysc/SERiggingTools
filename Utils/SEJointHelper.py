@@ -143,3 +143,25 @@ def createJointAlongCurve(curve, jointCount = 2, jointName = ''):
         cmds.warning('Cannot find curve:' + curve)
 
     return joints
+
+def adjustIKTwist(ikHandle, 
+                  startJoint, 
+                  startTwistValue = -270, 
+                  endTwistValue = 270, 
+                  twistValueStep = 90,
+                  epsilon = 0.01):
+    isZeroRot = isZeroRotation(startJoint, epsilon = epsilon)
+    if isZeroRot:
+        print('No need twisting IK value for: %s' % startJoint)
+        return
+
+    twistValues = range(startTwistValue, endTwistValue + twistValueStep, twistValueStep)
+    for twistValue in twistValues:
+        cmds.setAttr(ikHandle + '.twist', twistValue)
+        isZeroRot = isZeroRotation(startJoint, epsilon = epsilon)
+        if isZeroRot:
+            print('Twisting IK value succeeded for: %s' % startJoint)
+            break
+
+    if isZeroRot == False:
+        cmds.error('Twisting IK value failed for: %s' % startJoint)

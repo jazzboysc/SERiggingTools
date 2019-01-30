@@ -235,6 +235,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                 parent = self.IKControlGroup, 
                                 lockChannels = ['s', 'r', 'v']
                                 )
+        self.HeadAimIKControl.adjustControlGroupOffset(offsetY = 5)
         cmds.parentConstraint(self.FKNeckControls[-1].ControlObject, self.HeadAimIKControl.ControlGroup, mo = 1)
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.HeadAimIKControl.ControlGroup, 'HeadAimIKControl', 'ControlOwner')
 
@@ -243,6 +244,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.delete(cmds.pointConstraint(neckAttachPoint, locatorNeckRotationBase, mo = 0))
         cmds.delete(cmds.orientConstraint(headAimJnt1, locatorNeckRotationBase))
         cmds.parent(locatorNeckRotationBase, self.RigPartsGrp)
+        cmds.hide(locatorNeckRotationBase)
 
         # Create head aim IK PV locator.
         locatorHeadAimPV = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_HeadAimPV')[0]
@@ -250,3 +252,12 @@ class RigMuscleSplineHumanNeck(RigComponent):
         curY = cmds.getAttr(locatorHeadAimPV + '.translateY')
         cmds.setAttr(locatorHeadAimPV + '.translateY', curY + 50)
         cmds.parent(locatorHeadAimPV, self.HeadAimIKControl.ControlObject)
+        cmds.hide(locatorHeadAimPV)
+
+        # Create head aim IK handle.
+        headAimIK = cmds.ikHandle(n = self.Prefix + 'headAim' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', sj = headAimJnt0, ee = headAimJnt1)[0]
+        cmds.hide(headAimIK)
+        cmds.parent(headAimIK, self.RigPartsGrp)
+        cmds.pointConstraint(self.HeadAimIKControl.ControlObject, headAimIK, mo = 1)
+        cmds.poleVectorConstraint(locatorHeadAimPV, headAimIK)
+        SEJointHelper.adjustIKTwist(headAimIK, headAimJnt0, startTwistValue = 0, endTwistValue = 360, twistValueStep = 90)
