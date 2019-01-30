@@ -620,16 +620,17 @@ class RigHumanLeg(RigHumanLimb):
             mainCtrlIKFKSwitchAt = SERigNaming.sRightLegIKFKSwitch
 
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
+        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
         ikfkAutoHideEN = SERigNaming.sExpressionPrefix + self.Prefix + 'IKFKAutoHide'
         ikfkAutoHideES = 'if( ' + mainControl + '.' + mainCtrlAutoHideAt + ' )'
         ikfkAutoHideES += '\n{\n'
-        ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = 1 - int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = (1 - int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ')) * ' +  tempExpressionTail
         ikfkAutoHideES += '\n'
-        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ') * ' + tempExpressionTail
         ikfkAutoHideES += '\n}\nelse\n{\n'
-        ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = 1 * ' + tempExpressionTail
         ikfkAutoHideES += '\n'
-        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = 1 * ' + tempExpressionTail
         ikfkAutoHideES += '\n}'
 
         cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
@@ -1046,17 +1047,22 @@ class RigHumanArm(RigHumanLimb):
             mainCtrlIKFKSwitchAt = SERigNaming.sRightArmIKFKSwitch
 
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
+        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
         ikfkAutoHideEN = SERigNaming.sExpressionPrefix + self.Prefix + 'IKFKAutoHide'
         ikfkAutoHideES = 'if( ' + mainControl + '.' + mainCtrlAutoHideAt + ' )'
         ikfkAutoHideES += '\n{\n'
-        ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = 1 - int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = (1 - int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ')) * ' +  tempExpressionTail
         ikfkAutoHideES += '\n'
-        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ');'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ') * ' + tempExpressionTail
         ikfkAutoHideES += '\n}\nelse\n{\n'
-        ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = 1 * ' + tempExpressionTail
         ikfkAutoHideES += '\n'
-        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = 1;'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = 1 * ' + tempExpressionTail
         ikfkAutoHideES += '\n}'
+
+        if self.ClavRotationControl:
+            ikfkAutoHideES += '\n'
+            ikfkAutoHideES += self.ClavRotationControl.ControlGroup + '.visibility = ' + tempExpressionTail
 
         cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
 
@@ -1145,3 +1151,13 @@ class RigHumanHand(RigComponent):
             self.FKFingerControls.append(curFKFingerControls)
 
             curFingerTypeIndex += 1
+
+        mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
+        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+        controlsVisEN = SERigNaming.sExpressionPrefix + self.Prefix + 'ControlsVis'
+        controlsVisES = ''
+        controlsVisES += self.FKControlGroup + '.visibility = ' +  tempExpressionTail
+        controlsVisES += '\n'
+        controlsVisES += self.IKControlGroup + '.visibility = ' + tempExpressionTail
+
+        cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
