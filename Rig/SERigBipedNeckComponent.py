@@ -90,6 +90,19 @@ class RigSimpleHumanNeck(RigComponent):
 
             preParent = curFKControl.ControlObject
 
+        # Create controls visibility expression.
+        mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
+        controlsVisEN = SERigNaming.sExpressionPrefix + self.Prefix + 'ControlsVis'
+        fkControlsCount = len(self.FKNeckControls)
+        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+        if fkControlsCount > 0:
+            controlsVisES = self.FKNeckControls[0].ControlGroup + '.visibility = ' + tempExpressionTail
+            for i in range(1, fkControlsCount):
+                controlsVisES += '\n'
+                controlsVisES += self.FKNeckControls[i].ControlGroup + '.visibility = ' + tempExpressionTail
+
+        cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
+
 
 #-----------------------------------------------------------------------------
 # Rig Muscle Spline Human Neck Class

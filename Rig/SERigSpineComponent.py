@@ -202,6 +202,13 @@ class RigFixedEndsIKSpine(RigComponent):
                  ):
         RigComponent.__init__(self, prefix, baseRig, rigSide, rigType)
 
+        self.UpperBodyCtrl = None
+        self.ChestBeginCtrl = None
+        self.PelvisCtrl = None
+        self.PelvisLocalCtrl = None
+        self.FKSpine0Ctrl = None
+        self.FKSpine1Ctrl = None
+
     def build(
             self,
             spineJoints = [],
@@ -225,6 +232,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                 transparency = 0.8
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl', 'ControlOwner')
+        self.UpperBodyCtrl = upperBodyCtrl
 
         # Create pelvis and chest proxy joints.
         pelvisProxyJoint = cmds.duplicate(spineJoints[0], n = spineJoints[0] + SERigNaming.s_Proxy, parentOnly = True)[0]
@@ -242,6 +250,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                     parent = upperBodyCtrl.ControlObject
                                     )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl', 'ControlOwner')
+        self.ChestBeginCtrl = chestBeginCtrl
 
         pelvisCtrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
@@ -253,6 +262,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                 parent = upperBodyCtrl.ControlObject
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl', 'ControlOwner')
+        self.PelvisCtrl = pelvisCtrl
 
         pelvisLocalCtrl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
@@ -265,6 +275,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                 lockChannels = ['s', 't', 'v']
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisLocalCtrl.ControlGroup, 'PelvisLocalCtrl', 'ControlOwner')
+        self.PelvisLocalCtrl = pelvisLocalCtrl
 
         cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
 
@@ -440,6 +451,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                     transparency = 0.75
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl', 'ControlOwner')
+            self.FKSpine0Ctrl = FKSpine0Ctrl
 
             cmds.orientConstraint(FKSpine0Ctrl.ControlObject, jnt1)
 
@@ -460,6 +472,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                     transparency = 0.75
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl', 'ControlOwner')
+            self.FKSpine1Ctrl = FKSpine1Ctrl
 
             cmds.orientConstraint(FKSpine1Ctrl.ControlObject, jnt2)
 
@@ -467,3 +480,34 @@ class RigFixedEndsIKSpine(RigComponent):
             cmds.parent(chestBeginCtrl.ControlGroup, FKSpine1Ctrl.ControlObject)
 
             cmds.hide(jnt0)
+
+        # Create controls visibility expression.
+        mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
+        controlsVisEN = SERigNaming.sExpressionPrefix + self.Prefix + 'ControlsVis'
+        controlsVisES = ''
+        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+
+        if self.UpperBodyCtrl:
+            controlsVisES += self.UpperBodyCtrl.ControlGroup + '.visibility = ' + tempExpressionTail
+
+        if self.ChestBeginCtrl:
+            controlsVisES += '\n'
+            controlsVisES += self.ChestBeginCtrl.ControlGroup + '.visibility = ' + tempExpressionTail
+
+        if self.PelvisCtrl:
+            controlsVisES += '\n'
+            controlsVisES += self.PelvisCtrl.ControlGroup + '.visibility = ' + tempExpressionTail
+
+        if self.PelvisLocalCtrl:
+            controlsVisES += '\n'
+            controlsVisES += self.PelvisLocalCtrl.ControlGroup + '.visibility = ' + tempExpressionTail
+
+        if self.FKSpine0Ctrl:
+            controlsVisES += '\n'
+            controlsVisES += self.FKSpine0Ctrl.ControlGroup + '.visibility = ' + tempExpressionTail
+
+        if self.FKSpine1Ctrl:
+            controlsVisES += '\n'
+            controlsVisES += self.FKSpine1Ctrl.ControlGroup + '.visibility = ' + tempExpressionTail
+
+        cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
