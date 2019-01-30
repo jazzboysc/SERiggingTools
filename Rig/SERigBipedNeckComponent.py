@@ -134,6 +134,8 @@ class RigMuscleSplineHumanNeck(RigComponent):
 
         # Create FK neck and head controls.
         fkControlDrvGrpNames = []
+        headDrvGrp0 = None
+        headDrvGrp1 = None
         preParent = fkNeckControlGroup
         curFKJnt = None
         nextFKJnt = None
@@ -193,6 +195,16 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                         cubeScaleZ = curScaleYZ,
                                         transparency = 0.75
                                         )
+                
+                # head driver group 0 drives the rotation of the head joint. It will be drived by head aim IK joint.
+                headDrvGrp0 = cmds.group(n = 'C_Head_DrvGrp_0', em = 1)
+                cmds.delete(cmds.parentConstraint(curFKControl.ControlObject, headDrvGrp0, mo = 0))
+                cmds.parent(headDrvGrp0, curFKControl.ControlObject)
+                cmds.orientConstraint(headDrvGrp0, curFKJnt)
+
+                headDrvGrp1 = cmds.group(n = 'C_Head_DrvGrp_1', em = 1)
+                cmds.parentConstraint(curFKJnt, headDrvGrp1, mo = 0)
+                cmds.parent(headDrvGrp1, headDrvGrp0)
 
             self.FKNeckControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKControl' + str(i), 'ControlOwner')
@@ -217,13 +229,18 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.parent(headAimJnt0, ikJointsGroup)
         cmds.setAttr(headAimJnt0 + '.jointOrientX', -90)
         cmds.setAttr(headAimJnt0 + '.jointOrientY', -90)
+        cmds.hide(headAimJnt0)
+
+        if headDrvGrp0:
+            cmds.orientConstraint(headAimJnt0, headDrvGrp0, mo = 1)
 
         cmds.select(cl = True)
         headAimJnt1 = cmds.joint(n = SERigNaming.sIKPrefix + 'C_HeadAim_1')
         cmds.delete(cmds.pointConstraint(headJoint, headAimJnt1, mo = 0))
         cmds.parent(headAimJnt1, headAimJnt0)
-        cmds.setAttr(headAimJnt1 + '.translateX', 50)
+        cmds.setAttr(headAimJnt1 + '.translateX', 40)
         cmds.setAttr(headAimJnt1 + '.jointOrientY', 90)
+        cmds.hide(headAimJnt1)
 
         # Create head aim IK control.
         self.HeadAimIKControl = SERigControl.RigCircleControl(
@@ -252,7 +269,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         locatorHeadAimPV = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_HeadAimPV')[0]
         cmds.delete(cmds.pointConstraint(headAimJnt1, locatorHeadAimPV))
         curY = cmds.getAttr(locatorHeadAimPV + '.translateY')
-        cmds.setAttr(locatorHeadAimPV + '.translateY', curY + 50)
+        cmds.setAttr(locatorHeadAimPV + '.translateY', curY + 40)
         cmds.parent(locatorHeadAimPV, self.HeadAimIKControl.ControlObject)
         cmds.hide(locatorHeadAimPV)
 
