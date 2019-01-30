@@ -96,7 +96,7 @@ class RigBase():
         if cmds.objExists(mainCtrlAttachObject):
             cmds.parentConstraint(mainCtrlAttachObject, mainCtrl.ControlGroup, mo = 1)
 
-        mainVisAts = ['modelVisibility', 'masterJointsVisibility', 'slaveJointsVisibility']
+        mainVisAts = [SERigNaming.sModelVisibilityAttr, SERigNaming.sMasterJointsVisibilityAttr, SERigNaming.sSlaveJointsVisibilityAttr]
         mainVisAtsDV = [1, 0, 0]
         mainDispAts = ['modelDisplay', 'masterJointsDisplay', 'slaveJointsDisplay']
         mainObjList = [self.ModelGrp, self.JointsGrp, self.DeformationGrp]
@@ -106,6 +106,10 @@ class RigBase():
             cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = dv)
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
             cmds.connectAttr(mainCtrl.ControlObject + '.' + at, obj + '.v')
+
+        # Add control visibility switch.
+        cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sControlsVisibilityAttr, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
+        cmds.setAttr(mainCtrl.ControlObject + '.' + SERigNaming.sControlsVisibilityAttr, cb = 1)
 
         # Add rig display type connections.
         for at, obj in zip(mainDispAts, mainObjList):

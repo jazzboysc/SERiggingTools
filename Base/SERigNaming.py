@@ -32,6 +32,11 @@ sDeformationGroupOwnerAttr = 'DeformationGroupOwner'
 sModelGroupAttr            = 'ModelGroup'
 sModelGroupOwnerAttr       = 'ModelGroupOwner'
 
+sModelVisibilityAttr         = 'modelVisibility'
+sMasterJointsVisibilityAttr  = 'masterJointsVisibility'
+sSlaveJointsVisibilityAttr   = 'slaveJointsVisibility'
+sControlsVisibilityAttr      = 'controlsVisibility'
+
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
 s_BuilderGroup       = '_' + sBuilderGroup
