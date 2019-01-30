@@ -46,14 +46,15 @@ eRigType = SE_RigEnum(
     RT_ArmIKMain            = 26,
     RT_NeckFK               = 27,
     RT_HeadFK               = 28,
-    RT_Global               = 29,
-    RT_Component            = 30,
-    RT_LegComponent         = 31,
-    RT_ArmComponent         = 32,
-    RT_SpineComponent       = 33,
-    RT_NeckComponent        = 34,
-    RT_HandComponent        = 35,
-    RT_Max                  = 36
+    RT_HeadAimIK            = 29,
+    RT_Global               = 30,
+    RT_Component            = 31,
+    RT_LegComponent         = 32,
+    RT_ArmComponent         = 33,
+    RT_SpineComponent       = 34,
+    RT_NeckComponent        = 35,
+    RT_HandComponent        = 36,
+    RT_Max                  = 37
     )
 
 eRigTypeStringTable = [
@@ -86,6 +87,7 @@ eRigTypeStringTable = [
     'RT_ArmIKMain',
     'RT_NeckFK',
     'RT_HeadFK',
+    'RT_HeadAimIK',
     'RT_Global',
     'RT_Component',
     'RT_LegComponent',

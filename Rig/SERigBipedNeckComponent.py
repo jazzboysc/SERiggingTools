@@ -108,6 +108,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
 
         # Add public members.
         self.FKNeckControls = []
+        self.HeadAimIKControl = None
 
     def build(
             self,
@@ -136,7 +137,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         curFKJnt = None
         nextFKJnt = None
         fkJoints = neckJoints
-        for i in range(len(fkJoints) - 2):
+        for i in range(len(fkJoints) - 1):
             curFKJnt = fkJoints[i]
             nextFKJnt = fkJoints[i + 1]
             curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
@@ -157,32 +158,54 @@ class RigMuscleSplineHumanNeck(RigComponent):
                 curRigType = SERigEnum.eRigType.RT_HeadFK
                 curRigControlIndex = 0
 
-            curFKControl = SERigControl.RigCubeControl(
-                                    rigSide = self.RigSide,
-                                    rigType = curRigType,
-                                    rigControlIndex = curRigControlIndex,
-                                    prefix = SERigNaming.sFKPrefix + fkJoints[i], 
-                                    translateTo = curFKJnt,
-                                    rotateTo = curFKJnt,
-                                    scale = rigScale,
-                                    parent = preParent,
-                                    lockChannels = ['t', 's', 'v'],
-                                    cubeScaleX = distance,
-                                    cubeScaleY = curScaleYZ,
-                                    cubeScaleZ = curScaleYZ,
-                                    transparency = 0.75
-                                    )
+            if i != (len(fkJoints) - 2):
+                # Neck FK.
+                curFKControl = SERigControl.RigCubeControl(
+                                        rigSide = self.RigSide,
+                                        rigType = curRigType,
+                                        rigControlIndex = curRigControlIndex,
+                                        prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                        translateTo = curFKJnt,
+                                        rotateTo = curFKJnt,
+                                        scale = rigScale,
+                                        parent = preParent,
+                                        lockChannels = ['t', 's', 'v'],
+                                        cubeScaleX = distance,
+                                        cubeScaleY = curScaleYZ,
+                                        cubeScaleZ = curScaleYZ,
+                                        transparency = 0.75
+                                        )
+            else:
+                # Head FK.
+                curFKControl = SERigControl.RigCubeControl(
+                                        rigSide = self.RigSide,
+                                        rigType = curRigType,
+                                        rigControlIndex = curRigControlIndex,
+                                        prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                        translateTo = curFKJnt,
+                                        rotateTo = curFKJnt,
+                                        scale = rigScale,
+                                        parent = fkNeckControlGroup,
+                                        lockChannels = ['t', 's', 'v'],
+                                        cubeScaleX = distance,
+                                        cubeScaleY = curScaleYZ,
+                                        cubeScaleZ = curScaleYZ,
+                                        transparency = 0.75
+                                        )
+
             self.FKNeckControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKControl' + str(i), 'ControlOwner')
 
-            cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
-            cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
+            if i != (len(fkJoints) - 2):
+                # Neck FK.
+                cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
+                cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
+
+                # Create additional driver group for FK neck controls.
+                drvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
+                curFKControl.InsertNewGroup(drvGrpName)
 
             preParent = curFKControl.ControlObject
-
-            # Create additional driver group for FK neck controls.
-            drvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
-            curFKControl.InsertNewGroup(drvGrpName)
 
         # Create IK aim joints.
         headJoint = neckJoints[2]
@@ -200,8 +223,30 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.setAttr(headAimJnt1 + '.translateX', 50)
         cmds.setAttr(headAimJnt1 + '.jointOrientY', 90)
 
+        # Create head aim IK control.
+        self.HeadAimIKControl = SERigControl.RigCircleControl(
+                                rigSide = self.RigSide,
+                                rigType = SERigEnum.eRigType.RT_HeadAimIK,
+                                rigFacing = SERigEnum.eRigFacing.RF_Z,
+                                prefix = self.Prefix + '_IK_HeadAim', 
+                                scale = rigScale * 8, 
+                                translateTo = headAimJnt1,
+                                rotateTo = headAimJnt1, 
+                                parent = self.IKControlGroup, 
+                                lockChannels = ['s', 'r', 'v']
+                                )
+        cmds.parentConstraint(self.FKNeckControls[-1].ControlObject, self.HeadAimIKControl.ControlGroup, mo = 1)
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.HeadAimIKControl.ControlGroup, 'HeadAimIKControl', 'ControlOwner')
+
         # Create neck rotation base locator.
         locatorNeckRotationBase = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_RotationBase')[0]
         cmds.delete(cmds.pointConstraint(neckAttachPoint, locatorNeckRotationBase, mo = 0))
         cmds.delete(cmds.orientConstraint(headAimJnt1, locatorNeckRotationBase))
         cmds.parent(locatorNeckRotationBase, self.RigPartsGrp)
+
+        # Create head aim IK PV locator.
+        locatorHeadAimPV = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_HeadAimPV')[0]
+        cmds.delete(cmds.pointConstraint(headAimJnt1, locatorHeadAimPV))
+        curY = cmds.getAttr(locatorHeadAimPV + '.translateY')
+        cmds.setAttr(locatorHeadAimPV + '.translateY', curY + 50)
+        cmds.parent(locatorHeadAimPV, self.HeadAimIKControl.ControlObject)
