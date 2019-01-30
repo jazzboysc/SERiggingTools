@@ -133,6 +133,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
             cmds.parentConstraint(neckAttachPoint, self.RigPartsGrp, mo = 1)
 
         # Create FK neck and head controls.
+        fkControlDrvGrpNames = []
         preParent = fkNeckControlGroup
         curFKJnt = None
         nextFKJnt = None
@@ -204,6 +205,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
                 # Create additional driver group for FK neck controls.
                 drvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
                 curFKControl.InsertNewGroup(drvGrpName)
+                fkControlDrvGrpNames.append(drvGrpName)
 
             preParent = curFKControl.ControlObject
 
@@ -261,3 +263,6 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.pointConstraint(self.HeadAimIKControl.ControlObject, headAimIK, mo = 1)
         cmds.poleVectorConstraint(locatorHeadAimPV, headAimIK)
         SEJointHelper.adjustIKTwist(headAimIK, headAimJnt0, startTwistValue = 0, endTwistValue = 360, twistValueStep = 90)
+
+        # Create fk neck control driver based on IK head aim end joint.
+        cmds.orientConstraint(locatorNeckRotationBase, headAimJnt1, fkControlDrvGrpNames[0], mo = 1)
