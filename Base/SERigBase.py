@@ -112,7 +112,7 @@ class RigBase():
         cmds.setAttr(mainCtrl.ControlObject + '.' + SERigNaming.sControlsVisibilityAttr, cb = 1)
 
         # Add FK neck joint 0 follow IK head switch.
-        cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sFKNeckJoint0FollowHeadAttr, at = 'float', k = 1, dv = 0.35, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sFKNeckJoint0FollowHeadAttr, at = 'float', k = 1, dv = 0.4, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
         cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
 
         # Add rig display type connections.

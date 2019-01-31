@@ -256,16 +256,17 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.hide(headAimJnt1)
 
         # Create head aim IK control.
-        self.HeadAimIKControl = SERigControl.RigCircleControl(
+        self.HeadAimIKControl = SERigControl.RigFlatHexagonControl(
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_HeadAimIK,
                                 rigFacing = SERigEnum.eRigFacing.RF_Z,
                                 prefix = self.Prefix + '_IK_HeadAim', 
-                                scale = rigScale * 8, 
+                                scale = rigScale * 4, 
                                 translateTo = headAimJnt1,
                                 rotateTo = headAimJnt1, 
                                 parent = self.IKControlGroup, 
-                                lockChannels = ['s', 'r', 'v']
+                                lockChannels = ['s', 'r', 'tz', 'v'],
+                                preRotateY = 90
                                 )
         self.HeadAimIKControl.adjustControlGroupOffset(offsetY = 5)
         cmds.parentConstraint(self.FKNeckControls[-1].ControlObject, self.HeadAimIKControl.ControlGroup, mo = 1)
