@@ -295,7 +295,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         SEJointHelper.adjustIKTwist(headAimIK, headAimJnt0, startTwistValue = 0, endTwistValue = 360, twistValueStep = 90)
 
         # Create fk neck control driver based on IK head aim end joint.
-        cmds.orientConstraint(locatorNeckRotationBase, headAimJnt1, fkControlDrvGrpNames[0], mo = 1)
+        neckFollowHeadOC = cmds.orientConstraint(locatorNeckRotationBase, headAimJnt1, fkControlDrvGrpNames[0], mo = 1)[0]
 
         # Create controls visibility expression.
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
@@ -313,3 +313,12 @@ class RigMuscleSplineHumanNeck(RigComponent):
             controlsVisES += self.HeadAimIKControl.ControlGroup + '.visibility = ' + tempExpressionTail
 
         cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
+
+        # Create FK neck follow IK head expression.
+        neckFollowHeadEN = SERigNaming.sExpressionPrefix + self.Prefix + 'NeckFollowHead'
+        tempExpressionTail = mainControl + '.' + SERigNaming.sFKNeckJoint0FollowHeadAttr + ';'
+        neckFollowHeadES = neckFollowHeadOC + '.' + headAimJnt1 + 'W1 = ' + tempExpressionTail
+        neckFollowHeadES += '\n'
+        neckFollowHeadES += neckFollowHeadOC + '.' + locatorNeckRotationBase + 'W0 = 1.0 - ' + tempExpressionTail
+
+        cmds.expression(n = neckFollowHeadEN, s = neckFollowHeadES, ae = 1)

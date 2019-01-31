@@ -36,6 +36,7 @@ sModelVisibilityAttr         = 'modelVisibility'
 sMasterJointsVisibilityAttr  = 'masterJointsVisibility'
 sSlaveJointsVisibilityAttr   = 'slaveJointsVisibility'
 sControlsVisibilityAttr      = 'controlsVisibility'
+sFKNeckJoint0FollowHeadAttr  = 'neckJoint0FollowHead'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
