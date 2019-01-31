@@ -214,7 +214,10 @@ class RigHumanLimb(RigComponent):
         else:
             print('The numbers of FK control sources and targets do not match.')
 
+
     def createGuideCurve(self):
+        guideCurve = None
+        
         if self.LimbGuideCurveStart and self.LimbGuideCurveEnd and self.LimbPVControl:
             guideCurveStart = cmds.xform(self.LimbGuideCurveStart, q = 1, t = 1, ws = 1)
             guideCurveEnd = cmds.xform(self.LimbGuideCurveEnd, q = 1, t = 1, ws = 1)
@@ -223,6 +226,10 @@ class RigHumanLimb(RigComponent):
             cmds.cluster(pvGuideCurve + '.cv[1]', n = self.Prefix + '_PVGuideCurveEnd_Cls', wn = [self.LimbPVControl.ControlObject, self.LimbPVControl.ControlObject], bs = True)
             cmds.setAttr(pvGuideCurve + '.template', 1)
             cmds.parent(pvGuideCurve, self.RigPartsFixedGrp)
+            guideCurve = pvGuideCurve
+        
+        return guideCurve
+
 
     def createDelegateAttributes(self):
 
@@ -302,6 +309,7 @@ class RigHumanLeg(RigHumanLimb):
         self.FootRotationControl = None
         self.FKLegControls = []
         self.LegPVControl = None
+        self.PVGuideCurve = None
 
     def build(
             self,
@@ -582,8 +590,8 @@ class RigHumanLeg(RigHumanLimb):
         # Create leg PV guide curve.
         self.LimbGuideCurveStart = legJoints[1]
         self.LimbGuideCurveEnd = legPVLocator
-        self.createGuideCurve()
-
+        self.PVGuideCurve = self.createGuideCurve()
+        
         # Create foot swive control expressions.
         footBaseSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootBaseSwive'
         footBaseSwiveES = self.FootHelperJoints[SERigNaming.sFootBaseSwiveJnt] + '.rotateY = ' + footBaseSwiveControl.ControlObject + '.rotateY;'
@@ -627,10 +635,14 @@ class RigHumanLeg(RigHumanLimb):
         ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = (1 - int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ')) * ' +  tempExpressionTail
         ikfkAutoHideES += '\n'
         ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ') * ' + tempExpressionTail
-        ikfkAutoHideES += '\n}\nelse\n{\n'
-        ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = 1 * ' + tempExpressionTail
         ikfkAutoHideES += '\n'
-        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = 1 * ' + tempExpressionTail
+        ikfkAutoHideES += '\t' + self.PVGuideCurve + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ') * ' + tempExpressionTail
+        ikfkAutoHideES += '\n}\nelse\n{\n'
+        ikfkAutoHideES += '\t' + self.FKControlGroup + '.visibility = ' + tempExpressionTail
+        ikfkAutoHideES += '\n'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = ' + tempExpressionTail
+        ikfkAutoHideES += '\n'
+        ikfkAutoHideES += '\t' + self.PVGuideCurve + '.visibility = ' + tempExpressionTail
         ikfkAutoHideES += '\n}'
 
         cmds.expression(n = ikfkAutoHideEN, s = ikfkAutoHideES, ae = 1)
@@ -1033,7 +1045,7 @@ class RigHumanArm(RigHumanLimb):
         # Create arm PV guide curve.
         self.LimbGuideCurveStart = armJoints[1]
         self.LimbGuideCurveEnd = armPVLocator
-        self.createGuideCurve()
+        self.PVGuideCurve = self.createGuideCurve()
 
         # Create IK/FK control group auto hide expression.
 
@@ -1054,10 +1066,14 @@ class RigHumanArm(RigHumanLimb):
         ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = (1 - int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ')) * ' +  tempExpressionTail
         ikfkAutoHideES += '\n'
         ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ') * ' + tempExpressionTail
-        ikfkAutoHideES += '\n}\nelse\n{\n'
-        ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = 1 * ' + tempExpressionTail
         ikfkAutoHideES += '\n'
-        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = 1 * ' + tempExpressionTail
+        ikfkAutoHideES += '\t' + self.PVGuideCurve + '.visibility = int(' + mainControl + '.' + mainCtrlIKFKSwitchAt + ') * ' + tempExpressionTail
+        ikfkAutoHideES += '\n}\nelse\n{\n'
+        ikfkAutoHideES += '\t' + self.FKArmControls[0].ControlGroup + '.visibility = ' + tempExpressionTail
+        ikfkAutoHideES += '\n'
+        ikfkAutoHideES += '\t' + self.IKControlGroup + '.visibility = ' + tempExpressionTail
+        ikfkAutoHideES += '\n'
+        ikfkAutoHideES += '\t' + self.PVGuideCurve + '.visibility = ' + tempExpressionTail
         ikfkAutoHideES += '\n}'
 
         if self.ClavRotationControl:
