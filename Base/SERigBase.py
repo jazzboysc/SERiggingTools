@@ -111,16 +111,20 @@ class RigBase():
         cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sControlsVisibilityAttr, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
         cmds.setAttr(mainCtrl.ControlObject + '.' + SERigNaming.sControlsVisibilityAttr, cb = 1)
 
-        # Add FK neck joint 0 follow IK head switch.
-        cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sFKNeckJoint0FollowHeadAttr, at = 'float', k = 1, dv = 0.4, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
-        cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
-
         # Add rig display type connections.
         for at, obj in zip(mainDispAts, mainObjList):
             cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'enum', enumName = 'normal:template:reference', k = 1, dv = 2)
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
             cmds.setAttr(obj + '.ove', 1)
             cmds.connectAttr(mainCtrl.ControlObject + '.' + at, obj + '.ovdt')
+
+        # Add FK neck joint 0 follow IK head switch.
+        cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sFKNeckJoint0FollowHeadAttr, at = 'float', k = 1, dv = 0.4, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.setAttr(mainCtrl.ControlObject + '.' + SERigNaming.sFKNeckJoint0FollowHeadAttr, cb = 1)
+
+        # Add IK head aim control local to world switch.
+        cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sIKHeadAimLocalToWorldAttr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.setAttr(mainCtrl.ControlObject + '.' + SERigNaming.sIKHeadAimLocalToWorldAttr, cb = 1)
 
         # Add IK/FK switches.
         mainIKFKSwitchAts = [SERigNaming.sLeftLegIKFKSwitch, SERigNaming.sRightLegIKFKSwitch, 

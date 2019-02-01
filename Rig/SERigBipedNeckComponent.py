@@ -251,7 +251,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         headAimJnt1 = cmds.joint(n = SERigNaming.sIKPrefix + 'C_HeadAim_1')
         cmds.delete(cmds.pointConstraint(headJoint, headAimJnt1, mo = 0))
         cmds.parent(headAimJnt1, headAimJnt0)
-        cmds.setAttr(headAimJnt1 + '.translateX', 40)
+        cmds.setAttr(headAimJnt1 + '.translateX', 75)
         cmds.setAttr(headAimJnt1 + '.jointOrientY', 90)
         cmds.hide(headAimJnt1)
 
@@ -261,7 +261,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                 rigType = SERigEnum.eRigType.RT_HeadAimIK,
                                 rigFacing = SERigEnum.eRigFacing.RF_Z,
                                 prefix = self.Prefix + '_IK_HeadAim', 
-                                scale = rigScale * 4, 
+                                scale = rigScale * 2, 
                                 translateTo = headAimJnt1,
                                 rotateTo = headAimJnt1, 
                                 parent = self.IKControlGroup, 
@@ -269,7 +269,8 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                 preRotateY = 90
                                 )
         self.HeadAimIKControl.adjustControlGroupOffset(offsetY = 5)
-        cmds.parentConstraint(self.FKNeckControls[-1].ControlObject, self.HeadAimIKControl.ControlGroup, mo = 1)
+        headAimPC = cmds.parentConstraint(self.FKNeckControls[-1].ControlObject, self.BaseRig.Global02Control.ControlObject, 
+                                          self.HeadAimIKControl.ControlGroup, mo = 1)[0]
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.HeadAimIKControl.ControlGroup, 'HeadAimIKControl', 'ControlOwner')
 
         # Create neck rotation base locator.
@@ -316,10 +317,15 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
 
         # Create FK neck follow IK head expression.
-        neckFollowHeadEN = SERigNaming.sExpressionPrefix + self.Prefix + 'NeckFollowHead'
+        neckFollowHeadEN = SERigNaming.sExpressionPrefix + self.Prefix + 'HeadAim'
         tempExpressionTail = mainControl + '.' + SERigNaming.sFKNeckJoint0FollowHeadAttr + ';'
+        tempExpressionTail2 = mainControl + '.' + SERigNaming.sIKHeadAimLocalToWorldAttr + ';'
         neckFollowHeadES = neckFollowHeadOC + '.' + headAimJnt1 + 'W1 = ' + tempExpressionTail
         neckFollowHeadES += '\n'
         neckFollowHeadES += neckFollowHeadOC + '.' + locatorNeckRotationBase + 'W0 = 1.0 - ' + tempExpressionTail
+        neckFollowHeadES += '\n'
+        neckFollowHeadES += headAimPC + '.' + self.FKNeckControls[-1].ControlObject + 'W0 = 1.0 - ' + tempExpressionTail2
+        neckFollowHeadES += '\n'
+        neckFollowHeadES += headAimPC + '.' + self.BaseRig.Global02Control.ControlObject + 'W1 = ' + tempExpressionTail2
 
         cmds.expression(n = neckFollowHeadEN, s = neckFollowHeadES, ae = 1)
