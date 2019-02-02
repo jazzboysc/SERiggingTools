@@ -128,7 +128,12 @@ class RigMuscleSplineHumanNeck(RigComponent):
             neckJoints = [],  # ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
             rootJoint = '',
             neckAttachPoint = '',
-            rigScale = 1.0
+            rigScale = 1.0,
+            leftChestHeadBegin = '',
+            leftChestHeadEnd = '',
+            rightChestHeadBegin = '',
+            rightChestHeadEnd = '',
+            createMuscleSpline = False
             ):
         if not cmds.objExists(neckAttachPoint):
             return
@@ -329,3 +334,10 @@ class RigMuscleSplineHumanNeck(RigComponent):
         neckFollowHeadES += headAimPC + '.' + self.BaseRig.Global02Control.ControlObject + 'W1 = ' + tempExpressionTail2
 
         cmds.expression(n = neckFollowHeadEN, s = neckFollowHeadES, ae = 1)
+
+        # Create muscle spline keep out system.
+        if createMuscleSpline:
+            if cmds.objExists(leftChestHeadBegin) and cmds.objExists(leftChestHeadEnd) and cmds.objExists(rightChestHeadBegin) and cmds.objExists(rightChestHeadEnd):
+                pass
+            else:
+                cmds.warning('Failed creating muscle spline keep out system. Please create chest head begin and end locators in the builder file.')

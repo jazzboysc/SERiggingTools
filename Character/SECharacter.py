@@ -346,17 +346,27 @@ class RigBipedCharacter():
             neck = SERigBipedNeckComponent.RigSimpleHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
                                                           rigSide = SERigEnum.eRigSide.RS_Center, 
                                                           rigType = SERigEnum.eRigType.RT_NeckComponent)
-        else:
-            neck = SERigBipedNeckComponent.RigMuscleSplineHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
-                                                          rigSide = SERigEnum.eRigSide.RS_Center, 
-                                                          rigType = SERigEnum.eRigType.RT_NeckComponent)
-
-        if neck:
             neck.build(
                     neckJoints = neckJnts,
                     neckAttachPoint = 'C_ChestEnd',
                     rigScale = sceneScale
                     )
+        else:
+            neck = SERigBipedNeckComponent.RigMuscleSplineHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
+                                                          rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                          rigType = SERigEnum.eRigType.RT_NeckComponent)
+            neck.build(
+                    neckJoints = neckJnts,
+                    neckAttachPoint = 'C_ChestEnd',
+                    rigScale = sceneScale,
+                    leftChestHeadBegin = 'locator_L_ChestHeadBegin',
+                    leftChestHeadEnd = 'locator_L_ChestHeadEnd',
+                    rightChestHeadBegin = 'locator_R_ChestHeadBegin',
+                    rightChestHeadEnd = 'locator_R_ChestHeadEnd',
+                    createMuscleSpline = True
+                    )
+
+        if neck:
             self.Neck = neck
             SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Neck.TopGrp, 'NeckComponent', 'ComponentOwner')
 
