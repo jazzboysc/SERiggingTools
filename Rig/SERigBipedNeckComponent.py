@@ -338,6 +338,16 @@ class RigMuscleSplineHumanNeck(RigComponent):
         # Create muscle spline keep out system.
         if createMuscleSpline:
             if cmds.objExists(leftChestHeadBegin) and cmds.objExists(leftChestHeadEnd) and cmds.objExists(rightChestHeadBegin) and cmds.objExists(rightChestHeadEnd):
-                pass
+                self._createMuscleSplineKeepOutSystem(leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, 
+                                                      headJoint, neckAttachPoint)
             else:
                 cmds.warning('Failed creating muscle spline keep out system. Please create chest head begin and end locators in the builder file.')
+
+
+    def _createMuscleSplineKeepOutSystem(self, leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, headJoint, neckAttachPoint):
+        print('Creating neck muscle spline keep out system.')
+
+        neckKeepOutSystemGrp = cmds.group(n = self.Prefix + 'NeckKeepOutSystem', em = 1, p = self.RigPartsGrp)
+        cmds.parent(leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, neckKeepOutSystemGrp)
+        cmds.parentConstraint(headJoint, leftChestHeadEnd, mo = 1)
+        cmds.parentConstraint(headJoint, rightChestHeadEnd, mo = 1)
