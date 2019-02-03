@@ -17,7 +17,9 @@ import SERiggingTools.Rig.SERigBipedLimbComponent as RigBipedLimbComponent
 import SERiggingTools.Rig.SERigBipedNeckComponent as RigBipedNeckComponent
 import SERiggingTools.UI.CreateRigUI              as CreateRigUI
 import SERiggingTools.UI.ControlRigUI             as ControlRigUI
-
+import SERiggingTools.PoseLibrary.PoseBrowseUI    as PoseBrowseUI
+import SERiggingTools.PoseLibrary.ScreenShot      as ScreenShot
+import SERiggingTools.PoseLibrary.SavePose        as SavePose
 
 from maya import cmds
 
@@ -40,6 +42,9 @@ reload(RigBipedLimbComponent)
 reload(RigBipedNeckComponent)
 reload(CreateRigUI)
 reload(ControlRigUI)
+reload(PoseBrowseUI)
+reload(ScreenShot)
+reload(SavePose)
 
 CreateRigUI.openMayaWindow()
 
@@ -102,7 +107,7 @@ for p in unknownPlugins:
 res = cmds.namespace(query = True, isRootNamespace = ":")
 res = cmds.namespaceInfo(currentNamespace = True)
 cmds.namespace(set = ':DanLi01')
-nt = cmds.nodeType('cMuscleSystem1')
+nt = cmds.nodeType('cMuscleKeepOutShape2')
 res = cmds.ls(type = 'cMuscleSpline')
 res = cmds.ls(type = 'cMuscleSplineDeformer')
 res = cmds.ls(type = 'cMuscleObject')
@@ -110,3 +115,6 @@ res = cmds.ls(type = 'cMuscleSystem')
 cmds.select('cMuscleSplineNeck_LShape')
         
 ConstraintHelper.createRivetConstraint('pPlane1', 'pSphere1')
+
+p = cmds.listRelatives('pCube1', p = 1, type = 'transform')
+
