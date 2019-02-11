@@ -1,4 +1,6 @@
 import maya.cmds as cmds
+import maya.mel as mm
+
 from ..Base.SERigComponent import RigComponent
 from ..Base import SERigControl
 from ..Base import SERigEnum
@@ -414,6 +416,24 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.connectAttr(divNode + '.outputX', leftChestHeadBeginJnt + '.scaleX', f = 1)
         cmds.connectAttr(divNode + '.outputY', rightChestHeadBeginJnt + '.scaleX', f = 1)
 
+        # Create muscle spline systems for the neck.
+        leftPrefix = '_L_ChestHead'
+        rightPrefix = '_R_ChestHead'
+        leftMuscleSplineGrp = self._createMuscleSpline(5, leftPrefix)
+        rightMuscleSplineGrp = self._createMuscleSpline(5, rightPrefix)
+        cmds.parent(leftMuscleSplineGrp, self.RigPartsGrp)
+        cmds.parent(rightMuscleSplineGrp, self.RigPartsGrp)
+
+        leftMuscleSplineControl01 = 'iControl' + leftPrefix + '1'
+        cmds.pointConstraint(leftChestHeadBeginJnt, leftMuscleSplineControl01)
+        leftMuscleSplineControl05 = 'iControl' + leftPrefix + '5'
+        cmds.pointConstraint(leftChestHeadEndJnt, leftMuscleSplineControl05)
+
+        rightMuscleSplineControl01 = 'iControl' + rightPrefix + '1'
+        cmds.pointConstraint(rightChestHeadBeginJnt, rightMuscleSplineControl01)
+        rightMuscleSplineControl05 = 'iControl' + rightPrefix + '5'
+        cmds.pointConstraint(rightChestHeadEndJnt, rightMuscleSplineControl05)
+
 
     def _createDistanceBetweenNode(self, locatorStart, locatorEnd):
         disNode = cmds.createNode('distanceBetween')
@@ -423,3 +443,22 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.connectAttr(locatorEndShape + '.worldPosition', disNode + '.point2')
 
         return disNode
+
+    def _createMuscleSpline(self, jointCount = 5, namePrefix = ''):
+        commandStr = '{string $ctrls[];'
+        commandStr += 'string $reads[];'
+        commandStr += 'string $baseName = '
+        commandStr += '"' + namePrefix + '";'
+        commandStr += 'int $nControls = '
+        commandStr += str(jointCount) + ';'
+        commandStr += 'string $controlType = "cube";'
+        commandStr += 'int $detail = 8;'
+        commandStr += 'int $nRead = '
+        commandStr +=  str(jointCount) + ';'
+        commandStr += 'string $readType = "joint";'
+        commandStr += 'int $bConstrainMid = 1;'
+        commandStr += 'string $spline = cMS_makeSpline($baseName, $nControls, $controlType, $detail, $nRead, $readType, $ctrls, $reads, $bConstrainMid);}'
+        mm.eval(commandStr)
+    
+        res = 'grp' + namePrefix + 'RIG'
+        return res
