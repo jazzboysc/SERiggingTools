@@ -434,6 +434,12 @@ class RigMuscleSplineHumanNeck(RigComponent):
         rightMuscleSplineControl05 = 'iControl' + rightPrefix + '5'
         cmds.pointConstraint(rightChestHeadEndJnt, rightMuscleSplineControl05)
 
+        for i in range(1, 6):
+            curLeftMuscleSplineControl = 'iControl' + leftPrefix + str(i)
+            cmds.setAttr(curLeftMuscleSplineControl + '.tangentLength', 0)
+            curRightMuscleSplineControl = 'iControl' + rightPrefix + str(i)
+            cmds.setAttr(curRightMuscleSplineControl + '.tangentLength', 0)
+
 
     def _createDistanceBetweenNode(self, locatorStart, locatorEnd):
         disNode = cmds.createNode('distanceBetween')
