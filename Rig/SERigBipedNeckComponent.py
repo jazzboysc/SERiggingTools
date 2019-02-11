@@ -353,7 +353,9 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.parent(leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, neckKeepOutSystemGrp)
         cmds.parentConstraint(headJoint, leftChestHeadEnd, mo = 1)
         cmds.parentConstraint(headJoint, rightChestHeadEnd, mo = 1)
+        cmds.hide(leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd)
 
+        # Create IK joints.
         cmds.select(cl = True)
         leftChestHeadBeginJnt = cmds.joint(n = 'IK_L_ChestHeadBegin')
         cmds.delete(cmds.pointConstraint(leftChestHeadBegin, leftChestHeadBeginJnt, mo = 0))
@@ -382,6 +384,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.makeIdentity(leftChestHeadBeginJnt, apply = True)
         cmds.makeIdentity(rightChestHeadBeginJnt, apply = True)
 
+        # Create IK handles.
         leftChestHeadIK = cmds.ikHandle(n = self.Prefix + '_L_ChestHead' + SERigNaming.s_IKHandle, sol = 'ikSCsolver', 
                                         sj = leftChestHeadBeginJnt, ee = leftChestHeadEndJnt)[0]
         cmds.hide(leftChestHeadIK)
@@ -394,5 +397,29 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.parentConstraint(headJoint, leftChestHeadIK, mo = 1)
         cmds.parentConstraint(headJoint, rightChestHeadIK, mo = 1)
 
-    def _createDistanceBetweenNode(locatorStart, locatorEnd):
-        pass
+        # Create chest-head locators' distance nodes.
+        leftDisNode = self._createDistanceBetweenNode(leftChestHeadBegin, leftChestHeadEnd)
+        leftInitDis = cmds.getAttr(leftDisNode + '.distance')
+        rightDisNode = self._createDistanceBetweenNode(rightChestHeadBegin, rightChestHeadEnd)
+        rightInitDis = cmds.getAttr(rightDisNode + '.distance')
+
+        divNode = cmds.createNode('multiplyDivide')
+        cmds.setAttr(divNode + '.operation', 2)
+        cmds.setAttr(divNode + '.input2X', leftInitDis)
+        cmds.connectAttr(leftDisNode + '.distance', divNode + '.input1X', f = 1)
+        cmds.setAttr(divNode + '.input2Y', rightInitDis)
+        cmds.connectAttr(rightDisNode + '.distance', divNode + '.input1Y', f = 1)
+        
+        # Scale IK start joints.
+        cmds.connectAttr(divNode + '.outputX', leftChestHeadBeginJnt + '.scaleX', f = 1)
+        cmds.connectAttr(divNode + '.outputY', rightChestHeadBeginJnt + '.scaleX', f = 1)
+
+
+    def _createDistanceBetweenNode(self, locatorStart, locatorEnd):
+        disNode = cmds.createNode('distanceBetween')
+        locatorStartShape = cmds.listRelatives(locatorStart, s = 1)[0]
+        locatorEndShape = cmds.listRelatives(locatorEnd, s = 1)[0]
+        cmds.connectAttr(locatorStartShape + '.worldPosition', disNode + '.point1')
+        cmds.connectAttr(locatorEndShape + '.worldPosition', disNode + '.point2')
+
+        return disNode
