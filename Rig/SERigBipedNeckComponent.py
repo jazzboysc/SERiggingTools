@@ -122,6 +122,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         # Add public members.
         self.FKNeckControls = []
         self.HeadAimIKControl = None
+        self.IKJointsGroup = None
 
     def build(
             self,
@@ -142,6 +143,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                         p = self.FKControlGroup)
 
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
+        self.IKJointsGroup = ikJointsGroup
 
         # Attach neck to the spine.
         if cmds.objExists(neckAttachPoint):
@@ -351,3 +353,46 @@ class RigMuscleSplineHumanNeck(RigComponent):
         cmds.parent(leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, neckKeepOutSystemGrp)
         cmds.parentConstraint(headJoint, leftChestHeadEnd, mo = 1)
         cmds.parentConstraint(headJoint, rightChestHeadEnd, mo = 1)
+
+        cmds.select(cl = True)
+        leftChestHeadBeginJnt = cmds.joint(n = 'IK_L_ChestHeadBegin')
+        cmds.delete(cmds.pointConstraint(leftChestHeadBegin, leftChestHeadBeginJnt, mo = 0))
+        cmds.select(cl = True)
+        leftChestHeadEndJnt = cmds.joint(n = 'IK_L_ChestHeadEnd')
+        cmds.delete(cmds.pointConstraint(leftChestHeadEnd, leftChestHeadEndJnt, mo = 0))
+
+        cmds.select(cl = True)
+        rightChestHeadBeginJnt = cmds.joint(n = 'IK_R_ChestHeadBegin')
+        cmds.delete(cmds.pointConstraint(rightChestHeadBegin, rightChestHeadBeginJnt, mo = 0))
+        cmds.select(cl = True)
+        rightChestHeadEndJnt = cmds.joint(n = 'IK_R_ChestHeadEnd')
+        cmds.delete(cmds.pointConstraint(rightChestHeadEnd, rightChestHeadEndJnt, mo = 0))
+
+        cmds.delete(cmds.aimConstraint(leftChestHeadEndJnt, leftChestHeadBeginJnt, offset = [0, 0, 0], w = 1, aim = [1, 0, 0], u = [0, 0, -1], 
+                           worldUpType = 'object', worldUpObject = rightChestHeadBegin))
+        cmds.delete(cmds.aimConstraint(rightChestHeadEndJnt, rightChestHeadBeginJnt, offset = [0, 0, 0], w = 1, aim = [1, 0, 0], u = [0, 0, -1], 
+                           worldUpType = 'object', worldUpObject = leftChestHeadBegin))
+        cmds.delete(cmds.orientConstraint(leftChestHeadBeginJnt, leftChestHeadEndJnt, mo = 0))
+        cmds.delete(cmds.orientConstraint(rightChestHeadBeginJnt, rightChestHeadEndJnt, mo = 0))
+        cmds.parent(leftChestHeadEndJnt, leftChestHeadBeginJnt)
+        cmds.parent(rightChestHeadEndJnt, rightChestHeadBeginJnt)
+
+        cmds.parent(leftChestHeadBeginJnt, self.IKJointsGroup)
+        cmds.parent(rightChestHeadBeginJnt, self.IKJointsGroup)
+        cmds.makeIdentity(leftChestHeadBeginJnt, apply = True)
+        cmds.makeIdentity(rightChestHeadBeginJnt, apply = True)
+
+        leftChestHeadIK = cmds.ikHandle(n = self.Prefix + '_L_ChestHead' + SERigNaming.s_IKHandle, sol = 'ikSCsolver', 
+                                        sj = leftChestHeadBeginJnt, ee = leftChestHeadEndJnt)[0]
+        cmds.hide(leftChestHeadIK)
+        rightChestHeadIK = cmds.ikHandle(n = self.Prefix + '_R_ChestHead' + SERigNaming.s_IKHandle, sol = 'ikSCsolver', 
+                                        sj = rightChestHeadBeginJnt, ee = rightChestHeadEndJnt)[0]
+        cmds.hide(rightChestHeadIK)
+        cmds.parent(leftChestHeadIK, self.RigPartsGrp)
+        cmds.parent(rightChestHeadIK, self.RigPartsGrp)
+
+        cmds.parentConstraint(headJoint, leftChestHeadIK, mo = 1)
+        cmds.parentConstraint(headJoint, rightChestHeadIK, mo = 1)
+
+    def _createDistanceBetweenNode(locatorStart, locatorEnd):
+        pass
