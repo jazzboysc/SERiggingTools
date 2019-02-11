@@ -141,7 +141,7 @@ class mainRigWindow(QtWidgets.QDialog):
         fkArmControlTransparency = float(self.fkBodyArmControlTransparencyLine.text())
         createSimpleSpine = self.fixedEndsSpineOptionCheckBox.isChecked()
         createSpineFKSystem = self.createSpineFKSystemCheckBox.isChecked()
-        createSimpleFKNeck = self.simpleNeckOptionCheckBox.isChecked()
+        createSimpleFKNeck = not self.ikDrivenNeckOptionCheckBox.isChecked()
 
         # Build character rig.
         character = SECharacter.RigBipedCharacter(characterName = characterName)
@@ -314,10 +314,10 @@ class mainRigWindow(QtWidgets.QDialog):
 
         # Head config tab page layout.
         neckOptionLayout = QtWidgets.QHBoxLayout()
-        neckOptionLayout.addWidget(QtWidgets.QLabel("Create Simple FK Neck:"))
-        self.simpleNeckOptionCheckBox = QtWidgets.QCheckBox()
-        self.simpleNeckOptionCheckBox.setChecked(True)
-        neckOptionLayout.addWidget(self.simpleNeckOptionCheckBox)
+        neckOptionLayout.addWidget(QtWidgets.QLabel("Create IK driven Neck:"))
+        self.ikDrivenNeckOptionCheckBox = QtWidgets.QCheckBox()
+        self.ikDrivenNeckOptionCheckBox.setChecked(False)
+        neckOptionLayout.addWidget(self.ikDrivenNeckOptionCheckBox)
         neckOptionLayout.addSpacing(370)
         headConfigTabPageLayout.addLayout(neckOptionLayout)
         headConfigTabPageLayout.addSpacing(300)
