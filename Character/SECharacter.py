@@ -363,7 +363,8 @@ class RigBipedCharacter():
                     leftChestHeadEnd = 'locator_L_ChestHeadEnd',
                     rightChestHeadBegin = 'locator_R_ChestHeadBegin',
                     rightChestHeadEnd = 'locator_R_ChestHeadEnd',
-                    createMuscleSpline = True
+                    createMuscleSpline = True,
+                    keepOutJointCount = 5
                     )
 
         if neck:

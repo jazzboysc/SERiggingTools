@@ -125,6 +125,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         self.FKNeckControls = []
         self.HeadAimIKControl = None
         self.IKJointsGroup = None
+        self.NeckKeepOutSystemGroup = None
 
     def build(
             self,
@@ -136,7 +137,8 @@ class RigMuscleSplineHumanNeck(RigComponent):
             leftChestHeadEnd = '',
             rightChestHeadBegin = '',
             rightChestHeadEnd = '',
-            createMuscleSpline = False
+            createMuscleSpline = False,
+            keepOutJointCount = 5
             ):
         if not cmds.objExists(neckAttachPoint):
             return
@@ -343,15 +345,17 @@ class RigMuscleSplineHumanNeck(RigComponent):
         if createMuscleSpline:
             if cmds.objExists(leftChestHeadBegin) and cmds.objExists(leftChestHeadEnd) and cmds.objExists(rightChestHeadBegin) and cmds.objExists(rightChestHeadEnd):
                 self._createMuscleSplineKeepOutSystem(leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, 
-                                                      headJoint, neckAttachPoint)
+                                                      headJoint, neckAttachPoint, keepOutJointCount = keepOutJointCount)
             else:
                 cmds.warning('Failed creating muscle spline keep out system. Please create chest head begin and end locators in the builder file.')
 
 
-    def _createMuscleSplineKeepOutSystem(self, leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, headJoint, neckAttachPoint):
+    def _createMuscleSplineKeepOutSystem(self, leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, headJoint, 
+                                         neckAttachPoint, keepOutJointCount):
         print('Creating neck muscle spline keep out system.')
 
         neckKeepOutSystemGrp = cmds.group(n = self.Prefix + 'NeckKeepOutSystem', em = 1, p = self.RigPartsGrp)
+        self.NeckKeepOutSystemGroup = neckKeepOutSystemGrp
         cmds.parent(leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, neckKeepOutSystemGrp)
         cmds.parentConstraint(headJoint, leftChestHeadEnd, mo = 1)
         cmds.parentConstraint(headJoint, rightChestHeadEnd, mo = 1)
@@ -419,22 +423,22 @@ class RigMuscleSplineHumanNeck(RigComponent):
         # Create muscle spline systems for the neck.
         leftPrefix = '_L_ChestHead'
         rightPrefix = '_R_ChestHead'
-        leftMuscleSplineGrp = self._createMuscleSpline(5, leftPrefix)
-        rightMuscleSplineGrp = self._createMuscleSpline(5, rightPrefix)
-        cmds.parent(leftMuscleSplineGrp, self.RigPartsGrp)
-        cmds.parent(rightMuscleSplineGrp, self.RigPartsGrp)
+        leftMuscleSplineGrp = self._createMuscleSpline(keepOutJointCount, leftPrefix)
+        rightMuscleSplineGrp = self._createMuscleSpline(keepOutJointCount, rightPrefix)
+        cmds.parent(leftMuscleSplineGrp, self.NeckKeepOutSystemGroup)
+        cmds.parent(rightMuscleSplineGrp, self.NeckKeepOutSystemGroup)
 
-        leftMuscleSplineControl01 = 'iControl' + leftPrefix + '1'
-        cmds.pointConstraint(leftChestHeadBeginJnt, leftMuscleSplineControl01)
-        leftMuscleSplineControl05 = 'iControl' + leftPrefix + '5'
-        cmds.pointConstraint(leftChestHeadEndJnt, leftMuscleSplineControl05)
+        leftMuscleSplineControlBegin = 'iControl' + leftPrefix + '1'
+        cmds.pointConstraint(leftChestHeadBeginJnt, leftMuscleSplineControlBegin)
+        leftMuscleSplineControlEnd = 'iControl' + leftPrefix + str(keepOutJointCount)
+        cmds.pointConstraint(leftChestHeadEndJnt, leftMuscleSplineControlEnd)
 
-        rightMuscleSplineControl01 = 'iControl' + rightPrefix + '1'
-        cmds.pointConstraint(rightChestHeadBeginJnt, rightMuscleSplineControl01)
-        rightMuscleSplineControl05 = 'iControl' + rightPrefix + '5'
-        cmds.pointConstraint(rightChestHeadEndJnt, rightMuscleSplineControl05)
+        rightMuscleSplineControlBegin = 'iControl' + rightPrefix + '1'
+        cmds.pointConstraint(rightChestHeadBeginJnt, rightMuscleSplineControlBegin)
+        rightMuscleSplineControlEnd = 'iControl' + rightPrefix + str(keepOutJointCount)
+        cmds.pointConstraint(rightChestHeadEndJnt, rightMuscleSplineControlEnd)
 
-        for i in range(1, 6):
+        for i in range(1, keepOutJointCount + 1):
             curLeftMuscleSplineControl = 'iControl' + leftPrefix + str(i)
             cmds.setAttr(curLeftMuscleSplineControl + '.tangentLength', 0)
             curRightMuscleSplineControl = 'iControl' + rightPrefix + str(i)
