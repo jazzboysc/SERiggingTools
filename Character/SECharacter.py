@@ -67,7 +67,9 @@ class RigBipedCharacter():
               fkArmControlTransparency = 0.85,
               createSimpleSpine = False,
               createSpineFKSystem = True,
-              createSimpleFKNeck = True
+              createSimpleFKNeck = True,
+              createNeckMuscleSplineSystem = False,
+              neckMuscleSplineJointCount = 5
               ):
 
         # Import model scene.
@@ -160,7 +162,9 @@ class RigBipedCharacter():
                                 fkArmControlTransparency,
                                 createSimpleSpine,
                                 createSpineFKSystem,
-                                createSimpleFKNeck
+                                createSimpleFKNeck,
+                                createNeckMuscleSplineSystem,
+                                neckMuscleSplineJointCount
                                 )
 
         # Setup model deformation.
@@ -230,7 +234,9 @@ class RigBipedCharacter():
                             fkArmControlTransparency,
                             createSimpleSpine,
                             createSpineFKSystem,
-                            createSimpleFKNeck
+                            createSimpleFKNeck,
+                            createNeckMuscleSplineSystem,
+                            neckMuscleSplineJointCount
                             ):
 
         # Spine.
@@ -363,8 +369,8 @@ class RigBipedCharacter():
                     leftChestHeadEnd = 'locator_L_ChestHeadEnd',
                     rightChestHeadBegin = 'locator_R_ChestHeadBegin',
                     rightChestHeadEnd = 'locator_R_ChestHeadEnd',
-                    createMuscleSpline = True,
-                    keepOutJointCount = 5
+                    createMuscleSpline = createNeckMuscleSplineSystem,
+                    keepOutJointCount = neckMuscleSplineJointCount
                     )
 
         if neck:

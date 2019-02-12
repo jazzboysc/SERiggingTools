@@ -142,6 +142,8 @@ class mainRigWindow(QtWidgets.QDialog):
         createSimpleSpine = self.fixedEndsSpineOptionCheckBox.isChecked()
         createSpineFKSystem = self.createSpineFKSystemCheckBox.isChecked()
         createSimpleFKNeck = not self.ikDrivenNeckOptionCheckBox.isChecked()
+        createNeckMuscleSplineSystem = self.NeckMuscleSplineOptionCheckBox.isChecked()
+        neckMuscleSplineJointCount = int(self.neckMuscleSplineJointCountLine.text())
 
         # Build character rig.
         character = SECharacter.RigBipedCharacter(characterName = characterName)
@@ -160,7 +162,9 @@ class mainRigWindow(QtWidgets.QDialog):
                         fkArmControlTransparency = fkArmControlTransparency,
                         createSimpleSpine = createSimpleSpine,
                         createSpineFKSystem = createSpineFKSystem,
-                        createSimpleFKNeck = createSimpleFKNeck
+                        createSimpleFKNeck = createSimpleFKNeck,
+                        createNeckMuscleSplineSystem = createNeckMuscleSplineSystem,
+                        neckMuscleSplineJointCount = neckMuscleSplineJointCount
                         )
         
         # Close the create rig window.
@@ -314,11 +318,23 @@ class mainRigWindow(QtWidgets.QDialog):
 
         # Head config tab page layout.
         neckOptionLayout = QtWidgets.QHBoxLayout()
-        neckOptionLayout.addWidget(QtWidgets.QLabel("Create IK driven Neck:"))
+        neckOptionLayout.addWidget(QtWidgets.QLabel("Create IK Driven Neck:"))
         self.ikDrivenNeckOptionCheckBox = QtWidgets.QCheckBox()
         self.ikDrivenNeckOptionCheckBox.setChecked(False)
         neckOptionLayout.addWidget(self.ikDrivenNeckOptionCheckBox)
-        neckOptionLayout.addSpacing(370)
+        neckOptionLayout.addSpacing(50)
+        neckOptionLayout.addWidget(QtWidgets.QLabel("Create Neck Muscle Spline System:"))
+        self.NeckMuscleSplineOptionCheckBox = QtWidgets.QCheckBox()
+        self.NeckMuscleSplineOptionCheckBox.setChecked(False)
+        neckOptionLayout.addWidget(self.NeckMuscleSplineOptionCheckBox)
+        neckOptionLayout.addSpacing(50)
+        neckOptionLayout.addWidget(QtWidgets.QLabel("Muscle Spline Joint Count:"))
+        self.neckMuscleSplineJointCountLine = QtWidgets.QLineEdit()
+        self.neckMuscleSplineJointCountLine.setValidator(QtGui.QIntValidator(3, 7))
+        neckOptionLayout.addWidget(self.neckMuscleSplineJointCountLine)
+        self.neckMuscleSplineJointCountLine.setText('5')
+        neckOptionLayout.addWidget(QtWidgets.QLabel("(3 - 7)"))
+        neckOptionLayout.addSpacing(200)
         headConfigTabPageLayout.addLayout(neckOptionLayout)
         headConfigTabPageLayout.addSpacing(300)
 
