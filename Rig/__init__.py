@@ -1,2 +1,4 @@
 import SERigSpineComponent
 import SERigBipedLimbComponent
+import SERigBipedNeckComponent
+import SERigHumanFacialComponent

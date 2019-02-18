@@ -6,6 +6,7 @@ from ..Base import SERigEnum
 from ..Rig import SERigSpineComponent
 from ..Rig import SERigBipedLimbComponent
 from ..Rig import SERigBipedNeckComponent
+from ..Rig import SERigHumanFacialComponent
 from ..Utils import SERigObjectTypeHelper
 from . import SECharacterDeform
 
@@ -43,6 +44,7 @@ class RigBipedCharacter():
         self.LeftHand = None
         self.RightHand = None
         self.Neck = None
+        self.FacialSystem = None
 
         # Rig deformation system.
         self.RigDeform = SECharacterDeform.RigBipedCharacterDeform(self)
@@ -69,7 +71,8 @@ class RigBipedCharacter():
               createSpineFKSystem = True,
               createSimpleFKNeck = True,
               createNeckMuscleSplineSystem = False,
-              neckMuscleSplineJointCount = 5
+              neckMuscleSplineJointCount = 5,
+              createFacialSystem = True
               ):
 
         # Import model scene.
@@ -164,7 +167,8 @@ class RigBipedCharacter():
                                 createSpineFKSystem,
                                 createSimpleFKNeck,
                                 createNeckMuscleSplineSystem,
-                                neckMuscleSplineJointCount
+                                neckMuscleSplineJointCount,
+                                createFacialSystem
                                 )
 
         # Setup model deformation.
@@ -236,7 +240,8 @@ class RigBipedCharacter():
                             createSpineFKSystem,
                             createSimpleFKNeck,
                             createNeckMuscleSplineSystem,
-                            neckMuscleSplineJointCount
+                            neckMuscleSplineJointCount,
+                            createFacialSystem
                             ):
 
         # Spine.
@@ -377,3 +382,14 @@ class RigBipedCharacter():
             self.Neck = neck
             SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Neck.TopGrp, 'NeckComponent', 'ComponentOwner')
 
+        if createFacialSystem:
+            facialSystem = SERigHumanFacialComponent.RigHumanFacialSystem(prefix = 'C_Face', baseRig = self.BaseRig, 
+                                                                          rigSide = SERigEnum.eRigSide.RS_Center, rigType = SERigEnum.eRigType.RT_NeckComponent)
+            facialSystem.build(
+                facialJoints = [],  # []
+                rootJoint = '',
+                facialAttachPoint = '',
+                rigScale = 1.0
+                )
+            self.FacialSystem = facialSystem
+            SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.FacialSystem.TopGrp, 'FacialComponent', 'ComponentOwner')

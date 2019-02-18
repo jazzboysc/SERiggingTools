@@ -54,7 +54,8 @@ eRigType = SE_RigEnum(
     RT_SpineComponent       = 34,
     RT_NeckComponent        = 35,
     RT_HandComponent        = 36,
-    RT_Max                  = 37
+    RT_FacialComponent      = 37,
+    RT_Max                  = 38
     )
 
 eRigTypeStringTable = [
@@ -94,7 +95,8 @@ eRigTypeStringTable = [
     'RT_ArmComponent',
     'RT_SpineComponent',
     'RT_NeckComponent',
-    'RT_HandComponent'
+    'RT_HandComponent',
+    'RT_FacialComponent'
     ]
 
 eRigColor = SE_RigEnum(
