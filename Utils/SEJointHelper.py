@@ -149,7 +149,7 @@ def adjustIKTwist(ikHandle,
                   startTwistValue = -270, 
                   endTwistValue = 270, 
                   twistValueStep = 90,
-                  epsilon = 0.01):
+                  epsilon = 0.4):
     isZeroRot = isZeroRotation(startJoint, epsilon = epsilon)
     if isZeroRot:
         print('No need twisting IK value for: %s' % startJoint)
