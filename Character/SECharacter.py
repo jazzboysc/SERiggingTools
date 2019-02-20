@@ -109,6 +109,12 @@ class RigBipedCharacter():
             portraitCamera = SERigObjectTypeHelper.getDefaultPerspectiveCamera()
             if portraitCamera:
                 cmds.setAttr(portraitCamera + '.focalLength', portraitCameraFocalLength)
+
+                portraitCameraTrans = cmds.listRelatives(portraitCamera, parent = True)[0]
+                cmds.setAttr(portraitCameraTrans + '.rotateX', -10.0)
+                cmds.setAttr(portraitCameraTrans + '.rotateY', 25.0)
+                cmds.setAttr(portraitCameraTrans + '.rotateZ', 0.0)
+                cmds.delete(cmds.pointConstraint('C_ChestBegin', portraitCameraTrans))
                 pm.viewFit(all = True)
 
         # Create rig base.

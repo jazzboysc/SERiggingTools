@@ -350,7 +350,7 @@ class mainRigWindow(QtWidgets.QDialog):
         portraitCameraOptionLayout = QtWidgets.QHBoxLayout()
         portraitCameraOptionLayout.addWidget(QtWidgets.QLabel("Use Portrait Camera Focal Length:"))
         self.PortraitCameraOptionCheckBox = QtWidgets.QCheckBox()
-        self.PortraitCameraOptionCheckBox.setChecked(False)
+        self.PortraitCameraOptionCheckBox.setChecked(True)
         portraitCameraOptionLayout.addWidget(self.PortraitCameraOptionCheckBox)
         portraitCameraOptionLayout.addSpacing(25)
         portraitCameraOptionLayout.addWidget(QtWidgets.QLabel("Portrait Camera Focal Length:"))
