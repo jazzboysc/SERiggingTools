@@ -399,3 +399,35 @@ def getSpecificObjectsUnderNamespace(type = '', namespace = ''):
 
     cmds.select(cl = True)
     return res
+
+def getDefaultCameras():
+    # Get all cameras first.
+    cameras = cmds.ls(type = ('camera'), l = True)
+
+    # Let's filter all startup / default cameras.
+    startupCameras = [camera for camera in cameras if cmds.camera(cmds.listRelatives(camera, parent = True)[0], startupCamera = True, q = True)]
+
+    return startupCameras
+
+def getNonDefaultCameras():
+    # Get all cameras first.
+    cameras = cmds.ls(type = ('camera'), l = True)
+
+    startupCameras = getDefaultCameras()
+
+    # non-default cameras are easy to find now.
+    nonStartupCameras = list(set(cameras) - set(startupCameras))
+
+    # Let's get their respective transform names, just in-case
+    nonStartupCamerasTransforms = map(lambda x: cmds.listRelatives(x, parent = True)[0], nonStartupCameras)
+
+    return [nonStartupCameras, nonStartupCamerasTransforms]
+
+def getDefaultPerspectiveCamera():
+    startupCameras = getDefaultCameras()
+    for camera in startupCameras:
+        index = camera.find('persp')
+        if index != -1:
+            return camera
+
+    return None

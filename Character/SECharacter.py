@@ -11,6 +11,7 @@ from ..Utils import SERigObjectTypeHelper
 from . import SECharacterDeform
 
 import maya.cmds as cmds
+import pymel.core as pm
 import os
 
 sceneScale = 1.0
@@ -72,7 +73,9 @@ class RigBipedCharacter():
               createSimpleFKNeck = True,
               createNeckMuscleSplineSystem = False,
               neckMuscleSplineJointCount = 5,
-              createFacialSystem = True
+              createFacialSystem = True,
+              usePortraitCameraFocalLength = True,
+              portraitCameraFocalLength = 85.0
               ):
 
         # Import model scene.
@@ -100,6 +103,13 @@ class RigBipedCharacter():
         else:
             print(builderFile + ' does not exist.')
             return
+
+        # Adjust default perspective camera's focal length and orientation to fit the character.
+        if usePortraitCameraFocalLength:
+            portraitCamera = SERigObjectTypeHelper.getDefaultPerspectiveCamera()
+            if portraitCamera:
+                cmds.setAttr(portraitCamera + '.focalLength', portraitCameraFocalLength)
+                pm.viewFit(all = True)
 
         # Create rig base.
         baseRig = RigBase(characterName = self.CharacterName, 

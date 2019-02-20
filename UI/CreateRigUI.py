@@ -144,6 +144,9 @@ class mainRigWindow(QtWidgets.QDialog):
         createSimpleFKNeck = not self.ikDrivenNeckOptionCheckBox.isChecked()
         createNeckMuscleSplineSystem = self.NeckMuscleSplineOptionCheckBox.isChecked()
         neckMuscleSplineJointCount = int(self.neckMuscleSplineJointCountLine.text())
+        usePortraitCameraFocalLength = self.PortraitCameraOptionCheckBox.isChecked()
+        portraitCameraFocalLength = float(self.PortraitCameraFocalLengthLine.text())
+
 
         # Build character rig.
         character = SECharacter.RigBipedCharacter(characterName = characterName)
@@ -164,7 +167,9 @@ class mainRigWindow(QtWidgets.QDialog):
                         createSpineFKSystem = createSpineFKSystem,
                         createSimpleFKNeck = createSimpleFKNeck,
                         createNeckMuscleSplineSystem = createNeckMuscleSplineSystem,
-                        neckMuscleSplineJointCount = neckMuscleSplineJointCount
+                        neckMuscleSplineJointCount = neckMuscleSplineJointCount,
+                        usePortraitCameraFocalLength = usePortraitCameraFocalLength,
+                        portraitCameraFocalLength = portraitCameraFocalLength
                         )
         
         # Close the create rig window.
@@ -238,7 +243,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.fixedEndsSpineOptionCheckBox = QtWidgets.QCheckBox()
         self.fixedEndsSpineOptionCheckBox.setChecked(False)
         spineOptionLayout.addWidget(self.fixedEndsSpineOptionCheckBox)
-        spineOptionLayout.addSpacing(30)
+        spineOptionLayout.addSpacing(25)
         spineOptionLayout.addWidget(QtWidgets.QLabel("Create Spine FK System:"))
         self.createSpineFKSystemCheckBox = QtWidgets.QCheckBox()
         self.createSpineFKSystemCheckBox.setChecked(True)
@@ -322,20 +327,46 @@ class mainRigWindow(QtWidgets.QDialog):
         self.ikDrivenNeckOptionCheckBox = QtWidgets.QCheckBox()
         self.ikDrivenNeckOptionCheckBox.setChecked(False)
         neckOptionLayout.addWidget(self.ikDrivenNeckOptionCheckBox)
-        neckOptionLayout.addSpacing(50)
+        neckOptionLayout.addSpacing(25)
         neckOptionLayout.addWidget(QtWidgets.QLabel("Create Neck Muscle Spline System:"))
         self.NeckMuscleSplineOptionCheckBox = QtWidgets.QCheckBox()
         self.NeckMuscleSplineOptionCheckBox.setChecked(False)
         neckOptionLayout.addWidget(self.NeckMuscleSplineOptionCheckBox)
-        neckOptionLayout.addSpacing(50)
+        neckOptionLayout.addSpacing(25)
         neckOptionLayout.addWidget(QtWidgets.QLabel("Muscle Spline Joint Count:"))
         self.neckMuscleSplineJointCountLine = QtWidgets.QLineEdit()
         self.neckMuscleSplineJointCountLine.setValidator(QtGui.QIntValidator(3, 7))
         neckOptionLayout.addWidget(self.neckMuscleSplineJointCountLine)
         self.neckMuscleSplineJointCountLine.setText('5')
         neckOptionLayout.addWidget(QtWidgets.QLabel("(3 - 7)"))
-        neckOptionLayout.addSpacing(200)
+        neckOptionLayout.addSpacing(270)
         headConfigTabPageLayout.addLayout(neckOptionLayout)
+
+        separator01 = QtWidgets.QFrame()
+        separator01.setFrameShape(QtWidgets.QFrame.HLine)
+        separator01.setFrameShadow(QtWidgets.QFrame.Sunken)
+        headConfigTabPageLayout.addWidget(separator01)
+
+        portraitCameraOptionLayout = QtWidgets.QHBoxLayout()
+        portraitCameraOptionLayout.addWidget(QtWidgets.QLabel("Use Portrait Camera Focal Length:"))
+        self.PortraitCameraOptionCheckBox = QtWidgets.QCheckBox()
+        self.PortraitCameraOptionCheckBox.setChecked(False)
+        portraitCameraOptionLayout.addWidget(self.PortraitCameraOptionCheckBox)
+        portraitCameraOptionLayout.addSpacing(25)
+        portraitCameraOptionLayout.addWidget(QtWidgets.QLabel("Portrait Camera Focal Length:"))
+        self.PortraitCameraFocalLengthLine = QtWidgets.QLineEdit()
+        self.PortraitCameraFocalLengthLine.setValidator(QtGui.QDoubleValidator(16.0, 135.0, 2))
+        portraitCameraOptionLayout.addWidget(self.PortraitCameraFocalLengthLine)
+        self.PortraitCameraFocalLengthLine.setText('85')
+        portraitCameraOptionLayout.addWidget(QtWidgets.QLabel("(16 - 135)"))
+        portraitCameraOptionLayout.addSpacing(400)
+        headConfigTabPageLayout.addLayout(portraitCameraOptionLayout)
+
+        separator02 = QtWidgets.QFrame()
+        separator02.setFrameShape(QtWidgets.QFrame.HLine)
+        separator02.setFrameShadow(QtWidgets.QFrame.Sunken)
+        headConfigTabPageLayout.addWidget(separator02)
+
         headConfigTabPageLayout.addSpacing(300)
 
         mainLayout.addWidget(tabs)
