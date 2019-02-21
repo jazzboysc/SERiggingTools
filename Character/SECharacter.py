@@ -159,7 +159,7 @@ class RigBipedCharacter():
         neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
 
         facialJnts = ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
-                      'R_EyelidLower', 'C_Jaw', 'C_JawEnd', 'C_LowerTeeth']
+                      'R_EyelidLower', 'C_Jaw', 'C_JawOffset', 'C_JawEnd', 'C_LowerTeeth']
 
         # Create rig components.
         self._createRigComponents( 
