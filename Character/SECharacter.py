@@ -184,7 +184,8 @@ class RigBipedCharacter():
                                 createSimpleFKNeck,
                                 createNeckMuscleSplineSystem,
                                 neckMuscleSplineJointCount,
-                                createFacialSystem
+                                createFacialSystem,
+                                facialJnts
                                 )
 
         # Setup model deformation.
@@ -257,7 +258,8 @@ class RigBipedCharacter():
                             createSimpleFKNeck,
                             createNeckMuscleSplineSystem,
                             neckMuscleSplineJointCount,
-                            createFacialSystem
+                            createFacialSystem,
+                            facialJnts
                             ):
 
         # Spine.
@@ -402,10 +404,13 @@ class RigBipedCharacter():
             facialSystem = SERigHumanFacialComponent.RigHumanFacialSystem(prefix = 'C_Face', baseRig = self.BaseRig, 
                                                                           rigSide = SERigEnum.eRigSide.RS_Center, rigType = SERigEnum.eRigType.RT_NeckComponent)
             facialSystem.build(
-                facialJoints = [],  # []
+                facialJoints = facialJnts,  # []
+                jawEndJoint = 'C_JawEnd',
+                throatJoint = 'C_Throat',
                 rootJoint = '',
                 facialAttachPoint = '',
-                rigScale = 1.0
+                rigScale = 1.0,
+                createChinBulgeIKSystem = True
                 )
             self.FacialSystem = facialSystem
             SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.FacialSystem.TopGrp, 'FacialComponent', 'ComponentOwner')
