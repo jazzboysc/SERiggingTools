@@ -40,6 +40,8 @@ sControlsVisibilityAttr      = 'controlsVisibility'
 sFKNeckJoint0FollowHeadAttr  = 'neckJoint0FollowHead'
 sIKHeadAimLocalToWorldAttr   = 'headAimControlLocalToWorld'
 
+sJawForwardAttr = 'jawForward'
+
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
 s_BuilderGroup       = '_' + sBuilderGroup

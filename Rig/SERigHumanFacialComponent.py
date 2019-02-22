@@ -141,9 +141,21 @@ class RigHumanFacialSystem(RigComponent):
         driverGrpName = onFaceIKJawControl.Prefix + SERigNaming.sDriverGroup
         resDriverGrp = onFaceIKJawControl.InsertNewGroup(driverGrpName)
         cmds.setAttr(resOffsetGrp + '.translateX', 2.0)
-        cmds.addAttr(onFaceIKJawControl.ControlObject, ln = 'jawForward', at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.setAttr(resOffsetGrp + '.rotateZ', 20.0)
+        cmds.addAttr(onFaceIKJawControl.ControlObject, ln = SERigNaming.sJawForwardAttr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.transformLimits(onFaceIKJawControl.ControlObject, tx = (0, 1), etx = (True, True), ty = (-1.0, 0.25), ety = (True, True), tz = (-1, 1), etz = (True, True))
 
-        cmds.transformLimits(onFaceIKJawControl.ControlObject, tx = (0, 1), etx = (True, True))
+        mulNode = cmds.createNode('multiplyDivide')
+        cmds.setAttr(mulNode + '.operation', 1)
+        cmds.setAttr(mulNode + '.input1X', 10.0)
+        cmds.connectAttr(onFaceIKJawControl.ControlObject + '.tx', mulNode + '.input2X')
+        cmds.connectAttr(mulNode + '.outputX', onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr)
+
+        mulNode = cmds.createNode('multiplyDivide')
+        cmds.setAttr(mulNode + '.operation', 1)
+        cmds.setAttr(mulNode + '.input1X', 0.03)
+        cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, mulNode + '.input2X')
+        cmds.connectAttr(mulNode + '.outputX', onFaceIKJawControlTransOffsetGrp + '.tx')
 
 
 
