@@ -93,6 +93,8 @@ class RigHumanFacialSystem(RigComponent):
             ):
         print('Building facial system...')
 
+        jawJoint = facialJoints[7]
+
         # Create IK joints group.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
         self.IKJointsGroup = ikJointsGroup
@@ -112,6 +114,11 @@ class RigHumanFacialSystem(RigComponent):
             self._createChinBulgeIKSystem(jawEndJoint, throatJoint)
 
         # Create on-face jaw IK control.
+        onFaceIKJawControlTransGrp = cmds.group(n = self.Prefix + '_OnFaceIKJawTransGrp', em = 1, p = self.OnFaceIkControlGroup)
+        cmds.delete(cmds.parentConstraint(jawJoint, onFaceIKJawControlTransGrp, mo = 0))
+        onFaceIKJawControlTransOffsetGrp = cmds.group(n = self.Prefix + '_OnFaceIKJawTransOffsetGrp', em = 1, p = onFaceIKJawControlTransGrp)
+        cmds.delete(cmds.parentConstraint(jawJoint, onFaceIKJawControlTransOffsetGrp, mo = 0))
+
         onFaceIKJawControl = SERigControl.RigCubeControl(
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_OnFaceIK,
@@ -120,12 +127,23 @@ class RigHumanFacialSystem(RigComponent):
                                 translateTo = jawEndJoint,
                                 rotateTo = jawEndJoint,
                                 scale = rigScale,
-                                parent = onFaceIkCtrlGrp,
+                                parent = onFaceIKJawControlTransOffsetGrp,
                                 lockChannels = ['r', 's', 'v'],
                                 cubeScaleX = 1.0,
                                 cubeScaleY = 2.0,
                                 cubeScaleZ = 2.0,
-                                transparency = 0.75
+                                transparency = 0.5,
+                                overrideControlColor = True,
+                                controlColor = (0.9, 0.4, 0.75)
                                 )
+        offsetGrpName = onFaceIKJawControl.Prefix + SERigNaming.sOffsetGroup
+        resOffsetGrp = onFaceIKJawControl.InsertNewGroup(offsetGrpName)
+        driverGrpName = onFaceIKJawControl.Prefix + SERigNaming.sDriverGroup
+        resDriverGrp = onFaceIKJawControl.InsertNewGroup(driverGrpName)
+        cmds.setAttr(resOffsetGrp + '.translateX', 2.0)
+        cmds.addAttr(onFaceIKJawControl.ControlObject, ln = 'jawForward', at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+
+        cmds.transformLimits(onFaceIKJawControl.ControlObject, tx = (0, 1), etx = (True, True))
+
 
 

@@ -404,7 +404,7 @@ class RigBipedCharacter():
             facialSystem = SERigHumanFacialComponent.RigHumanFacialSystem(prefix = 'C_Face', baseRig = self.BaseRig, 
                                                                           rigSide = SERigEnum.eRigSide.RS_Center, rigType = SERigEnum.eRigType.RT_NeckComponent)
             facialSystem.build(
-                facialJoints = facialJnts,  # []
+                facialJoints = facialJnts,  # ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 'R_EyelidLower', 'C_Jaw', 'C_JawOffset', 'C_JawEnd', 'C_LowerTeeth']
                 jawEndJoint = 'C_JawEnd',
                 throatJoint = 'C_Throat',
                 rootJoint = '',
