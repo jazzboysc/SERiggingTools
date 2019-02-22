@@ -27,6 +27,8 @@ class RigHumanFacialSystem(RigComponent):
         # Add public members.
         self.EyesAimIKControl = None
         self.IKJointsGroup = None
+        self.OnFaceIkControlGroup = None
+        self.OnFaceFkControlGroup = None
 
     def _createChinBulgeIKSystem(self, jawEndJoint, throatJoint):
         if cmds.objExists(jawEndJoint) and cmds.objExists(throatJoint):
@@ -91,9 +93,21 @@ class RigHumanFacialSystem(RigComponent):
             ):
         print('Building facial system...')
 
+        # Create IK joints group.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
         self.IKJointsGroup = ikJointsGroup
 
+        # Create on-face IK control group.
+        onFaceIkCtrlGrp = cmds.group(n = self.Prefix + '_OnFace_IK' + SERigNaming.sControlGroup, em = 1, p = self.IKControlGroup)
+        cmds.parentConstraint(facialAttachPoint, onFaceIkCtrlGrp, mo = 0)
+        self.OnFaceIkControlGroup = onFaceIkCtrlGrp
+
+        # Create on-face FK control group.
+        onFaceFkCtrlGrp = cmds.group(n = self.Prefix + '_OnFace_FK' + SERigNaming.sControlGroup, em = 1, p = self.FKControlGroup)
+        cmds.parentConstraint(facialAttachPoint, onFaceFkCtrlGrp, mo = 0)
+        self.OnFaceFkControlGroup = onFaceFkCtrlGrp
+
+        # Possibly create chin bulge ik joints.
         if createChinBulgeIKSystem:
             self._createChinBulgeIKSystem(jawEndJoint, throatJoint)
 

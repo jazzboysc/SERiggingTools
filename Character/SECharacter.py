@@ -408,7 +408,7 @@ class RigBipedCharacter():
                 jawEndJoint = 'C_JawEnd',
                 throatJoint = 'C_Throat',
                 rootJoint = '',
-                facialAttachPoint = '',
+                facialAttachPoint = 'C_FacialRoot',
                 rigScale = 1.0,
                 createChinBulgeIKSystem = True
                 )
