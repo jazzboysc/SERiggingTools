@@ -111,4 +111,21 @@ class RigHumanFacialSystem(RigComponent):
         if createChinBulgeIKSystem:
             self._createChinBulgeIKSystem(jawEndJoint, throatJoint)
 
+        # Create on-face jaw IK control.
+        onFaceIKJawControl = SERigControl.RigCubeControl(
+                                rigSide = self.RigSide,
+                                rigType = SERigEnum.eRigType.RT_OnFaceIK,
+                                rigControlIndex = 0,
+                                prefix = SERigNaming.sFKPrefix + 'OnFace_JawIK', 
+                                translateTo = jawEndJoint,
+                                rotateTo = jawEndJoint,
+                                scale = rigScale,
+                                parent = onFaceIkCtrlGrp,
+                                lockChannels = ['r', 's', 'v'],
+                                cubeScaleX = 1.0,
+                                cubeScaleY = 2.0,
+                                cubeScaleZ = 2.0,
+                                transparency = 0.75
+                                )
+
 
