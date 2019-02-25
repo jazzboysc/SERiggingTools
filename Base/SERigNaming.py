@@ -41,6 +41,7 @@ sFKNeckJoint0FollowHeadAttr  = 'neckJoint0FollowHead'
 sIKHeadAimLocalToWorldAttr   = 'headAimControlLocalToWorld'
 
 sJawForwardAttr = 'jawForward'
+sJawForwardFactorAttr = 'jawForwardFactor'
 
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup

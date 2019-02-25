@@ -95,7 +95,9 @@ class RigHumanFacialSystem(RigComponent):
 
         jawJoint = facialJoints[7]
         lowerLipBeginJoint = facialJoints[11]
-        lowerLipEndJoint = facialJoints[12]
+        lowerLipEndJoint   = facialJoints[12]
+        upperLipBeginJoint = facialJoints[13]
+        upperLipEndJoint   = facialJoints[14]
 
 
         # Create IK joints group.
@@ -144,6 +146,21 @@ class RigHumanFacialSystem(RigComponent):
         cmds.parent(midLowerLipEndJoint, midLowerLipBeginJoint)
         cmds.makeIdentity(midLowerLipEndJoint, apply = True)
         cmds.setAttr(midLowerLipEndJoint + '.radius', 0.5)
+
+        # Create mid upper lip joints.
+        cmds.select(cl = 1)
+        midUpperLipBeginJoint = cmds.joint(n = 'C_MidUpperLipBegin')
+        cmds.delete(cmds.parentConstraint(upperLipBeginJoint, midUpperLipBeginJoint, mo = 0))
+        cmds.parent(midUpperLipBeginJoint, jawMidPosJoint)
+        cmds.makeIdentity(midUpperLipBeginJoint, apply = True)
+        cmds.setAttr(midUpperLipBeginJoint + '.radius', 0.5)
+
+        cmds.select(cl = 1)
+        midUpperLipEndJoint = cmds.joint(n = 'C_MidUpperLipEnd')
+        cmds.delete(cmds.parentConstraint(upperLipEndJoint, midUpperLipEndJoint, mo = 0))
+        cmds.parent(midUpperLipEndJoint, midUpperLipBeginJoint)
+        cmds.makeIdentity(midUpperLipEndJoint, apply = True)
+        cmds.setAttr(midUpperLipEndJoint + '.radius', 0.5)
 
         # Create jaw position control.
         jawPosControl = SERigControl.RigCubeControl(
@@ -218,8 +235,12 @@ class RigHumanFacialSystem(RigComponent):
         resDriverGrp = onFaceIKJawControl.InsertNewGroup(driverGrpName)
         cmds.setAttr(resOffsetGrp + '.translateX', 2.0)
         cmds.setAttr(resOffsetGrp + '.rotateZ', 20.0)
-        cmds.addAttr(onFaceIKJawControl.ControlObject, ln = SERigNaming.sJawForwardAttr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.addAttr(onFaceIKJawControl.ControlObject, ln = SERigNaming.sJawForwardAttr, at = 'float', k = 0, dv = 0.0, 
+                     hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.setAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, cb = 0)
         cmds.transformLimits(onFaceIKJawControl.ControlObject, tx = (0, 1), etx = (True, True), ty = (-1.0, 0.25), ety = (True, True), tz = (-1, 1), etz = (True, True))
+        cmds.addAttr(onFaceIKJawControl.ControlObject, ln = SERigNaming.sJawForwardFactorAttr, at = 'float', k = 1, dv = 0.03, 
+                     hasMinValue = True, min = 0.0, hasMaxValue = True, max = 0.1)
 
         mulNode = cmds.createNode('multiplyDivide')
         cmds.setAttr(mulNode + '.operation', 1)
@@ -229,13 +250,13 @@ class RigHumanFacialSystem(RigComponent):
 
         mulNode = cmds.createNode('multiplyDivide')
         cmds.setAttr(mulNode + '.operation', 1)
-        cmds.setAttr(mulNode + '.input1X', 0.03)
+        cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardFactorAttr, mulNode + '.input1X')
         cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, mulNode + '.input2X')
         cmds.connectAttr(mulNode + '.outputX', onFaceIKJawControlTransOffsetGrp + '.tx')
 
         mulNode = cmds.createNode('multiplyDivide')
         cmds.setAttr(mulNode + '.operation', 1)
-        cmds.setAttr(mulNode + '.input1X', 0.03)
+        cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardFactorAttr, mulNode + '.input1X')
         cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, mulNode + '.input2X')
         cmds.connectAttr(mulNode + '.outputX', jawPosControl.ControlObject + '.tx')
 
@@ -244,7 +265,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.setAttr(mulNode0 + '.input1X', 0.5)
         mulNode1 = cmds.createNode('multiplyDivide')
         cmds.setAttr(mulNode1 + '.operation', 1)
-        cmds.setAttr(mulNode1 + '.input1X', 0.03)
+        cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardFactorAttr, mulNode1 + '.input1X')
         cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, mulNode1 + '.input2X')
         cmds.connectAttr(mulNode1 + '.outputX', mulNode0 + '.input2X')
         cmds.connectAttr(mulNode0 + '.outputX', jawMidPosControl.ControlObject + '.tx')
