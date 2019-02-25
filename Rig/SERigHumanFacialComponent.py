@@ -96,14 +96,6 @@ class RigHumanFacialSystem(RigComponent):
         jawJoint = facialJoints[7]
         lowerLipBeginJoint = facialJoints[11]
 
-        # Create jaw postion joint.
-        cmds.select(cl = 1)
-        jawPosJoint = cmds.joint(n = 'C_JawPos')
-        cmds.delete(cmds.parentConstraint(jawJoint, jawPosJoint, mo = 0))
-        cmds.parent(jawPosJoint, facialAttachPoint)
-        cmds.makeIdentity(jawPosJoint, apply = True)
-        cmds.parent(jawJoint, jawPosJoint)
-        cmds.parent(lowerLipBeginJoint, jawPosJoint)
 
         # Create IK joints group.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
@@ -119,6 +111,35 @@ class RigHumanFacialSystem(RigComponent):
         cmds.parentConstraint(facialAttachPoint, onFaceFkCtrlGrp, mo = 0)
         self.OnFaceFkControlGroup = onFaceFkCtrlGrp
 
+        # Create jaw postion joint.
+        cmds.select(cl = 1)
+        jawPosJoint = cmds.joint(n = 'C_JawPos')
+        cmds.delete(cmds.parentConstraint(jawJoint, jawPosJoint, mo = 0))
+        cmds.parent(jawPosJoint, facialAttachPoint)
+        cmds.makeIdentity(jawPosJoint, apply = True)
+        cmds.parent(jawJoint, jawPosJoint)
+        cmds.parent(lowerLipBeginJoint, jawPosJoint)
+
+        # Create jaw postion control.
+        jawPosControl = SERigControl.RigCubeControl(
+                                rigSide = self.RigSide,
+                                rigType = SERigEnum.eRigType.RT_OnFaceFK,
+                                rigControlIndex = 0,
+                                prefix = SERigNaming.sFKPrefix + 'OnFace_JawPosFK', 
+                                translateTo = jawPosJoint,
+                                rotateTo = jawPosJoint,
+                                scale = rigScale,
+                                parent = onFaceFkCtrlGrp,
+                                lockChannels = ['r', 's', 'v'],
+                                cubeScaleX = 3.0,
+                                cubeScaleY = 3.0,
+                                cubeScaleZ = 3.0,
+                                transparency = 0.5,
+                                overrideControlColor = True,
+                                controlColor = (0.9, 0.4, 0.75)
+                                )
+        cmds.pointConstraint(jawPosControl.ControlObject, jawPosJoint, mo = 0)
+
         # Possibly create chin bulge ik joints.
         if createChinBulgeIKSystem:
             self._createChinBulgeIKSystem(jawEndJoint, throatJoint)
@@ -133,7 +154,7 @@ class RigHumanFacialSystem(RigComponent):
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_OnFaceIK,
                                 rigControlIndex = 0,
-                                prefix = SERigNaming.sFKPrefix + 'OnFace_JawIK', 
+                                prefix = SERigNaming.sIKPrefix + 'OnFace_JawIK', 
                                 translateTo = jawEndJoint,
                                 rotateTo = jawEndJoint,
                                 scale = rigScale,
@@ -166,6 +187,12 @@ class RigHumanFacialSystem(RigComponent):
         cmds.setAttr(mulNode + '.input1X', 0.03)
         cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, mulNode + '.input2X')
         cmds.connectAttr(mulNode + '.outputX', onFaceIKJawControlTransOffsetGrp + '.tx')
+
+        mulNode = cmds.createNode('multiplyDivide')
+        cmds.setAttr(mulNode + '.operation', 1)
+        cmds.setAttr(mulNode + '.input1X', 0.03)
+        cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, mulNode + '.input2X')
+        cmds.connectAttr(mulNode + '.outputX', jawPosControl.ControlObject + '.tx')
 
 
 
