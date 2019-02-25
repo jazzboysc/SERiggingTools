@@ -94,6 +94,16 @@ class RigHumanFacialSystem(RigComponent):
         print('Building facial system...')
 
         jawJoint = facialJoints[7]
+        lowerLipBeginJoint = facialJoints[11]
+
+        # Create jaw postion joint.
+        cmds.select(cl = 1)
+        jawPosJoint = cmds.joint(n = 'C_JawPos')
+        cmds.delete(cmds.parentConstraint(jawJoint, jawPosJoint, mo = 0))
+        cmds.parent(jawPosJoint, facialAttachPoint)
+        cmds.makeIdentity(jawPosJoint, apply = True)
+        cmds.parent(jawJoint, jawPosJoint)
+        cmds.parent(lowerLipBeginJoint, jawPosJoint)
 
         # Create IK joints group.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
