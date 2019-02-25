@@ -95,6 +95,7 @@ class RigHumanFacialSystem(RigComponent):
 
         jawJoint = facialJoints[7]
         lowerLipBeginJoint = facialJoints[11]
+        lowerLipEndJoint = facialJoints[12]
 
 
         # Create IK joints group.
@@ -111,7 +112,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.parentConstraint(facialAttachPoint, onFaceFkCtrlGrp, mo = 0)
         self.OnFaceFkControlGroup = onFaceFkCtrlGrp
 
-        # Create jaw postion joint.
+        # Create jaw position joint.
         cmds.select(cl = 1)
         jawPosJoint = cmds.joint(n = 'C_JawPos')
         cmds.delete(cmds.parentConstraint(jawJoint, jawPosJoint, mo = 0))
@@ -119,8 +120,32 @@ class RigHumanFacialSystem(RigComponent):
         cmds.makeIdentity(jawPosJoint, apply = True)
         cmds.parent(jawJoint, jawPosJoint)
         cmds.parent(lowerLipBeginJoint, jawPosJoint)
+        cmds.setAttr(jawPosJoint + '.radius', 0.5)
 
-        # Create jaw postion control.
+        # Create jaw mid-position joint.
+        cmds.select(cl = 1)
+        jawMidPosJoint = cmds.joint(n = 'C_JawMidPos')
+        cmds.delete(cmds.parentConstraint(jawJoint, jawMidPosJoint, mo = 0))
+        cmds.parent(jawMidPosJoint, facialAttachPoint)
+        cmds.makeIdentity(jawMidPosJoint, apply = True)
+        cmds.setAttr(jawMidPosJoint + '.radius', 0.5)
+
+        # Create mid lower lip joints.
+        cmds.select(cl = 1)
+        midLowerLipBeginJoint = cmds.joint(n = 'C_MidLowerLipBegin')
+        cmds.delete(cmds.parentConstraint(lowerLipBeginJoint, midLowerLipBeginJoint, mo = 0))
+        cmds.parent(midLowerLipBeginJoint, jawMidPosJoint)
+        cmds.makeIdentity(midLowerLipBeginJoint, apply = True)
+        cmds.setAttr(midLowerLipBeginJoint + '.radius', 0.5)
+
+        cmds.select(cl = 1)
+        midLowerLipEndJoint = cmds.joint(n = 'C_MidLowerLipEnd')
+        cmds.delete(cmds.parentConstraint(lowerLipEndJoint, midLowerLipEndJoint, mo = 0))
+        cmds.parent(midLowerLipEndJoint, midLowerLipBeginJoint)
+        cmds.makeIdentity(midLowerLipEndJoint, apply = True)
+        cmds.setAttr(midLowerLipEndJoint + '.radius', 0.5)
+
+        # Create jaw position control.
         jawPosControl = SERigControl.RigCubeControl(
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_OnFaceFK,
@@ -131,14 +156,34 @@ class RigHumanFacialSystem(RigComponent):
                                 scale = rigScale,
                                 parent = onFaceFkCtrlGrp,
                                 lockChannels = ['r', 's', 'v'],
-                                cubeScaleX = 3.0,
-                                cubeScaleY = 3.0,
-                                cubeScaleZ = 3.0,
+                                cubeScaleX = 4.0,
+                                cubeScaleY = 2.0,
+                                cubeScaleZ = 4.0,
                                 transparency = 0.5,
                                 overrideControlColor = True,
                                 controlColor = (0.9, 0.4, 0.75)
                                 )
         cmds.pointConstraint(jawPosControl.ControlObject, jawPosJoint, mo = 0)
+
+        # Create jaw mid position control.
+        jawMidPosControl = SERigControl.RigCubeControl(
+                                rigSide = self.RigSide,
+                                rigType = SERigEnum.eRigType.RT_OnFaceFK,
+                                rigControlIndex = 1,
+                                prefix = SERigNaming.sFKPrefix + 'OnFace_JawMidPosFK', 
+                                translateTo = jawMidPosJoint,
+                                rotateTo = jawMidPosJoint,
+                                scale = rigScale,
+                                parent = onFaceFkCtrlGrp,
+                                lockChannels = ['r', 's', 'v'],
+                                cubeScaleX = 4.0,
+                                cubeScaleY = 4.0,
+                                cubeScaleZ = 2.0,
+                                transparency = 0.5,
+                                overrideControlColor = True,
+                                controlColor = (0.4, 0.9, 0.75)
+                                )
+        cmds.pointConstraint(jawMidPosControl.ControlObject, jawMidPosJoint, mo = 0)
 
         # Possibly create chin bulge ik joints.
         if createChinBulgeIKSystem:
@@ -193,6 +238,16 @@ class RigHumanFacialSystem(RigComponent):
         cmds.setAttr(mulNode + '.input1X', 0.03)
         cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, mulNode + '.input2X')
         cmds.connectAttr(mulNode + '.outputX', jawPosControl.ControlObject + '.tx')
+
+        mulNode0 = cmds.createNode('multiplyDivide')
+        cmds.setAttr(mulNode0 + '.operation', 1)
+        cmds.setAttr(mulNode0 + '.input1X', 0.5)
+        mulNode1 = cmds.createNode('multiplyDivide')
+        cmds.setAttr(mulNode1 + '.operation', 1)
+        cmds.setAttr(mulNode1 + '.input1X', 0.03)
+        cmds.connectAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, mulNode1 + '.input2X')
+        cmds.connectAttr(mulNode1 + '.outputX', mulNode0 + '.input2X')
+        cmds.connectAttr(mulNode0 + '.outputX', jawMidPosControl.ControlObject + '.tx')
 
 
 
