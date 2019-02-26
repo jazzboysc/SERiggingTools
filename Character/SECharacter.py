@@ -403,7 +403,8 @@ class RigBipedCharacter():
 
         if createFacialSystem:
             facialSystem = SERigHumanFacialComponent.RigHumanFacialSystem(prefix = 'C_Face', baseRig = self.BaseRig, 
-                                                                          rigSide = SERigEnum.eRigSide.RS_Center, rigType = SERigEnum.eRigType.RT_NeckComponent)
+                                                                          rigSide = SERigEnum.eRigSide.RS_Center, 
+                                                                          rigType = SERigEnum.eRigType.RT_FacialComponent)
             facialSystem.build(
                 facialJoints = facialJnts,  # ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
                                             #  'R_EyelidLower', 'C_Jaw', 'C_JawOffset', 'C_JawEnd', 'C_LowerTeeth', 'C_LowerLipBegin', 'C_LowerLipEnd',

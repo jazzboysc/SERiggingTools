@@ -114,3 +114,9 @@ eRigFacing = SE_RigEnum(
     RF_Y = 2,
     RF_Z = 3
     )
+
+eRigFacialControlID = SE_RigEnum(
+    RFCID_JawPos    = 0,
+    RFCID_JawMidPos = 1,
+    RFCID_JawIK     = 2
+    )
