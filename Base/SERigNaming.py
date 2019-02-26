@@ -43,6 +43,12 @@ sIKHeadAimLocalToWorldAttr   = 'headAimControlLocalToWorld'
 sJawForwardAttr = 'jawForward'
 sJawForwardFactorAttr = 'jawForwardFactor'
 
+sAU_01_L_Attr = 'AU01L'
+sAU_01_R_Attr = 'AU01R'
+sAU_02_L_Attr = 'AU02L'
+sAU_02_R_Attr = 'AU02R'
+sAU_LipClose_Attr = 'LipClose'
+
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
 s_BuilderGroup       = '_' + sBuilderGroup

@@ -81,6 +81,20 @@ class RigHumanFacialSystem(RigComponent):
             cmds.parent(chinBulgeIK, throatIk_OffsetGrp)
 
 
+    def _createDataBuffer(self):
+        dataBufferGroup = cmds.group(n = self.Prefix + '_DataBufferGrp', em = 1, p = self.RigPartsGrp)
+
+        auAttrList = [SERigNaming.sAU_01_L_Attr,
+                      SERigNaming.sAU_01_R_Attr,
+                      SERigNaming.sAU_02_L_Attr,
+                      SERigNaming.sAU_02_R_Attr,
+                      SERigNaming.sAU_LipClose_Attr]
+
+        for attr in auAttrList:
+            cmds.addAttr(dataBufferGroup, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+            cmds.setAttr(dataBufferGroup + '.' + attr, cb = 1)
+
+
     def build(
             self,
             facialJoints = [],  # []
@@ -104,6 +118,9 @@ class RigHumanFacialSystem(RigComponent):
         lockAttrList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz']
         for attr in lockAttrList:
             cmds.setAttr(jawOffsetJoint + '.' + attr, l = True)
+
+        # Create data buffer group.
+        self._createDataBuffer()
 
         # Create IK joints group.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
@@ -247,7 +264,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.addAttr(onFaceIKJawControl.ControlObject, ln = SERigNaming.sJawForwardAttr, at = 'float', k = 0, dv = 0.0, 
                      hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
         cmds.setAttr(onFaceIKJawControl.ControlObject + '.' + SERigNaming.sJawForwardAttr, cb = 0)
-        cmds.transformLimits(onFaceIKJawControl.ControlObject, tx = (0, 1), etx = (True, True), ty = (-2.0, 0.25), ety = (True, True), tz = (-1, 1), etz = (True, True))
+        cmds.transformLimits(onFaceIKJawControl.ControlObject, tx = (0, 1), etx = (True, True), ty = (-4.5, 0.25), ety = (True, True), tz = (-1, 1), etz = (True, True))
         cmds.addAttr(onFaceIKJawControl.ControlObject, ln = SERigNaming.sJawForwardFactorAttr, at = 'float', k = 1, dv = 0.03, 
                      hasMinValue = True, min = 0.0, hasMaxValue = True, max = 0.1)
 
@@ -300,3 +317,10 @@ class RigHumanFacialSystem(RigComponent):
         cmds.poleVectorConstraint(jawIKPV, jawIK)
         SEJointHelper.adjustIKTwist(jawIK, jawJoint)
 
+        cmds.connectAttr(jawJoint + '.rotate', lowerLipBeginJoint + '.rotate')
+        unitConversionNode = cmds.createNode('unitConversion')
+        cmds.setAttr(unitConversionNode + '.conversionFactor', 0.5)
+        cmds.connectAttr(jawJoint + '.rotate', unitConversionNode + '.input')
+        cmds.connectAttr(unitConversionNode + '.output', midLowerLipBeginJoint + '.rotate')
+        cmds.connectAttr(unitConversionNode + '.output', midUpperLipBeginJoint + '.rotate')
+        
