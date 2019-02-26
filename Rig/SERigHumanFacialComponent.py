@@ -29,6 +29,7 @@ class RigHumanFacialSystem(RigComponent):
         self.IKJointsGroup = None
         self.OnFaceIkControlGroup = None
         self.OnFaceFkControlGroup = None
+        self.DataBuffer = None
 
     def _createChinBulgeIKSystem(self, jawEndJoint, throatJoint):
         if cmds.objExists(jawEndJoint) and cmds.objExists(throatJoint):
@@ -83,6 +84,7 @@ class RigHumanFacialSystem(RigComponent):
 
     def _createDataBuffer(self):
         dataBufferGroup = cmds.group(n = self.Prefix + '_DataBufferGrp', em = 1, p = self.RigPartsGrp)
+        self.DataBuffer = dataBufferGroup
 
         auAttrList = [SERigNaming.sAU_01_L_Attr,
                       SERigNaming.sAU_01_R_Attr,
@@ -113,6 +115,27 @@ class RigHumanFacialSystem(RigComponent):
         lowerLipEndJoint   = facialJoints[12]
         upperLipBeginJoint = facialJoints[13]
         upperLipEndJoint   = facialJoints[14]
+
+        checkList = [jawJoint, jawOffsetJoint, lowerLipBeginJoint, lowerLipEndJoint, upperLipBeginJoint, upperLipEndJoint]
+        for obj in checkList:
+            if not cmds.objExists(obj):
+                cmds.warning('Failed building facial system, cannot find:' + obj)
+                return
+
+        # Create lower and upper lips' blend joints.
+        cmds.select(cl = 1)
+        lowerLipBlendJoint = cmds.joint(n = lowerLipEndJoint + 'Blend')
+        cmds.delete(cmds.parentConstraint(lowerLipEndJoint, lowerLipBlendJoint, mo = 0))
+        cmds.parent(lowerLipBlendJoint, lowerLipEndJoint)
+        cmds.makeIdentity(lowerLipBlendJoint, apply = True)
+        cmds.setAttr(lowerLipBlendJoint + '.radius', 0.5)
+
+        cmds.select(cl = 1)
+        upperLipBlendJoint = cmds.joint(n = upperLipEndJoint + 'Blend')
+        cmds.delete(cmds.parentConstraint(upperLipEndJoint, upperLipBlendJoint, mo = 0))
+        cmds.parent(upperLipBlendJoint, upperLipEndJoint)
+        cmds.makeIdentity(upperLipBlendJoint, apply = True)
+        cmds.setAttr(upperLipBlendJoint + '.radius', 0.5)
 
         # Lock jaw offset joint's motion.
         lockAttrList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz']
@@ -317,6 +340,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.poleVectorConstraint(jawIKPV, jawIK)
         SEJointHelper.adjustIKTwist(jawIK, jawJoint)
 
+        # Rotate lower, mid lower and mid upper lips via jaw joint.
         cmds.connectAttr(jawJoint + '.rotate', lowerLipBeginJoint + '.rotate')
         unitConversionNode = cmds.createNode('unitConversion')
         cmds.setAttr(unitConversionNode + '.conversionFactor', 0.5)
@@ -324,3 +348,14 @@ class RigHumanFacialSystem(RigComponent):
         cmds.connectAttr(unitConversionNode + '.output', midLowerLipBeginJoint + '.rotate')
         cmds.connectAttr(unitConversionNode + '.output', midUpperLipBeginJoint + '.rotate')
         
+        # Create blend for lower and upper lips.
+        reverseNode = cmds.createNode('reverse')
+        cmds.connectAttr(self.DataBuffer + '.' + SERigNaming.sAU_LipClose_Attr, reverseNode + '.inputX')
+
+        pc = cmds.parentConstraint(upperLipEndJoint, midUpperLipEndJoint, upperLipBlendJoint)[0]
+        cmds.connectAttr(self.DataBuffer + '.' + SERigNaming.sAU_LipClose_Attr, pc + '.' + midUpperLipEndJoint + 'W1')
+        cmds.connectAttr(reverseNode + '.outputX', pc + '.' + upperLipEndJoint + 'W0')
+
+        pc = cmds.parentConstraint(lowerLipEndJoint, midLowerLipEndJoint, lowerLipBlendJoint)[0]
+        cmds.connectAttr(self.DataBuffer + '.' + SERigNaming.sAU_LipClose_Attr, pc + '.' + midLowerLipEndJoint + 'W1')
+        cmds.connectAttr(reverseNode + '.outputX', pc + '.' + lowerLipEndJoint + 'W0')
