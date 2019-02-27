@@ -10,6 +10,29 @@ from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
+def getAuLipCloseAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_LipClose_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu01LAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_01_L_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu01RAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_01_R_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------
 # Rig Human Facial System Class
 # Sun Che
 #-----------------------------------------------------------------------------
@@ -272,7 +295,7 @@ class RigHumanFacialSystem(RigComponent):
                                 cubeScaleX = 1.0,
                                 cubeScaleY = 2.0,
                                 cubeScaleZ = 2.0,
-                                transparency = 0.5,
+                                transparency = 0.2,
                                 overrideControlColor = True,
                                 controlColor = (0.9, 0.4, 0.75)
                                 )
@@ -359,3 +382,30 @@ class RigHumanFacialSystem(RigComponent):
         pc = cmds.parentConstraint(lowerLipEndJoint, midLowerLipEndJoint, lowerLipBlendJoint)[0]
         cmds.connectAttr(self.DataBuffer + '.' + SERigNaming.sAU_LipClose_Attr, pc + '.' + midLowerLipEndJoint + 'W1')
         cmds.connectAttr(reverseNode + '.outputX', pc + '.' + lowerLipEndJoint + 'W0')
+
+        # Create on-face lip close control.
+        onFaceLipCloseControl = SERigControl.RigCubeControl(
+                                rigSide = self.RigSide,
+                                rigType = SERigEnum.eRigType.RT_OnFaceFK,
+                                rigControlIndex = SERigEnum.eRigFacialControlID.RFCID_LipCloseFK,
+                                prefix = SERigNaming.sFKPrefix + 'OnFace_LipCloseFK', 
+                                translateTo = onFaceIKJawControl.ControlObject,
+                                rotateTo = onFaceIKJawControl.ControlObject,
+                                scale = rigScale,
+                                parent = onFaceIKJawControl.ControlObject,
+                                lockChannels = ['tx', 'tz', 'r', 's', 'v'],
+                                cubeScaleX = 0.5,
+                                cubeScaleY = 1.0,
+                                cubeScaleZ = 1.0,
+                                transparency = 0.2,
+                                overrideControlColor = True,
+                                controlColor = (0.2, 0.8, 0.4)
+                                )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, onFaceLipCloseControl.ControlGroup, 'OnFaceLipCloseControl', 'ControlOwner')
+        onFaceLipCloseControlOffsetGrp = onFaceLipCloseControl.InsertNewGroup(groupName = onFaceLipCloseControl.Prefix + SERigNaming.sOffsetGroup)
+        cmds.move(0.0, 2.0, 0.0, onFaceLipCloseControlOffsetGrp, r = 1, os = 1)
+        cmds.transformLimits(onFaceLipCloseControl.ControlObject, ty = (0.0, 1.0), ety = (True, True))
+
+        # For now, connect the control's ty to the data buffer attribute directly.
+        dataBufferLipCloseAttr = getAuLipCloseAttrName(self.DataBuffer)
+        cmds.connectAttr(onFaceLipCloseControl.ControlObject + '.ty', dataBufferLipCloseAttr)
