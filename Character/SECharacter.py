@@ -8,6 +8,7 @@ from ..Rig import SERigBipedLimbComponent
 from ..Rig import SERigBipedNeckComponent
 from ..Rig import SERigHumanFacialComponent
 from ..Utils import SERigObjectTypeHelper
+from ..Utils import SEMathHelper
 from . import SECharacterDeform
 
 import maya.cmds as cmds
@@ -382,6 +383,8 @@ class RigBipedCharacter():
                     rigScale = sceneScale
                     )
         else:
+            spineRefLength = SEMathHelper.getDistanceBetweenObjects(spineJnts[0], spineJnts[-1])
+
             neck = SERigBipedNeckComponent.RigMuscleSplineHumanNeck(prefix = 'C_Neck', baseRig = self.BaseRig,
                                                           rigSide = SERigEnum.eRigSide.RS_Center, 
                                                           rigType = SERigEnum.eRigType.RT_NeckComponent)
@@ -394,7 +397,8 @@ class RigBipedCharacter():
                     rightChestHeadBegin = 'locator_R_ChestHeadBegin',
                     rightChestHeadEnd = 'locator_R_ChestHeadEnd',
                     createMuscleSpline = createNeckMuscleSplineSystem,
-                    keepOutJointCount = neckMuscleSplineJointCount
+                    keepOutJointCount = neckMuscleSplineJointCount,
+                    spineReferenceLength = spineRefLength
                     )
 
         if neck:

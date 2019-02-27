@@ -138,7 +138,8 @@ class RigMuscleSplineHumanNeck(RigComponent):
             rightChestHeadBegin = '',
             rightChestHeadEnd = '',
             createMuscleSpline = False,
-            keepOutJointCount = 5
+            keepOutJointCount = 5,
+            spineReferenceLength = 45.0
             ):
         if not cmds.objExists(neckAttachPoint):
             return
@@ -262,7 +263,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         headAimJnt1 = cmds.joint(n = SERigNaming.sIKPrefix + 'C_HeadAim_1')
         cmds.delete(cmds.pointConstraint(headJoint, headAimJnt1, mo = 0))
         cmds.parent(headAimJnt1, headAimJnt0)
-        cmds.setAttr(headAimJnt1 + '.translateX', 75)
+        cmds.setAttr(headAimJnt1 + '.translateX', spineReferenceLength * 1.5)
         cmds.setAttr(headAimJnt1 + '.jointOrientY', 90)
         cmds.hide(headAimJnt1)
 

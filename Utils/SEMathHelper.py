@@ -23,6 +23,15 @@ def getDistance3(a, b):
     res = sqrt(dx*dx + dy*dy + dz*dz)
     return res
 
+def getDistanceBetweenObjects(object1, object2):
+    d = -1.0
+    if cmds.objExists(object1) and cmds.objExists(object2):
+        pos1 = getWorldPosition(object1)
+        pos2 = getWorldPosition(object2)
+        d = getDistance3(pos1, pos2)
+
+    return d
+
 def movePivotTo(object, target):
 
     targetPos = cmds.xform(target, q = True, t = True, ws = True)
