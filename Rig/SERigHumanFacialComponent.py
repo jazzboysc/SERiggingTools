@@ -122,7 +122,7 @@ class RigHumanFacialSystem(RigComponent):
 
     def build(
             self,
-            facialJoints = [],  # []
+            facialJoints = [],
             jawEndJoint = '',
             throatJoint = '',
             rootJoint = '',
@@ -132,12 +132,12 @@ class RigHumanFacialSystem(RigComponent):
             ):
         print('Building facial system...')
 
-        jawJoint = facialJoints[7]
-        jawOffsetJoint = facialJoints[8]
-        lowerLipBeginJoint = facialJoints[11]
-        lowerLipEndJoint   = facialJoints[12]
-        upperLipBeginJoint = facialJoints[13]
-        upperLipEndJoint   = facialJoints[14]
+        jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
+        jawOffsetJoint = SEJointHelper.getFacialJawOffsetJoint(facialJoints)
+        lowerLipBeginJoint = SEJointHelper.getFacialLowerLipBeginJoint(facialJoints)
+        lowerLipEndJoint   = SEJointHelper.getFacialLowerLipEndJoint(facialJoints)
+        upperLipBeginJoint = SEJointHelper.getFacialUpperLipBeginJoint(facialJoints)
+        upperLipEndJoint   = SEJointHelper.getFacialUpperLipEndJoint(facialJoints)
 
         checkList = [jawJoint, jawOffsetJoint, lowerLipBeginJoint, lowerLipEndJoint, upperLipBeginJoint, upperLipEndJoint]
         for obj in checkList:

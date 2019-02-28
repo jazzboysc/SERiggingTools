@@ -9,6 +9,7 @@ from ..Rig import SERigBipedNeckComponent
 from ..Rig import SERigHumanFacialComponent
 from ..Utils import SERigObjectTypeHelper
 from ..Utils import SEMathHelper
+from ..Utils import SEJointHelper
 from . import SECharacterDeform
 
 import maya.cmds as cmds
@@ -159,9 +160,7 @@ class RigBipedCharacter():
 
         neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
 
-        facialJnts = ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
-                      'R_EyelidLower', 'C_Jaw', 'C_JawOffset', 'C_JawEnd', 'C_LowerTeeth', 'C_LowerLipBegin', 'C_LowerLipEnd',
-                      'C_UpperLipBegin', 'C_UpperLipEnd']
+        facialJnts = SEJointHelper.getFacialJoints()
 
         # Create rig components.
         self._createRigComponents( 
@@ -410,9 +409,7 @@ class RigBipedCharacter():
                                                                           rigSide = SERigEnum.eRigSide.RS_Center, 
                                                                           rigType = SERigEnum.eRigType.RT_FacialComponent)
             facialSystem.build(
-                facialJoints = facialJnts,  # ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
-                                            #  'R_EyelidLower', 'C_Jaw', 'C_JawOffset', 'C_JawEnd', 'C_LowerTeeth', 'C_LowerLipBegin', 'C_LowerLipEnd',
-                                            #  'C_UpperLipBegin', 'C_UpperLipEnd']
+                facialJoints = facialJnts,
                 jawEndJoint = 'C_JawEnd',
                 throatJoint = 'C_Throat',
                 rootJoint = '',

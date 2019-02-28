@@ -165,3 +165,35 @@ def adjustIKTwist(ikHandle,
 
     if isZeroRot == False:
         cmds.error('Twisting IK value failed for: %s' % startJoint)
+
+
+def getFacialJoints():
+    facialJnts = ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
+                  'R_EyelidLower', 'C_Jaw', 'C_JawOffset', 'C_JawEnd', 'C_LowerTeeth', 'C_LowerLipBegin', 'C_LowerLipEnd',
+                  'C_UpperLipBegin', 'C_UpperLipEnd']
+
+    return facialJnts
+
+def getFacialJawJoint(facialJoints):
+    jawJoint = facialJoints[7]
+    return jawJoint
+
+def getFacialJawOffsetJoint(facialJoints):
+    jawOffsetJoint = facialJoints[8]
+    return jawOffsetJoint
+
+def getFacialLowerLipBeginJoint(facialJoints):
+    lowerLipBeginJoint = facialJoints[11]
+    return lowerLipBeginJoint
+
+def getFacialLowerLipEndJoint(facialJoints):
+    lowerLipEndJoint   = facialJoints[12]
+    return lowerLipEndJoint
+
+def getFacialUpperLipBeginJoint(facialJoints):
+    upperLipBeginJoint   = facialJoints[13]
+    return upperLipBeginJoint
+
+def getFacialUpperLipEndJoint(facialJoints):
+    upperLipEndJoint   = facialJoints[14]
+    return upperLipEndJoint
