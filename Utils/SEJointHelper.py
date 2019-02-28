@@ -168,9 +168,25 @@ def adjustIKTwist(ikHandle,
 
 
 def getFacialJoints():
-    facialJnts = ['L_Eye', 'R_Eye', 'C_UpperTeeth', 'L_EyelidUpper', 'L_EyelidLower', 'R_EyelidUpper', 
-                  'R_EyelidLower', 'C_Jaw', 'C_JawOffset', 'C_JawEnd', 'C_LowerTeeth', 'C_LowerLipBegin', 'C_LowerLipEnd',
-                  'C_UpperLipBegin', 'C_UpperLipEnd']
+    facialJnts = ['L_Eye',                 # 0
+                  'R_Eye',                 # 1
+                  'C_UpperTeeth',          # 2 
+                  'L_EyelidUpper',         # 3
+                  'L_EyelidLower',         # 4
+                  'R_EyelidUpper',         # 5
+                  'R_EyelidLower',         # 6
+                  'C_Jaw',                 # 7
+                  'C_JawOffset',           # 8
+                  'C_JawEnd',              # 9
+                  'C_LowerTeeth',          # 10
+                  'C_LowerLipBegin',       # 11
+                  'C_LowerLipEnd',         # 12
+                  'C_UpperLipBegin',       # 13
+                  'C_UpperLipEnd',         # 14
+                  'L_EyelidUpperEnd',      # 15
+                  'L_EyelidLowerEnd',      # 16
+                  'R_EyelidUpperEnd',      # 17
+                  'R_EyelidLowerEnd']      # 18
 
     return facialJnts
 
@@ -187,13 +203,53 @@ def getFacialLowerLipBeginJoint(facialJoints):
     return lowerLipBeginJoint
 
 def getFacialLowerLipEndJoint(facialJoints):
-    lowerLipEndJoint   = facialJoints[12]
+    lowerLipEndJoint = facialJoints[12]
     return lowerLipEndJoint
 
 def getFacialUpperLipBeginJoint(facialJoints):
-    upperLipBeginJoint   = facialJoints[13]
+    upperLipBeginJoint = facialJoints[13]
     return upperLipBeginJoint
 
 def getFacialUpperLipEndJoint(facialJoints):
-    upperLipEndJoint   = facialJoints[14]
+    upperLipEndJoint = facialJoints[14]
     return upperLipEndJoint
+
+def getFacialLeftEyeJoint(facialJoints):
+    leftEyeJoint = facialJoints[0]
+    return leftEyeJoint
+
+def getFacialLeftEyelidUpperJoint(facialJoints):
+    leftEyelidUpperJoint = facialJoints[3]
+    return leftEyelidUpperJoint
+
+def getFacialLeftEyelidUpperEndJoint(facialJoints):
+    leftEyelidUpperEndJoint = facialJoints[15]
+    return leftEyelidUpperEndJoint
+
+def getFacialLeftEyelidLowerJoint(facialJoints):
+    leftEyelidLowerJoint = facialJoints[4]
+    return leftEyelidLowerJoint
+
+def getFacialLeftEyelidLowerEndJoint(facialJoints):
+    leftEyelidLowerEndJoint = facialJoints[16]
+    return leftEyelidLowerEndJoint
+
+def getFacialRightEyeJoint(facialJoints):
+    rightEyeJoint = facialJoints[1]
+    return rightEyeJoint
+
+def getFacialRightEyelidUpperJoint(facialJoints):
+    rightEyelidUpperJoint = facialJoints[5]
+    return rightEyelidUpperJoint
+
+def getFacialRightEyelidUpperEndJoint(facialJoints):
+    rightEyelidUpperEndJoint = facialJoints[17]
+    return rightEyelidUpperEndJoint
+
+def getFacialRightEyelidLowerJoint(facialJoints):
+    rightEyelidLowerJoint = facialJoints[6]
+    return rightEyelidLowerJoint
+
+def getFacialRightEyelidLowerEndJoint(facialJoints):
+    rightEyelidLowerEndJoint = facialJoints[18]
+    return rightEyelidLowerEndJoint

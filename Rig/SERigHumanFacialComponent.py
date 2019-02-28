@@ -132,14 +132,22 @@ class RigHumanFacialSystem(RigComponent):
             ):
         print('Building facial system...')
 
+        # Get input facial joints.
         jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
         jawOffsetJoint = SEJointHelper.getFacialJawOffsetJoint(facialJoints)
         lowerLipBeginJoint = SEJointHelper.getFacialLowerLipBeginJoint(facialJoints)
         lowerLipEndJoint   = SEJointHelper.getFacialLowerLipEndJoint(facialJoints)
         upperLipBeginJoint = SEJointHelper.getFacialUpperLipBeginJoint(facialJoints)
         upperLipEndJoint   = SEJointHelper.getFacialUpperLipEndJoint(facialJoints)
+        leftEyeJoint = SEJointHelper.getFacialLeftEyeJoint(facialJoints)
+        leftEyelidUpperJoint = SEJointHelper.getFacialLeftEyelidUpperJoint(facialJoints)
+        leftEyelidLowerJoint = SEJointHelper.getFacialLeftEyelidLowerJoint(facialJoints)
+        rightEyeJoint = SEJointHelper.getFacialRightEyeJoint(facialJoints)
+        rightEyelidUpperJoint = SEJointHelper.getFacialRightEyelidUpperJoint(facialJoints)
+        rightEyelidLowerJoint = SEJointHelper.getFacialRightEyelidLowerJoint(facialJoints)
 
-        checkList = [jawJoint, jawOffsetJoint, lowerLipBeginJoint, lowerLipEndJoint, upperLipBeginJoint, upperLipEndJoint]
+        checkList = [jawJoint, jawOffsetJoint, lowerLipBeginJoint, lowerLipEndJoint, upperLipBeginJoint, upperLipEndJoint,
+                     leftEyeJoint, leftEyelidUpperJoint, leftEyelidLowerJoint, rightEyeJoint, rightEyelidUpperJoint, rightEyelidLowerJoint]
         for obj in checkList:
             if not cmds.objExists(obj):
                 cmds.warning('Failed building facial system, cannot find:' + obj)
@@ -409,3 +417,52 @@ class RigHumanFacialSystem(RigComponent):
         # For now, connect the control's ty to the data buffer attribute directly.
         dataBufferLipCloseAttr = getAuLipCloseAttrName(self.DataBuffer)
         cmds.connectAttr(onFaceLipCloseControl.ControlObject + '.ty', dataBufferLipCloseAttr)
+
+        # Create IK eye joints.
+        cmds.select(cl = 1)
+        leftEyeIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'L_Eye')
+        cmds.delete(cmds.pointConstraint(leftEyeJoint, leftEyeIkJoint, mo = 0))
+        cmds.parent(leftEyeIkJoint, self.IKJointsGroup)
+        cmds.setAttr(leftEyeIkJoint + '.rotateY', -90.0)
+        cmds.makeIdentity(leftEyeIkJoint, apply = True)
+        cmds.setAttr(leftEyeIkJoint + '.radius', 0.5)
+
+        cmds.select(cl = 1)
+        leftEyeEndIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'L_EyeEnd')
+        cmds.delete(cmds.parentConstraint(leftEyeIkJoint, leftEyeEndIkJoint, mo = 0))
+        cmds.parent(leftEyeEndIkJoint, leftEyeIkJoint)
+        cmds.setAttr(leftEyeEndIkJoint + '.translateX', 2.0)
+        cmds.makeIdentity(leftEyeEndIkJoint, apply = True)
+        cmds.setAttr(leftEyeEndIkJoint + '.radius', 0.5)
+
+        cmds.select(cl = 1)
+        rightEyeIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'R_Eye')
+        cmds.delete(cmds.pointConstraint(rightEyeJoint, rightEyeIkJoint, mo = 0))
+        cmds.parent(rightEyeIkJoint, self.IKJointsGroup)
+        cmds.setAttr(rightEyeIkJoint + '.rotateX', 180.0)
+        cmds.setAttr(rightEyeIkJoint + '.rotateY', 90.0)
+        cmds.makeIdentity(rightEyeIkJoint, apply = True)
+        cmds.setAttr(rightEyeIkJoint + '.radius', 0.5)
+
+        cmds.select(cl = 1)
+        rightEyeEndIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'R_EyeEnd')
+        cmds.delete(cmds.parentConstraint(rightEyeIkJoint, rightEyeEndIkJoint, mo = 0))
+        cmds.parent(rightEyeEndIkJoint, rightEyeIkJoint)
+        cmds.setAttr(rightEyeEndIkJoint + '.translateX', -2.0)
+        cmds.makeIdentity(rightEyeEndIkJoint, apply = True)
+        cmds.setAttr(rightEyeEndIkJoint + '.radius', 0.5)
+
+        # Create IK eye PVs.
+        locatorLeftEyeIkPV = cmds.spaceLocator(n = 'locator_IK_L_EyePV')[0]
+        cmds.delete(cmds.parentConstraint(leftEyeIkJoint, locatorLeftEyeIkPV, mo = 0))
+        cmds.parent(locatorLeftEyeIkPV, leftEyeIkJoint)
+        cmds.move(0.0, -2.0, 0.0, locatorLeftEyeIkPV, r = 1, os = 1)
+        cmds.parent(locatorLeftEyeIkPV, self.RigPartsGrp)
+        cmds.parentConstraint(facialAttachPoint, locatorLeftEyeIkPV, mo = 1)
+
+        locatorRightEyeIkPV = cmds.spaceLocator(n = 'locator_IK_R_EyePV')[0]
+        cmds.delete(cmds.parentConstraint(rightEyeIkJoint, locatorRightEyeIkPV, mo = 0))
+        cmds.parent(locatorRightEyeIkPV, rightEyeIkJoint)
+        cmds.move(0.0, 2.0, 0.0, locatorRightEyeIkPV, r = 1, os = 1)
+        cmds.parent(locatorRightEyeIkPV, self.RigPartsGrp)
+        cmds.parentConstraint(facialAttachPoint, locatorRightEyeIkPV, mo = 1)
