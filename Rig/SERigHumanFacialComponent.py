@@ -128,9 +128,14 @@ class RigHumanFacialSystem(RigComponent):
             rootJoint = '',
             facialAttachPoint = '',
             rigScale = 1.0,
-            createChinBulgeIKSystem = True
+            createChinBulgeIKSystem = True,
+            headAimIkControl = None
             ):
         print('Building facial system...')
+
+        if not headAimIkControl and not cmds.objExists(headAimIkControl.ControlGroup):
+            cmds.warning('Failed building facial system, head aim IK control does not exist.')
+            return
 
         # Get input facial joints.
         jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
@@ -426,6 +431,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.setAttr(leftEyeIkJoint + '.rotateY', -90.0)
         cmds.makeIdentity(leftEyeIkJoint, apply = True)
         cmds.setAttr(leftEyeIkJoint + '.radius', 0.5)
+        cmds.parentConstraint(facialAttachPoint, leftEyeIkJoint, mo = 1)
 
         cmds.select(cl = 1)
         leftEyeEndIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'L_EyeEnd')
@@ -443,6 +449,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.setAttr(rightEyeIkJoint + '.rotateY', 90.0)
         cmds.makeIdentity(rightEyeIkJoint, apply = True)
         cmds.setAttr(rightEyeIkJoint + '.radius', 0.5)
+        cmds.parentConstraint(facialAttachPoint, rightEyeIkJoint, mo = 1)
 
         cmds.select(cl = 1)
         rightEyeEndIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'R_EyeEnd')
@@ -466,3 +473,32 @@ class RigHumanFacialSystem(RigComponent):
         cmds.move(0.0, 2.0, 0.0, locatorRightEyeIkPV, r = 1, os = 1)
         cmds.parent(locatorRightEyeIkPV, self.RigPartsGrp)
         cmds.parentConstraint(facialAttachPoint, locatorRightEyeIkPV, mo = 1)
+
+        # Create eye IK handles.
+        leftEyeIkHandle = cmds.ikHandle(n = self.Prefix + '_L_Eye' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', 
+                                        sj = leftEyeIkJoint, ee = leftEyeEndIkJoint)[0]
+        cmds.poleVectorConstraint(locatorLeftEyeIkPV, leftEyeIkHandle)
+
+        rightEyeIkHandle = cmds.ikHandle(n = self.Prefix + '_R_Eye' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', 
+                                        sj = rightEyeIkJoint, ee = rightEyeEndIkJoint)[0]
+        cmds.poleVectorConstraint(locatorRightEyeIkPV, rightEyeIkHandle)
+
+        # Create IK eye controls.
+        leftEyeIkControl = SERigControl.RigCircleControl(
+                            rigSide = SERigEnum.eRigSide.RS_Left,
+                            rigType = SERigEnum.eRigType.RT_OnFaceIK,
+                            rigControlIndex = 0,
+                            prefix = SERigNaming.sIKPrefix + 'OnFace_LeftEyeIK', 
+                            scale = rigScale, 
+                            translateTo = leftEyeEndIkJoint,
+                            rotateTo = leftEyeEndIkJoint,
+                            parent = leftEyeEndIkJoint, 
+                            lockChannels = ['r', 's', 'v'])
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, leftEyeIkControl.ControlGroup, 'OnFaceLeftEyeIkControl', 'ControlOwner')
+        cmds.move(30.0, 0.0, 0.0, leftEyeIkControl.ControlGroup, r = 1, os = 1)
+        cmds.parent(leftEyeIkControl.ControlGroup, self.OnFaceIkControlGroup)
+        cmds.parentConstraint(headAimIkControl.ControlObject, leftEyeIkControl.ControlGroup, mo = 1)
+
+        cmds.pointConstraint(leftEyeIkControl.ControlObject, leftEyeIkHandle, mo = 0)
+
+

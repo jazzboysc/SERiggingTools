@@ -404,7 +404,7 @@ class RigBipedCharacter():
             self.Neck = neck
             SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Neck.TopGrp, 'NeckComponent', 'ComponentOwner')
 
-        if createFacialSystem:
+        if createFacialSystem and not createSimpleFKNeck:
             facialSystem = SERigHumanFacialComponent.RigHumanFacialSystem(prefix = 'C_Face', baseRig = self.BaseRig, 
                                                                           rigSide = SERigEnum.eRigSide.RS_Center, 
                                                                           rigType = SERigEnum.eRigType.RT_FacialComponent)
@@ -415,7 +415,8 @@ class RigBipedCharacter():
                 rootJoint = '',
                 facialAttachPoint = 'C_FacialRoot',
                 rigScale = 1.0,
-                createChinBulgeIKSystem = True
+                createChinBulgeIKSystem = True,
+                headAimIkControl = neck.HeadAimIKControl
                 )
             self.FacialSystem = facialSystem
             SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.FacialSystem.TopGrp, 'FacialComponent', 'ComponentOwner')
