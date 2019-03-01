@@ -120,4 +120,7 @@ eRigFacialControlID = SE_RigEnum(
     RFCID_JawMidPos      = 1,
     RFCID_JawIK          = 2,
     RFCID_LipCloseFK     = 3,
+    RFCID_EyesAimIK      = 4,
+    RFCID_LeftEyeAimIK   = 5,
+    RFCID_RightEyeAimIK  = 6
     )
