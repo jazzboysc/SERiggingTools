@@ -485,7 +485,7 @@ class RigFixedEndsIKSpine(RigComponent):
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
         controlsVisEN = SERigNaming.sExpressionPrefix + self.Prefix + 'ControlsVis'
         controlsVisES = ''
-        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+        tempExpressionTail = mainControl + '.' + SERigNaming.sBodyControlsVisibilityAttr + ';'
 
         if self.UpperBodyCtrl:
             controlsVisES += self.UpperBodyCtrl.ControlGroup + '.visibility = ' + tempExpressionTail

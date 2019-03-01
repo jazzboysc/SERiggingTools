@@ -96,7 +96,7 @@ class RigSimpleHumanNeck(RigComponent):
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
         controlsVisEN = SERigNaming.sExpressionPrefix + self.Prefix + 'ControlsVis'
         fkControlsCount = len(self.FKNeckControls)
-        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+        tempExpressionTail = mainControl + '.' + SERigNaming.sBodyControlsVisibilityAttr + ';'
         if fkControlsCount > 0:
             controlsVisES = self.FKNeckControls[0].ControlGroup + '.visibility = ' + tempExpressionTail
             for i in range(1, fkControlsCount):
@@ -315,7 +315,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
         controlsVisEN = SERigNaming.sExpressionPrefix + self.Prefix + 'ControlsVis'
         fkControlsCount = len(self.FKNeckControls)
-        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+        tempExpressionTail = mainControl + '.' + SERigNaming.sBodyControlsVisibilityAttr + ';'
         if fkControlsCount > 0:
             controlsVisES = self.FKNeckControls[0].ControlGroup + '.visibility = ' + tempExpressionTail
             for i in range(1, fkControlsCount):
@@ -364,18 +364,20 @@ class RigMuscleSplineHumanNeck(RigComponent):
 
         # Create IK joints.
         cmds.select(cl = True)
-        leftChestHeadBeginJnt = cmds.joint(n = 'IK_L_ChestHeadBegin')
+        leftChestHeadBeginJnt = cmds.joint(n = SERigNaming.sIKPrefix + 'L_ChestHeadBegin')
         cmds.delete(cmds.pointConstraint(leftChestHeadBegin, leftChestHeadBeginJnt, mo = 0))
         cmds.select(cl = True)
-        leftChestHeadEndJnt = cmds.joint(n = 'IK_L_ChestHeadEnd')
+        leftChestHeadEndJnt = cmds.joint(n = SERigNaming.sIKPrefix + 'L_ChestHeadEnd')
         cmds.delete(cmds.pointConstraint(leftChestHeadEnd, leftChestHeadEndJnt, mo = 0))
+        cmds.hide(leftChestHeadBeginJnt)
 
         cmds.select(cl = True)
-        rightChestHeadBeginJnt = cmds.joint(n = 'IK_R_ChestHeadBegin')
+        rightChestHeadBeginJnt = cmds.joint(n = SERigNaming.sIKPrefix + 'R_ChestHeadBegin')
         cmds.delete(cmds.pointConstraint(rightChestHeadBegin, rightChestHeadBeginJnt, mo = 0))
         cmds.select(cl = True)
-        rightChestHeadEndJnt = cmds.joint(n = 'IK_R_ChestHeadEnd')
+        rightChestHeadEndJnt = cmds.joint(n = SERigNaming.sIKPrefix + 'R_ChestHeadEnd')
         cmds.delete(cmds.pointConstraint(rightChestHeadEnd, rightChestHeadEndJnt, mo = 0))
+        cmds.hide(rightChestHeadBeginJnt)
 
         cmds.delete(cmds.aimConstraint(leftChestHeadEndJnt, leftChestHeadBeginJnt, offset = [0, 0, 0], w = 1, aim = [1, 0, 0], u = [0, 0, -1], 
                            worldUpType = 'object', worldUpObject = rightChestHeadBegin))
@@ -444,6 +446,8 @@ class RigMuscleSplineHumanNeck(RigComponent):
             cmds.setAttr(curLeftMuscleSplineControl + '.tangentLength', 0)
             curRightMuscleSplineControl = 'iControl' + rightPrefix + str(i)
             cmds.setAttr(curRightMuscleSplineControl + '.tangentLength', 0)
+
+        cmds.hide(self.NeckKeepOutSystemGroup)
 
 
     def _createDistanceBetweenNode(self, locatorStart, locatorEnd):

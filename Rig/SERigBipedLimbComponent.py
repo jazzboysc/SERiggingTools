@@ -628,7 +628,7 @@ class RigHumanLeg(RigHumanLimb):
             mainCtrlIKFKSwitchAt = SERigNaming.sRightLegIKFKSwitch
 
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
-        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+        tempExpressionTail = mainControl + '.' + SERigNaming.sBodyControlsVisibilityAttr + ';'
         ikfkAutoHideEN = SERigNaming.sExpressionPrefix + self.Prefix + 'IKFKAutoHide'
         ikfkAutoHideES = 'if( ' + mainControl + '.' + mainCtrlAutoHideAt + ' )'
         ikfkAutoHideES += '\n{\n'
@@ -1059,7 +1059,7 @@ class RigHumanArm(RigHumanLimb):
             mainCtrlIKFKSwitchAt = SERigNaming.sRightArmIKFKSwitch
 
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
-        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+        tempExpressionTail = mainControl + '.' + SERigNaming.sBodyControlsVisibilityAttr + ';'
         ikfkAutoHideEN = SERigNaming.sExpressionPrefix + self.Prefix + 'IKFKAutoHide'
         ikfkAutoHideES = 'if( ' + mainControl + '.' + mainCtrlAutoHideAt + ' )'
         ikfkAutoHideES += '\n{\n'
@@ -1169,7 +1169,7 @@ class RigHumanHand(RigComponent):
             curFingerTypeIndex += 1
 
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
-        tempExpressionTail = mainControl + '.' + SERigNaming.sControlsVisibilityAttr + ';'
+        tempExpressionTail = mainControl + '.' + SERigNaming.sBodyControlsVisibilityAttr + ';'
         controlsVisEN = SERigNaming.sExpressionPrefix + self.Prefix + 'ControlsVis'
         controlsVisES = ''
         controlsVisES += self.FKControlGroup + '.visibility = ' +  tempExpressionTail

@@ -61,6 +61,7 @@ class RigHumanFacialSystem(RigComponent):
             cmds.delete(cmds.pointConstraint(jawEndJoint, ikChinJoint01, mo = 0))
             cmds.parent(ikChinJoint01, self.IKJointsGroup)
             cmds.setAttr(ikChinJoint01 + '.radius', 0.5)
+            cmds.hide(ikChinJoint01)
 
             cmds.select(cl = 1)
             ikChinJoint03 = cmds.joint(n = SERigNaming.sIKPrefix + 'Chin_3')
@@ -435,6 +436,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.makeIdentity(leftEyeIkJoint, apply = True)
         cmds.setAttr(leftEyeIkJoint + '.radius', 0.5)
         cmds.parentConstraint(facialAttachPoint, leftEyeIkJoint, mo = 1)
+        cmds.hide(leftEyeIkJoint)
 
         cmds.select(cl = 1)
         leftEyeEndIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'L_EyeEnd')
@@ -453,6 +455,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.makeIdentity(rightEyeIkJoint, apply = True)
         cmds.setAttr(rightEyeIkJoint + '.radius', 0.5)
         cmds.parentConstraint(facialAttachPoint, rightEyeIkJoint, mo = 1)
+        cmds.hide(rightEyeIkJoint)
 
         cmds.select(cl = 1)
         rightEyeEndIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'R_EyeEnd')
