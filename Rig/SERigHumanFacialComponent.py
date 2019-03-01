@@ -67,16 +67,8 @@ class RigHumanFacialSystem(RigComponent):
             cmds.delete(cmds.pointConstraint(throatJoint, ikChinJoint03, mo = 0))
             cmds.setAttr(ikChinJoint03 + '.radius', 0.5)
 
-            locatorChinIkPV = cmds.spaceLocator(n = 'locator_Chin_IK_PV')[0]
-            cmds.delete(cmds.parentConstraint(ikChinJoint01, locatorChinIkPV, mo = 0))
-            cmds.parent(locatorChinIkPV, ikChinJoint01)
-            cmds.move(0, 5.0, 0.0, locatorChinIkPV, r = 1, os = 1)
-            cmds.parent(locatorChinIkPV, self.RigPartsGrp)
-           # cmds.parentConstraint(jawEndJoint, locatorChinIkPV, mo = 1)
-            cmds.hide(locatorChinIkPV)
-
             cmds.delete(cmds.aimConstraint(ikChinJoint03, ikChinJoint01, offset = [0, 0, 0], w = 1, aim = [1, 0, 0], u = [0, 1, 0], 
-                                            worldUpType = 'object', worldUpObject = locatorChinIkPV))
+                                            worldUpType = 'scene'))
 
             cmds.delete(cmds.orientConstraint(ikChinJoint01, ikChinJoint03, mo = 0))
                 
@@ -94,6 +86,14 @@ class RigHumanFacialSystem(RigComponent):
             cmds.parent(ikChinJoint03, ikChinJoint02)
             cmds.makeIdentity(ikChinJoint01, apply = True)
 
+            locatorChinIkPV = cmds.spaceLocator(n = 'locator_Chin_IK_PV')[0]
+            cmds.delete(cmds.parentConstraint(ikChinJoint01, locatorChinIkPV, mo = 0))
+            cmds.parent(locatorChinIkPV, ikChinJoint01)
+            cmds.move(0, -5.0, 0.0, locatorChinIkPV, r = 1, os = 1)
+            cmds.parent(locatorChinIkPV, self.RigPartsGrp)
+            cmds.parentConstraint(jawEndJoint, locatorChinIkPV, mo = 1)
+            cmds.hide(locatorChinIkPV)
+
             throatIk_PCST_grp = cmds.group(n = 'ThroatIk_PCST_Grp', em = 1, p = self.RigPartsGrp)
             cmds.parentConstraint(throatJoint, throatIk_PCST_grp)
             throatIk_OffsetGrp = cmds.group(n = 'ThroatIk_OffsetGrp', em = 1, p = throatIk_PCST_grp)
@@ -101,7 +101,7 @@ class RigHumanFacialSystem(RigComponent):
             chinBulgeIK = cmds.ikHandle(n = self.Prefix + 'ChinBulge' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', 
                                         sj = ikChinJoint01, ee = ikChinJoint03)[0]
             cmds.poleVectorConstraint(locatorChinIkPV, chinBulgeIK)
-            SEJointHelper.adjustIKTwist(chinBulgeIK, ikChinJoint01)
+            #SEJointHelper.adjustIKTwist(chinBulgeIK, ikChinJoint01)
             cmds.hide(chinBulgeIK)
 
             cmds.parentConstraint(jawEndJoint, ikChinJoint01, mo = 1)
@@ -485,12 +485,14 @@ class RigHumanFacialSystem(RigComponent):
         cmds.poleVectorConstraint(locatorLeftEyeIkPV, leftEyeIkHandle)
         cmds.hide(leftEyeIkHandle)
         cmds.parent(leftEyeIkHandle, self.RigPartsGrp)
+        SEJointHelper.adjustIKTwist(leftEyeIkHandle, leftEyeIkJoint)
 
         rightEyeIkHandle = cmds.ikHandle(n = self.Prefix + '_R_Eye' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', 
                                         sj = rightEyeIkJoint, ee = rightEyeEndIkJoint)[0]
         cmds.poleVectorConstraint(locatorRightEyeIkPV, rightEyeIkHandle)
         cmds.hide(rightEyeIkHandle)
         cmds.parent(rightEyeIkHandle, self.RigPartsGrp)
+        SEJointHelper.adjustIKTwist(rightEyeIkHandle, rightEyeIkJoint)
 
         # Create IK eye base control.
         self.EyesAimIKControl = SERigControl.RigFlatHexagonControl(
@@ -522,9 +524,6 @@ class RigHumanFacialSystem(RigComponent):
                             lockChannels = ['tx', 'r', 's', 'v'])
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, leftEyeIkControl.ControlGroup, 'OnFaceLeftEyeIkControl', 'ControlOwner')
 
-        # First parent the control to the IK eye end joint and move it along local x axis.
-        #cmds.move(30.0, 0.0, 0.0, leftEyeIkControl.ControlGroup, r = 1, os = 1)
-
         # Then parent the control to our component and position it to align with the IK eye base control.
         cmds.parent(leftEyeIkControl.ControlGroup, self.OnFaceIkControlGroup)
         cmds.delete(cmds.pointConstraint(self.EyesAimIKControl.ControlObject, leftEyeIkControl.ControlGroup, skip = ['y', 'z'], mo = 0))
@@ -542,9 +541,6 @@ class RigHumanFacialSystem(RigComponent):
                             parent = rightEyeEndIkJoint, 
                             lockChannels = ['tx', 'r', 's', 'v'])
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, rightEyeIkControl.ControlGroup, 'OnFaceRightEyeIkControl', 'ControlOwner')
-
-        # First parent the control to the IK eye end joint and move it along local x axis.
-        #cmds.move(-30.0, 0.0, 0.0, rightEyeIkControl.ControlGroup, r = 1, os = 1)
 
         # Then parent the control to our component and position it to align with the IK eye base control.
         cmds.parent(rightEyeIkControl.ControlGroup, self.OnFaceIkControlGroup)
