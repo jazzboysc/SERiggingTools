@@ -465,6 +465,19 @@ class RigHumanFacialSystem(RigComponent):
         cmds.makeIdentity(rightEyeEndIkJoint, apply = True)
         cmds.setAttr(rightEyeEndIkJoint + '.radius', 0.5)
 
+        # Create eye base locators.
+        locatorLeftEyeBase = cmds.spaceLocator(n = 'locator_L_EyeBase')[0]
+        cmds.delete(cmds.parentConstraint(leftEyeIkJoint, locatorLeftEyeBase, mo = 0))
+        cmds.parent(locatorLeftEyeBase, self.RigPartsGrp)
+        cmds.parentConstraint(facialAttachPoint, locatorLeftEyeBase, mo = 1)
+        cmds.hide(locatorLeftEyeBase)
+
+        locatorRightEyeBase = cmds.spaceLocator(n = 'locator_R_EyeBase')[0]
+        cmds.delete(cmds.parentConstraint(rightEyeIkJoint, locatorRightEyeBase, mo = 0))
+        cmds.parent(locatorRightEyeBase, self.RigPartsGrp)
+        cmds.parentConstraint(facialAttachPoint, locatorRightEyeBase, mo = 1)
+        cmds.hide(locatorRightEyeBase)
+
         # Create IK eye PVs.
         locatorLeftEyeIkPV = cmds.spaceLocator(n = 'locator_IK_L_EyePV')[0]
         cmds.delete(cmds.parentConstraint(leftEyeIkJoint, locatorLeftEyeIkPV, mo = 0))
@@ -551,4 +564,12 @@ class RigHumanFacialSystem(RigComponent):
         cmds.pointConstraint(self.EyesAimIKControl.ControlObject, rightEyeIkControl.ControlGroup, mo = 1)
         cmds.pointConstraint(rightEyeIkControl.ControlObject, rightEyeIkHandle, mo = 0)
 
+        oc = cmds.orientConstraint(locatorLeftEyeBase, leftEyeIkJoint, leftEyeJoint, mo = 1)[0]
+        cmds.setAttr(oc + '.interpType', 2)
+        cmds.setAttr(oc + '.' + locatorLeftEyeBase + 'W0', 0.6)
+        cmds.setAttr(oc + '.' + leftEyeIkJoint + 'W1', 0.4)
 
+        oc = cmds.orientConstraint(locatorRightEyeBase, rightEyeIkJoint, rightEyeJoint, mo = 1)[0]
+        cmds.setAttr(oc + '.interpType', 2)
+        cmds.setAttr(oc + '.' + locatorRightEyeBase + 'W0', 0.6)
+        cmds.setAttr(oc + '.' + rightEyeIkJoint + 'W1', 0.4)
