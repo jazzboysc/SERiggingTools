@@ -355,10 +355,10 @@ class mainRigWindow(QtWidgets.QDialog):
         portraitCameraOptionLayout.addSpacing(25)
         portraitCameraOptionLayout.addWidget(QtWidgets.QLabel("Portrait Camera Focal Length:"))
         self.PortraitCameraFocalLengthLine = QtWidgets.QLineEdit()
-        self.PortraitCameraFocalLengthLine.setValidator(QtGui.QDoubleValidator(16.0, 135.0, 2))
+        self.PortraitCameraFocalLengthLine.setValidator(QtGui.QDoubleValidator(35.0, 135.0, 2))
         portraitCameraOptionLayout.addWidget(self.PortraitCameraFocalLengthLine)
         self.PortraitCameraFocalLengthLine.setText('85')
-        portraitCameraOptionLayout.addWidget(QtWidgets.QLabel("(16 - 135)"))
+        portraitCameraOptionLayout.addWidget(QtWidgets.QLabel("(35 - 135)"))
         portraitCameraOptionLayout.addSpacing(400)
         headConfigTabPageLayout.addLayout(portraitCameraOptionLayout)
 

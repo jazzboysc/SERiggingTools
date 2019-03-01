@@ -111,6 +111,7 @@ class RigBipedCharacter():
             portraitCamera = SERigObjectTypeHelper.getDefaultPerspectiveCamera()
             if portraitCamera:
                 cmds.setAttr(portraitCamera + '.focalLength', portraitCameraFocalLength)
+                cmds.setAttr(portraitCamera + '.nearClipPlane', 0.5)
 
                 portraitCameraTrans = cmds.listRelatives(portraitCamera, parent = True)[0]
                 cmds.setAttr(portraitCameraTrans + '.rotateX', -10.0)
