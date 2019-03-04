@@ -87,6 +87,20 @@ def getAu06RAttrName(bufferObject):
 
     return res
 #-----------------------------------------------------------------------------
+def getAu07LAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_07_L_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu07RAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_07_R_Attr
+
+    return res
+#-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
 # Rig Human Facial System Class
@@ -181,6 +195,8 @@ class RigHumanFacialSystem(RigComponent):
                       SERigNaming.sAU_05_R_Attr,
                       SERigNaming.sAU_06_L_Attr,
                       SERigNaming.sAU_06_R_Attr,
+                      SERigNaming.sAU_07_L_Attr,
+                      SERigNaming.sAU_07_R_Attr,
                       SERigNaming.sAU_Blink_L_Attr,
                       SERigNaming.sAU_Blink_R_Attr,
                       SERigNaming.sAU_LipClose_Attr]
@@ -641,9 +657,9 @@ class RigHumanFacialSystem(RigComponent):
         cmds.setAttr(oc + '.' + locatorRightEyeBase + 'W0', 0.6)
         cmds.setAttr(oc + '.' + rightEyeIkJoint + 'W1', 0.4)
 
-        # Create eye lid motion logic.
+        # Create eyelid motion logic.
         if self.DataBuffer:
-            # AU05.
+            # Upper eyelid AU05.
             au05LAttr = getAu05LAttrName(self.DataBuffer)
             animCurveAu05L = cmds.createNode('animCurveUA')
             cmds.setKeyframe(animCurveAu05L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
@@ -656,7 +672,7 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setKeyframe(animCurveAu05R, float = 1.0, value = 8.0, itt = 'linear', ott = 'linear')
             cmds.connectAttr(au05RAttr, animCurveAu05R + '.input')
 
-            # AU06.
+            # Upper eyelid AU06.
             au06LAttr = getAu06LAttrName(self.DataBuffer)
             animCurveAu06L = cmds.createNode('animCurveUA')
             cmds.setKeyframe(animCurveAu06L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
@@ -669,7 +685,7 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setKeyframe(animCurveAu06R, float = 1.0, value = -7.23, itt = 'linear', ott = 'linear')
             cmds.connectAttr(au06RAttr, animCurveAu06R + '.input')
 
-            # Blink.
+            # Upper eyelid blink.
             blinkLAttr = getAuBlinkLAttrName(self.DataBuffer)
             animCurveAuBlinkL = cmds.createNode('animCurveUA')
             cmds.setKeyframe(animCurveAuBlinkL, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
@@ -682,7 +698,7 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setKeyframe(animCurveAuBlinkR, float = 1.0, value = -27.0, itt = 'linear', ott = 'linear')
             cmds.connectAttr(blinkRAttr, animCurveAuBlinkR + '.input')
 
-            # Eye base.
+            # Upper eyelid Eye base.
             animCurveEyeBaseL = cmds.createNode('animCurveUA')
             cmds.setKeyframe(animCurveEyeBaseL, float = -45.0, value = -45.0, itt = 'linear', ott = 'linear')
             cmds.setKeyframe(animCurveEyeBaseL, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
@@ -708,3 +724,57 @@ class RigHumanFacialSystem(RigComponent):
 
             cmds.connectAttr(leftUpperEyelidBlend + '.output', leftEyelidUpperJoint + '.rotateZ', f = 1)
             cmds.connectAttr(rightUpperEyelidBlend + '.output', rightEyelidUpperJoint + '.rotateZ', f = 1)
+
+
+            # lower eyelid AU06.
+            au06LAttr = getAu06LAttrName(self.DataBuffer)
+            animCurveAu06L = cmds.createNode('animCurveUA')
+            cmds.setKeyframe(animCurveAu06L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
+            cmds.setKeyframe(animCurveAu06L, float = 1.0, value = 15.0, itt = 'linear', ott = 'linear')
+            cmds.connectAttr(au06LAttr, animCurveAu06L + '.input')
+
+            au06RAttr = getAu06RAttrName(self.DataBuffer)
+            animCurveAu06R = cmds.createNode('animCurveUA')
+            cmds.setKeyframe(animCurveAu06R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
+            cmds.setKeyframe(animCurveAu06R, float = 1.0, value = 15.0, itt = 'linear', ott = 'linear')
+            cmds.connectAttr(au06RAttr, animCurveAu06R + '.input')
+
+            # lower eyelid AU07.
+            au07LAttr = getAu07LAttrName(self.DataBuffer)
+            animCurveAu07L = cmds.createNode('animCurveUA')
+            cmds.setKeyframe(animCurveAu07L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
+            cmds.setKeyframe(animCurveAu07L, float = 1.0, value = 12.0, itt = 'linear', ott = 'linear')
+            cmds.connectAttr(au07LAttr, animCurveAu07L + '.input')
+
+            au07RAttr = getAu07RAttrName(self.DataBuffer)
+            animCurveAu07R = cmds.createNode('animCurveUA')
+            cmds.setKeyframe(animCurveAu07R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
+            cmds.setKeyframe(animCurveAu07R, float = 1.0, value = 12.0, itt = 'linear', ott = 'linear')
+            cmds.connectAttr(au07RAttr, animCurveAu07R + '.input')
+
+            # lower eyelid blink.
+            blinkLAttr = getAuBlinkLAttrName(self.DataBuffer)
+            animCurveAuBlinkL = cmds.createNode('animCurveUA')
+            cmds.setKeyframe(animCurveAuBlinkL, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
+            cmds.setKeyframe(animCurveAuBlinkL, float = 1.0, value = 2.0, itt = 'linear', ott = 'linear')
+            cmds.connectAttr(blinkLAttr, animCurveAuBlinkL + '.input')
+
+            blinkRAttr = getAuBlinkRAttrName(self.DataBuffer)
+            animCurveAuBlinkR = cmds.createNode('animCurveUA')
+            cmds.setKeyframe(animCurveAuBlinkR, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
+            cmds.setKeyframe(animCurveAuBlinkR, float = 1.0, value = 2.0, itt = 'linear', ott = 'linear')
+            cmds.connectAttr(blinkRAttr, animCurveAuBlinkR + '.input')
+
+            # Blend all drivers together using blend weighted nodes for lower eyelid joints.
+            leftLowerEyelidBlend = cmds.createNode('blendWeighted')
+            cmds.connectAttr(animCurveAu06L + '.output', leftLowerEyelidBlend + '.input[0]', f = 1)
+            cmds.connectAttr(animCurveAu07L + '.output', leftLowerEyelidBlend + '.input[1]', f = 1)
+            cmds.connectAttr(animCurveAuBlinkL + '.output', leftLowerEyelidBlend + '.input[2]', f = 1)
+
+            rightLowerEyelidBlend = cmds.createNode('blendWeighted')
+            cmds.connectAttr(animCurveAu06R + '.output', rightLowerEyelidBlend + '.input[0]', f = 1)
+            cmds.connectAttr(animCurveAu07R + '.output', rightLowerEyelidBlend + '.input[1]', f = 1)
+            cmds.connectAttr(animCurveAuBlinkR + '.output', rightLowerEyelidBlend + '.input[2]', f = 1)
+
+            cmds.connectAttr(leftLowerEyelidBlend + '.output', leftEyelidLowerJoint + '.rotateZ', f = 1)
+            cmds.connectAttr(rightLowerEyelidBlend + '.output', rightEyelidLowerJoint + '.rotateZ', f = 1)
