@@ -17,6 +17,20 @@ def getAuLipCloseAttrName(bufferObject):
 
     return res
 #-----------------------------------------------------------------------------
+def getAuBlinkLAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_Blink_L_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAuBlinkRAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_Blink_R_Attr
+
+    return res
+#-----------------------------------------------------------------------------
 def getAu01LAttrName(bufferObject):
     res = None
     if cmds.objExists(bufferObject):
@@ -28,6 +42,48 @@ def getAu01RAttrName(bufferObject):
     res = None
     if cmds.objExists(bufferObject):
         res = bufferObject + '.' + SERigNaming.sAU_01_R_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu02LAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_02_L_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu02RAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_02_R_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu05LAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_05_L_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu05RAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_05_R_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu06LAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_06_L_Attr
+
+    return res
+#-----------------------------------------------------------------------------
+def getAu06RAttrName(bufferObject):
+    res = None
+    if cmds.objExists(bufferObject):
+        res = bufferObject + '.' + SERigNaming.sAU_06_R_Attr
 
     return res
 #-----------------------------------------------------------------------------
@@ -113,10 +169,20 @@ class RigHumanFacialSystem(RigComponent):
         dataBufferGroup = cmds.group(n = self.Prefix + '_DataBufferGrp', em = 1, p = self.RigPartsGrp)
         self.DataBuffer = dataBufferGroup
 
+        singleAttributeLockList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'v']
+        for attr in singleAttributeLockList:
+            cmds.setAttr(self.DataBuffer + '.' + attr, l = 1, k = 0, cb = 0)
+
         auAttrList = [SERigNaming.sAU_01_L_Attr,
                       SERigNaming.sAU_01_R_Attr,
                       SERigNaming.sAU_02_L_Attr,
                       SERigNaming.sAU_02_R_Attr,
+                      SERigNaming.sAU_05_L_Attr,
+                      SERigNaming.sAU_05_R_Attr,
+                      SERigNaming.sAU_06_L_Attr,
+                      SERigNaming.sAU_06_R_Attr,
+                      SERigNaming.sAU_Blink_L_Attr,
+                      SERigNaming.sAU_Blink_R_Attr,
                       SERigNaming.sAU_LipClose_Attr]
 
         for attr in auAttrList:
@@ -564,6 +630,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.pointConstraint(self.EyesAimIKControl.ControlObject, rightEyeIkControl.ControlGroup, mo = 1)
         cmds.pointConstraint(rightEyeIkControl.ControlObject, rightEyeIkHandle, mo = 0)
 
+        # Create eye base joint motion logic.
         oc = cmds.orientConstraint(locatorLeftEyeBase, leftEyeIkJoint, leftEyeJoint, mo = 1)[0]
         cmds.setAttr(oc + '.interpType', 2)
         cmds.setAttr(oc + '.' + locatorLeftEyeBase + 'W0', 0.6)
@@ -573,3 +640,55 @@ class RigHumanFacialSystem(RigComponent):
         cmds.setAttr(oc + '.interpType', 2)
         cmds.setAttr(oc + '.' + locatorRightEyeBase + 'W0', 0.6)
         cmds.setAttr(oc + '.' + rightEyeIkJoint + 'W1', 0.4)
+
+        # Create eye lid motion logic.
+        if self.DataBuffer:
+            # AU05.
+            au05LAttr = getAu05LAttrName(self.DataBuffer)
+            animCurveAu05L = cmds.createNode('animCurveUA')
+            cmds.connectAttr(au05LAttr, animCurveAu05L + '.input')
+
+            au05RAttr = getAu05RAttrName(self.DataBuffer)
+            animCurveAu05R = cmds.createNode('animCurveUA')
+            cmds.connectAttr(au05RAttr, animCurveAu05R + '.input')
+
+            # AU06.
+            au06LAttr = getAu06LAttrName(self.DataBuffer)
+            animCurveAu06L = cmds.createNode('animCurveUA')
+            cmds.connectAttr(au06LAttr, animCurveAu06L + '.input')
+
+            au06RAttr = getAu06RAttrName(self.DataBuffer)
+            animCurveAu06R = cmds.createNode('animCurveUA')
+            cmds.connectAttr(au06RAttr, animCurveAu06R + '.input')
+
+            # Blink.
+            blinkLAttr = getAuBlinkLAttrName(self.DataBuffer)
+            animCurveAuBlinkL = cmds.createNode('animCurveUA')
+            cmds.connectAttr(blinkLAttr, animCurveAuBlinkL + '.input')
+
+            blinkRAttr = getAuBlinkRAttrName(self.DataBuffer)
+            animCurveAuBlinkR = cmds.createNode('animCurveUA')
+            cmds.connectAttr(blinkRAttr, animCurveAuBlinkR + '.input')
+
+            # Eye base.
+            animCurveEyeBaseL = cmds.createNode('animCurveUA')
+            cmds.connectAttr(leftEyeJoint + '.rotateZ', animCurveEyeBaseL + '.input', f = 1)
+
+            animCurveEyeBaseR = cmds.createNode('animCurveUA')
+            cmds.connectAttr(rightEyeJoint + '.rotateZ', animCurveEyeBaseR + '.input', f = 1)
+
+            # Blend all drivers together using blend weighted nodes for upper eyelid joints.
+            leftUpperEyelidBlend = cmds.createNode('blendWeighted')
+            cmds.connectAttr(animCurveAu05L + '.output', leftUpperEyelidBlend + '.input[0]', f = 1)
+            cmds.connectAttr(animCurveAu06L + '.output', leftUpperEyelidBlend + '.input[1]', f = 1)
+            cmds.connectAttr(animCurveAuBlinkL + '.output', leftUpperEyelidBlend + '.input[2]', f = 1)
+            cmds.connectAttr(animCurveEyeBaseL + '.output', leftUpperEyelidBlend + '.input[3]', f = 1)
+
+            rightUpperEyelidBlend = cmds.createNode('blendWeighted')
+            cmds.connectAttr(animCurveAu05R + '.output', rightUpperEyelidBlend + '.input[0]', f = 1)
+            cmds.connectAttr(animCurveAu06R + '.output', rightUpperEyelidBlend + '.input[1]', f = 1)
+            cmds.connectAttr(animCurveAuBlinkR + '.output', rightUpperEyelidBlend + '.input[2]', f = 1)
+            cmds.connectAttr(animCurveEyeBaseR + '.output', rightUpperEyelidBlend + '.input[3]', f = 1)
+
+            cmds.connectAttr(leftUpperEyelidBlend + '.output', leftEyelidUpperJoint + '.rotateZ', f = 1)
+            cmds.connectAttr(rightUpperEyelidBlend + '.output', rightEyelidUpperJoint + '.rotateZ', f = 1)

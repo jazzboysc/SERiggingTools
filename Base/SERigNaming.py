@@ -48,6 +48,12 @@ sAU_01_L_Attr = 'AU01L'
 sAU_01_R_Attr = 'AU01R'
 sAU_02_L_Attr = 'AU02L'
 sAU_02_R_Attr = 'AU02R'
+sAU_05_L_Attr = 'AU05L'
+sAU_05_R_Attr = 'AU05R'
+sAU_06_L_Attr = 'AU06L'
+sAU_06_R_Attr = 'AU06R'
+sAU_Blink_L_Attr  = 'BlinkL'
+sAU_Blink_R_Attr  = 'BlinkR'
 sAU_LipClose_Attr = 'LipClose'
 
 s_JointsGroup        = '_' + sJointsGroup
