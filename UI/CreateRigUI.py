@@ -146,6 +146,7 @@ class mainRigWindow(QtWidgets.QDialog):
         neckMuscleSplineJointCount = int(self.neckMuscleSplineJointCountLine.text())
         usePortraitCameraFocalLength = self.PortraitCameraOptionCheckBox.isChecked()
         portraitCameraFocalLength = float(self.PortraitCameraFocalLengthLine.text())
+        createFacialSystem = self.facialSystemOptionCheckBox.isChecked()
 
 
         # Build character rig.
@@ -169,7 +170,8 @@ class mainRigWindow(QtWidgets.QDialog):
                         createNeckMuscleSplineSystem = createNeckMuscleSplineSystem,
                         neckMuscleSplineJointCount = neckMuscleSplineJointCount,
                         usePortraitCameraFocalLength = usePortraitCameraFocalLength,
-                        portraitCameraFocalLength = portraitCameraFocalLength
+                        portraitCameraFocalLength = portraitCameraFocalLength,
+                        createFacialSystem = createFacialSystem
                         )
         
         # Close the create rig window.
@@ -367,6 +369,30 @@ class mainRigWindow(QtWidgets.QDialog):
         separator02.setFrameShadow(QtWidgets.QFrame.Sunken)
         headConfigTabPageLayout.addWidget(separator02)
 
+        # Facial system layout.
+        facialSystemOptionLayout = QtWidgets.QHBoxLayout()
+        facialSystemOptionLayout.addWidget(QtWidgets.QLabel("Create F.A.C.S facial system:"))
+        self.facialSystemOptionCheckBox = QtWidgets.QCheckBox()
+        self.facialSystemOptionCheckBox.setChecked(False)
+        self.facialSystemOptionCheckBox.setEnabled(False)
+        self.facialSystemOptionCheckBox.setStyleSheet("QCheckBox { background-color: grey }")
+        facialSystemOptionLayout.addWidget(self.facialSystemOptionCheckBox)
+        facialSystemOptionLayout.addSpacing(800)
+        headConfigTabPageLayout.addLayout(facialSystemOptionLayout)
+
         headConfigTabPageLayout.addSpacing(300)
 
         mainLayout.addWidget(tabs)
+
+        self.connect(self.ikDrivenNeckOptionCheckBox, QtCore.SIGNAL("clicked()"), self.validateFacialSystemDependency)
+
+    def validateFacialSystemDependency(self):
+        ikDrivenNeckChecked = self.ikDrivenNeckOptionCheckBox.isChecked()
+        self.ikDrivenNeckOptionCheckBox.checkState 
+        if ikDrivenNeckChecked:
+            self.facialSystemOptionCheckBox.setEnabled(True)
+            self.facialSystemOptionCheckBox.setStyleSheet("QCheckBox { background-color: dark grey }")
+        else:
+            self.facialSystemOptionCheckBox.setChecked(False)
+            self.facialSystemOptionCheckBox.setEnabled(False)
+            self.facialSystemOptionCheckBox.setStyleSheet("QCheckBox { background-color: grey }")
