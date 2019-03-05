@@ -280,6 +280,7 @@ class RigHumanFacialSystem(RigComponent):
 
     def _createChinBulgeIKSystem(self, jawEndJoint, throatJoint):
         if cmds.objExists(jawEndJoint) and cmds.objExists(throatJoint):
+
             cmds.select(cl = 1)
             ikChinJoint01 = cmds.joint(n = SERigNaming.sIKPrefix + 'Chin_1')
             cmds.delete(cmds.pointConstraint(jawEndJoint, ikChinJoint01, mo = 0))
@@ -294,8 +295,11 @@ class RigHumanFacialSystem(RigComponent):
 
             cmds.delete(cmds.aimConstraint(ikChinJoint03, ikChinJoint01, offset = [0, 0, 0], w = 1, aim = [1, 0, 0], u = [0, 1, 0], 
                                             worldUpType = 'scene'))
+            cmds.makeIdentity(ikChinJoint01, apply = True)
 
-            cmds.delete(cmds.orientConstraint(ikChinJoint01, ikChinJoint03, mo = 0))
+            # Offset the rotation a little bit such that the RP IK handle can work on the joint chain properly.
+            cmds.setAttr(ikChinJoint01 + '.rotateZ', -0.5)
+            cmds.makeIdentity(ikChinJoint01, apply = True)
                 
             cmds.select(cl = 1)
             ikChinJoint02 = cmds.joint(n = SERigNaming.sIKPrefix + 'Chin_2')
@@ -307,8 +311,15 @@ class RigHumanFacialSystem(RigComponent):
             halfDis = 0.5 * SEMathHelper.getDistance3(p1, p3)
             cmds.move(halfDis, 0.0, 0.0, ikChinJoint02, r = 1, os = 1)
 
+            cmds.delete(cmds.aimConstraint(ikChinJoint03, ikChinJoint02, offset = [0, 0, 0], w = 1, aim = [1, 0, 0], u = [0, 1, 0], 
+                                            worldUpType = 'scene'))
+            cmds.makeIdentity(ikChinJoint02, apply = True)
+
+            cmds.delete(cmds.orientConstraint(ikChinJoint02, ikChinJoint03, mo = 0))
+
             cmds.parent(ikChinJoint02, ikChinJoint01)
             cmds.parent(ikChinJoint03, ikChinJoint02)
+
             cmds.makeIdentity(ikChinJoint01, apply = True)
 
             locatorChinIkPV = cmds.spaceLocator(n = 'locator_Chin_IK_PV')[0]
@@ -323,10 +334,11 @@ class RigHumanFacialSystem(RigComponent):
             cmds.parentConstraint(throatJoint, throatIk_PCST_grp)
             throatIk_OffsetGrp = cmds.group(n = 'ThroatIk_OffsetGrp', em = 1, p = throatIk_PCST_grp)
 
+            # Create IK handle.
             chinBulgeIK = cmds.ikHandle(n = self.Prefix + 'ChinBulge' + SERigNaming.s_IKHandle, sol = 'ikRPsolver', 
                                         sj = ikChinJoint01, ee = ikChinJoint03)[0]
             cmds.poleVectorConstraint(locatorChinIkPV, chinBulgeIK)
-            #SEJointHelper.adjustIKTwist(chinBulgeIK, ikChinJoint01)
+            SEJointHelper.adjustIKTwist(chinBulgeIK, ikChinJoint01)
             cmds.hide(chinBulgeIK)
 
             cmds.parentConstraint(jawEndJoint, ikChinJoint01, mo = 1)
