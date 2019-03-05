@@ -107,9 +107,11 @@ class RigBase():
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
             cmds.connectAttr(mainCtrl.ControlObject + '.' + at, obj + '.v')
 
-        # Add control visibility switch.
+        # Add control visibility switches.
         cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sBodyControlsVisibilityAttr, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
         cmds.setAttr(mainCtrl.ControlObject + '.' + SERigNaming.sBodyControlsVisibilityAttr, cb = 1)
+        cmds.addAttr(mainCtrl.ControlObject, ln = SERigNaming.sFacialControlsVisibilityAttr, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
+        cmds.setAttr(mainCtrl.ControlObject + '.' + SERigNaming.sFacialControlsVisibilityAttr, cb = 1)
 
         # Add rig display type connections.
         for at, obj in zip(mainDispAts, mainObjList):

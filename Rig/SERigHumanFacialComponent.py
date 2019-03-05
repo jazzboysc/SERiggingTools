@@ -266,6 +266,13 @@ class RigHumanFacialSystem(RigComponent):
 
         # Add public members.
         self.EyesAimIKControl = None
+        self.JawPosControl = None
+        self.JawMidPosControl = None
+        self.OnFaceIKJawControl = None
+        self.OnFaceLipCloseControl = None
+        self.LeftEyeIkControl = None
+        self.RightEyeIkControl = None
+
         self.IKJointsGroup = None
         self.OnFaceIkControlGroup = None
         self.OnFaceFkControlGroup = None
@@ -351,7 +358,7 @@ class RigHumanFacialSystem(RigComponent):
         for attr in auAttrList:
             cmds.addAttr(dataBufferGroup, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
             cmds.setAttr(dataBufferGroup + '.' + attr, cb = 1)
-
+            
 
     def build(
             self,
@@ -496,6 +503,7 @@ class RigHumanFacialSystem(RigComponent):
                                 )
         cmds.pointConstraint(jawPosControl.ControlObject, jawPosJoint, mo = 0)
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, jawPosControl.ControlGroup, 'JawPositionControl', 'ControlOwner')
+        self.JawPosControl = jawPosControl
 
         # Create jaw mid position control.
         jawMidPosControl = SERigControl.RigCubeControl(
@@ -517,6 +525,7 @@ class RigHumanFacialSystem(RigComponent):
                                 )
         cmds.pointConstraint(jawMidPosControl.ControlObject, jawMidPosJoint, mo = 0)
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, jawMidPosControl.ControlGroup, 'JawMidPositionControl', 'ControlOwner')
+        self.JawMidPosControl = jawMidPosControl
 
         # Possibly create chin bulge ik joints.
         if createChinBulgeIKSystem:
@@ -546,6 +555,7 @@ class RigHumanFacialSystem(RigComponent):
                                 controlColor = (0.9, 0.4, 0.75)
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, onFaceIKJawControl.ControlGroup, 'OnFaceIkJawControl', 'ControlOwner')
+        self.OnFaceIKJawControl = onFaceIKJawControl
 
         offsetGrpName = onFaceIKJawControl.Prefix + SERigNaming.sOffsetGroup
         resOffsetGrp = onFaceIKJawControl.InsertNewGroup(offsetGrpName)
@@ -648,6 +658,8 @@ class RigHumanFacialSystem(RigComponent):
                                 controlColor = (0.2, 0.8, 0.4)
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, onFaceLipCloseControl.ControlGroup, 'OnFaceLipCloseControl', 'ControlOwner')
+        self.OnFaceLipCloseControl = onFaceLipCloseControl
+
         onFaceLipCloseControlOffsetGrp = onFaceLipCloseControl.InsertNewGroup(groupName = onFaceLipCloseControl.Prefix + SERigNaming.sOffsetGroup)
         cmds.move(0.0, 2.0, 0.0, onFaceLipCloseControlOffsetGrp, r = 1, os = 1)
         cmds.transformLimits(onFaceLipCloseControl.ControlObject, ty = (0.0, 1.0), ety = (True, True))
@@ -754,7 +766,7 @@ class RigHumanFacialSystem(RigComponent):
                                 preRotateY = 90
                                 )
         cmds.parentConstraint(headAimIkControl.ControlObject, self.EyesAimIKControl.ControlGroup, mo = 0)
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.EyesAimIKControl.ControlGroup, 'EyesAimIKControl', 'ControlOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.EyesAimIKControl.ControlGroup, 'EyesAimControl', 'ControlOwner')
 
         # Create IK eye controls.
         leftEyeIkControl = SERigControl.RigCircleControl(
@@ -767,7 +779,8 @@ class RigHumanFacialSystem(RigComponent):
                             rotateTo = leftEyeEndIkJoint,
                             parent = leftEyeEndIkJoint, 
                             lockChannels = ['tx', 'r', 's', 'v'])
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, leftEyeIkControl.ControlGroup, 'OnFaceLeftEyeIkControl', 'ControlOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, leftEyeIkControl.ControlGroup, 'OnFaceLeftEyeControl', 'ControlOwner')
+        self.LeftEyeIkControl = leftEyeIkControl
 
         # Then parent the control to our component and position it to align with the IK eye base control.
         cmds.parent(leftEyeIkControl.ControlGroup, self.OnFaceIkControlGroup)
@@ -785,7 +798,8 @@ class RigHumanFacialSystem(RigComponent):
                             rotateTo = rightEyeEndIkJoint,
                             parent = rightEyeEndIkJoint, 
                             lockChannels = ['tx', 'r', 's', 'v'])
-        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, rightEyeIkControl.ControlGroup, 'OnFaceRightEyeIkControl', 'ControlOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, rightEyeIkControl.ControlGroup, 'OnFaceRightEyeControl', 'ControlOwner')
+        self.RightEyeIkControl = rightEyeIkControl
 
         # Then parent the control to our component and position it to align with the IK eye base control.
         cmds.parent(rightEyeIkControl.ControlGroup, self.OnFaceIkControlGroup)
@@ -807,3 +821,10 @@ class RigHumanFacialSystem(RigComponent):
         # Create eyelid motion logic.
         createEyelidMotionLogic(self.DataBuffer, leftEyeJoint, rightEyeJoint, leftEyelidUpperJoint, rightEyelidUpperJoint, 
                                 leftEyelidLowerJoint, rightEyelidLowerJoint)
+
+        # Create controls visibility expression.
+        mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
+        controlsVisEN = SERigNaming.sExpressionPrefix + self.Prefix + 'ControlsVis'
+        tempExpressionTail = mainControl + '.' + SERigNaming.sFacialControlsVisibilityAttr + ';'
+        controlsVisES = self.ControlsGrp + '.visibility = ' + tempExpressionTail
+        cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
