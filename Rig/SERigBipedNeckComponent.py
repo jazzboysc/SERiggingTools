@@ -82,7 +82,9 @@ class RigSimpleHumanNeck(RigComponent):
                                     cubeScaleX = distance,
                                     cubeScaleY = curScaleYZ,
                                     cubeScaleZ = curScaleYZ,
-                                    transparency = 0.75
+                                    transparency = 0.75,
+                                    overrideControlColor = True, 
+                                    controlColor = (0.4, 0.9, 0.9)
                                     )
             self.FKNeckControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKControl' + str(i), 'ControlOwner')
@@ -201,7 +203,9 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                         cubeScaleX = distance,
                                         cubeScaleY = curScaleYZ,
                                         cubeScaleZ = curScaleYZ,
-                                        transparency = 0.75
+                                        transparency = 0.75,
+                                        overrideControlColor = True, 
+                                        controlColor = (0.4, 0.9, 0.9)
                                         )
             else:
                 # Head FK.
@@ -218,7 +222,9 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                         cubeScaleX = distance,
                                         cubeScaleY = curScaleYZ,
                                         cubeScaleZ = curScaleYZ,
-                                        transparency = 0.75
+                                        transparency = 0.75,
+                                        overrideControlColor = True, 
+                                        controlColor = (0.4, 0.9, 0.9)
                                         )
                 
                 # head driver group 0 drives the rotation of the head joint. It will be drived by head aim IK joint.

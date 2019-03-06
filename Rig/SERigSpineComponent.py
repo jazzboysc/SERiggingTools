@@ -40,7 +40,9 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleX = 2.0,
                                 cubeScaleY = 40.0,
                                 cubeScaleZ = 40.0,
-                                transparency = 0.8
+                                transparency = 0.8,
+                                overrideControlColor = True, 
+                                controlColor = (0.4, 0.9, 0.9)
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl', 'ControlOwner')
 
@@ -156,7 +158,9 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleX = 4.0,
                                 cubeScaleY = 35.0,
                                 cubeScaleZ = 35.0,
-                                transparency = 0.75
+                                transparency = 0.75,
+                                overrideControlColor = True, 
+                                controlColor = (0.4, 0.9, 0.9)
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl', 'ControlOwner')
 
@@ -176,7 +180,9 @@ class RigSimpleIKSpine(RigComponent):
                                 cubeScaleX = 4.0,
                                 cubeScaleY = 28.0,
                                 cubeScaleZ = 28.0,
-                                transparency = 0.75
+                                transparency = 0.75,
+                                overrideControlColor = True, 
+                                controlColor = (0.4, 0.9, 0.9)
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl', 'ControlOwner')
 
@@ -229,7 +235,9 @@ class RigFixedEndsIKSpine(RigComponent):
                                 cubeScaleX = 6.0,
                                 cubeScaleY = 36.0,
                                 cubeScaleZ = 36.0,
-                                transparency = 0.8
+                                transparency = 0.8,
+                                overrideControlColor = True, 
+                                controlColor = (0.4, 0.9, 0.9)
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl', 'ControlOwner')
         self.UpperBodyCtrl = upperBodyCtrl
@@ -448,7 +456,9 @@ class RigFixedEndsIKSpine(RigComponent):
                                     cubeScaleX = 4.0,
                                     cubeScaleY = 35.0,
                                     cubeScaleZ = 35.0,
-                                    transparency = 0.75
+                                    transparency = 0.75,
+                                    overrideControlColor = True, 
+                                    controlColor = (0.4, 0.9, 0.9)
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl', 'ControlOwner')
             self.FKSpine0Ctrl = FKSpine0Ctrl
@@ -469,7 +479,9 @@ class RigFixedEndsIKSpine(RigComponent):
                                     cubeScaleX = 4.0,
                                     cubeScaleY = 30.0,
                                     cubeScaleZ = 30.0,
-                                    transparency = 0.75
+                                    transparency = 0.75,
+                                    overrideControlColor = True, 
+                                    controlColor = (0.4, 0.9, 0.9)
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl', 'ControlOwner')
             self.FKSpine1Ctrl = FKSpine1Ctrl

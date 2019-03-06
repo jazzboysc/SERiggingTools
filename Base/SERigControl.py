@@ -3,6 +3,15 @@ from . import SERigEnum
 from . import SERigNaming
 from ..Utils import SERigObjectTypeHelper
 
+def setControlRGBColor(control, color = (1.0, 1.0, 1.0)):
+    
+    rgb = ("R","G","B")
+    cmds.setAttr(control + ".overrideEnabled",1)
+    cmds.setAttr(control + ".overrideRGBColors",1)
+
+    for channel, color in zip(rgb, color):    
+        cmds.setAttr(control + ".overrideColor%s" %channel, color)
+
 #-----------------------------------------------------------------------------
 # Rig Control Class
 # Sun Che
@@ -231,41 +240,86 @@ class RigCubeControl(RigControl):
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, 
                             preRotateX, preRotateY, preRotateZ, overrideControlColor, controlColor):
 
-        # Create control shape.
-        resShape = cmds.polyCube(n = prefix + SERigNaming.sControl,
-                                 w = 1, h = 1, d = 1, sx = 1, sy = 1, sz = 1, ax = [0, 1, 0], cuv = 4, ch = 0)[0]
-        cmds.move(-0.5, resShape + '.scalePivot', resShape + '.rotatePivot', moveX = 1, relative = 1)
-        cmds.move(0.5, resShape, moveX = 1, relative = 1)
+        ## Create control shape.
+        #resShape = cmds.polyCube(n = prefix + SERigNaming.sControl,
+        #                         w = 1, h = 1, d = 1, sx = 1, sy = 1, sz = 1, ax = [0, 1, 0], cuv = 4, ch = 0)[0]
+        #cmds.move(-0.5, resShape + '.scalePivot', resShape + '.rotatePivot', moveX = 1, relative = 1)
+        #cmds.move(0.5, resShape, moveX = 1, relative = 1)
 
+        #if rigSide == SERigEnum.eRigSide.RS_Right:
+        #    self.CubeScaleX *= -1
+        #cmds.scale(self.CubeScaleX, self.CubeScaleY, self.CubeScaleZ, xyz = 1, relative = 1)
+        #cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+        ## Create a new lamber shader.
+        #resShader = cmds.shadingNode('lambert', asShader = 1)
+        #resSet = cmds.sets(n = resShader + 'SG', renderable = True, noSurfaceShader = True, em = 1)
+        #cmds.connectAttr(resShader + '.outColor', resSet + '.surfaceShader', f = 1)
+
+        ## Assign the shader to the shape.
+        #cmds.sets(resShape, e = True, forceElement = resSet)
+
+        ## Set material color.
+        #if overrideControlColor:
+        #    cmds.setAttr(resShader + '.color', controlColor[0], controlColor[1], controlColor[2], type = 'double3')
+        #else:
+        #    if rigSide == SERigEnum.eRigSide.RS_Center:
+        #        cmds.setAttr(resShader + '.color', 0.4, 0.9, 0.9, type = 'double3')
+        #    elif rigSide == SERigEnum.eRigSide.RS_Left:
+        #        cmds.setAttr(resShader + '.color', 0.0, 0.0, 1.0, type = 'double3')
+        #    elif rigSide == SERigEnum.eRigSide.RS_Right:
+        #        cmds.setAttr(resShader + '.color', 1.0, 0.0, 0.0, type = 'double3')
+        #    else:
+        #        pass
+
+        #cmds.setAttr(resShader + '.transparency', self.Transparency, self.Transparency, self.Transparency, type = 'double3')
+
+        list = []
+        list.append(cmds.curve( p =[(1.0, 0.5, -0.5), (1.0, 0.5, 0.5), 
+                                    (1.0, -0.5, 0.5), (1.0, -0.5, -0.5), 
+                                    (1.0, 0.5, -0.5), (0.0, 0.5, -0.5), 
+                                    (0.0, -0.5, -0.5), (1.0, -0.5, -0.5), 
+                                    (1.0, -0.5, 0.5), (0.0, -0.5, 0.5), 
+                                    (0.0, -0.5, -0.5), (0.0, 0.5, -0.5), 
+                                    (0.0, 0.5, 0.5), (0.0, -0.5, 0.5), 
+                                    (1.0, -0.5, 0.5), (1.0, 0.5, 0.5), 
+                                    (0.0, 0.5, 0.5)], per = False, d=1, k=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]))
+        fp = cmds.listRelatives(list[0], f = True)[0]
+        shapeName = fp.split("|")[1]
+
+        newShapeName = prefix + SERigNaming.sControl
+        cmds.rename(shapeName, newShapeName)
+
+        cmds.select(newShapeName)
         if rigSide == SERigEnum.eRigSide.RS_Right:
             self.CubeScaleX *= -1
         cmds.scale(self.CubeScaleX, self.CubeScaleY, self.CubeScaleZ, xyz = 1, relative = 1)
         cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
-        # Create a new lamber shader.
-        resShader = cmds.shadingNode('lambert', asShader = 1)
-        resSet = cmds.sets(n = resShader + 'SG', renderable = True, noSurfaceShader = True, em = 1)
-        cmds.connectAttr(resShader + '.outColor', resSet + '.surfaceShader', f = 1)
-
-        # Assign the shader to the shape.
-        cmds.sets(resShape, e = True, forceElement = resSet)
-
-        # Set material color.
+        # Set control color.
+        ctrlShapes = cmds.listRelatives(newShapeName, s = 1)
+        ctrlColor = SERigEnum.eRigColor.RC_Blue
+        
         if overrideControlColor:
-            cmds.setAttr(resShader + '.color', controlColor[0], controlColor[1], controlColor[2], type = 'double3')
+            for ctrlShape in ctrlShapes:
+                setControlRGBColor(ctrlShape, controlColor)
         else:
-            if rigSide == SERigEnum.eRigSide.RS_Center:
-                cmds.setAttr(resShader + '.color', 0.4, 0.9, 0.9, type = 'double3')
-            elif rigSide == SERigEnum.eRigSide.RS_Left:
-                cmds.setAttr(resShader + '.color', 0.0, 0.0, 1.0, type = 'double3')
+            if rigSide == SERigEnum.eRigSide.RS_Left:
+                ctrlColor = SERigEnum.eRigColor.RC_Blue
             elif rigSide == SERigEnum.eRigSide.RS_Right:
-                cmds.setAttr(resShader + '.color', 1.0, 0.0, 0.0, type = 'double3')
+                ctrlColor = SERigEnum.eRigColor.RC_Red
+            elif rigSide == SERigEnum.eRigSide.RS_Center:
+                ctrlColor = SERigEnum.eRigColor.RC_Yellow
             else:
+                # TODO:
                 pass
+        
+            for ctrlShape in ctrlShapes:
+                cmds.setAttr(ctrlShape + '.ove', 1)
+                cmds.setAttr(ctrlShape + '.ovc', ctrlColor)
+            
+        return newShapeName
 
-        cmds.setAttr(resShader + '.transparency', self.Transparency, self.Transparency, self.Transparency, type = 'double3')
-
-        return resShape
 
 #-----------------------------------------------------------------------------
 # Rig Spike Cross Control Class
