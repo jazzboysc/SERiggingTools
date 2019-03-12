@@ -232,7 +232,10 @@ class RigBipedCharacter():
         # Delete imported builder group.
         builderGrp = ('%s' + SERigNaming.s_BuilderGroup) % self.CharacterName
         if cmds.objExists(builderGrp):
+            print('Deleting builder group: ' + builderGrp)
             cmds.delete(builderGrp)
+        else:
+            cmds.warning('Cannot delete builder group:'  + builderGrp)
 
         cmds.select(cl = 1)
 
