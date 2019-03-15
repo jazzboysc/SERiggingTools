@@ -325,6 +325,9 @@ class RigHumanLeg(RigHumanLimb):
 
         self.FootHelperJoints = self.attachFootHelperJoints(footHelperJoints)
 
+        # Get ik joints' attach point.
+        ikJointsParent = SEJointHelper.getFirstParentJoint(legJoints[0])
+
         # Measure foot size.
         footBaseLocation = SEMathHelper.getWorldPosition(self.FootHelperJoints[SERigNaming.sFootBaseJnt])
         footToeLocation = SEMathHelper.getWorldPosition(self.FootHelperJoints[SERigNaming.sFootToeProxy])
@@ -447,6 +450,35 @@ class RigHumanLeg(RigHumanLimb):
         self.LegPVControl = legPVControl
         self.LimbPVControl = legPVControl
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.LegPVControl.ControlGroup, 'LegPVControl', 'ControlOwner')
+
+        # Create additional driver group for leg PV control.
+        legPVControlDrvGrpName = self.Prefix + '_PV' + SERigNaming.sDriverGroup
+        legPVControlDrvGrp = legPVControl.InsertNewGroup(legPVControlDrvGrpName)
+
+        # PV driver system.
+        pvAimGrp = cmds.group(n = self.Prefix + '_PVAimGrp', em = 1, p = self.RigPartsGrp)
+        cmds.delete(cmds.parentConstraint(legJoints[0], pvAimGrp, mo = 0))
+        cmds.parentConstraint(ikJointsParent, pvAimGrp, mo = 1)
+
+        locatorLegPVAim = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_PVAim')[0]
+        cmds.delete(cmds.pointConstraint(legJoints[0], locatorLegPVAim))
+        cmds.parent(locatorLegPVAim, pvAimGrp)
+
+        locatorLegPVAimUp = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_PVAimUp')[0]
+        cmds.delete(cmds.pointConstraint(legJoints[0], locatorLegPVAimUp))
+        cmds.parent(locatorLegPVAimUp, pvAimGrp)
+        cmds.move(0, 5.0, 0, locatorLegPVAimUp, r = 1)
+
+        locatorLegPVAimTarget = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_PVAimTarget')[0]
+        cmds.delete(cmds.pointConstraint(legPVLocator, locatorLegPVAimTarget, mo = 0))
+        cmds.parent(locatorLegPVAimTarget, self.RigPartsGrp)
+        cmds.parentConstraint(self.LimbIKMainRotationControl.ControlObject, locatorLegPVAimTarget, mo = 1)
+
+        cmds.aimConstraint(locatorLegPVAimTarget, locatorLegPVAim, offset = [0, 0, 0], 
+                           w = 1, aim = [1, 0, 0], u = [0, 1, 0], worldUpType = 'object', worldUpObject = locatorLegPVAimUp)
+
+        # Drive PV's movement.
+        cmds.parentConstraint(locatorLegPVAim, legPVControlDrvGrp, mo = 1)
         
         # Move leg PV locator from builder scene to this component.
         cmds.parent(legPVLocator, self.RigPartsGrp)
@@ -486,7 +518,6 @@ class RigHumanLeg(RigHumanLimb):
         # Attach ik joints to current rig component.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
         cmds.parent(ikJoints[0], ikJointsGroup)
-        ikJointsParent = SEJointHelper.getFirstParentJoint(legJoints[0])
         cmds.parentConstraint(ikJointsParent, ikJointsGroup, mo = 1)
 
         # Create FK leg joints.
