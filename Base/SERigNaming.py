@@ -102,6 +102,11 @@ sRightLegFKLocalToWorldSwitch = 'rightLegFKLocalToWorldSwitch'
 sLeftArmFKLocalToWorldSwitch  = 'leftArmFKLocalToWorldSwitch'
 sRightArmFKLocalToWorldSwitch = 'rightArmFKLocalToWorldSwitch'
 
+sLeftLegPVFollowSwitch = 'leftLegPvFollowSwitch'
+sRightLegPVFollowSwitch = 'rightLegPvFollowSwitch'
+sLeftArmPVFollowSwitch = 'leftArmPvFollowSwitch'
+sRightArmPVFollowSwitch = 'rightArmPvFollowSwitch'
+
 sLeftLegIKFKAutoHide  = 'leftLegIKFKAutoHide'
 sRightLegIKFKAutoHide = 'rightLegIKFKAutoHide'
 sLeftArmIKFKAutoHide  = 'leftArmIKFKAutoHide'

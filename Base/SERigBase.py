@@ -144,6 +144,14 @@ class RigBase():
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
         self.MainFKLocalToWorldSwitchAts = mainFKLocalToWorldSwitchAts
 
+        # Add limb PV follow switches.
+        mainLimbPVFollowSwitchAts = [SERigNaming.sLeftLegPVFollowSwitch, SERigNaming.sRightLegPVFollowSwitch,
+                                     SERigNaming.sLeftArmPVFollowSwitch, SERigNaming.sRightArmPVFollowSwitch]
+        for at in mainLimbPVFollowSwitchAts:
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.7, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+            cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
+        self.MainLimbPVFollowSwitchAts = mainLimbPVFollowSwitchAts
+
         # Add IK/FK auto hide options.
         mainIKFKAutoHideAts = [SERigNaming.sLeftLegIKFKAutoHide, SERigNaming.sRightLegIKFKAutoHide, 
                              SERigNaming.sLeftArmIKFKAutoHide, SERigNaming.sRightArmIKFKAutoHide]
@@ -212,6 +220,25 @@ class RigBase():
             return self.MainControl.ControlObject + '.' + self.MainFKLocalToWorldSwitchAts[3]
         else:
             return None
+
+    def getLegPVFollowSwitch(self, rigSide = SERigEnum.eRigSide.RS_Unknown):
+
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            return self.MainControl.ControlObject + '.' + self.MainLimbPVFollowSwitchAts[0]
+        elif rigSide == SERigEnum.eRigSide.RS_Right:
+            return self.MainControl.ControlObject + '.' + self.MainLimbPVFollowSwitchAts[1]
+        else:
+            return None
+
+    def getArmPVFollowSwitch(self, rigSide = SERigEnum.eRigSide.RS_Unknown):
+
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            return self.MainControl.ControlObject + '.' + self.MainLimbPVFollowSwitchAts[2]
+        elif rigSide == SERigEnum.eRigSide.RS_Right:
+            return self.MainControl.ControlObject + '.' + self.MainLimbPVFollowSwitchAts[3]
+        else:
+            return None
+
 
     def getCharacterName(self):
         res = cmds.getAttr(self.TopGrp + '.' + characterNameAttr)

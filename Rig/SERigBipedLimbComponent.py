@@ -463,22 +463,34 @@ class RigHumanLeg(RigHumanLimb):
         locatorLegPVAim = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_PVAim')[0]
         cmds.delete(cmds.pointConstraint(legJoints[0], locatorLegPVAim))
         cmds.parent(locatorLegPVAim, pvAimGrp)
+        cmds.hide(locatorLegPVAim)
 
         locatorLegPVAimUp = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_PVAimUp')[0]
         cmds.delete(cmds.pointConstraint(legJoints[0], locatorLegPVAimUp))
         cmds.parent(locatorLegPVAimUp, pvAimGrp)
         cmds.move(0, 5.0, 0, locatorLegPVAimUp, r = 1)
+        cmds.hide(locatorLegPVAimUp)
 
         locatorLegPVAimTarget = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_PVAimTarget')[0]
         cmds.delete(cmds.pointConstraint(legPVLocator, locatorLegPVAimTarget, mo = 0))
         cmds.parent(locatorLegPVAimTarget, self.RigPartsGrp)
         cmds.parentConstraint(self.LimbIKMainRotationControl.ControlObject, locatorLegPVAimTarget, mo = 1)
+        cmds.hide(locatorLegPVAimTarget)
 
         cmds.aimConstraint(locatorLegPVAimTarget, locatorLegPVAim, offset = [0, 0, 0], 
                            w = 1, aim = [1, 0, 0], u = [0, 1, 0], worldUpType = 'object', worldUpObject = locatorLegPVAimUp)
 
-        # Drive PV's movement.
-        cmds.parentConstraint(locatorLegPVAim, legPVControlDrvGrp, mo = 1)
+        # Drive PV's movement via PV's driver group.
+        pc = cmds.parentConstraint(locatorLegPVAim, self.BaseRig.Global02Control.ControlObject, legPVControlDrvGrp, mo = 1)[0]
+        legPVFollowSwitchAttr = self.BaseRig.getLegPVFollowSwitch(self.RigSide)
+        reverseNode = cmds.createNode('reverse')
+        cmds.connectAttr(legPVFollowSwitchAttr, reverseNode + '.inputX')
+        cmds.connectAttr(legPVFollowSwitchAttr, pc + '.' + locatorLegPVAim + 'W0')
+        cmds.connectAttr(reverseNode + '.outputX', pc + '.' + self.BaseRig.Global02Control.ControlObject + 'W1')
+
+        # We don't want PV control's rotation.
+        cmds.transformLimits(legPVControlDrvGrp, rx = (0, 0), erx = (True, True), 
+                             ry = (0, 0), ery = (True, True), rz = (0, 0), erz = (True, True))
         
         # Move leg PV locator from builder scene to this component.
         cmds.parent(legPVLocator, self.RigPartsGrp)
