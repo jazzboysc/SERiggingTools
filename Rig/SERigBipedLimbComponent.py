@@ -176,7 +176,7 @@ class RigHumanLimb(RigComponent):
             cmds.hide(self.PVLocatorSync)
 
         else:
-            print('Cannot create limb PV locator sync.')
+            cmds.warning('Cannot create limb PV locator sync.')
 
 
     @staticmethod
@@ -190,12 +190,14 @@ class RigHumanLimb(RigComponent):
 
         if LimbIKMainControl and LimbIKMainControlSyncTarget and LimbPVControl and PVLocatorSync and LimbIKMainRotationControl:
 
-            cmds.delete(cmds.pointConstraint(PVLocatorSync, LimbPVControl))
             cmds.delete(cmds.pointConstraint(LimbIKMainControlSyncTarget, LimbIKMainControl))
             cmds.delete(cmds.orientConstraint(LimbIKMainControlSyncTarget, LimbIKMainRotationControl))
 
+            # The last step is PV sync, take PV's driver group into consideration.
+            cmds.delete(cmds.pointConstraint(PVLocatorSync, LimbPVControl))
+
         else:
-            print('Delegates not created.')
+            cmds.warning('Delegates not created.')
 
 
     @staticmethod
