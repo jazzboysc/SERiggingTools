@@ -371,20 +371,31 @@ class RigHumanLeg(RigHumanLimb):
         SEMathHelper.movePivotTo(footIKMainControl.ControlObject, legJoints[-3])
 
         # Create ankle IK rotation control.
+        rotateToGroup = cmds.group(n = self.Prefix + '_AnkleIKRotGrp', em = 1)
+        if self.RigSide == SERigEnum.eRigSide.RS_Right:
+            cmds.setAttr(rotateToGroup + '.rotateX', -180.0)
+
         ankleIKRotationControl = SERigControl.RigCircleControl(
                                 rigSide = self.RigSide,
                                 rigType = SERigEnum.eRigType.RT_AnkleIKRotation,
-                                rigFacing = SERigEnum.eRigFacing.RF_X,
+                                rigFacing = SERigEnum.eRigFacing.RF_Y,
                                 prefix = self.Prefix + '_IK_Rotation', 
                                 scale = rigScale * 9, 
                                 translateTo = legJoints[-3],
-                                rotateTo = legJoints[-3], 
+                                rotateTo = rotateToGroup, 
                                 parent = footIKMainControl.ControlObject, 
                                 lockChannels = ['s', 't', 'v']
                                 )
         self.AnkleIKRotationControl = ankleIKRotationControl
         self.LimbIKMainRotationControl = ankleIKRotationControl
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.AnkleIKRotationControl.ControlGroup, 'AnkleIKRotationControl', 'ControlOwner')
+        cmds.delete(rotateToGroup)
+
+        #pvAimTargetDrvGrp = cmds.group(n = self.Prefix + '_PVAimTarget_DrvGrp', em = 1, p = ankleIKRotationControl.ControlObject)
+        #cmds.delete(cmds.parentConstraint(ankleIKRotationControl.ControlObject, pvAimTargetDrvGrp, mo = 0))
+        #cmds.connectAttr(ankleIKRotationControl.ControlObject + '.rotateX', pvAimTargetDrvGrp + '.rotateX')
+        #cmds.connectAttr(ankleIKRotationControl.ControlObject + '.rotateY', pvAimTargetDrvGrp + '.rotateY')
+
 
         # Create foot base swive control.
         flipScaleX = False
