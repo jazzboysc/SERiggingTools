@@ -389,12 +389,19 @@ class RigHumanLeg(RigHumanLimb):
         self.AnkleIKRotationControl = ankleIKRotationControl
         self.LimbIKMainRotationControl = ankleIKRotationControl
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.AnkleIKRotationControl.ControlGroup, 'AnkleIKRotationControl', 'ControlOwner')
-        cmds.delete(rotateToGroup)
+        
+        # Create PV aim target driver group.
+        pvAimTargetDrvOffsetGrp = cmds.group(n = self.Prefix + '_PV_AimTarget_DrvOffsetGrp', em = 1, p = self.RigPartsGrp)
+        cmds.delete(cmds.pointConstraint(ankleIKRotationControl.ControlGroup, pvAimTargetDrvOffsetGrp, mo = 0))
+        cmds.delete(cmds.orientConstraint(rotateToGroup, pvAimTargetDrvOffsetGrp, mo = 0))
+        cmds.parentConstraint(footIKMainControl.ControlObject, pvAimTargetDrvOffsetGrp, mo = 1)
 
-        #pvAimTargetDrvGrp = cmds.group(n = self.Prefix + '_PVAimTarget_DrvGrp', em = 1, p = ankleIKRotationControl.ControlObject)
-        #cmds.delete(cmds.parentConstraint(ankleIKRotationControl.ControlObject, pvAimTargetDrvGrp, mo = 0))
-        #cmds.connectAttr(ankleIKRotationControl.ControlObject + '.rotateX', pvAimTargetDrvGrp + '.rotateX')
-        #cmds.connectAttr(ankleIKRotationControl.ControlObject + '.rotateY', pvAimTargetDrvGrp + '.rotateY')
+        pvAimTargetDrvGrp = cmds.group(n = self.Prefix + '_PV_AimTarget_DrvGrp', em = 1)
+        cmds.delete(cmds.parentConstraint(pvAimTargetDrvOffsetGrp, pvAimTargetDrvGrp, mo = 0))
+        cmds.parent(pvAimTargetDrvGrp, pvAimTargetDrvOffsetGrp)
+
+        cmds.connectAttr(ankleIKRotationControl.ControlObject + '.rotateY', pvAimTargetDrvGrp + '.rotateY')
+        cmds.delete(rotateToGroup)
 
 
         # Create foot base swive control.
@@ -487,7 +494,7 @@ class RigHumanLeg(RigHumanLimb):
         locatorLegPVAimTarget = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_PVAimTarget')[0]
         cmds.delete(cmds.pointConstraint(legPVLocator, locatorLegPVAimTarget, mo = 0))
         cmds.parent(locatorLegPVAimTarget, self.RigPartsGrp)
-        cmds.parentConstraint(self.LimbIKMainRotationControl.ControlObject, locatorLegPVAimTarget, mo = 1)
+        cmds.parentConstraint(pvAimTargetDrvGrp, locatorLegPVAimTarget, mo = 1)
         cmds.hide(locatorLegPVAimTarget)
 
         cmds.aimConstraint(locatorLegPVAimTarget, locatorLegPVAim, offset = [0, 0, 0], 
