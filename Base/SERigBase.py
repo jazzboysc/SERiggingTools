@@ -145,10 +145,9 @@ class RigBase():
         self.MainFKLocalToWorldSwitchAts = mainFKLocalToWorldSwitchAts
 
         # Add limb PV follow switches.
-        mainLimbPVFollowSwitchAts = [SERigNaming.sLeftLegPVFollowSwitch, SERigNaming.sRightLegPVFollowSwitch,
-                                     SERigNaming.sLeftArmPVFollowSwitch, SERigNaming.sRightArmPVFollowSwitch]
+        mainLimbPVFollowSwitchAts = [SERigNaming.sLeftLegPVFollowSwitch, SERigNaming.sRightLegPVFollowSwitch]
         for at in mainLimbPVFollowSwitchAts:
-            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.7, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+            cmds.addAttr(mainCtrl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.6, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
             cmds.setAttr(mainCtrl.ControlObject + '.' + at, cb = 1)
         self.MainLimbPVFollowSwitchAts = mainLimbPVFollowSwitchAts
 

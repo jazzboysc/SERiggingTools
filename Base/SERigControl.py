@@ -423,6 +423,85 @@ class RigSpikeCrossControl(RigControl):
 
         return newShapeName
 
+
+#-----------------------------------------------------------------------------
+# Rig Arrow Cross Control Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigArrowCrossControl(RigControl):
+    def __init__(
+                 self,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown,
+                 rigFacing = SERigEnum.eRigFacing.RF_Y,
+                 rigControlIndex = 0,
+                 prefix = 'new', 
+                 scale = 1.0, 
+                 matchBoundingBoxScale = False,
+                 translateTo = '', 
+                 rotateTo = '', 
+                 parent = '',
+                 lockChannels = ['s', 'v'],
+                 scaleX = 6.0,
+                 scaleZ = 6.0,
+                 preRotateX = 0.0,
+                 preRotateY = 0.0,
+                 preRotateZ = 0.0
+                 ):
+
+        self.ScaleX = scaleX
+        self.ScaleZ = scaleZ
+
+        RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
+
+    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, 
+                            preRotateX, preRotateY, preRotateZ, overrideControlColor, controlColor):
+        curve1 = []
+        curve1.append(cmds.curve( p =[(-1.0, 0.0, -6.0), (-1.0, 0.0, -4.0), (1.0, 0.0, -4.0), (1.0, 0.0, -6.0), (2.0, 0.0, -6.0), (0.0, 0.0, -8.0), (-2.0, 0.0, -6.0), (-1.0, 0.0, -6.0)],per = False, d=1, k=[0, 1, 2, 3, 4, 5, 6, 7]))
+        curve1.append(cmds.curve( p =[(6.0, 0.0, -1.0), (4.0, 0.0, -1.0), (4.0, 0.0, 1.0), (6.0, 0.0, 1.0), (6.0, 0.0, 2.0), (8.0, 0.0, 0.0), (6.0, 0.0, -2.0), (6.0, 0.0, -1.0)],per = False, d=1, k=[0, 1, 2, 3, 4, 5, 6, 7]))
+        curve1.append(cmds.curve( p =[(1.0, 0.0, 6.0), (0.9999999999999998, 0.0, 4.0), (-1.0000000000000002, 0.0, 4.0), (-1.0, 0.0, 6.0), (-2.0, 0.0, 6.0), (2.4492935982947064e-16, 0.0, 8.0), (2.0, 0.0, 6.0), (1.0, 0.0, 6.0)],per = False, d=1, k=[0, 1, 2, 3, 4, 5, 6, 7]))
+        curve1.append(cmds.curve( p =[(-6.0, 0.0, 1.0), (-4.0, 0.0, 1.0), (-4.0, 0.0, -1.0), (-6.0, 0.0, -1.0), (-6.0, 0.0, -2.0), (-8.0, 0.0, 0.0), (-6.0, 0.0, 2.0), (-6.0, 0.0, 1.0)],per = False, d=1, k=[0, 1, 2, 3, 4, 5, 6, 7]))
+        for x in range(len(curve1)-1):
+	        cmds.makeIdentity(curve1[x+1], apply=True, t=1, r=1, s=1, n=0)
+	        shapeNode = cmds.listRelatives(curve1[x+1], shapes=True)
+	        cmds.parent(shapeNode, curve1[0], add=True, s=True)
+	        cmds.delete(curve1[x+1])
+        fp = cmds.listRelatives(curve1[0], f=True)[0]
+        oldShapeName = fp.split("|")[1]
+
+        newShapeName = prefix + SERigNaming.sControl
+        cmds.rename(oldShapeName, newShapeName)
+
+        cmds.select(newShapeName)
+        cmds.scale(self.ScaleX, 1.0, self.ScaleZ, xyz = 1, relative = 1)
+        cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+        # Set control color.
+        ctrlShapes = cmds.listRelatives(newShapeName, s = 1)
+        ctrlColor = SERigEnum.eRigColor.RC_Blue
+        
+        if overrideControlColor:
+            for ctrlShape in ctrlShapes:
+                setControlRGBColor(ctrlShape, controlColor)
+        else:
+            if rigSide == SERigEnum.eRigSide.RS_Left:
+                ctrlColor = SERigEnum.eRigColor.RC_Blue
+            elif rigSide == SERigEnum.eRigSide.RS_Right:
+                ctrlColor = SERigEnum.eRigColor.RC_Red
+            elif rigSide == SERigEnum.eRigSide.RS_Center:
+                ctrlColor = SERigEnum.eRigColor.RC_Yellow
+            else:
+                # TODO:
+                pass
+        
+            for ctrlShape in ctrlShapes:
+                cmds.setAttr(ctrlShape + '.ove', 1)
+                cmds.setAttr(ctrlShape + '.ovc', ctrlColor)
+
+        return newShapeName
+
+
 #-----------------------------------------------------------------------------
 # Rig Foot Control Class
 # Sun Che

@@ -224,14 +224,14 @@ class RigFixedEndsIKSpine(RigComponent):
             ):
 
         # Create upper body control.
-        upperBodyCtrl = SERigControl.RigSpikeCrossControl(
+        upperBodyCtrl = SERigControl.RigArrowCrossControl(
                                 rigSide = SERigEnum.eRigSide.RS_Center,
                                 rigType = SERigEnum.eRigType.RT_SpineUpperBody,
                                 prefix = self.Prefix + 'UpperBody', 
                                 translateTo = spineJoints[0],
                                 scale = rigScale*20,
-                                scaleX = 60.0,
-                                scaleZ = 60.0,
+                                scaleX = 5,
+                                scaleZ = 5,
                                 parent = self.ControlsGrp
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl', 'ControlOwner')
