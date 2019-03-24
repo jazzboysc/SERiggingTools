@@ -322,7 +322,8 @@ class RigHumanLeg(RigHumanLimb):
             rigScale = 1.0,
             fkControlScaleYZ = 19,
             fkControlScaleYZMultiplier = 0.75,
-            fkControlTransparency = 0.85
+            fkControlTransparency = 0.85,
+            createCompactFootControl = True
             ):
 
         self.FootHelperJoints = self.attachFootHelperJoints(footHelperJoints)
@@ -447,13 +448,26 @@ class RigHumanLeg(RigHumanLimb):
                                  scale = rigScale * 6, 
                                  translateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                  parent = footIKMainControl.ControlObject, 
-                                 lockChannels = ['s', 't', 'v'],
+                                 lockChannels = ['s', 't', 'ry', 'v'],
                                  flipScaleX = flipScaleX
                                  )
         self.FootRotationControl = footRotationControl
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.FootRotationControl.ControlGroup, 'FootRotationControl', 'ControlOwner')
 
         footRotationControl.adjustControlGroupOffset(0, 8, -15)
+
+        # Create compact foot control.
+        if createCompactFootControl:
+            cmds.hide(footBaseSwiveControl.ControlGroup)
+            cmds.hide(footToeSwiveControl.ControlGroup)
+
+            footControlAts = [SERigNaming.sFootToeSwiveAttr, SERigNaming.sFootHeelSwiveAttr]
+            swiveControlAts = [footToeSwiveControl.ControlObject + '.rotateY', footBaseSwiveControl.ControlObject + '.rotateY']
+
+            for at, swiveAt in zip(footControlAts, swiveControlAts):
+                cmds.addAttr(footIKMainControl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.0)
+                cmds.setAttr(footIKMainControl.ControlObject + '.' + at, cb = 1)
+                cmds.connectAttr(footIKMainControl.ControlObject + '.' + at, swiveAt)
 
         # Create leg PV control.
         legPVControl = SERigControl.RigDiamondControl(

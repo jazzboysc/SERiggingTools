@@ -44,6 +44,9 @@ sIKHeadAimLocalToWorldAttr     = 'headAimControlLocalToWorld'
 sJawForwardAttr = 'jawForward'
 sJawForwardFactorAttr = 'jawForwardFactor'
 
+sFootToeSwiveAttr = 'toeSwive'
+sFootHeelSwiveAttr = 'heelSwive'
+
 sAU_01_L_Attr = 'AU01L'
 sAU_01_R_Attr = 'AU01R'
 sAU_02_L_Attr = 'AU02L'

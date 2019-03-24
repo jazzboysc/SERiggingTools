@@ -72,6 +72,7 @@ class RigBipedCharacter():
               fkArmControlTransparency = 0.85,
               createCircleFkFingerControl = True,
               circleFkFingerControlScaleFactor = 1.7,
+              createCompactFootControl = True,
               createSimpleSpine = False,
               createSpineFKSystem = True,
               createSimpleFKNeck = True,
@@ -185,6 +186,7 @@ class RigBipedCharacter():
                                 fkArmControlTransparency,
                                 createCircleFkFingerControl,
                                 circleFkFingerControlScaleFactor,
+                                createCompactFootControl,
                                 createSimpleSpine,
                                 createSpineFKSystem,
                                 createSimpleFKNeck,
@@ -264,6 +266,7 @@ class RigBipedCharacter():
                             fkArmControlTransparency,
                             createCircleFkFingerControl,
                             circleFkFingerControlScaleFactor,
+                            createCompactFootControl,
                             createSimpleSpine,
                             createSpineFKSystem,
                             createSimpleFKNeck,
@@ -303,7 +306,8 @@ class RigBipedCharacter():
                 rigScale = sceneScale,
                 fkControlScaleYZ = fkLegControlScaleYZ,
                 fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
-                fkControlTransparency = fkLegControlTransparency
+                fkControlTransparency = fkLegControlTransparency,
+                createCompactFootControl = createCompactFootControl
                 )
         self.LeftLeg = leftLeg
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftLeg.TopGrp, 'LeftLegComponent', 'ComponentOwner')
@@ -319,7 +323,8 @@ class RigBipedCharacter():
                 rigScale = sceneScale,
                 fkControlScaleYZ = fkLegControlScaleYZ,
                 fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
-                fkControlTransparency = fkLegControlTransparency
+                fkControlTransparency = fkLegControlTransparency,
+                createCompactFootControl = createCompactFootControl
                 )
         self.RightLeg = rightLeg
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightLeg.TopGrp, 'RightLegComponent', 'ComponentOwner')

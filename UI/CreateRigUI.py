@@ -144,6 +144,7 @@ class mainRigWindow(QtWidgets.QDialog):
         createSimpleSpine = self.fixedEndsSpineOptionCheckBox.isChecked()
         createSpineFKSystem = self.createSpineFKSystemCheckBox.isChecked()
         createSimpleFKNeck = not self.ikDrivenNeckOptionCheckBox.isChecked()
+        createCompactFootControl = self.compactFootControlCheckBox.isChecked()
         createNeckMuscleSplineSystem = self.NeckMuscleSplineOptionCheckBox.isChecked()
         neckMuscleSplineJointCount = int(self.neckMuscleSplineJointCountLine.text())
         usePortraitCameraFocalLength = self.PortraitCameraOptionCheckBox.isChecked()
@@ -168,6 +169,7 @@ class mainRigWindow(QtWidgets.QDialog):
                         fkArmControlTransparency = fkArmControlTransparency,
                         createCircleFkFingerControl = createCircleFkFingerControl,
                         circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor,
+                        createCompactFootControl = createCompactFootControl,
                         createSimpleSpine = createSimpleSpine,
                         createSpineFKSystem = createSpineFKSystem,
                         createSimpleFKNeck = createSimpleFKNeck,
@@ -320,6 +322,14 @@ class mainRigWindow(QtWidgets.QDialog):
         fkFingerControlOptionLayout.addWidget(QtWidgets.QLabel("(1 - 5)"))
         fkFingerControlOptionLayout.addSpacing(215)
         bodyConfigTabPageLayout.addLayout(fkFingerControlOptionLayout)
+
+        footControlOptionLayout = QtWidgets.QHBoxLayout()
+        footControlOptionLayout.addWidget(QtWidgets.QLabel("Create Compact Foot Control :"))
+        self.compactFootControlCheckBox = QtWidgets.QCheckBox()
+        self.compactFootControlCheckBox.setChecked(True)
+        footControlOptionLayout.addWidget(self.compactFootControlCheckBox)
+        footControlOptionLayout.addSpacing(500)
+        bodyConfigTabPageLayout.addLayout(footControlOptionLayout)
 
         fkBodyArmControlScaleYZMultiplierLayout = QtWidgets.QHBoxLayout()
         fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FK Arm Control Scale YZ Multiplier :"))
