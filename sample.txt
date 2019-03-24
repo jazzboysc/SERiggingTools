@@ -1,3 +1,7 @@
+MAYA_PLUG_IN_PATH = E:\Work\SERiggingTools\Plugins
+PYTHONPATH = E:\Work
+
+
 import SERiggingTools.Base.SERigBase                as RigBase
 import SERiggingTools.Base.SERigControl             as RigControl
 import SERiggingTools.Base.SERigComponent           as RigComp
