@@ -139,6 +139,8 @@ class mainRigWindow(QtWidgets.QDialog):
         fkArmControlScaleYZ = int(self.fkBodyArmControlScaleYZLine.text())
         fkArmControlScaleYZMultiplier = float(self.fkBodyArmControlScaleYZMultiplierLine.text())
         fkArmControlTransparency = float(self.fkBodyArmControlTransparencyLine.text())
+        createCircleFkFingerControl = self.circleFkFingerControlCheckBox.isChecked()
+        circleFkFingerControlScaleFactor = float(self.circleFkFingerControlScaleFactorLine.text())
         createSimpleSpine = self.fixedEndsSpineOptionCheckBox.isChecked()
         createSpineFKSystem = self.createSpineFKSystemCheckBox.isChecked()
         createSimpleFKNeck = not self.ikDrivenNeckOptionCheckBox.isChecked()
@@ -164,6 +166,8 @@ class mainRigWindow(QtWidgets.QDialog):
                         fkArmControlScaleYZ = fkArmControlScaleYZ,
                         fkArmControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
                         fkArmControlTransparency = fkArmControlTransparency,
+                        createCircleFkFingerControl = createCircleFkFingerControl,
+                        circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor,
                         createSimpleSpine = createSimpleSpine,
                         createSpineFKSystem = createSpineFKSystem,
                         createSimpleFKNeck = createSimpleFKNeck,
@@ -302,6 +306,20 @@ class mainRigWindow(QtWidgets.QDialog):
         fkBodyArmControlScaleYZLayout.addWidget(QtWidgets.QLabel("(0 - 10)"))
         fkBodyArmControlScaleYZLayout.addSpacing(215)
         bodyConfigTabPageLayout.addLayout(fkBodyArmControlScaleYZLayout)
+
+        fkFingerControlOptionLayout = QtWidgets.QHBoxLayout()
+        fkFingerControlOptionLayout.addWidget(QtWidgets.QLabel("Create Circle FK Finger Control :"))
+        self.circleFkFingerControlCheckBox = QtWidgets.QCheckBox()
+        self.circleFkFingerControlCheckBox.setChecked(True)
+        fkFingerControlOptionLayout.addWidget(self.circleFkFingerControlCheckBox)
+        fkFingerControlOptionLayout.addWidget(QtWidgets.QLabel("Circle FK Finger Control Scale Factor :"))
+        self.circleFkFingerControlScaleFactorLine = QtWidgets.QLineEdit()
+        self.circleFkFingerControlScaleFactorLine.setValidator(QtGui.QDoubleValidator(1.0, 5.0, 4.0))
+        fkFingerControlOptionLayout.addWidget(self.circleFkFingerControlScaleFactorLine)
+        self.circleFkFingerControlScaleFactorLine.setText('1.7')
+        fkFingerControlOptionLayout.addWidget(QtWidgets.QLabel("(1 - 5)"))
+        fkFingerControlOptionLayout.addSpacing(215)
+        bodyConfigTabPageLayout.addLayout(fkFingerControlOptionLayout)
 
         fkBodyArmControlScaleYZMultiplierLayout = QtWidgets.QHBoxLayout()
         fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FK Arm Control Scale YZ Multiplier :"))

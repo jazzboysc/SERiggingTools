@@ -1172,7 +1172,9 @@ class RigHumanHand(RigComponent):
             fingers = [],
             rootJoint = '',
             armFKFingerAttachPoint = '',
-            rigScale = 1.0
+            rigScale = 1.0,
+            createCircleFkFingerControl = True,
+            circleFkFingerControlScaleFactor = 1.5
             ):
 
         fkFingerControlGroup = cmds.group(n = self.Prefix + SERigNaming.s_FKPrefix + 'Finger' + SERigNaming.sControlGroup, em = 1, 
@@ -1197,27 +1199,43 @@ class RigHumanHand(RigComponent):
             nextFKJnt = None
             curFKFingerControls = []
             for i in range(len(fkJoints) - 1):
-                curFKJnt = fkJoints[i]
-                nextFKJnt = fkJoints[i + 1]
-                curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
-                nextFKJntLoc = SEMathHelper.getWorldPosition(nextFKJnt)
-                distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
 
-                curFKControl = SERigControl.RigCubeControl(
-                                        rigSide = self.RigSide,
-                                        rigType = fkFingerTypes[curFingerTypeIndex],
-                                        rigControlIndex = i,
-                                        prefix = SERigNaming.sFKPrefix + fingerJoints[0] + str(i), 
-                                        translateTo = curFKJnt,
-                                        rotateTo = curFKJnt,
-                                        scale = rigScale,
-                                        parent = preParent,
-                                        lockChannels = ['t', 's', 'v'],
-                                        cubeScaleX = distance,
-                                        cubeScaleY = curScaleYZ,
-                                        cubeScaleZ = curScaleYZ,
-                                        transparency = 0.75
-                                        )
+                curFKControl = None
+                curFKJnt = fkJoints[i]
+
+                if createCircleFkFingerControl:
+                    curFKControl = SERigControl.RigCircleControl(
+                            rigSide = self.RigSide,
+                            rigType = fkFingerTypes[curFingerTypeIndex],
+                            rigControlIndex = i,
+                            prefix = SERigNaming.sFKPrefix + fingerJoints[0] + str(i), 
+                            translateTo = curFKJnt,
+                            rotateTo = curFKJnt,
+                            scale = rigScale * circleFkFingerControlScaleFactor,
+                            parent = preParent,
+                            lockChannels = ['t', 's', 'v'])
+                else:
+                    nextFKJnt = fkJoints[i + 1]
+                    curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
+                    nextFKJntLoc = SEMathHelper.getWorldPosition(nextFKJnt)
+                    distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
+
+                    curFKControl = SERigControl.RigCubeControl(
+                                            rigSide = self.RigSide,
+                                            rigType = fkFingerTypes[curFingerTypeIndex],
+                                            rigControlIndex = i,
+                                            prefix = SERigNaming.sFKPrefix + fingerJoints[0] + str(i), 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = preParent,
+                                            lockChannels = ['t', 's', 'v'],
+                                            cubeScaleX = distance,
+                                            cubeScaleY = curScaleYZ,
+                                            cubeScaleZ = curScaleYZ,
+                                            transparency = 0.75
+                                            )
+
                 curFKFingerControls.append(curFKControl)
                 curAttrPrefix = finger[:-1]
                 SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, curAttrPrefix + 'FKControl' + str(i), 'ControlOwner')

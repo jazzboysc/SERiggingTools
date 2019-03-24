@@ -70,6 +70,8 @@ class RigBipedCharacter():
               fkArmControlScaleYZ = 10,
               fkArmControlScaleYZMultiplier = 0.9,
               fkArmControlTransparency = 0.85,
+              createCircleFkFingerControl = True,
+              circleFkFingerControlScaleFactor = 1.7,
               createSimpleSpine = False,
               createSpineFKSystem = True,
               createSimpleFKNeck = True,
@@ -181,6 +183,8 @@ class RigBipedCharacter():
                                 fkArmControlScaleYZ,
                                 fkArmControlScaleYZMultiplier,
                                 fkArmControlTransparency,
+                                createCircleFkFingerControl,
+                                circleFkFingerControlScaleFactor,
                                 createSimpleSpine,
                                 createSpineFKSystem,
                                 createSimpleFKNeck,
@@ -258,6 +262,8 @@ class RigBipedCharacter():
                             fkArmControlScaleYZ,
                             fkArmControlScaleYZMultiplier,
                             fkArmControlTransparency,
+                            createCircleFkFingerControl,
+                            circleFkFingerControlScaleFactor,
                             createSimpleSpine,
                             createSpineFKSystem,
                             createSimpleFKNeck,
@@ -357,7 +363,9 @@ class RigBipedCharacter():
         leftHand.build(
                 fingers = leftHandJnts,
                 armFKFingerAttachPoint = 'L_Wrist',
-                rigScale = sceneScale
+                rigScale = sceneScale,
+                createCircleFkFingerControl = createCircleFkFingerControl,
+                circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor
                 )
         self.LeftHand = leftHand
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftHand.TopGrp, 'LeftHandComponent', 'ComponentOwner')
@@ -369,7 +377,9 @@ class RigBipedCharacter():
         rightHand.build(
                 fingers = rightHandJnts,
                 armFKFingerAttachPoint = 'R_Wrist',
-                rigScale = sceneScale
+                rigScale = sceneScale,
+                createCircleFkFingerControl = createCircleFkFingerControl,
+                circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor
                 )
         self.RightHand = rightHand
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightHand.TopGrp, 'RightHandComponent', 'ComponentOwner')
