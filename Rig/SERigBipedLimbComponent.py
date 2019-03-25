@@ -460,14 +460,16 @@ class RigHumanLeg(RigHumanLimb):
         if createCompactFootControl:
             cmds.hide(footBaseSwiveControl.ControlGroup)
             cmds.hide(footToeSwiveControl.ControlGroup)
+            cmds.hide(footRotationControl.ControlGroup)
 
-            footControlAts = [SERigNaming.sFootToeSwiveAttr, SERigNaming.sFootHeelSwiveAttr]
-            swiveControlAts = [footToeSwiveControl.ControlObject + '.rotateY', footBaseSwiveControl.ControlObject + '.rotateY']
+            footControlAts = [SERigNaming.sFootToeSwiveAttr, SERigNaming.sFootHeelSwiveAttr, SERigNaming.sFootRotateXAttr, SERigNaming.sFootRotateZAttr]
+            drivenControlAts = [footToeSwiveControl.ControlObject + '.rotateY', footBaseSwiveControl.ControlObject + '.rotateY', 
+                                footRotationControl.ControlObject + '.rotateX', footRotationControl.ControlObject + '.rotateZ']
 
-            for at, swiveAt in zip(footControlAts, swiveControlAts):
+            for at, drivenAt in zip(footControlAts, drivenControlAts):
                 cmds.addAttr(footIKMainControl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.0)
                 cmds.setAttr(footIKMainControl.ControlObject + '.' + at, cb = 1)
-                cmds.connectAttr(footIKMainControl.ControlObject + '.' + at, swiveAt)
+                cmds.connectAttr(footIKMainControl.ControlObject + '.' + at, drivenAt)
 
         # Create leg PV control.
         legPVControl = SERigControl.RigDiamondControl(
