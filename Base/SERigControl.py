@@ -2,6 +2,8 @@ import maya.cmds as cmds
 from . import SERigEnum
 from . import SERigNaming
 from ..Utils import SERigObjectTypeHelper
+from ..Utils import SEMathHelper
+from maya.api.OpenMaya import MVector, MMatrix, MPoint
 
 def setControlRGBColor(control, color = (1.0, 1.0, 1.0)):
     
@@ -231,7 +233,10 @@ class RigCubeControl(RigControl):
                  preRotateY = 0.0,
                  preRotateZ = 0.0,
                  overrideControlColor = False, 
-                 controlColor = (0.0, 0.0, 0.0)
+                 controlColor = (0.0, 0.0, 0.0),
+                 fitToSurroundingMeshes = False,
+                 surroundingMeshes = [],
+                 postFitScale = 1.0
                  ):
 
         self.CubeScaleX = cubeScaleX
@@ -241,7 +246,8 @@ class RigCubeControl(RigControl):
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, 
-                            overrideControlColor = overrideControlColor, controlColor = controlColor)
+                            overrideControlColor = overrideControlColor, controlColor = controlColor,
+                            fitToSurroundingMeshes = fitToSurroundingMeshes, surroundingMeshes = surroundingMeshes, postFitScale = postFitScale)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, 
                             preRotateX, preRotateY, preRotateZ, overrideControlColor, controlColor,
@@ -304,7 +310,26 @@ class RigCubeControl(RigControl):
         cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         if fitToSurroundingMeshes and surroundingMeshes and len(surroundingMeshes) > 0:
-            pass
+            minDis = 9999999
+            minHit  = None
+            rayDir = SEMathHelper.getLocalVecToWorldSpace(rotateTo, MVector.kZaxisVector)
+            rayStartPos = SEMathHelper.getWorldPosition(translateTo)
+
+            for mesh in surroundingMeshes:
+                res = SEMathHelper.rayIntersect(mesh, rayStartPos, rayDir)
+                if res[0]:
+                    curFirstHit = (res[0].x, res[0].y, res[0].z)
+                    curDis = SEMathHelper.getDistance3(curFirstHit, rayStartPos)
+                    if curDis < minDis:
+                        minDis = curDis
+                        minHit = curFirstHit
+
+            if minHit:
+                pass
+                #s = cmds.sphere()[0]
+                #cmds.setAttr(s + '.tx', minHit[0])
+                #cmds.setAttr(s + '.ty', minHit[1])
+                #cmds.setAttr(s + '.tz', minHit[2])
 
         # Set control color.
         ctrlShapes = cmds.listRelatives(newShapeName, s = 1)
