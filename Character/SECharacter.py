@@ -379,7 +379,8 @@ class RigBipedCharacter():
                 armFKFingerAttachPoint = 'L_Wrist',
                 rigScale = sceneScale,
                 createCircleFkFingerControl = createCircleFkFingerControl,
-                circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor
+                circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor,
+                surroundingMeshes = surroundingMeshes
                 )
         self.LeftHand = leftHand
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftHand.TopGrp, 'LeftHandComponent', 'ComponentOwner')
@@ -393,7 +394,8 @@ class RigBipedCharacter():
                 armFKFingerAttachPoint = 'R_Wrist',
                 rigScale = sceneScale,
                 createCircleFkFingerControl = createCircleFkFingerControl,
-                circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor
+                circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor,
+                surroundingMeshes = surroundingMeshes
                 )
         self.RightHand = rightHand
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightHand.TopGrp, 'RightHandComponent', 'ComponentOwner')

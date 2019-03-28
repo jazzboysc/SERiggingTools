@@ -1190,7 +1190,8 @@ class RigHumanHand(RigComponent):
             armFKFingerAttachPoint = '',
             rigScale = 1.0,
             createCircleFkFingerControl = True,
-            circleFkFingerControlScaleFactor = 1.5
+            circleFkFingerControlScaleFactor = 1.5,
+            surroundingMeshes = []
             ):
 
         fkFingerControlGroup = cmds.group(n = self.Prefix + SERigNaming.s_FKPrefix + 'Finger' + SERigNaming.sControlGroup, em = 1, 
@@ -1229,7 +1230,13 @@ class RigHumanHand(RigComponent):
                             rotateTo = curFKJnt,
                             scale = rigScale * circleFkFingerControlScaleFactor,
                             parent = preParent,
-                            lockChannels = ['t', 's', 'v'])
+                            lockChannels = ['t', 's', 'v'],
+                            fitToSurroundingMeshes = True,
+                            surroundingMeshes = surroundingMeshes,
+                            postFitScale = 1.1,
+                            overrideFitRayDirection = True, 
+                            fitRayDirection = (0, 1, 0)
+                            )
                 else:
                     nextFKJnt = fkJoints[i + 1]
                     curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
