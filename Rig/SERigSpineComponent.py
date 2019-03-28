@@ -25,7 +25,8 @@ class RigSimpleIKSpine(RigComponent):
             spineJoints = [],
             rootJoint = '',
             rigScale = 1.0,
-            createFKSystem = True
+            createFKSystem = True,
+            surroundingMeshes = []
             ):
 
         # Create upper body control.
@@ -220,7 +221,8 @@ class RigFixedEndsIKSpine(RigComponent):
             spineJoints = [],
             rootJoint = '',
             rigScale = 1.0,
-            createFKSystem = True
+            createFKSystem = True,
+            surroundingMeshes = []
             ):
 
         # Create upper body control.
@@ -455,7 +457,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                     overrideControlColor = True, 
                                     controlColor = (0.4, 0.9, 0.9),
                                     fitToSurroundingMeshes = True,
-                                    surroundingMeshes = ['Little_Monster03_UpperCloth', 'Little_Monster03_Belt', 'Little_Monster03_LowerCloth']
+                                    surroundingMeshes = surroundingMeshes
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl', 'ControlOwner')
             self.FKSpine0Ctrl = FKSpine0Ctrl
@@ -478,7 +480,9 @@ class RigFixedEndsIKSpine(RigComponent):
                                     cubeScaleZ = 30.0,
                                     transparency = 0.75,
                                     overrideControlColor = True, 
-                                    controlColor = (0.4, 0.9, 0.9)
+                                    controlColor = (0.4, 0.9, 0.9),
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl', 'ControlOwner')
             self.FKSpine1Ctrl = FKSpine1Ctrl

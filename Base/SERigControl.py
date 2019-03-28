@@ -311,7 +311,9 @@ class RigCubeControl(RigControl):
 
         if fitToSurroundingMeshes and surroundingMeshes and len(surroundingMeshes) > 0:
             minDis = 9999999
+            secondMinDis = minDis
             minHit  = None
+            secondMinHit = None
             rayDir = SEMathHelper.getLocalVecToWorldSpace(rotateTo, MVector.kZaxisVector)
             rayStartPos = SEMathHelper.getWorldPosition(translateTo)
 
@@ -323,13 +325,20 @@ class RigCubeControl(RigControl):
                     if curDis < minDis:
                         minDis = curDis
                         minHit = curFirstHit
+                    elif curDis < secondMinDis:
+                        secondMinDis = curDis
+                        secondMinHit = curFirstHit
 
-            if minHit:
-                pass
-                #s = cmds.sphere()[0]
-                #cmds.setAttr(s + '.tx', minHit[0])
-                #cmds.setAttr(s + '.ty', minHit[1])
-                #cmds.setAttr(s + '.tz', minHit[2])
+            if secondMinHit:
+                s = cmds.sphere()[0]
+                cmds.setAttr(s + '.tx', secondMinHit[0])
+                cmds.setAttr(s + '.ty', secondMinHit[1])
+                cmds.setAttr(s + '.tz', secondMinHit[2])
+            elif minHit:
+                s = cmds.sphere()[0]
+                cmds.setAttr(s + '.tx', minHit[0])
+                cmds.setAttr(s + '.ty', minHit[1])
+                cmds.setAttr(s + '.tz', minHit[2])
 
         # Set control color.
         ctrlShapes = cmds.listRelatives(newShapeName, s = 1)

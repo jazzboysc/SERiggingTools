@@ -134,7 +134,13 @@ class RigBipedCharacter():
 
         # Parent the imported model to the rig base.
         modelGrp = ('%s' + SERigNaming.s_ModelGroup) % self.CharacterName
-        cmds.parent(modelGrp, baseRig.ModelGrp)
+        if cmds.objExists(modelGrp):
+            cmds.parent(modelGrp, baseRig.ModelGrp)
+        else:
+            cmds.error('Cannot find model group.')
+
+        # Get surrounding meshes from model group.
+        surroundingMeshes = cmds.listRelatives(modelGrp, c = 1)
 
         # Parent the imported skeleton to the rig base.
         cmds.parent(rootJnt, baseRig.JointsGrp)
@@ -193,7 +199,8 @@ class RigBipedCharacter():
                                 createNeckMuscleSplineSystem,
                                 neckMuscleSplineJointCount,
                                 createFacialSystem,
-                                facialJnts
+                                facialJnts,
+                                surroundingMeshes
                                 )
 
         # Setup model deformation.
@@ -273,7 +280,8 @@ class RigBipedCharacter():
                             createNeckMuscleSplineSystem,
                             neckMuscleSplineJointCount,
                             createFacialSystem,
-                            facialJnts
+                            facialJnts,
+                            surroundingMeshes
                             ):
 
         # Spine.
@@ -290,7 +298,8 @@ class RigBipedCharacter():
                     spineJoints = spineJnts,
                     rootJoint = rootJnt,
                     rigScale = sceneScale,
-                    createFKSystem = createSpineFKSystem
+                    createFKSystem = createSpineFKSystem,
+                    surroundingMeshes = surroundingMeshes
                     )
         self.Spine = spine
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Spine.TopGrp, 'SpineComponent', 'ComponentOwner')
