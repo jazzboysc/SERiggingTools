@@ -457,7 +457,8 @@ class RigFixedEndsIKSpine(RigComponent):
                                     overrideControlColor = True, 
                                     controlColor = (0.4, 0.9, 0.9),
                                     fitToSurroundingMeshes = True,
-                                    surroundingMeshes = surroundingMeshes
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 1.05
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl', 'ControlOwner')
             self.FKSpine0Ctrl = FKSpine0Ctrl
@@ -482,7 +483,8 @@ class RigFixedEndsIKSpine(RigComponent):
                                     overrideControlColor = True, 
                                     controlColor = (0.4, 0.9, 0.9),
                                     fitToSurroundingMeshes = True,
-                                    surroundingMeshes = surroundingMeshes
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 1.05
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl', 'ControlOwner')
             self.FKSpine1Ctrl = FKSpine1Ctrl

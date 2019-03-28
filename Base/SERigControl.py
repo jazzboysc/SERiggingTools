@@ -124,6 +124,45 @@ class RigControl():
                             fitToSurroundingMeshes, surroundingMeshes, postFitScale, translateTo, rotateTo):
         return None
 
+    def _getFitSize(self, surroundingMeshes, translateTo, rotateTo):
+        minDis = 9999999
+        secondMinDis = minDis
+        minHit  = None
+        secondMinHit = None
+        rayDir = SEMathHelper.getLocalVecToWorldSpace(rotateTo, MVector.kZaxisVector)
+        rayStartPos = SEMathHelper.getWorldPosition(translateTo)
+
+        for mesh in surroundingMeshes:
+            res = SEMathHelper.rayIntersect(mesh, rayStartPos, rayDir)
+            if res[0]:
+                curFirstHit = (res[0].x, res[0].y, res[0].z)
+                curDis = SEMathHelper.getDistance3(curFirstHit, rayStartPos)
+                if curDis < minDis:
+                    minDis = curDis
+                    minHit = curFirstHit
+                elif curDis < secondMinDis:
+                    secondMinDis = curDis
+                    secondMinHit = curFirstHit
+
+        res = None
+        if secondMinHit:
+            # Create debug sphere.
+            #s = cmds.sphere()[0]
+            #cmds.setAttr(s + '.tx', secondMinHit[0])
+            #cmds.setAttr(s + '.ty', secondMinHit[1])
+            #cmds.setAttr(s + '.tz', secondMinHit[2])
+            res = secondMinDis
+        elif minHit:
+            # Create debug sphere.
+            #s = cmds.sphere()[0]
+            #cmds.setAttr(s + '.tx', minHit[0])
+            #cmds.setAttr(s + '.ty', minHit[1])
+            #cmds.setAttr(s + '.tz', minHit[2])
+            res = minDis
+
+        return res
+
+
     def adjustControlGroupOffset(self, offsetX = 0, offsetY = 0, offsetZ = 0):
         cmds.move(offsetX, offsetY, offsetZ, self.ControlGroup, moveXYZ = True, relative = True)
 
@@ -310,35 +349,16 @@ class RigCubeControl(RigControl):
         cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         if fitToSurroundingMeshes and surroundingMeshes and len(surroundingMeshes) > 0:
-            minDis = 9999999
-            secondMinDis = minDis
-            minHit  = None
-            secondMinHit = None
-            rayDir = SEMathHelper.getLocalVecToWorldSpace(rotateTo, MVector.kZaxisVector)
-            rayStartPos = SEMathHelper.getWorldPosition(translateTo)
+            fitSize = self._getFitSize(surroundingMeshes, translateTo, rotateTo)
+            if fitSize:
+                shapeBB = cmds.exactWorldBoundingBox(newShapeName)
+                shapeSizeY = (shapeBB[4] - shapeBB[1]) * 0.5
+                fitScale = fitSize / shapeSizeY * postFitScale
 
-            for mesh in surroundingMeshes:
-                res = SEMathHelper.rayIntersect(mesh, rayStartPos, rayDir)
-                if res[0]:
-                    curFirstHit = (res[0].x, res[0].y, res[0].z)
-                    curDis = SEMathHelper.getDistance3(curFirstHit, rayStartPos)
-                    if curDis < minDis:
-                        minDis = curDis
-                        minHit = curFirstHit
-                    elif curDis < secondMinDis:
-                        secondMinDis = curDis
-                        secondMinHit = curFirstHit
+                cmds.select(newShapeName)
+                cmds.scale(1.0, fitScale, fitScale, xyz = 1, relative = 1)
+                cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
-            if secondMinHit:
-                s = cmds.sphere()[0]
-                cmds.setAttr(s + '.tx', secondMinHit[0])
-                cmds.setAttr(s + '.ty', secondMinHit[1])
-                cmds.setAttr(s + '.tz', secondMinHit[2])
-            elif minHit:
-                s = cmds.sphere()[0]
-                cmds.setAttr(s + '.tx', minHit[0])
-                cmds.setAttr(s + '.ty', minHit[1])
-                cmds.setAttr(s + '.tz', minHit[2])
 
         # Set control color.
         ctrlShapes = cmds.listRelatives(newShapeName, s = 1)
