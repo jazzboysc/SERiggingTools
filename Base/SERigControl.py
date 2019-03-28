@@ -207,12 +207,16 @@ class RigCircleControl(RigControl):
                  flipScaleZ = False,
                  preRotateX = 0.0,
                  preRotateY = 0.0,
-                 preRotateZ = 0.0
+                 preRotateZ = 0.0,
+                 fitToSurroundingMeshes = False,
+                 surroundingMeshes = [],
+                 postFitScale = 1.0
                  ):
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels,
-                            flipScaleX, flipScaleY, flipScaleZ)
+                            flipScaleX, flipScaleY, flipScaleZ, 
+                            fitToSurroundingMeshes = fitToSurroundingMeshes, surroundingMeshes = surroundingMeshes, postFitScale = postFitScale)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, 
                             preRotateX, preRotateY, preRotateZ, overrideControlColor, controlColor, 
@@ -229,6 +233,17 @@ class RigCircleControl(RigControl):
             pass
 
         ctrlObj = cmds.circle(n = prefix + SERigNaming.sControl, ch = False, normal = circleNormal, radius = scale)[0]
+
+        if fitToSurroundingMeshes and surroundingMeshes and len(surroundingMeshes) > 0:
+            fitSize = self._getFitSize(surroundingMeshes, translateTo, rotateTo)
+            if fitSize:
+                shapeBB = cmds.exactWorldBoundingBox(ctrlObj)
+                shapeSizeY = (shapeBB[4] - shapeBB[1]) * 0.5
+                fitScale = fitSize / shapeSizeY * postFitScale
+
+                cmds.select(ctrlObj)
+                cmds.scale(1.0, fitScale, fitScale, xyz = 1, relative = 1)
+                cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         # Set control color.
         ctrlShape = cmds.listRelatives(ctrlObj, s = 1)[0]

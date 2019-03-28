@@ -252,7 +252,10 @@ class RigFixedEndsIKSpine(RigComponent):
                                     translateTo = chestBeginProxyJoint,
                                     rotateTo = chestBeginProxyJoint,
                                     scale = rigScale*22,
-                                    parent = upperBodyCtrl.ControlObject
+                                    parent = upperBodyCtrl.ControlObject,
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 1.45
                                     )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl', 'ControlOwner')
         self.ChestBeginCtrl = chestBeginCtrl
@@ -264,7 +267,10 @@ class RigFixedEndsIKSpine(RigComponent):
                                 translateTo = pelvisProxyJoint,
                                 rotateTo = pelvisProxyJoint,
                                 scale = rigScale*26,
-                                parent = upperBodyCtrl.ControlObject
+                                parent = upperBodyCtrl.ControlObject,
+                                fitToSurroundingMeshes = True,
+                                surroundingMeshes = surroundingMeshes,
+                                postFitScale = 1.6
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl', 'ControlOwner')
         self.PelvisCtrl = pelvisCtrl
@@ -277,7 +283,10 @@ class RigFixedEndsIKSpine(RigComponent):
                                 rotateTo = pelvisProxyJoint,
                                 scale = rigScale*22,
                                 parent = upperBodyCtrl.ControlObject,
-                                lockChannels = ['s', 't', 'v']
+                                lockChannels = ['s', 't', 'v'],
+                                fitToSurroundingMeshes = True,
+                                surroundingMeshes = surroundingMeshes,
+                                postFitScale = 1.35
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisLocalCtrl.ControlGroup, 'PelvisLocalCtrl', 'ControlOwner')
         self.PelvisLocalCtrl = pelvisLocalCtrl
@@ -458,7 +467,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                     controlColor = (0.4, 0.9, 0.9),
                                     fitToSurroundingMeshes = True,
                                     surroundingMeshes = surroundingMeshes,
-                                    postFitScale = 1.05
+                                    postFitScale = 1.1
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl', 'ControlOwner')
             self.FKSpine0Ctrl = FKSpine0Ctrl
@@ -484,7 +493,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                     controlColor = (0.4, 0.9, 0.9),
                                     fitToSurroundingMeshes = True,
                                     surroundingMeshes = surroundingMeshes,
-                                    postFitScale = 1.05
+                                    postFitScale = 1.1
                                     )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl', 'ControlOwner')
             self.FKSpine1Ctrl = FKSpine1Ctrl
