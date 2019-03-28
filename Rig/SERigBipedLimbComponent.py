@@ -323,7 +323,8 @@ class RigHumanLeg(RigHumanLimb):
             fkControlScaleYZ = 19,
             fkControlScaleYZMultiplier = 0.75,
             fkControlTransparency = 0.85,
-            createCompactFootControl = True
+            createCompactFootControl = True,
+            surroundingMeshes = []
             ):
 
         self.FootHelperJoints = self.attachFootHelperJoints(footHelperJoints)
@@ -385,7 +386,12 @@ class RigHumanLeg(RigHumanLimb):
                                 translateTo = legJoints[-3],
                                 rotateTo = rotateToGroup, 
                                 parent = footIKMainControl.ControlObject, 
-                                lockChannels = ['s', 't', 'v']
+                                lockChannels = ['s', 't', 'v'],
+                                fitToSurroundingMeshes = False,
+                                surroundingMeshes = surroundingMeshes,
+                                postFitScale = 2.0,
+                                overrideFitRayDirection = True, 
+                                fitRayDirection = (0, 0, 1)
                                 )
         self.AnkleIKRotationControl = ankleIKRotationControl
         self.LimbIKMainRotationControl = ankleIKRotationControl
@@ -575,6 +581,7 @@ class RigHumanLeg(RigHumanLimb):
         # Create FK leg controls.
         preParent = self.FKControlGroup
         curScaleYZ = fkControlScaleYZ
+        postFitScaleList = [1.1, 1.1, 0.8, 0.6]
         for i in range(len(fkJoints) - 1):
             curFKJnt = fkJoints[i]
             nextFKJnt = fkJoints[i + 1]
@@ -595,7 +602,12 @@ class RigHumanLeg(RigHumanLimb):
                                     cubeScaleX = distance,
                                     cubeScaleY = curScaleYZ,
                                     cubeScaleZ = curScaleYZ,
-                                    transparency = fkControlTransparency
+                                    transparency = fkControlTransparency,
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = postFitScaleList[i],
+                                    overrideFitRayDirection = True, 
+                                    fitRayDirection = (0, 0, 1)
                                     )
             self.FKLegControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKLegControl' + str(i), 'ControlOwner')
@@ -888,7 +900,8 @@ class RigHumanArm(RigHumanLimb):
             rigScale = 1.0,
             fkControlScaleYZ = 10,
             fkControlScaleYZMultiplier = 0.9,
-            fkControlTransparency = 0.85
+            fkControlTransparency = 0.85,
+            surroundingMeshes = []
             ):
         
         armParent = SEJointHelper.getFirstParentJoint(armJoints[0])
@@ -939,7 +952,12 @@ class RigHumanArm(RigHumanLimb):
                                 lockChannels = ['s', 'v'],
                                 flipScaleX = flipScaleXYZ,
                                 flipScaleY = flipScaleXYZ,
-                                flipScaleZ = flipScaleXYZ
+                                flipScaleZ = flipScaleXYZ,
+                                fitToSurroundingMeshes = True,
+                                surroundingMeshes = surroundingMeshes,
+                                postFitScale = 2.0,
+                                overrideFitRayDirection = True, 
+                                fitRayDirection = (0, 0, 1)
                                 )
         self.ArmIKMainControl = armIKMainControl
         self.LimbIKMainControl = armIKMainControl
@@ -1008,7 +1026,12 @@ class RigHumanArm(RigHumanLimb):
                                     cubeScaleX = distance,
                                     cubeScaleY = curScaleYZ,
                                     cubeScaleZ = curScaleYZ,
-                                    transparency = fkControlTransparency
+                                    transparency = fkControlTransparency,
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 1.1,
+                                    overrideFitRayDirection = True, 
+                                    fitRayDirection = (0, 0, 1)
                                     )
             self.FKArmControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKArmControl' + str(i), 'ControlOwner')
@@ -1032,7 +1055,12 @@ class RigHumanArm(RigHumanLimb):
                                 cubeScaleX = curScaleYZ,
                                 cubeScaleY = curScaleYZ,
                                 cubeScaleZ = curScaleYZ,
-                                transparency = fkControlTransparency
+                                transparency = fkControlTransparency,
+                                fitToSurroundingMeshes = True,
+                                surroundingMeshes = surroundingMeshes,
+                                postFitScale = 1.1,
+                                overrideFitRayDirection = True, 
+                                fitRayDirection = (0, 0, 1)
                                 )
         self.FKArmControls.append(curFKControl)
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKWristControl', 'ControlOwner')
@@ -1233,7 +1261,7 @@ class RigHumanHand(RigComponent):
                             lockChannels = ['t', 's', 'v'],
                             fitToSurroundingMeshes = True,
                             surroundingMeshes = surroundingMeshes,
-                            postFitScale = 1.1,
+                            postFitScale = 1.45,
                             overrideFitRayDirection = True, 
                             fitRayDirection = (0, 1, 0)
                             )

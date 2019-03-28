@@ -55,7 +55,7 @@ class RigControl():
         ctrlObj = self._createControlShape(rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, 
                                            preRotateX, preRotateY, preRotateZ, overrideControlColor, controlColor,
                                            fitToSurroundingMeshes, surroundingMeshes, postFitScale, translateTo, rotateTo,
-                                           overrideFitRayDirection, fitRayDirection)
+                                           overrideFitRayDirection = overrideFitRayDirection, fitRayDirection = fitRayDirection)
         if ctrlObj:
             # Parent to control group.
             ctrlGrp = cmds.group(n = prefix + SERigNaming.sControlGroup, em = 1)
@@ -300,7 +300,9 @@ class RigCubeControl(RigControl):
                  controlColor = (0.0, 0.0, 0.0),
                  fitToSurroundingMeshes = False,
                  surroundingMeshes = [],
-                 postFitScale = 1.0
+                 postFitScale = 1.0,
+                 overrideFitRayDirection = False, 
+                 fitRayDirection = (0, 1, 0)
                  ):
 
         self.CubeScaleX = cubeScaleX
@@ -311,7 +313,8 @@ class RigCubeControl(RigControl):
         RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, 
                             overrideControlColor = overrideControlColor, controlColor = controlColor,
-                            fitToSurroundingMeshes = fitToSurroundingMeshes, surroundingMeshes = surroundingMeshes, postFitScale = postFitScale)
+                            fitToSurroundingMeshes = fitToSurroundingMeshes, surroundingMeshes = surroundingMeshes, postFitScale = postFitScale,
+                            overrideFitRayDirection = overrideFitRayDirection, fitRayDirection = fitRayDirection)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, 
                             preRotateX, preRotateY, preRotateZ, overrideControlColor, controlColor,
@@ -374,7 +377,7 @@ class RigCubeControl(RigControl):
         cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         if fitToSurroundingMeshes and surroundingMeshes and len(surroundingMeshes) > 0:
-            fitSize = self._getFitSize(surroundingMeshes, translateTo, rotateTo)
+            fitSize = self._getFitSize(surroundingMeshes, translateTo, rotateTo, overrideFitRayDirection, fitRayDirection)
             if fitSize:
                 shapeBB = cmds.exactWorldBoundingBox(newShapeName)
                 shapeSizeY = (shapeBB[4] - shapeBB[1]) * 0.5

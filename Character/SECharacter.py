@@ -316,7 +316,8 @@ class RigBipedCharacter():
                 fkControlScaleYZ = fkLegControlScaleYZ,
                 fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
                 fkControlTransparency = fkLegControlTransparency,
-                createCompactFootControl = createCompactFootControl
+                createCompactFootControl = createCompactFootControl,
+                surroundingMeshes = surroundingMeshes
                 )
         self.LeftLeg = leftLeg
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftLeg.TopGrp, 'LeftLegComponent', 'ComponentOwner')
@@ -333,7 +334,8 @@ class RigBipedCharacter():
                 fkControlScaleYZ = fkLegControlScaleYZ,
                 fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
                 fkControlTransparency = fkLegControlTransparency,
-                createCompactFootControl = createCompactFootControl
+                createCompactFootControl = createCompactFootControl,
+                surroundingMeshes = surroundingMeshes
                 )
         self.RightLeg = rightLeg
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightLeg.TopGrp, 'RightLegComponent', 'ComponentOwner')
@@ -349,7 +351,8 @@ class RigBipedCharacter():
                 rigScale = sceneScale,
                 fkControlScaleYZ = fkArmControlScaleYZ,
                 fkControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
-                fkControlTransparency = fkArmControlTransparency
+                fkControlTransparency = fkArmControlTransparency,
+                surroundingMeshes = surroundingMeshes
                 )
         self.LeftArm = leftArm
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftArm.TopGrp, 'LeftArmComponent', 'ComponentOwner')
@@ -365,7 +368,8 @@ class RigBipedCharacter():
                 rigScale = sceneScale,
                 fkControlScaleYZ = fkArmControlScaleYZ,
                 fkControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
-                fkControlTransparency = fkArmControlTransparency
+                fkControlTransparency = fkArmControlTransparency,
+                surroundingMeshes = surroundingMeshes
                 )
         self.RightArm = rightArm
         SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightArm.TopGrp, 'RightArmComponent', 'ComponentOwner')
