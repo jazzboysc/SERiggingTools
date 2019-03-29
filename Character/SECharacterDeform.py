@@ -355,6 +355,7 @@ class RigBipedCharacterDeform():
                 oc = cmds.orientConstraint(upperLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
                 cmds.setAttr(oc + '.' + upperLimbJoint + 'W0', w0)
                 cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
+                cmds.setAttr(oc + '.interpType', 2)
                 w0 += 1
                 w1 -= 1
 
@@ -443,6 +444,7 @@ class RigBipedCharacterDeform():
                 oc = cmds.orientConstraint(lowerLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
                 cmds.setAttr(oc + '.' + lowerLimbJoint + 'W0', w0)
                 cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
+                cmds.setAttr(oc + '.interpType', 2)
                 w0 -= 1
                 w1 += 1
 
