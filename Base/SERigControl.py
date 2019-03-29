@@ -127,7 +127,7 @@ class RigControl():
                             fitToSurroundingMeshes, surroundingMeshes, postFitScale, translateTo, rotateTo, overrideFitRayDirection, fitRayDirection):
         return None
 
-    def _getFitSize(self, surroundingMeshes, translateTo, rotateTo, overrideFitRayDirection = False, fitRayDirection = (0, 1, 0)):
+    def _getFitSize(self, surroundingMeshes, translateTo, rotateTo, overrideFitRayDirection = False, fitRayDirection = (0, 0, 1)):
         minDis = 9999999
         secondMinDis = minDis
         minHit  = None
@@ -136,7 +136,12 @@ class RigControl():
         if overrideFitRayDirection:
             rayDir = fitRayDirection
         else:
-            rayDir = SEMathHelper.getLocalVecToWorldSpace(rotateTo, MVector.kZaxisVector)
+            if rotateTo and cmds.objExists(rotateTo):
+                rayDir = SEMathHelper.getLocalVecToWorldSpace(rotateTo, MVector.kZaxisVector)
+            else:
+                cmds.warning('RotateTo object does not exist. Using default fit ray direction.')
+                rayDir = fitRayDirection
+
         rayStartPos = SEMathHelper.getWorldPosition(translateTo)
 
         for mesh in surroundingMeshes:
@@ -562,14 +567,21 @@ class RigArrowCrossControl(RigControl):
                  scaleZ = 6.0,
                  preRotateX = 0.0,
                  preRotateY = 0.0,
-                 preRotateZ = 0.0
+                 preRotateZ = 0.0,
+                 fitToSurroundingMeshes = False,
+                 surroundingMeshes = [],
+                 postFitScale = 1.0,
+                 overrideFitRayDirection = False, 
+                 fitRayDirection = (0, 1, 0)
                  ):
 
         self.ScaleX = scaleX
         self.ScaleZ = scaleZ
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
-                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels)
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels,
+                            fitToSurroundingMeshes = fitToSurroundingMeshes, surroundingMeshes = surroundingMeshes, postFitScale = postFitScale,
+                            overrideFitRayDirection = overrideFitRayDirection, fitRayDirection = fitRayDirection)
 
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, 
                             preRotateX, preRotateY, preRotateZ, overrideControlColor, controlColor,
@@ -593,6 +605,17 @@ class RigArrowCrossControl(RigControl):
         cmds.select(newShapeName)
         cmds.scale(self.ScaleX, 1.0, self.ScaleZ, xyz = 1, relative = 1)
         cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+        if fitToSurroundingMeshes and surroundingMeshes and len(surroundingMeshes) > 0:
+            fitSize = self._getFitSize(surroundingMeshes, translateTo, rotateTo, overrideFitRayDirection, fitRayDirection)
+            if fitSize:
+                shapeBB = cmds.exactWorldBoundingBox(newShapeName)
+                shapeSizeX = (shapeBB[3] - shapeBB[0]) * 0.5
+                fitScale = fitSize / shapeSizeX * postFitScale
+
+                cmds.select(newShapeName)
+                cmds.scale(fitScale, 1.0, fitScale, xyz = 1, relative = 1)
+                cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
 
         # Set control color.
         ctrlShapes = cmds.listRelatives(newShapeName, s = 1)

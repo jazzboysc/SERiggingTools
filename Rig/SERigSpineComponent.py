@@ -234,7 +234,12 @@ class RigFixedEndsIKSpine(RigComponent):
                                 scale = rigScale*20,
                                 scaleX = 5,
                                 scaleZ = 5,
-                                parent = self.ControlsGrp
+                                parent = self.ControlsGrp,
+                                fitToSurroundingMeshes = True,
+                                surroundingMeshes = surroundingMeshes,
+                                postFitScale = 1.55,
+                                overrideFitRayDirection = True, 
+                                fitRayDirection = (-1, 0, 0)
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, upperBodyCtrl.ControlGroup, 'UpperBodyCtrl', 'ControlOwner')
         self.UpperBodyCtrl = upperBodyCtrl
@@ -255,7 +260,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                     parent = upperBodyCtrl.ControlObject,
                                     fitToSurroundingMeshes = True,
                                     surroundingMeshes = surroundingMeshes,
-                                    postFitScale = 1.45
+                                    postFitScale = 1.6
                                     )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl', 'ControlOwner')
         self.ChestBeginCtrl = chestBeginCtrl
@@ -270,7 +275,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                 parent = upperBodyCtrl.ControlObject,
                                 fitToSurroundingMeshes = True,
                                 surroundingMeshes = surroundingMeshes,
-                                postFitScale = 1.6
+                                postFitScale = 1.7
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl', 'ControlOwner')
         self.PelvisCtrl = pelvisCtrl
