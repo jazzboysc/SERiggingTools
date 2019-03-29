@@ -246,14 +246,37 @@ class RigCircleControl(RigControl):
 
         if fitToSurroundingMeshes and surroundingMeshes and len(surroundingMeshes) > 0:
             fitSize = self._getFitSize(surroundingMeshes, translateTo, rotateTo, overrideFitRayDirection, fitRayDirection)
+            # Debug info.
+            #print(prefix + ':fitSize:' + str(fitSize))
+
             if fitSize:
                 shapeBB = cmds.exactWorldBoundingBox(ctrlObj)
-                shapeSizeY = (shapeBB[4] - shapeBB[1]) * 0.5
-                fitScale = fitSize / shapeSizeY * postFitScale
+                if rigFacing == SERigEnum.eRigFacing.RF_X:
+                    shapeSizeY = (shapeBB[4] - shapeBB[1]) * 0.5
+                    fitScale = fitSize / shapeSizeY * postFitScale
 
-                cmds.select(ctrlObj)
-                cmds.scale(1.0, fitScale, fitScale, xyz = 1, relative = 1)
-                cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+                    cmds.select(ctrlObj)
+                    cmds.scale(1.0, fitScale, fitScale, xyz = 1, relative = 1)
+                    cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+                elif rigFacing == SERigEnum.eRigFacing.RF_Y:
+                    shapeSizeX = (shapeBB[3] - shapeBB[0]) * 0.5
+                    fitScale = fitSize / shapeSizeX * postFitScale
+                    
+                    cmds.select(ctrlObj)
+                    cmds.scale(fitScale, 1.0, fitScale, xyz = 1, relative = 1)
+                    cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+                elif rigFacing == SERigEnum.eRigFacing.RF_Z:
+                    shapeSizeX = (shapeBB[3] - shapeBB[0]) * 0.5
+                    fitScale = fitSize / shapeSizeX * postFitScale
+                    
+                    cmds.select(ctrlObj)
+                    cmds.scale(fitScale, fitScale, 1.0, xyz = 1, relative = 1)
+                    cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+                else:
+                    pass
 
         # Set control color.
         ctrlShape = cmds.listRelatives(ctrlObj, s = 1)[0]

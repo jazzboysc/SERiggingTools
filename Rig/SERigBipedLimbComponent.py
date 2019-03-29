@@ -387,11 +387,11 @@ class RigHumanLeg(RigHumanLimb):
                                 rotateTo = rotateToGroup, 
                                 parent = footIKMainControl.ControlObject, 
                                 lockChannels = ['s', 't', 'v'],
-                                fitToSurroundingMeshes = False,
+                                fitToSurroundingMeshes = True,
                                 surroundingMeshes = surroundingMeshes,
-                                postFitScale = 2.0,
+                                postFitScale = 1.35,
                                 overrideFitRayDirection = True, 
-                                fitRayDirection = (0, 0, 1)
+                                fitRayDirection = (0, 1, 1)
                                 )
         self.AnkleIKRotationControl = ankleIKRotationControl
         self.LimbIKMainRotationControl = ankleIKRotationControl
