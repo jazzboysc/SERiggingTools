@@ -33,7 +33,8 @@ class RigSimpleHumanNeck(RigComponent):
             neckJoints = [],  # ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
             rootJoint = '',
             neckAttachPoint = '',
-            rigScale = 1.0
+            rigScale = 1.0,
+            surroundingMeshes = []
             ):
         
         fkNeckControlGroup = cmds.group(n = self.Prefix + SERigNaming.s_FKPrefix + 'Neck' + SERigNaming.sControlGroup, em = 1, 
@@ -62,6 +63,29 @@ class RigSimpleHumanNeck(RigComponent):
                 curScaleYZ = 14
                 curRigType = SERigEnum.eRigType.RT_NeckFK
                 curRigControlIndex = i
+
+                curFKControl = SERigControl.RigCubeControl(
+                                        rigSide = self.RigSide,
+                                        rigType = curRigType,
+                                        rigControlIndex = curRigControlIndex,
+                                        prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                        translateTo = curFKJnt,
+                                        rotateTo = curFKJnt,
+                                        scale = rigScale,
+                                        parent = preParent,
+                                        lockChannels = ['t', 's', 'v'],
+                                        cubeScaleX = distance,
+                                        cubeScaleY = curScaleYZ,
+                                        cubeScaleZ = curScaleYZ,
+                                        transparency = 0.75,
+                                        overrideControlColor = True, 
+                                        controlColor = (0.4, 0.9, 0.9),
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.3,
+                                        overrideFitRayDirection = True, 
+                                        fitRayDirection = (0, 0, 1)
+                                        )
             else:
                 # Head FK.
                 distance *= 3
@@ -69,23 +93,29 @@ class RigSimpleHumanNeck(RigComponent):
                 curRigType = SERigEnum.eRigType.RT_HeadFK
                 curRigControlIndex = 0
 
-            curFKControl = SERigControl.RigCubeControl(
-                                    rigSide = self.RigSide,
-                                    rigType = curRigType,
-                                    rigControlIndex = curRigControlIndex,
-                                    prefix = SERigNaming.sFKPrefix + fkJoints[i], 
-                                    translateTo = curFKJnt,
-                                    rotateTo = curFKJnt,
-                                    scale = rigScale,
-                                    parent = preParent,
-                                    lockChannels = ['t', 's', 'v'],
-                                    cubeScaleX = distance,
-                                    cubeScaleY = curScaleYZ,
-                                    cubeScaleZ = curScaleYZ,
-                                    transparency = 0.75,
-                                    overrideControlColor = True, 
-                                    controlColor = (0.4, 0.9, 0.9)
-                                    )
+                curFKControl = SERigControl.RigCubeControl(
+                                        rigSide = self.RigSide,
+                                        rigType = curRigType,
+                                        rigControlIndex = curRigControlIndex,
+                                        prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                        translateTo = curFKJnt,
+                                        rotateTo = curFKJnt,
+                                        scale = rigScale,
+                                        parent = preParent,
+                                        lockChannels = ['t', 's', 'v'],
+                                        cubeScaleX = distance,
+                                        cubeScaleY = curScaleYZ,
+                                        cubeScaleZ = curScaleYZ,
+                                        transparency = 0.75,
+                                        overrideControlColor = True, 
+                                        controlColor = (0.4, 0.9, 0.9),
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.25,
+                                        overrideFitRayDirection = True, 
+                                        fitRayDirection = (0, 0, -1)
+                                        )
+
             self.FKNeckControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKControl' + str(i), 'ControlOwner')
 
@@ -141,7 +171,8 @@ class RigMuscleSplineHumanNeck(RigComponent):
             rightChestHeadEnd = '',
             createMuscleSpline = False,
             keepOutJointCount = 5,
-            spineReferenceLength = 45.0
+            spineReferenceLength = 45.0,
+            surroundingMeshes = []
             ):
         if not cmds.objExists(neckAttachPoint):
             return
@@ -205,7 +236,12 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                         cubeScaleZ = curScaleYZ,
                                         transparency = 0.75,
                                         overrideControlColor = True, 
-                                        controlColor = (0.4, 0.9, 0.9)
+                                        controlColor = (0.4, 0.9, 0.9),
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.3,
+                                        overrideFitRayDirection = True, 
+                                        fitRayDirection = (0, 0, 1)
                                         )
             else:
                 # Head FK.
@@ -224,7 +260,12 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                         cubeScaleZ = curScaleYZ,
                                         transparency = 0.75,
                                         overrideControlColor = True, 
-                                        controlColor = (0.4, 0.9, 0.9)
+                                        controlColor = (0.4, 0.9, 0.9),
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.25,
+                                        overrideFitRayDirection = True, 
+                                        fitRayDirection = (0, 0, -1)
                                         )
                 
                 # head driver group 0 drives the rotation of the head joint. It will be drived by head aim IK joint.

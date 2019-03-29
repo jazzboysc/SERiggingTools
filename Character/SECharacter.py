@@ -413,7 +413,8 @@ class RigBipedCharacter():
             neck.build(
                     neckJoints = neckJnts,
                     neckAttachPoint = 'C_ChestEnd',
-                    rigScale = sceneScale
+                    rigScale = sceneScale,
+                    surroundingMeshes = surroundingMeshes
                     )
         else:
             spineRefLength = SEMathHelper.getDistanceBetweenObjects(spineJnts[0], spineJnts[-1])
@@ -431,7 +432,8 @@ class RigBipedCharacter():
                     rightChestHeadEnd = 'locator_R_ChestHeadEnd',
                     createMuscleSpline = createNeckMuscleSplineSystem,
                     keepOutJointCount = neckMuscleSplineJointCount,
-                    spineReferenceLength = spineRefLength
+                    spineReferenceLength = spineRefLength,
+                    surroundingMeshes = surroundingMeshes
                     )
 
         if neck:
