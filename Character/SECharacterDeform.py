@@ -352,7 +352,7 @@ class RigBipedCharacterDeform():
                 cmds.color(knobJoint, ud = 1)
 
                 # Create twist knobs' orient constraint.
-                oc = cmds.orientConstraint(upperLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
+                oc = cmds.orientConstraint(upperLimbJoint, twistBeginJoint, knobJoint, mo = True)[0]
                 cmds.setAttr(oc + '.' + upperLimbJoint + 'W0', w0)
                 cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
                 cmds.setAttr(oc + '.interpType', 2)
@@ -441,7 +441,7 @@ class RigBipedCharacterDeform():
                 cmds.color(knobJoint, ud = 8)
 
                 # Create twist knobs' orient constraint.
-                oc = cmds.orientConstraint(lowerLimbJoint, twistBeginJoint, knobJoint, mo = False)[0]
+                oc = cmds.orientConstraint(lowerLimbJoint, twistBeginJoint, knobJoint, mo = True)[0]
                 cmds.setAttr(oc + '.' + lowerLimbJoint + 'W0', w0)
                 cmds.setAttr(oc + '.' + twistBeginJoint + 'W1', w1)
                 cmds.setAttr(oc + '.interpType', 2)
