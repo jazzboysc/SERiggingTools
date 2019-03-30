@@ -63,6 +63,7 @@ class RigBipedCharacter():
               fkLegControlScaleYZ = 19,
               fkLegControlScaleYZMultiplier = 0.75,
               fkLegControlTransparency = 0.85,
+              createLegCircleFkControl = True,
               ballIKTwistLeft = 90,
               ballIKTwistRight = 270,
               toeIKTwistLeft = 90,
@@ -189,6 +190,7 @@ class RigBipedCharacter():
                                 fkLegControlScaleYZ,
                                 fkLegControlScaleYZMultiplier,
                                 fkLegControlTransparency,
+                                createLegCircleFkControl,
                                 fkArmControlScaleYZ,
                                 fkArmControlScaleYZMultiplier,
                                 fkArmControlTransparency,
@@ -272,6 +274,7 @@ class RigBipedCharacter():
                             fkLegControlScaleYZ,
                             fkLegControlScaleYZMultiplier,
                             fkLegControlTransparency,
+                            createLegCircleFkControl,
                             fkArmControlScaleYZ,
                             fkArmControlScaleYZMultiplier,
                             fkArmControlTransparency,
@@ -323,6 +326,7 @@ class RigBipedCharacter():
                 fkControlScaleYZ = fkLegControlScaleYZ,
                 fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
                 fkControlTransparency = fkLegControlTransparency,
+                createCircleFkControl = createLegCircleFkControl,
                 createCompactFootControl = createCompactFootControl,
                 surroundingMeshes = surroundingMeshes
                 )
@@ -341,6 +345,7 @@ class RigBipedCharacter():
                 fkControlScaleYZ = fkLegControlScaleYZ,
                 fkControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
                 fkControlTransparency = fkLegControlTransparency,
+                createCircleFkControl = createLegCircleFkControl,
                 createCompactFootControl = createCompactFootControl,
                 surroundingMeshes = surroundingMeshes
                 )
