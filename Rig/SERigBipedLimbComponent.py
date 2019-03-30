@@ -901,6 +901,7 @@ class RigHumanArm(RigHumanLimb):
             fkControlScaleYZ = 10,
             fkControlScaleYZMultiplier = 0.9,
             fkControlTransparency = 0.85,
+            createCircleFkControl = True,
             surroundingMeshes = []
             ):
         
@@ -1014,25 +1015,43 @@ class RigHumanArm(RigHumanLimb):
             nextFKJntLoc = SEMathHelper.getWorldPosition(nextFKJnt)
             distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
 
-            curFKControl = SERigControl.RigCubeControl(
-                                    rigSide = self.RigSide,
-                                    rigType = fkRigTypes[i],
-                                    prefix = SERigNaming.sFKPrefix + self.Prefix + str(i), 
-                                    translateTo = curFKJnt,
-                                    rotateTo = curFKJnt,
-                                    scale = rigScale*20,
-                                    parent = preParent,
-                                    lockChannels = ['t', 's', 'v'],
-                                    cubeScaleX = distance,
-                                    cubeScaleY = curScaleYZ,
-                                    cubeScaleZ = curScaleYZ,
-                                    transparency = fkControlTransparency,
-                                    fitToSurroundingMeshes = True,
-                                    surroundingMeshes = surroundingMeshes,
-                                    postFitScale = 1.1,
-                                    overrideFitRayDirection = True, 
-                                    fitRayDirection = (0, 0, 1)
-                                    )
+            curFKControl = None
+            if createCircleFkControl:
+                curFKControl = SERigControl.RigCircleControl(
+                                        rigSide = self.RigSide,
+                                        rigType = fkRigTypes[i],
+                                        prefix = SERigNaming.sFKPrefix + self.Prefix + str(i), 
+                                        translateTo = curFKJnt,
+                                        rotateTo = curFKJnt,
+                                        scale = rigScale*20,
+                                        parent = preParent,
+                                        lockChannels = ['t', 's', 'v'],
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.8,
+                                        overrideFitRayDirection = True, 
+                                        fitRayDirection = (0, 0, 1)
+                                        )
+            else:
+                curFKControl = SERigControl.RigCubeControl(
+                                        rigSide = self.RigSide,
+                                        rigType = fkRigTypes[i],
+                                        prefix = SERigNaming.sFKPrefix + self.Prefix + str(i), 
+                                        translateTo = curFKJnt,
+                                        rotateTo = curFKJnt,
+                                        scale = rigScale*20,
+                                        parent = preParent,
+                                        lockChannels = ['t', 's', 'v'],
+                                        cubeScaleX = distance,
+                                        cubeScaleY = curScaleYZ,
+                                        cubeScaleZ = curScaleYZ,
+                                        transparency = fkControlTransparency,
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.1,
+                                        overrideFitRayDirection = True, 
+                                        fitRayDirection = (0, 0, 1)
+                                        )
             self.FKArmControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKArmControl' + str(i), 'ControlOwner')
 
@@ -1043,25 +1062,43 @@ class RigHumanArm(RigHumanLimb):
             curScaleYZ *= fkControlScaleYZMultiplier
 
         # Create Wrist FK control.
-        curFKControl = SERigControl.RigCubeControl(
-                                rigSide = self.RigSide,
-                                rigType = fkRigTypes[2],
-                                prefix = SERigNaming.sFKPrefix + self.Prefix + str(2), 
-                                translateTo = nextFKJnt,
-                                rotateTo = nextFKJnt,
-                                scale = rigScale*20,
-                                parent = preParent,
-                                lockChannels = ['t', 's', 'v'],
-                                cubeScaleX = curScaleYZ,
-                                cubeScaleY = curScaleYZ,
-                                cubeScaleZ = curScaleYZ,
-                                transparency = fkControlTransparency,
-                                fitToSurroundingMeshes = True,
-                                surroundingMeshes = surroundingMeshes,
-                                postFitScale = 1.1,
-                                overrideFitRayDirection = True, 
-                                fitRayDirection = (0, 0, 1)
-                                )
+        curFKControl = None
+        if createCircleFkControl:
+            curFKControl = SERigControl.RigCircleControl(
+                                    rigSide = self.RigSide,
+                                    rigType = fkRigTypes[2],
+                                    prefix = SERigNaming.sFKPrefix + self.Prefix + str(2), 
+                                    translateTo = nextFKJnt,
+                                    rotateTo = nextFKJnt,
+                                    scale = rigScale*20,
+                                    parent = preParent,
+                                    lockChannels = ['t', 's', 'v'],
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 2.0,
+                                    overrideFitRayDirection = True, 
+                                    fitRayDirection = (0, 0, 1)
+                                    )
+        else:
+            curFKControl = SERigControl.RigCubeControl(
+                                    rigSide = self.RigSide,
+                                    rigType = fkRigTypes[2],
+                                    prefix = SERigNaming.sFKPrefix + self.Prefix + str(2), 
+                                    translateTo = nextFKJnt,
+                                    rotateTo = nextFKJnt,
+                                    scale = rigScale*20,
+                                    parent = preParent,
+                                    lockChannels = ['t', 's', 'v'],
+                                    cubeScaleX = curScaleYZ,
+                                    cubeScaleY = curScaleYZ,
+                                    cubeScaleZ = curScaleYZ,
+                                    transparency = fkControlTransparency,
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 1.1,
+                                    overrideFitRayDirection = True, 
+                                    fitRayDirection = (0, 0, 1)
+                                    )
         self.FKArmControls.append(curFKControl)
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKWristControl', 'ControlOwner')
 

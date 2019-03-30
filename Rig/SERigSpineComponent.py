@@ -26,6 +26,7 @@ class RigSimpleIKSpine(RigComponent):
             rootJoint = '',
             rigScale = 1.0,
             createFKSystem = True,
+            createCircleFkControl = True,
             surroundingMeshes = []
             ):
 
@@ -222,6 +223,7 @@ class RigFixedEndsIKSpine(RigComponent):
             rootJoint = '',
             rigScale = 1.0,
             createFKSystem = True,
+            createCircleFkControl = True,
             surroundingMeshes = []
             ):
 
@@ -454,52 +456,86 @@ class RigFixedEndsIKSpine(RigComponent):
             cmds.parentConstraint(upperBodyCtrl.ControlObject, jnt0, mo = 1)        
 
             # Create FK spine_0 control.
-            FKSpine0Ctrl = SERigControl.RigCubeControl(
-                                    rigSide = SERigEnum.eRigSide.RS_Center,
-                                    rigType = SERigEnum.eRigType.RT_SpineFK,
-                                    rigControlIndex = 0,
-                                    prefix = SERigNaming.sFKPrefix + self.Prefix + '_0', 
-                                    translateTo = jnt1,
-                                    rotateTo = jnt1,
-                                    scale = rigScale*20,
-                                    parent = upperBodyCtrl.ControlObject,
-                                    lockChannels = ['t', 's', 'v'],
-                                    cubeScaleX = 4.0,
-                                    cubeScaleY = 35.0,
-                                    cubeScaleZ = 35.0,
-                                    transparency = 0.75,
-                                    overrideControlColor = True, 
-                                    controlColor = (0.4, 0.9, 0.9),
-                                    fitToSurroundingMeshes = True,
-                                    surroundingMeshes = surroundingMeshes,
-                                    postFitScale = 1.1
-                                    )
+            FKSpine0Ctrl = None
+            if createCircleFkControl:
+                FKSpine0Ctrl = SERigControl.RigCircleControl(
+                                        rigSide = SERigEnum.eRigSide.RS_Center,
+                                        rigType = SERigEnum.eRigType.RT_SpineFK,
+                                        rigControlIndex = 0,
+                                        prefix = SERigNaming.sFKPrefix + self.Prefix + '_0', 
+                                        translateTo = jnt1,
+                                        rotateTo = jnt1,
+                                        scale = rigScale*20,
+                                        parent = upperBodyCtrl.ControlObject,
+                                        lockChannels = ['t', 's', 'v'],
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.45
+                                        )
+            else:
+                FKSpine0Ctrl = SERigControl.RigCubeControl(
+                                        rigSide = SERigEnum.eRigSide.RS_Center,
+                                        rigType = SERigEnum.eRigType.RT_SpineFK,
+                                        rigControlIndex = 0,
+                                        prefix = SERigNaming.sFKPrefix + self.Prefix + '_0', 
+                                        translateTo = jnt1,
+                                        rotateTo = jnt1,
+                                        scale = rigScale*20,
+                                        parent = upperBodyCtrl.ControlObject,
+                                        lockChannels = ['t', 's', 'v'],
+                                        cubeScaleX = 4.0,
+                                        cubeScaleY = 35.0,
+                                        cubeScaleZ = 35.0,
+                                        transparency = 0.75,
+                                        overrideControlColor = True, 
+                                        controlColor = (0.4, 0.9, 0.9),
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.1
+                                        )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine0Ctrl.ControlGroup, 'FKSpine0Ctrl', 'ControlOwner')
             self.FKSpine0Ctrl = FKSpine0Ctrl
 
             cmds.orientConstraint(FKSpine0Ctrl.ControlObject, jnt1)
 
             # Create FK spine_1 control.
-            FKSpine1Ctrl = SERigControl.RigCubeControl(
-                                    rigSide = SERigEnum.eRigSide.RS_Center,
-                                    rigType = SERigEnum.eRigType.RT_SpineFK,
-                                    rigControlIndex = 1,
-                                    prefix = SERigNaming.sFKPrefix + self.Prefix + '_1', 
-                                    translateTo = jnt2,
-                                    rotateTo = jnt2,
-                                    scale = rigScale*20,
-                                    parent = FKSpine0Ctrl.ControlObject,
-                                    lockChannels = ['t', 's', 'v'],
-                                    cubeScaleX = 4.0,
-                                    cubeScaleY = 30.0,
-                                    cubeScaleZ = 30.0,
-                                    transparency = 0.75,
-                                    overrideControlColor = True, 
-                                    controlColor = (0.4, 0.9, 0.9),
-                                    fitToSurroundingMeshes = True,
-                                    surroundingMeshes = surroundingMeshes,
-                                    postFitScale = 1.1
-                                    )
+            FKSpine1Ctrl = None
+            if createCircleFkControl:
+                FKSpine1Ctrl = SERigControl.RigCircleControl(
+                                        rigSide = SERigEnum.eRigSide.RS_Center,
+                                        rigType = SERigEnum.eRigType.RT_SpineFK,
+                                        rigControlIndex = 1,
+                                        prefix = SERigNaming.sFKPrefix + self.Prefix + '_1', 
+                                        translateTo = jnt2,
+                                        rotateTo = jnt2,
+                                        scale = rigScale*20,
+                                        parent = FKSpine0Ctrl.ControlObject,
+                                        lockChannels = ['t', 's', 'v'],
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.45
+                                        )
+            else:
+                FKSpine1Ctrl = SERigControl.RigCubeControl(
+                                        rigSide = SERigEnum.eRigSide.RS_Center,
+                                        rigType = SERigEnum.eRigType.RT_SpineFK,
+                                        rigControlIndex = 1,
+                                        prefix = SERigNaming.sFKPrefix + self.Prefix + '_1', 
+                                        translateTo = jnt2,
+                                        rotateTo = jnt2,
+                                        scale = rigScale*20,
+                                        parent = FKSpine0Ctrl.ControlObject,
+                                        lockChannels = ['t', 's', 'v'],
+                                        cubeScaleX = 4.0,
+                                        cubeScaleY = 30.0,
+                                        cubeScaleZ = 30.0,
+                                        transparency = 0.75,
+                                        overrideControlColor = True, 
+                                        controlColor = (0.4, 0.9, 0.9),
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.1
+                                        )
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, FKSpine1Ctrl.ControlGroup, 'FKSpine1Ctrl', 'ControlOwner')
             self.FKSpine1Ctrl = FKSpine1Ctrl
 
