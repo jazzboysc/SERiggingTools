@@ -468,6 +468,8 @@ class RigFixedEndsIKSpine(RigComponent):
                                         scale = rigScale*20,
                                         parent = upperBodyCtrl.ControlObject,
                                         lockChannels = ['t', 's', 'v'],
+                                        overrideControlColor = True, 
+                                        controlColor = (0.4, 0.9, 0.9),
                                         fitToSurroundingMeshes = True,
                                         surroundingMeshes = surroundingMeshes,
                                         postFitScale = 1.45
@@ -511,6 +513,8 @@ class RigFixedEndsIKSpine(RigComponent):
                                         scale = rigScale*20,
                                         parent = FKSpine0Ctrl.ControlObject,
                                         lockChannels = ['t', 's', 'v'],
+                                        overrideControlColor = True, 
+                                        controlColor = (0.4, 0.9, 0.9),
                                         fitToSurroundingMeshes = True,
                                         surroundingMeshes = surroundingMeshes,
                                         postFitScale = 1.45

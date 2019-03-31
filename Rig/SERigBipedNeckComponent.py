@@ -34,6 +34,7 @@ class RigSimpleHumanNeck(RigComponent):
             rootJoint = '',
             neckAttachPoint = '',
             rigScale = 1.0,
+            createCircleFkControl = True,
             surroundingMeshes = []
             ):
         
@@ -64,28 +65,49 @@ class RigSimpleHumanNeck(RigComponent):
                 curRigType = SERigEnum.eRigType.RT_NeckFK
                 curRigControlIndex = i
 
-                curFKControl = SERigControl.RigCubeControl(
-                                        rigSide = self.RigSide,
-                                        rigType = curRigType,
-                                        rigControlIndex = curRigControlIndex,
-                                        prefix = SERigNaming.sFKPrefix + fkJoints[i], 
-                                        translateTo = curFKJnt,
-                                        rotateTo = curFKJnt,
-                                        scale = rigScale,
-                                        parent = preParent,
-                                        lockChannels = ['t', 's', 'v'],
-                                        cubeScaleX = distance,
-                                        cubeScaleY = curScaleYZ,
-                                        cubeScaleZ = curScaleYZ,
-                                        transparency = 0.75,
-                                        overrideControlColor = True, 
-                                        controlColor = (0.4, 0.9, 0.9),
-                                        fitToSurroundingMeshes = True,
-                                        surroundingMeshes = surroundingMeshes,
-                                        postFitScale = 1.3,
-                                        overrideFitRayDirection = True, 
-                                        fitRayDirection = (0, 0, 1)
-                                        )
+                curFKControl = None
+                if createCircleFkControl:
+                    curFKControl = SERigControl.RigCircleControl(
+                                            rigSide = self.RigSide,
+                                            rigType = curRigType,
+                                            rigControlIndex = curRigControlIndex,
+                                            prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = preParent,
+                                            lockChannels = ['t', 's', 'v'],
+                                            overrideControlColor = True, 
+                                            controlColor = (0.4, 0.9, 0.9),
+                                            fitToSurroundingMeshes = True,
+                                            surroundingMeshes = surroundingMeshes,
+                                            postFitScale = 1.6,
+                                            overrideFitRayDirection = True, 
+                                            fitRayDirection = (0, 0, 1)
+                                            )
+                else:
+                    curFKControl = SERigControl.RigCubeControl(
+                                            rigSide = self.RigSide,
+                                            rigType = curRigType,
+                                            rigControlIndex = curRigControlIndex,
+                                            prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = preParent,
+                                            lockChannels = ['t', 's', 'v'],
+                                            cubeScaleX = distance,
+                                            cubeScaleY = curScaleYZ,
+                                            cubeScaleZ = curScaleYZ,
+                                            transparency = 0.75,
+                                            overrideControlColor = True, 
+                                            controlColor = (0.4, 0.9, 0.9),
+                                            fitToSurroundingMeshes = True,
+                                            surroundingMeshes = surroundingMeshes,
+                                            postFitScale = 1.3,
+                                            overrideFitRayDirection = True, 
+                                            fitRayDirection = (0, 0, 1)
+                                            )
             else:
                 # Head FK.
                 distance *= 3
@@ -93,28 +115,52 @@ class RigSimpleHumanNeck(RigComponent):
                 curRigType = SERigEnum.eRigType.RT_HeadFK
                 curRigControlIndex = 0
 
-                curFKControl = SERigControl.RigCubeControl(
-                                        rigSide = self.RigSide,
-                                        rigType = curRigType,
-                                        rigControlIndex = curRigControlIndex,
-                                        prefix = SERigNaming.sFKPrefix + fkJoints[i], 
-                                        translateTo = curFKJnt,
-                                        rotateTo = curFKJnt,
-                                        scale = rigScale,
-                                        parent = preParent,
-                                        lockChannels = ['t', 's', 'v'],
-                                        cubeScaleX = distance,
-                                        cubeScaleY = curScaleYZ,
-                                        cubeScaleZ = curScaleYZ,
-                                        transparency = 0.75,
-                                        overrideControlColor = True, 
-                                        controlColor = (0.4, 0.9, 0.9),
-                                        fitToSurroundingMeshes = True,
-                                        surroundingMeshes = surroundingMeshes,
-                                        postFitScale = 1.25,
-                                        overrideFitRayDirection = True, 
-                                        fitRayDirection = (0, 0, -1)
-                                        )
+                curFKControl = None
+                if createCircleFkControl:
+                    curFKControl = SERigControl.RigCircleControl(
+                                            rigSide = self.RigSide,
+                                            rigType = curRigType,
+                                            rigControlIndex = curRigControlIndex,
+                                            prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = preParent,
+                                            lockChannels = ['t', 's', 'v'],
+                                            overrideControlColor = True, 
+                                            controlColor = (0.4, 0.9, 0.9),
+                                            fitToSurroundingMeshes = True,
+                                            surroundingMeshes = surroundingMeshes,
+                                            postFitScale = 1.6,
+                                            overrideFitRayDirection = True, 
+                                            fitRayDirection = (0, 0, -1)
+                                            )
+
+                    curFKControl.offsetCVsLocal(offset = (20.0, 0, 0))
+
+                else:
+                    curFKControl = SERigControl.RigCubeControl(
+                                            rigSide = self.RigSide,
+                                            rigType = curRigType,
+                                            rigControlIndex = curRigControlIndex,
+                                            prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = preParent,
+                                            lockChannels = ['t', 's', 'v'],
+                                            cubeScaleX = distance,
+                                            cubeScaleY = curScaleYZ,
+                                            cubeScaleZ = curScaleYZ,
+                                            transparency = 0.75,
+                                            overrideControlColor = True, 
+                                            controlColor = (0.4, 0.9, 0.9),
+                                            fitToSurroundingMeshes = True,
+                                            surroundingMeshes = surroundingMeshes,
+                                            postFitScale = 1.25,
+                                            overrideFitRayDirection = True, 
+                                            fitRayDirection = (0, 0, -1)
+                                            )
 
             self.FKNeckControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKControl' + str(i), 'ControlOwner')
@@ -172,6 +218,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
             createMuscleSpline = False,
             keepOutJointCount = 5,
             spineReferenceLength = 45.0,
+            createCircleFkControl = True,
             surroundingMeshes = []
             ):
         if not cmds.objExists(neckAttachPoint):
@@ -221,52 +268,95 @@ class RigMuscleSplineHumanNeck(RigComponent):
 
             if i != (len(fkJoints) - 2):
                 # Neck FK.
-                curFKControl = SERigControl.RigCubeControl(
-                                        rigSide = self.RigSide,
-                                        rigType = curRigType,
-                                        rigControlIndex = curRigControlIndex,
-                                        prefix = SERigNaming.sFKPrefix + fkJoints[i], 
-                                        translateTo = curFKJnt,
-                                        rotateTo = curFKJnt,
-                                        scale = rigScale,
-                                        parent = preParent,
-                                        lockChannels = ['t', 's', 'v'],
-                                        cubeScaleX = distance,
-                                        cubeScaleY = curScaleYZ,
-                                        cubeScaleZ = curScaleYZ,
-                                        transparency = 0.75,
-                                        overrideControlColor = True, 
-                                        controlColor = (0.4, 0.9, 0.9),
-                                        fitToSurroundingMeshes = True,
-                                        surroundingMeshes = surroundingMeshes,
-                                        postFitScale = 1.3,
-                                        overrideFitRayDirection = True, 
-                                        fitRayDirection = (0, 0, 1)
-                                        )
+                if createCircleFkControl:
+                    curFKControl = SERigControl.RigCircleControl(
+                                            rigSide = self.RigSide,
+                                            rigType = curRigType,
+                                            rigControlIndex = curRigControlIndex,
+                                            prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = preParent,
+                                            lockChannels = ['t', 's', 'v'],
+                                            overrideControlColor = True, 
+                                            controlColor = (0.4, 0.9, 0.9),
+                                            fitToSurroundingMeshes = True,
+                                            surroundingMeshes = surroundingMeshes,
+                                            postFitScale = 1.6,
+                                            overrideFitRayDirection = True, 
+                                            fitRayDirection = (0, 0, 1)
+                                            )
+                else:
+                    curFKControl = SERigControl.RigCubeControl(
+                                            rigSide = self.RigSide,
+                                            rigType = curRigType,
+                                            rigControlIndex = curRigControlIndex,
+                                            prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = preParent,
+                                            lockChannels = ['t', 's', 'v'],
+                                            cubeScaleX = distance,
+                                            cubeScaleY = curScaleYZ,
+                                            cubeScaleZ = curScaleYZ,
+                                            transparency = 0.75,
+                                            overrideControlColor = True, 
+                                            controlColor = (0.4, 0.9, 0.9),
+                                            fitToSurroundingMeshes = True,
+                                            surroundingMeshes = surroundingMeshes,
+                                            postFitScale = 1.3,
+                                            overrideFitRayDirection = True, 
+                                            fitRayDirection = (0, 0, 1)
+                                            )
             else:
                 # Head FK.
-                curFKControl = SERigControl.RigCubeControl(
-                                        rigSide = self.RigSide,
-                                        rigType = curRigType,
-                                        rigControlIndex = curRigControlIndex,
-                                        prefix = SERigNaming.sFKPrefix + fkJoints[i], 
-                                        translateTo = curFKJnt,
-                                        rotateTo = curFKJnt,
-                                        scale = rigScale,
-                                        parent = fkNeckControlGroup,
-                                        lockChannels = ['t', 's', 'v'],
-                                        cubeScaleX = distance,
-                                        cubeScaleY = curScaleYZ,
-                                        cubeScaleZ = curScaleYZ,
-                                        transparency = 0.75,
-                                        overrideControlColor = True, 
-                                        controlColor = (0.4, 0.9, 0.9),
-                                        fitToSurroundingMeshes = True,
-                                        surroundingMeshes = surroundingMeshes,
-                                        postFitScale = 1.25,
-                                        overrideFitRayDirection = True, 
-                                        fitRayDirection = (0, 0, -1)
-                                        )
+                if createCircleFkControl:
+                    curFKControl = SERigControl.RigCircleControl(
+                                            rigSide = self.RigSide,
+                                            rigType = curRigType,
+                                            rigControlIndex = curRigControlIndex,
+                                            prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = fkNeckControlGroup,
+                                            lockChannels = ['t', 's', 'v'],
+                                            overrideControlColor = True, 
+                                            controlColor = (0.4, 0.9, 0.9),
+                                            fitToSurroundingMeshes = True,
+                                            surroundingMeshes = surroundingMeshes,
+                                            postFitScale = 1.6,
+                                            overrideFitRayDirection = True, 
+                                            fitRayDirection = (0, 0, -1)
+                                            )
+
+                    curFKControl.offsetCVsLocal(offset = (20.0, 0, 0))
+
+                else:
+                    curFKControl = SERigControl.RigCubeControl(
+                                            rigSide = self.RigSide,
+                                            rigType = curRigType,
+                                            rigControlIndex = curRigControlIndex,
+                                            prefix = SERigNaming.sFKPrefix + fkJoints[i], 
+                                            translateTo = curFKJnt,
+                                            rotateTo = curFKJnt,
+                                            scale = rigScale,
+                                            parent = fkNeckControlGroup,
+                                            lockChannels = ['t', 's', 'v'],
+                                            cubeScaleX = distance,
+                                            cubeScaleY = curScaleYZ,
+                                            cubeScaleZ = curScaleYZ,
+                                            transparency = 0.75,
+                                            overrideControlColor = True, 
+                                            controlColor = (0.4, 0.9, 0.9),
+                                            fitToSurroundingMeshes = True,
+                                            surroundingMeshes = surroundingMeshes,
+                                            postFitScale = 1.25,
+                                            overrideFitRayDirection = True, 
+                                            fitRayDirection = (0, 0, -1)
+                                            )
                 
                 # head driver group 0 drives the rotation of the head joint. It will be drived by head aim IK joint.
                 headDrvGrp0 = cmds.group(n = 'C_Head_DrvGrp_0', em = 1)

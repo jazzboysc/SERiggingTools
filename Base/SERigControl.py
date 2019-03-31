@@ -220,6 +220,8 @@ class RigCircleControl(RigControl):
                  preRotateX = 0.0,
                  preRotateY = 0.0,
                  preRotateZ = 0.0,
+                 overrideControlColor = False, 
+                 controlColor = (0.0, 0.0, 0.0),
                  fitToSurroundingMeshes = False,
                  surroundingMeshes = [],
                  postFitScale = 1.0,
@@ -229,7 +231,7 @@ class RigCircleControl(RigControl):
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels,
-                            flipScaleX, flipScaleY, flipScaleZ, 
+                            flipScaleX, flipScaleY, flipScaleZ, overrideControlColor = overrideControlColor, controlColor = controlColor,
                             fitToSurroundingMeshes = fitToSurroundingMeshes, surroundingMeshes = surroundingMeshes, postFitScale = postFitScale,
                             overrideFitRayDirection = overrideFitRayDirection, fitRayDirection = fitRayDirection)
 
@@ -285,17 +287,21 @@ class RigCircleControl(RigControl):
 
         # Set control color.
         ctrlShape = cmds.listRelatives(ctrlObj, s = 1)[0]
-        cmds.setAttr(ctrlShape + '.ove', 1)
 
-        if rigSide == SERigEnum.eRigSide.RS_Left:
-            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Blue)
-        elif rigSide == SERigEnum.eRigSide.RS_Right:
-            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Red)
-        elif rigSide == SERigEnum.eRigSide.RS_Center:
-            cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Yellow)
+        if overrideControlColor:
+            setControlRGBColor(ctrlShape, controlColor)
         else:
-            # TODO:
-            pass
+            cmds.setAttr(ctrlShape + '.ove', 1)
+
+            if rigSide == SERigEnum.eRigSide.RS_Left:
+                cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Blue)
+            elif rigSide == SERigEnum.eRigSide.RS_Right:
+                cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Red)
+            elif rigSide == SERigEnum.eRigSide.RS_Center:
+                cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Yellow)
+            else:
+                # TODO:
+                pass
 
         return ctrlObj
 

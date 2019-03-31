@@ -81,6 +81,7 @@ class RigBipedCharacter():
               createSimpleFKNeck = True,
               createNeckMuscleSplineSystem = False,
               neckMuscleSplineJointCount = 5,
+              createNeckCircleFkControl = True,
               createFacialSystem = True,
               usePortraitCameraFocalLength = True,
               portraitCameraFocalLength = 85.0
@@ -204,6 +205,7 @@ class RigBipedCharacter():
                                 createSimpleFKNeck,
                                 createNeckMuscleSplineSystem,
                                 neckMuscleSplineJointCount,
+                                createNeckCircleFkControl,
                                 createFacialSystem,
                                 facialJnts,
                                 surroundingMeshes
@@ -288,6 +290,7 @@ class RigBipedCharacter():
                             createSimpleFKNeck,
                             createNeckMuscleSplineSystem,
                             neckMuscleSplineJointCount,
+                            createNeckCircleFkControl,
                             createFacialSystem,
                             facialJnts,
                             surroundingMeshes
@@ -428,6 +431,7 @@ class RigBipedCharacter():
                     neckJoints = neckJnts,
                     neckAttachPoint = 'C_ChestEnd',
                     rigScale = sceneScale,
+                    createCircleFkControl = createNeckCircleFkControl,
                     surroundingMeshes = surroundingMeshes
                     )
         else:
@@ -447,6 +451,7 @@ class RigBipedCharacter():
                     createMuscleSpline = createNeckMuscleSplineSystem,
                     keepOutJointCount = neckMuscleSplineJointCount,
                     spineReferenceLength = spineRefLength,
+                    createCircleFkControl = createNeckCircleFkControl,
                     surroundingMeshes = surroundingMeshes
                     )
 
