@@ -299,6 +299,11 @@ class RigCircleControl(RigControl):
 
         return ctrlObj
 
+    def offsetCVsLocal(self, offset = (0.0, 0.0, 0.0)):
+        cmds.select(self.ControlObject + '.cv[0:7]', r = 1)
+        cmds.move(offset[0], offset[1], offset[2], r = 1, os = 1, wd = 1)
+        cmds.select(cl = 1)
+
 #-----------------------------------------------------------------------------
 # Rig Cube Control Class
 # Sun Che

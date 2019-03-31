@@ -583,7 +583,8 @@ class RigHumanLeg(RigHumanLimb):
         preParent = self.FKControlGroup
         curScaleYZ = fkControlScaleYZ
         postFitScaleList = [1.1, 1.1, 0.8, 0.6]
-        postFitCircleScaleList = [1.4, 1.4, 1.2, 1.0]
+        postFitCircleScaleList = [1.4, 1.4, 1.2, 0.75]
+        cvOffsetXList = [12.0, 8.0, 2.0, 2.0]
         for i in range(len(fkJoints) - 1):
             curFKJnt = fkJoints[i]
             nextFKJnt = fkJoints[i + 1]
@@ -609,6 +610,12 @@ class RigHumanLeg(RigHumanLimb):
                                         overrideFitRayDirection = True, 
                                         fitRayDirection = (0, 0, 1)
                                         )
+
+                curCvOffsetX = cvOffsetXList[i]
+                if self.RigSide == SERigEnum.eRigSide.RS_Right:
+                    curCvOffsetX *= -1.0
+                curFKControl.offsetCVsLocal(offset = (curCvOffsetX, 0, 0))
+
             else:
                 curFKControl = SERigControl.RigCubeControl(
                                         rigSide = self.RigSide,
@@ -1029,6 +1036,7 @@ class RigHumanArm(RigHumanLimb):
         curScaleYZ = fkControlScaleYZ
         curFKJnt = None
         nextFKJnt = None
+        cvOffsetXList = [8.0, 4.0]
         for i in range(len(fkJoints) - 1):
             curFKJnt = fkJoints[i]
             nextFKJnt = fkJoints[i + 1]
@@ -1053,6 +1061,12 @@ class RigHumanArm(RigHumanLimb):
                                         overrideFitRayDirection = True, 
                                         fitRayDirection = (0, 0, 1)
                                         )
+
+                curCvOffsetX = cvOffsetXList[i]
+                if self.RigSide == SERigEnum.eRigSide.RS_Right:
+                    curCvOffsetX *= -1.0
+                curFKControl.offsetCVsLocal(offset = (curCvOffsetX, 0, 0))
+
             else:
                 curFKControl = SERigControl.RigCubeControl(
                                         rigSide = self.RigSide,
