@@ -140,7 +140,7 @@ class mainRigWindow(QtWidgets.QDialog):
         fkArmControlScaleYZMultiplier = float(self.fkBodyArmControlScaleYZMultiplierLine.text())
         fkArmControlTransparency = float(self.fkBodyArmControlTransparencyLine.text())
         createCircleFkFingerControl = self.circleFkFingerControlCheckBox.isChecked()
-        circleFkFingerControlScaleFactor = float(self.circleFkFingerControlScaleFactorLine.text())
+        circleFkFingerControlScaleFactor = 1.7
         createSimpleSpine = self.fixedEndsSpineOptionCheckBox.isChecked()
         createSpineFKSystem = self.createSpineFKSystemCheckBox.isChecked()
         createSimpleFKNeck = not self.ikDrivenNeckOptionCheckBox.isChecked()
@@ -150,7 +150,8 @@ class mainRigWindow(QtWidgets.QDialog):
         usePortraitCameraFocalLength = self.PortraitCameraOptionCheckBox.isChecked()
         portraitCameraFocalLength = float(self.PortraitCameraFocalLengthLine.text())
         createFacialSystem = self.facialSystemOptionCheckBox.isChecked()
-
+        createSpineNeckCircleFkControl = self.circleFkSpineNeckControlCheckBox.isChecked()
+        createLimbCircleFkControl = self.circleFkLimbControlCheckBox.isChecked()
 
         # Build character rig.
         character = SECharacter.RigBipedCharacter(characterName = characterName)
@@ -177,7 +178,11 @@ class mainRigWindow(QtWidgets.QDialog):
                         neckMuscleSplineJointCount = neckMuscleSplineJointCount,
                         usePortraitCameraFocalLength = usePortraitCameraFocalLength,
                         portraitCameraFocalLength = portraitCameraFocalLength,
-                        createFacialSystem = createFacialSystem
+                        createFacialSystem = createFacialSystem,
+                        createArmCircleFkControl = createLimbCircleFkControl,
+                        createSpineCircleFkControl = createSpineNeckCircleFkControl,
+                        createNeckCircleFkControl = createSpineNeckCircleFkControl,
+                        createLegCircleFkControl = createLimbCircleFkControl
                         )
         
         # Close the create rig window.
@@ -309,19 +314,24 @@ class mainRigWindow(QtWidgets.QDialog):
         fkBodyArmControlScaleYZLayout.addSpacing(215)
         bodyConfigTabPageLayout.addLayout(fkBodyArmControlScaleYZLayout)
 
-        fkFingerControlOptionLayout = QtWidgets.QHBoxLayout()
-        fkFingerControlOptionLayout.addWidget(QtWidgets.QLabel("Create Circle FK Finger Control :"))
+        fkCircleFkControlOptionLayout = QtWidgets.QHBoxLayout()
+        fkCircleFkControlOptionLayout.addWidget(QtWidgets.QLabel("Create Circle FK Finger Control :"))
         self.circleFkFingerControlCheckBox = QtWidgets.QCheckBox()
         self.circleFkFingerControlCheckBox.setChecked(True)
-        fkFingerControlOptionLayout.addWidget(self.circleFkFingerControlCheckBox)
-        fkFingerControlOptionLayout.addWidget(QtWidgets.QLabel("Circle FK Finger Control Scale Factor :"))
-        self.circleFkFingerControlScaleFactorLine = QtWidgets.QLineEdit()
-        self.circleFkFingerControlScaleFactorLine.setValidator(QtGui.QDoubleValidator(1.0, 5.0, 4.0))
-        fkFingerControlOptionLayout.addWidget(self.circleFkFingerControlScaleFactorLine)
-        self.circleFkFingerControlScaleFactorLine.setText('1.7')
-        fkFingerControlOptionLayout.addWidget(QtWidgets.QLabel("(1 - 5)"))
-        fkFingerControlOptionLayout.addSpacing(215)
-        bodyConfigTabPageLayout.addLayout(fkFingerControlOptionLayout)
+        fkCircleFkControlOptionLayout.addWidget(self.circleFkFingerControlCheckBox)
+
+        fkCircleFkControlOptionLayout.addWidget(QtWidgets.QLabel("Create Circle FK Limb Control :"))
+        self.circleFkLimbControlCheckBox = QtWidgets.QCheckBox()
+        self.circleFkLimbControlCheckBox.setChecked(True)
+        fkCircleFkControlOptionLayout.addWidget(self.circleFkLimbControlCheckBox)
+
+        fkCircleFkControlOptionLayout.addWidget(QtWidgets.QLabel("Create Circle FK Spine and Neck Control :"))
+        self.circleFkSpineNeckControlCheckBox = QtWidgets.QCheckBox()
+        self.circleFkSpineNeckControlCheckBox.setChecked(True)
+        fkCircleFkControlOptionLayout.addWidget(self.circleFkSpineNeckControlCheckBox)
+
+        fkCircleFkControlOptionLayout.addSpacing(215)
+        bodyConfigTabPageLayout.addLayout(fkCircleFkControlOptionLayout)
 
         footControlOptionLayout = QtWidgets.QHBoxLayout()
         footControlOptionLayout.addWidget(QtWidgets.QLabel("Create Compact Foot Control :"))
