@@ -219,6 +219,23 @@ class RigBipedCharacter():
         lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
 
         if self.RigDeform:
+
+            if not createSimpleFKNeck and createNeckMuscleSplineSystem:
+                leftNeckMuscleDrivenJnts = self.Neck.getLeftNeckKeepOutDrivenJoints()
+                rightNeckMuscleDrivenJnts = self.Neck.getRightNeckKeepOutDrivenJoints()
+                leftNeckMuscleDriverJnts = self.Neck.getLeftNeckKeepOutDriverJoints()
+                rightNeckMuscleDriverJnts = self.Neck.getRightNeckKeepOutDriverJoints()
+
+                leftNeckMuscleMasterJnts = leftNeckMuscleDrivenJnts[1:-1]
+                leftNeckMuscleMasterJnts.insert(0, leftNeckMuscleDriverJnts[0])
+                leftNeckMuscleMasterJnts.append(leftNeckMuscleDriverJnts[1])
+                print(leftNeckMuscleMasterJnts)
+
+                rightNeckMuscleMasterJnts = rightNeckMuscleDrivenJnts[1:-1]
+                rightNeckMuscleMasterJnts.insert(0, rightNeckMuscleDriverJnts[0])
+                rightNeckMuscleMasterJnts.append(rightNeckMuscleDriverJnts[1])
+                print(rightNeckMuscleMasterJnts)
+
             self.RigDeform.build(
                                 baseRig, mainProjectPath, sceneScale, 
                                 False,

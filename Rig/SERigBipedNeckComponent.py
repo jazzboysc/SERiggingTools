@@ -204,6 +204,7 @@ class RigMuscleSplineHumanNeck(RigComponent):
         self.HeadAimIKControl = None
         self.IKJointsGroup = None
         self.NeckKeepOutSystemGroup = None
+        self.KeepOutJointCount = 0
 
     def build(
             self,
@@ -488,10 +489,38 @@ class RigMuscleSplineHumanNeck(RigComponent):
                 cmds.warning('Failed creating muscle spline keep out system. Please create chest head begin and end locators in the builder file.')
 
 
+    def getLeftNeckKeepOutDrivenJoints(self):
+        res = []
+        for i in range(self.KeepOutJointCount):
+            res.append('driven_L_ChestHead' + str(i + 1))
+
+        return res
+
+
+    def getRightNeckKeepOutDrivenJoints(self):
+        res = []
+        for i in range(self.KeepOutJointCount):
+            res.append('driven_R_ChestHead' + str(i + 1))
+
+        return res
+
+
+    def getLeftNeckKeepOutDriverJoints(self):
+        res = [SERigNaming.sIKPrefix + 'L_ChestHeadBegin', SERigNaming.sIKPrefix + 'L_ChestHeadEnd']
+        return res
+
+
+    def getRightNeckKeepOutDriverJoints(self):
+        res = [SERigNaming.sIKPrefix + 'R_ChestHeadBegin', SERigNaming.sIKPrefix + 'R_ChestHeadEnd']
+        return res
+
+
     def _createMuscleSplineKeepOutSystem(self, leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, headJoint, 
                                          neckAttachPoint, keepOutJointCount):
         print('Creating neck muscle spline keep out system.')
 
+        self.KeepOutJointCount = keepOutJointCount
+        
         neckKeepOutSystemGrp = cmds.group(n = self.Prefix + 'NeckKeepOutSystem', em = 1, p = self.RigPartsGrp)
         self.NeckKeepOutSystemGroup = neckKeepOutSystemGrp
         cmds.parent(leftChestHeadBegin, leftChestHeadEnd, rightChestHeadBegin, rightChestHeadEnd, neckKeepOutSystemGrp)
