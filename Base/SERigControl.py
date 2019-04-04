@@ -328,6 +328,9 @@ class RigCubeControl(RigControl):
                  rotateTo = '', 
                  parent = '',
                  lockChannels = ['s', 'v'],
+                 flipScaleX = False,
+                 flipScaleY = False,
+                 flipScaleZ = False,
                  cubeScaleX = 1.0,
                  cubeScaleY = 1.0,
                  cubeScaleZ = 1.0,
@@ -351,6 +354,7 @@ class RigCubeControl(RigControl):
 
         RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
                             scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels, 
+                            flipScaleX = flipScaleX, flipScaleY = flipScaleY, flipScaleZ = flipScaleZ,
                             overrideControlColor = overrideControlColor, controlColor = controlColor,
                             fitToSurroundingMeshes = fitToSurroundingMeshes, surroundingMeshes = surroundingMeshes, postFitScale = postFitScale,
                             overrideFitRayDirection = overrideFitRayDirection, fitRayDirection = fitRayDirection)

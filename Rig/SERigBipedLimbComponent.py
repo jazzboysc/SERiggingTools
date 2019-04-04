@@ -930,6 +930,7 @@ class RigHumanArm(RigHumanLimb):
             fkControlScaleYZMultiplier = 0.9,
             fkControlTransparency = 0.85,
             createCircleFkControl = True,
+            createCircleIkControl = False,
             surroundingMeshes = []
             ):
         
@@ -967,27 +968,52 @@ class RigHumanArm(RigHumanLimb):
 
         # Create arm IK main control.
         flipScaleXYZ = False
+        cubeScaleX = 10.0
         if self.RigSide == SERigEnum.eRigSide.RS_Right:
             flipScaleXYZ = True
-        armIKMainControl = SERigControl.RigCircleControl(
-                                rigSide = self.RigSide,
-                                rigType = SERigEnum.eRigType.RT_ArmIKMain,
-                                rigFacing = SERigEnum.eRigFacing.RF_X,
-                                prefix = self.Prefix + '_IK_Main', 
-                                scale = rigScale * 8, 
-                                translateTo = armJoints[2],
-                                rotateTo = armJoints[2], 
-                                parent = self.IKControlGroup, 
-                                lockChannels = ['s', 'v'],
-                                flipScaleX = flipScaleXYZ,
-                                flipScaleY = flipScaleXYZ,
-                                flipScaleZ = flipScaleXYZ,
-                                fitToSurroundingMeshes = True,
-                                surroundingMeshes = surroundingMeshes,
-                                postFitScale = 2.0,
-                                overrideFitRayDirection = True, 
-                                fitRayDirection = (0, 0, 1)
-                                )
+            cubeScaleX *= -1.0
+          
+        armIKMainControl = None
+        if createCircleIkControl:
+            armIKMainControl = SERigControl.RigCircleControl(
+                                    rigSide = self.RigSide,
+                                    rigType = SERigEnum.eRigType.RT_ArmIKMain,
+                                    rigFacing = SERigEnum.eRigFacing.RF_X,
+                                    prefix = self.Prefix + '_IK_Main', 
+                                    scale = rigScale * 8, 
+                                    translateTo = armJoints[2],
+                                    rotateTo = armJoints[2], 
+                                    parent = self.IKControlGroup, 
+                                    lockChannels = ['s', 'v'],
+                                    flipScaleX = flipScaleXYZ,
+                                    flipScaleY = flipScaleXYZ,
+                                    flipScaleZ = flipScaleXYZ,
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 2.0,
+                                    overrideFitRayDirection = True, 
+                                    fitRayDirection = (0, 0, 1)
+                                    )
+        else:
+            armIKMainControl = SERigControl.RigCubeControl(
+                                    rigSide = self.RigSide,
+                                    rigType = SERigEnum.eRigType.RT_ArmIKMain,
+                                    prefix = self.Prefix + '_IK_Main', 
+                                    translateTo = armJoints[2],
+                                    rotateTo = armJoints[2], 
+                                    scale = rigScale*8,
+                                    parent = self.IKControlGroup, 
+                                    lockChannels = ['s', 'v'],
+                                    flipScaleX = flipScaleXYZ,
+                                    flipScaleY = flipScaleXYZ,
+                                    flipScaleZ = flipScaleXYZ,
+                                    cubeScaleX = cubeScaleX,
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 1.4,
+                                    overrideFitRayDirection = True, 
+                                    fitRayDirection = (0, 0, 1)
+                                    )
         self.ArmIKMainControl = armIKMainControl
         self.LimbIKMainControl = armIKMainControl
         self.LimbIKMainRotationControl = armIKMainControl
