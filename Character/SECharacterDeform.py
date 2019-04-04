@@ -133,6 +133,9 @@ class RigBipedCharacterDeform():
               leftHandJnts = [],
               rightHandJnts = [],
               neckJnts = [],
+              createNeckMuscleSlaveJoints = False,
+              leftNeckMuscleMasterJnts = [],
+              rightNeckMuscleMasterJnts = [],
               facialJnts = [],
               rootJnt = ''
               ):
@@ -213,6 +216,14 @@ class RigBipedCharacterDeform():
 
         for facialSlaveJoint in facialSlaveJnts:
             cmds.parent(facialSlaveJoint[0], neckSlaveJnts[-1][0])
+
+        # Possibly create neck muscle slave joints.
+        if createNeckMuscleSlaveJoints:
+            leftNeckMuscleSlaveJnts = self.createSlaveJointsHelper(leftNeckMuscleMasterJnts)
+            cmds.parent(leftNeckMuscleSlaveJnts[0][0], neckSlaveJnts[0][0])
+
+            rightNeckMuscleSlaveJnts = self.createSlaveJointsHelper(rightNeckMuscleMasterJnts)
+            cmds.parent(rightNeckMuscleSlaveJnts[0][0], neckSlaveJnts[0][0])
 
         # Create upper chest slaves and parent them to the spine.
         upperChestSlaveJnts = self.createSlaveJointsHelperNoHierarchy(upperChestJnts)

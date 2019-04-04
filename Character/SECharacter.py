@@ -220,6 +220,7 @@ class RigBipedCharacter():
 
         if self.RigDeform:
 
+            # Get neck muscle master joints.
             if not createSimpleFKNeck and createNeckMuscleSplineSystem:
                 leftNeckMuscleDrivenJnts = self.Neck.getLeftNeckKeepOutDrivenJoints()
                 rightNeckMuscleDrivenJnts = self.Neck.getRightNeckKeepOutDrivenJoints()
@@ -229,13 +230,12 @@ class RigBipedCharacter():
                 leftNeckMuscleMasterJnts = leftNeckMuscleDrivenJnts[1:-1]
                 leftNeckMuscleMasterJnts.insert(0, leftNeckMuscleDriverJnts[0])
                 leftNeckMuscleMasterJnts.append(leftNeckMuscleDriverJnts[1])
-                print(leftNeckMuscleMasterJnts)
 
                 rightNeckMuscleMasterJnts = rightNeckMuscleDrivenJnts[1:-1]
                 rightNeckMuscleMasterJnts.insert(0, rightNeckMuscleDriverJnts[0])
                 rightNeckMuscleMasterJnts.append(rightNeckMuscleDriverJnts[1])
-                print(rightNeckMuscleMasterJnts)
 
+            # Build deformation system.
             self.RigDeform.build(
                                 baseRig, mainProjectPath, sceneScale, 
                                 False,
@@ -263,6 +263,9 @@ class RigBipedCharacter():
                                 leftHandJnts,
                                 rightHandJnts,
                                 neckJnts,
+                                createNeckMuscleSplineSystem,
+                                leftNeckMuscleMasterJnts,
+                                rightNeckMuscleMasterJnts,
                                 facialJnts,
                                 rootJnt
                                 )
