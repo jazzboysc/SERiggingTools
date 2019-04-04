@@ -220,6 +220,9 @@ class RigBipedCharacter():
 
         if self.RigDeform:
 
+            leftNeckMuscleMasterJnts = []
+            rightNeckMuscleMasterJnts = []
+
             # Get neck muscle master joints.
             if not createSimpleFKNeck and createNeckMuscleSplineSystem:
                 leftNeckMuscleDrivenJnts = self.Neck.getLeftNeckKeepOutDrivenJoints()

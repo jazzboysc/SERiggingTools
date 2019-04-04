@@ -224,6 +224,7 @@ class RigFixedEndsIKSpine(RigComponent):
             rigScale = 1.0,
             createFKSystem = True,
             createCircleFkControl = True,
+            createCircleIkControl = False,
             surroundingMeshes = []
             ):
 
@@ -239,7 +240,7 @@ class RigFixedEndsIKSpine(RigComponent):
                                 parent = self.ControlsGrp,
                                 fitToSurroundingMeshes = True,
                                 surroundingMeshes = surroundingMeshes,
-                                postFitScale = 1.55,
+                                postFitScale = 1.75,
                                 overrideFitRayDirection = True, 
                                 fitRayDirection = (-1, 0, 0)
                                 )
@@ -252,7 +253,22 @@ class RigFixedEndsIKSpine(RigComponent):
         cmds.hide(pelvisProxyJoint, chestBeginProxyJoint)
 
         # Create IK controls.
-        chestBeginCtrl = SERigControl.RigCircleControl(
+        chestBeginCtrl = None
+        if createCircleIkControl:
+            chestBeginCtrl = SERigControl.RigCircleControl(
+                                        rigSide = SERigEnum.eRigSide.RS_Center,
+                                        rigType = SERigEnum.eRigType.RT_SpineChest,
+                                        prefix = self.Prefix + 'Chest', 
+                                        translateTo = chestBeginProxyJoint,
+                                        rotateTo = chestBeginProxyJoint,
+                                        scale = rigScale*22,
+                                        parent = upperBodyCtrl.ControlObject,
+                                        fitToSurroundingMeshes = True,
+                                        surroundingMeshes = surroundingMeshes,
+                                        postFitScale = 1.6
+                                        )
+        else:
+            chestBeginCtrl = SERigControl.RigCubeControl(
                                     rigSide = SERigEnum.eRigSide.RS_Center,
                                     rigType = SERigEnum.eRigType.RT_SpineChest,
                                     prefix = self.Prefix + 'Chest', 
@@ -260,25 +276,48 @@ class RigFixedEndsIKSpine(RigComponent):
                                     rotateTo = chestBeginProxyJoint,
                                     scale = rigScale*22,
                                     parent = upperBodyCtrl.ControlObject,
+                                    cubeScaleX = 4.0,
+                                    cubeScaleY = 35.0,
+                                    cubeScaleZ = 35.0,
+                                    transparency = 0.75,
                                     fitToSurroundingMeshes = True,
                                     surroundingMeshes = surroundingMeshes,
-                                    postFitScale = 1.6
+                                    postFitScale = 1.25
                                     )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginCtrl.ControlGroup, 'ChestBeginCtrl', 'ControlOwner')
         self.ChestBeginCtrl = chestBeginCtrl
 
-        pelvisCtrl = SERigControl.RigCircleControl(
-                                rigSide = SERigEnum.eRigSide.RS_Center,
-                                rigType = SERigEnum.eRigType.RT_SpinePelvis,
-                                prefix = self.Prefix + 'Pelvis', 
-                                translateTo = pelvisProxyJoint,
-                                rotateTo = pelvisProxyJoint,
-                                scale = rigScale*26,
-                                parent = upperBodyCtrl.ControlObject,
-                                fitToSurroundingMeshes = True,
-                                surroundingMeshes = surroundingMeshes,
-                                postFitScale = 1.7
-                                )
+        pelvisCtrl = None
+        if createCircleIkControl:
+            pelvisCtrl = SERigControl.RigCircleControl(
+                                    rigSide = SERigEnum.eRigSide.RS_Center,
+                                    rigType = SERigEnum.eRigType.RT_SpinePelvis,
+                                    prefix = self.Prefix + 'Pelvis', 
+                                    translateTo = pelvisProxyJoint,
+                                    rotateTo = pelvisProxyJoint,
+                                    scale = rigScale*26,
+                                    parent = upperBodyCtrl.ControlObject,
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 1.3
+                                    )
+        else:
+            pelvisCtrl = SERigControl.RigCubeControl(
+                                    rigSide = SERigEnum.eRigSide.RS_Center,
+                                    rigType = SERigEnum.eRigType.RT_SpinePelvis,
+                                    prefix = self.Prefix + 'Pelvis', 
+                                    translateTo = pelvisProxyJoint,
+                                    rotateTo = pelvisProxyJoint,
+                                    scale = rigScale*26,
+                                    parent = upperBodyCtrl.ControlObject,
+                                    cubeScaleX = 4.0,
+                                    cubeScaleY = 35.0,
+                                    cubeScaleZ = 35.0,
+                                    transparency = 0.75,
+                                    fitToSurroundingMeshes = True,
+                                    surroundingMeshes = surroundingMeshes,
+                                    postFitScale = 1.2
+                                    )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisCtrl.ControlGroup, 'PelvisCtrl', 'ControlOwner')
         self.PelvisCtrl = pelvisCtrl
 
