@@ -72,12 +72,14 @@ class RigBipedCharacter():
               fkArmControlScaleYZMultiplier = 0.9,
               fkArmControlTransparency = 0.85,
               createArmCircleFkControl = True,
+              createArmCircleIkControl = False,
               createCircleFkFingerControl = True,
               circleFkFingerControlScaleFactor = 1.7,
               createCompactFootControl = True,
               createSimpleSpine = False,
               createSpineFKSystem = True,
               createSpineCircleFkControl = True,
+              createSpineCircleIkControl = False,
               createSimpleFKNeck = True,
               createNeckMuscleSplineSystem = False,
               neckMuscleSplineJointCount = 5,
@@ -196,12 +198,14 @@ class RigBipedCharacter():
                                 fkArmControlScaleYZMultiplier,
                                 fkArmControlTransparency,
                                 createArmCircleFkControl,
+                                createArmCircleIkControl,
                                 createCircleFkFingerControl,
                                 circleFkFingerControlScaleFactor,
                                 createCompactFootControl,
                                 createSimpleSpine,
                                 createSpineFKSystem,
                                 createSpineCircleFkControl,
+                                createSpineCircleIkControl,
                                 createSimpleFKNeck,
                                 createNeckMuscleSplineSystem,
                                 neckMuscleSplineJointCount,
@@ -304,12 +308,14 @@ class RigBipedCharacter():
                             fkArmControlScaleYZMultiplier,
                             fkArmControlTransparency,
                             createArmCircleFkControl,
+                            createArmCircleIkControl,
                             createCircleFkFingerControl,
                             circleFkFingerControlScaleFactor,
                             createCompactFootControl,
                             createSimpleSpine,
                             createSpineFKSystem,
                             createSpineCircleFkControl,
+                            createSpineCircleIkControl,
                             createSimpleFKNeck,
                             createNeckMuscleSplineSystem,
                             neckMuscleSplineJointCount,
@@ -335,6 +341,7 @@ class RigBipedCharacter():
                     rigScale = sceneScale,
                     createFKSystem = createSpineFKSystem,
                     createCircleFkControl = createSpineCircleFkControl,
+                    createCircleIkControl = createSpineCircleIkControl,
                     surroundingMeshes = surroundingMeshes
                     )
         self.Spine = spine
@@ -391,6 +398,7 @@ class RigBipedCharacter():
                 fkControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
                 fkControlTransparency = fkArmControlTransparency,
                 createCircleFkControl = createArmCircleFkControl,
+                createCircleIkControl = createArmCircleIkControl,
                 surroundingMeshes = surroundingMeshes
                 )
         self.LeftArm = leftArm
@@ -409,6 +417,7 @@ class RigBipedCharacter():
                 fkControlScaleYZMultiplier = fkArmControlScaleYZMultiplier,
                 fkControlTransparency = fkArmControlTransparency,
                 createCircleFkControl = createArmCircleFkControl,
+                createCircleIkControl = createArmCircleIkControl,
                 surroundingMeshes = surroundingMeshes
                 )
         self.RightArm = rightArm

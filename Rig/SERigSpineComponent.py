@@ -27,6 +27,7 @@ class RigSimpleIKSpine(RigComponent):
             rigScale = 1.0,
             createFKSystem = True,
             createCircleFkControl = True,
+            createCircleIkControl = False,
             surroundingMeshes = []
             ):
 

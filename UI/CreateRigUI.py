@@ -152,6 +152,8 @@ class mainRigWindow(QtWidgets.QDialog):
         createFacialSystem = self.facialSystemOptionCheckBox.isChecked()
         createSpineNeckCircleFkControl = self.circleFkSpineNeckControlCheckBox.isChecked()
         createLimbCircleFkControl = self.circleFkLimbControlCheckBox.isChecked()
+        createArmCircleIkControl = not self.cubeIkArmControlCheckBox.isChecked()
+        createSpineCircleIkControl = not self.cubeIkSpineControlCheckBox.isChecked()
 
         # Build character rig.
         character = SECharacter.RigBipedCharacter(characterName = characterName)
@@ -180,7 +182,9 @@ class mainRigWindow(QtWidgets.QDialog):
                         portraitCameraFocalLength = portraitCameraFocalLength,
                         createFacialSystem = createFacialSystem,
                         createArmCircleFkControl = createLimbCircleFkControl,
+                        createArmCircleIkControl = createArmCircleIkControl,
                         createSpineCircleFkControl = createSpineNeckCircleFkControl,
+                        createSpineCircleIkControl = createSpineCircleIkControl,
                         createNeckCircleFkControl = createSpineNeckCircleFkControl,
                         createLegCircleFkControl = createLimbCircleFkControl
                         )
@@ -333,13 +337,24 @@ class mainRigWindow(QtWidgets.QDialog):
         fkCircleFkControlOptionLayout.addSpacing(215)
         bodyConfigTabPageLayout.addLayout(fkCircleFkControlOptionLayout)
 
-        footControlOptionLayout = QtWidgets.QHBoxLayout()
-        footControlOptionLayout.addWidget(QtWidgets.QLabel("Create Compact Foot Control :"))
+        limbControlOptionLayout = QtWidgets.QHBoxLayout()
+        limbControlOptionLayout.addWidget(QtWidgets.QLabel("Create Compact Foot Control :"))
         self.compactFootControlCheckBox = QtWidgets.QCheckBox()
         self.compactFootControlCheckBox.setChecked(True)
-        footControlOptionLayout.addWidget(self.compactFootControlCheckBox)
-        footControlOptionLayout.addSpacing(500)
-        bodyConfigTabPageLayout.addLayout(footControlOptionLayout)
+        limbControlOptionLayout.addWidget(self.compactFootControlCheckBox)
+
+        limbControlOptionLayout.addWidget(QtWidgets.QLabel("Create Cube Arm IK Control :"))
+        self.cubeIkArmControlCheckBox = QtWidgets.QCheckBox()
+        self.cubeIkArmControlCheckBox.setChecked(True)
+        limbControlOptionLayout.addWidget(self.cubeIkArmControlCheckBox)
+
+        limbControlOptionLayout.addWidget(QtWidgets.QLabel("Create Cube Spine IK Control :"))
+        self.cubeIkSpineControlCheckBox = QtWidgets.QCheckBox()
+        self.cubeIkSpineControlCheckBox.setChecked(True)
+        limbControlOptionLayout.addWidget(self.cubeIkSpineControlCheckBox)
+
+        limbControlOptionLayout.addSpacing(270)
+        bodyConfigTabPageLayout.addLayout(limbControlOptionLayout)
 
         fkBodyArmControlScaleYZMultiplierLayout = QtWidgets.QHBoxLayout()
         fkBodyArmControlScaleYZMultiplierLayout.addWidget(QtWidgets.QLabel("FK Arm Control Scale YZ Multiplier :"))
