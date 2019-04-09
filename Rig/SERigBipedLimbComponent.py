@@ -355,7 +355,7 @@ class RigHumanLeg(RigHumanLimb):
                                 translateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                 rotateTo = self.FootHelperJoints[SERigNaming.sFootBaseJnt],
                                 parent = self.IKControlGroup, 
-                                lockChannels = ['s', 'r', 'v'],
+                                lockChannels = ['s', 'v'],
                                 flipScaleX = flipScaleXYZ,
                                 flipScaleY = flipScaleXYZ,
                                 flipScaleZ = flipScaleXYZ
@@ -397,18 +397,19 @@ class RigHumanLeg(RigHumanLimb):
         self.AnkleIKRotationControl = ankleIKRotationControl
         self.LimbIKMainRotationControl = ankleIKRotationControl
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.AnkleIKRotationControl.ControlGroup, 'AnkleIKRotationControl', 'ControlOwner')
+        cmds.hide(ankleIKRotationControl.ControlGroup)
         
         # Create PV aim target driver group.
         pvAimTargetDrvOffsetGrp = cmds.group(n = self.Prefix + '_PV_AimTarget_DrvOffsetGrp', em = 1, p = self.RigPartsGrp)
         cmds.delete(cmds.pointConstraint(ankleIKRotationControl.ControlGroup, pvAimTargetDrvOffsetGrp, mo = 0))
         cmds.delete(cmds.orientConstraint(rotateToGroup, pvAimTargetDrvOffsetGrp, mo = 0))
-        cmds.parentConstraint(footIKMainControl.ControlObject, pvAimTargetDrvOffsetGrp, mo = 1)
+        cmds.pointConstraint(footIKMainControl.ControlObject, pvAimTargetDrvOffsetGrp, mo = 1)
 
         pvAimTargetDrvGrp = cmds.group(n = self.Prefix + '_PV_AimTarget_DrvGrp', em = 1)
         cmds.delete(cmds.parentConstraint(pvAimTargetDrvOffsetGrp, pvAimTargetDrvGrp, mo = 0))
         cmds.parent(pvAimTargetDrvGrp, pvAimTargetDrvOffsetGrp)
 
-        cmds.connectAttr(ankleIKRotationControl.ControlObject + '.rotateY', pvAimTargetDrvGrp + '.rotateY')
+        cmds.connectAttr(footIKMainControl.ControlObject + '.rotateY', pvAimTargetDrvGrp + '.rotateY')
         cmds.delete(rotateToGroup)
 
 
