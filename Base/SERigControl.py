@@ -163,13 +163,16 @@ class RigControl():
             #cmds.setAttr(s + '.tx', secondMinHit[0])
             #cmds.setAttr(s + '.ty', secondMinHit[1])
             #cmds.setAttr(s + '.tz', secondMinHit[2])
+
             res = secondMinDis
+
         elif minHit:
             # Create debug sphere.
             #s = cmds.sphere()[0]
             #cmds.setAttr(s + '.tx', minHit[0])
             #cmds.setAttr(s + '.ty', minHit[1])
             #cmds.setAttr(s + '.tz', minHit[2])
+
             res = minDis
 
         return res
