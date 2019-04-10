@@ -358,6 +358,16 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                             overrideFitRayDirection = True, 
                                             fitRayDirection = (0, 0, -1)
                                             )
+
+                # Head local to world rotation driver group.
+                drvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
+                headLocalToWorldDrvGroup = curFKControl.InsertNewGroup(drvGrpName)
+
+                locatorHeadLocalToWorldRot = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_LocalToWorldRot')[0]
+                cmds.delete(cmds.parentConstraint(headLocalToWorldDrvGroup, locatorHeadLocalToWorldRot, mo = 0))
+                cmds.parent(locatorHeadLocalToWorldRot, self.RigPartsGrp)
+                cmds.parentConstraint(self.BaseRig.Global02Control.ControlObject, locatorHeadLocalToWorldRot, mo = 1)
+                cmds.orientConstraint(locatorHeadLocalToWorldRot, headLocalToWorldDrvGroup, mo = 1)
                 
                 # head driver group 0 drives the rotation of the head joint. It will be drived by head aim IK joint.
                 headDrvGrp0 = cmds.group(n = 'C_Head_DrvGrp_0', em = 1)
