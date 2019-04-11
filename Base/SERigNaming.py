@@ -112,6 +112,8 @@ sRightLegPVFollowSwitch = 'rightLegPvFollowSwitch'
 sLeftArmPVFollowSwitch = 'leftArmPvFollowSwitch'
 sRightArmPVFollowSwitch = 'rightArmPvFollowSwitch'
 
+sHeadFkFollowWorldSwitch = 'headFkFollowWorldSwitch'
+
 sLeftLegIKFKAutoHide  = 'leftLegIkFkAutoHide'
 sRightLegIKFKAutoHide = 'rightLegIkFkAutoHide'
 sLeftArmIKFKAutoHide  = 'leftArmIkFkAutoHide'

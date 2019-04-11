@@ -360,14 +360,20 @@ class RigMuscleSplineHumanNeck(RigComponent):
                                             )
 
                 # Head local to world rotation driver group.
-                drvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
-                headLocalToWorldDrvGroup = curFKControl.InsertNewGroup(drvGrpName)
+                fkHeadDrvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
+                headLocalToWorldDrvGroup = curFKControl.InsertNewGroup(fkHeadDrvGrpName)
 
                 locatorHeadLocalToWorldRot = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_LocalToWorldRot')[0]
                 cmds.delete(cmds.parentConstraint(headLocalToWorldDrvGroup, locatorHeadLocalToWorldRot, mo = 0))
                 cmds.parent(locatorHeadLocalToWorldRot, self.RigPartsGrp)
                 cmds.parentConstraint(self.BaseRig.Global02Control.ControlObject, locatorHeadLocalToWorldRot, mo = 1)
-                cmds.orientConstraint(locatorHeadLocalToWorldRot, headLocalToWorldDrvGroup, mo = 1)
+                oc = cmds.orientConstraint(locatorHeadLocalToWorldRot, headLocalToWorldDrvGroup, mo = 1)[0]
+                cmds.hide(locatorHeadLocalToWorldRot)
+
+                # Add Head follow world rotation switch.
+                cmds.addAttr(curFKControl.ControlObject, ln = SERigNaming.sHeadFkFollowWorldSwitch, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+                cmds.setAttr(curFKControl.ControlObject + '.' + SERigNaming.sHeadFkFollowWorldSwitch, cb = 1)
+                cmds.connectAttr(curFKControl.ControlObject + '.' + SERigNaming.sHeadFkFollowWorldSwitch, oc + '.' + locatorHeadLocalToWorldRot + 'W0')
                 
                 # head driver group 0 drives the rotation of the head joint. It will be drived by head aim IK joint.
                 headDrvGrp0 = cmds.group(n = 'C_Head_DrvGrp_0', em = 1)
