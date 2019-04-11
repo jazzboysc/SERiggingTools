@@ -2,6 +2,15 @@ import maya.cmds as cmds
 import pymel.core as pm
 from ..Base import SERigNaming
 
+def loadPlugin(plugin):
+    loaded = cmds.pluginInfo(plugin, q = True, loaded = True)
+    if not loaded:
+        cmds.loadPlugin(plugin)
+
+def isPluginLoaded(plugin):
+    loaded = cmds.pluginInfo(plugin, q = True, loaded = True)
+    return loaded
+
 def createRigObjectTypeAttr(rigObjectTopGroup, rigObjectTypeNodeStr):
     rigObjectTypeNode = cmds.createNode(rigObjectTypeNodeStr)
     cmds.addAttr(rigObjectTopGroup, ln = 'RigObjectType', at = 'message')

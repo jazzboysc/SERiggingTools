@@ -89,6 +89,12 @@ class RigBipedCharacter():
               portraitCameraFocalLength = 85.0
               ):
 
+        # Check if SERiggingTools plugin is loaded.
+        pluginLoaded = SERigObjectTypeHelper.isPluginLoaded('SERiggingToolsPlugin.py')
+        if not pluginLoaded:
+            cmds.error('Cannot build rig. SERiggingToolsPlugin.py is not loaded.')
+            return
+
         # Import model scene.
         modelFile = modelFilePath % (mainProjectPath, self.CharacterName, self.CharacterName)
         if os.path.isfile(modelFile):
