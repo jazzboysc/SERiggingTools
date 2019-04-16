@@ -711,6 +711,15 @@ class RigHumanLeg(RigHumanLimb):
         self.LimbGuideCurveStart = legJoints[1]
         self.LimbGuideCurveEnd = legPVLocator
         self.PVGuideCurve = self.createGuideCurve()
+
+        # Add foot rotation attributes needed by the foot rotation expression.
+        cmds.addAttr(footIKMainControl.ControlObject, ln = SERigNaming.sFootToeStartRotAngleAttr, at = 'float', k = 1, dv = 15.0, 
+                     hasMinValue = True, min = 0.0, hasMaxValue = True, max = 60.0)
+        cmds.setAttr(footIKMainControl.ControlObject + '.' + SERigNaming.sFootToeStartRotAngleAttr, cb = 1)
+
+        cmds.addAttr(footIKMainControl.ControlObject, ln = SERigNaming.sFootToeRotAngleRangeAttr, at = 'float', k = 1, dv = 30.0, 
+                     hasMinValue = True, min = 0.0, hasMaxValue = True, max = 60.0)
+        cmds.setAttr(footIKMainControl.ControlObject + '.' + SERigNaming.sFootToeRotAngleRangeAttr, cb = 1)
         
         # Create foot swive control expressions.
         footBaseSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootBaseSwive'
@@ -721,14 +730,16 @@ class RigHumanLeg(RigHumanLimb):
         footToeSwiveES = self.FootHelperJoints[SERigNaming.sFootToeSwiveJnt] + '.rotateY = ' + footToeSwiveControl.ControlObject + '.rotateY;'
         cmds.expression(n = footToeSwiveEN, s = footToeSwiveES, ae = 1)
 
+        toeStartRotAngleAttr = footIKMainControl.ControlObject + '.' + SERigNaming.sFootToeStartRotAngleAttr
+        toeRotAngleRangeAttr = footIKMainControl.ControlObject + '.' + SERigNaming.sFootToeRotAngleRangeAttr
+
         # Create foot rotation control expressions.
-        # TODO: hard coded rotation angel for now.
         footRotationEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootRotation'
         footRotationES = self.FootHelperJoints[SERigNaming.sFootBaseJnt] + '.rotateX = clamp(-60, 0, ' + footRotationControl.ControlObject + '.rotateX);'
         footRotationES += '\n'
-        footRotationES += self.FootHelperJoints[SERigNaming.sFootBallProxy] + '.rotateZ = clamp(0, 15, ' + footRotationControl.ControlObject + '.rotateX);'
+        footRotationES += self.FootHelperJoints[SERigNaming.sFootBallProxy] + '.rotateZ = clamp(0, ' + toeStartRotAngleAttr + ', ' + footRotationControl.ControlObject + '.rotateX);'
         footRotationES += '\n'
-        footRotationES += self.FootHelperJoints[SERigNaming.sFootToeProxy] + '.rotateZ = clamp(15, 45, ' + footRotationControl.ControlObject + '.rotateX) - 15;'
+        footRotationES += self.FootHelperJoints[SERigNaming.sFootToeProxy] + '.rotateZ = clamp(' + toeStartRotAngleAttr + ', ' + toeStartRotAngleAttr + ' + ' + toeRotAngleRangeAttr + ', ' + footRotationControl.ControlObject + '.rotateX) - ' + toeStartRotAngleAttr + ';'
         footRotationES += '\n'
         footRotationES += self.FootHelperJoints[SERigNaming.sFootExtJnt] + '.rotateZ = clamp(-25, 0, ' + footRotationControl.ControlObject + '.rotateZ);'
         footRotationES += '\n'
