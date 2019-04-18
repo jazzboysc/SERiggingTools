@@ -162,6 +162,22 @@ class RigSimpleHumanNeck(RigComponent):
                                             fitRayDirection = (0, 0, -1)
                                             )
 
+                # Head local to world rotation driver group.
+                fkHeadDrvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
+                headLocalToWorldDrvGroup = curFKControl.InsertNewGroup(fkHeadDrvGrpName)
+
+                locatorHeadLocalToWorldRot = cmds.spaceLocator(n = 'locator_' + self.Prefix + '_LocalToWorldRot')[0]
+                cmds.delete(cmds.parentConstraint(headLocalToWorldDrvGroup, locatorHeadLocalToWorldRot, mo = 0))
+                cmds.parent(locatorHeadLocalToWorldRot, self.RigPartsGrp)
+                cmds.parentConstraint(self.BaseRig.Global02Control.ControlObject, locatorHeadLocalToWorldRot, mo = 1)
+                oc = cmds.orientConstraint(locatorHeadLocalToWorldRot, headLocalToWorldDrvGroup, mo = 1)[0]
+                cmds.hide(locatorHeadLocalToWorldRot)
+
+                # Add Head follow world rotation switch.
+                cmds.addAttr(curFKControl.ControlObject, ln = SERigNaming.sHeadFkFollowWorldSwitch, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+                cmds.setAttr(curFKControl.ControlObject + '.' + SERigNaming.sHeadFkFollowWorldSwitch, cb = 1)
+                cmds.connectAttr(curFKControl.ControlObject + '.' + SERigNaming.sHeadFkFollowWorldSwitch, oc + '.' + locatorHeadLocalToWorldRot + 'W0')
+
             self.FKNeckControls.append(curFKControl)
             SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKControl' + str(i), 'ControlOwner')
 
