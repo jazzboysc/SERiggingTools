@@ -436,6 +436,8 @@ class RigBipedCharacter():
         leftHand.build(
                 fingers = leftHandJnts,
                 armFKFingerAttachPoint = 'L_Wrist',
+                palmIndexFingerRootPoint = 'L_Index_1',
+                palmPinkyFingerRootPoint = 'L_Pinky_1',
                 rigScale = sceneScale,
                 createCircleFkFingerControl = createCircleFkFingerControl,
                 circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor,
@@ -451,6 +453,8 @@ class RigBipedCharacter():
         rightHand.build(
                 fingers = rightHandJnts,
                 armFKFingerAttachPoint = 'R_Wrist',
+                palmIndexFingerRootPoint = 'R_Index_1',
+                palmPinkyFingerRootPoint = 'R_Pinky_1',
                 rigScale = sceneScale,
                 createCircleFkFingerControl = createCircleFkFingerControl,
                 circleFkFingerControlScaleFactor = circleFkFingerControlScaleFactor,

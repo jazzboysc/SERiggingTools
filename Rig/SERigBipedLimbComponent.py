@@ -8,6 +8,8 @@ from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
 
+from maya.api.OpenMaya import MVector, MMatrix, MPoint
+
 #-----------------------------------------------------------------------------
 # Rig Human Limb Base Class
 # Sun Che
@@ -1326,11 +1328,25 @@ class RigHumanHand(RigComponent):
             fingers = [],
             rootJoint = '',
             armFKFingerAttachPoint = '',
+            palmIndexFingerRootPoint = '',
+            palmPinkyFingerRootPoint = '',
             rigScale = 1.0,
             createCircleFkFingerControl = True,
             circleFkFingerControlScaleFactor = 1.5,
             surroundingMeshes = []
             ):
+
+        fingerControlFitRayDirection = (0, 1, 0)
+        if cmds.objExists(armFKFingerAttachPoint) and cmds.objExists(palmIndexFingerRootPoint) and cmds.objExists(palmPinkyFingerRootPoint):
+            v0 = MVector(SEMathHelper.getWorldPosition(armFKFingerAttachPoint))
+            v1 = MVector(SEMathHelper.getWorldPosition(palmIndexFingerRootPoint))
+            v2 = MVector(SEMathHelper.getWorldPosition(palmPinkyFingerRootPoint))
+            e1 = (v1 - v0).normal()
+            e2 = (v2 - v0).normal()
+            palmN = e1 ^ e2
+            if self.RigSide == SERigEnum.eRigSide.RS_Right:
+                palmN = -palmN
+            fingerControlFitRayDirection = (palmN.x, palmN.y, palmN.z)
 
         fkFingerControlGroup = cmds.group(n = self.Prefix + SERigNaming.s_FKPrefix + 'Finger' + SERigNaming.sControlGroup, em = 1, 
                                           p = self.FKControlGroup)
@@ -1373,7 +1389,7 @@ class RigHumanHand(RigComponent):
                             surroundingMeshes = surroundingMeshes,
                             postFitScale = 1.45,
                             overrideFitRayDirection = True, 
-                            fitRayDirection = (0, 1, 0)
+                            fitRayDirection = fingerControlFitRayDirection
                             )
                 else:
                     nextFKJnt = fkJoints[i + 1]
