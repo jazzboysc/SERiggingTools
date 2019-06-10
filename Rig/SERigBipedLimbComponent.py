@@ -1328,6 +1328,7 @@ class RigHumanHand(RigComponent):
             fingers = [],
             rootJoint = '',
             armFKFingerAttachPoint = '',
+            palmThumbFingerRootPoint = '',
             palmIndexFingerRootPoint = '',
             palmPinkyFingerRootPoint = '',
             rigScale = 1.0,
@@ -1336,17 +1337,27 @@ class RigHumanHand(RigComponent):
             surroundingMeshes = []
             ):
 
-        fingerControlFitRayDirection = (0, 1, 0)
-        if cmds.objExists(armFKFingerAttachPoint) and cmds.objExists(palmIndexFingerRootPoint) and cmds.objExists(palmPinkyFingerRootPoint):
+        fingerControlFitRayDirections = [(0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0)]
+        if cmds.objExists(armFKFingerAttachPoint) and cmds.objExists(palmThumbFingerRootPoint) and cmds.objExists(palmIndexFingerRootPoint) and cmds.objExists(palmPinkyFingerRootPoint):
             v0 = MVector(SEMathHelper.getWorldPosition(armFKFingerAttachPoint))
             v1 = MVector(SEMathHelper.getWorldPosition(palmIndexFingerRootPoint))
             v2 = MVector(SEMathHelper.getWorldPosition(palmPinkyFingerRootPoint))
+            v3 = MVector(SEMathHelper.getWorldPosition(palmThumbFingerRootPoint))
             e1 = (v1 - v0).normal()
             e2 = (v2 - v0).normal()
+            e3 = (v3 - v0).normal()
             palmN = e1 ^ e2
+            thumbN = e3 ^ e1
             if self.RigSide == SERigEnum.eRigSide.RS_Right:
                 palmN = -palmN
-            fingerControlFitRayDirection = (palmN.x, palmN.y, palmN.z)
+                thumbN = -thumbN
+
+            fingerControlFitRayDirections = []
+            fingerControlFitRayDirections.append((thumbN.x, thumbN.y, thumbN.z))
+            fingerControlFitRayDirections.append((palmN.x, palmN.y, palmN.z))
+            fingerControlFitRayDirections.append((palmN.x, palmN.y, palmN.z))
+            fingerControlFitRayDirections.append((palmN.x, palmN.y, palmN.z))
+            fingerControlFitRayDirections.append((palmN.x, palmN.y, palmN.z))
 
         fkFingerControlGroup = cmds.group(n = self.Prefix + SERigNaming.s_FKPrefix + 'Finger' + SERigNaming.sControlGroup, em = 1, 
                                           p = self.FKControlGroup)
@@ -1389,7 +1400,7 @@ class RigHumanHand(RigComponent):
                             surroundingMeshes = surroundingMeshes,
                             postFitScale = 1.45,
                             overrideFitRayDirection = True, 
-                            fitRayDirection = fingerControlFitRayDirection
+                            fitRayDirection = fingerControlFitRayDirections[curFingerTypeIndex]
                             )
                 else:
                     nextFKJnt = fkJoints[i + 1]
