@@ -610,11 +610,18 @@ class RigMuscleSplineHumanNeck(RigComponent):
         rightDisNode = self._createDistanceBetweenNode(rightChestHeadBegin, rightChestHeadEnd)
         rightInitDis = cmds.getAttr(rightDisNode + '.distance')
 
+        mulNode = cmds.createNode('multiplyDivide')
+        cmds.setAttr(mulNode + '.operation', 1)
+        cmds.setAttr(mulNode + '.input2X', leftInitDis)
+        cmds.setAttr(mulNode + '.input2Y', rightInitDis)
+        cmds.connectAttr(self.BaseRig.Global01Control.ControlObject + '.scaleX', mulNode + '.input1X', f = 1)
+        cmds.connectAttr(self.BaseRig.Global01Control.ControlObject + '.scaleX', mulNode + '.input1Y', f = 1)
+
         divNode = cmds.createNode('multiplyDivide')
         cmds.setAttr(divNode + '.operation', 2)
-        cmds.setAttr(divNode + '.input2X', leftInitDis)
+        cmds.connectAttr(mulNode + '.outputX', divNode + '.input2X', f = 1)
+        cmds.connectAttr(mulNode + '.outputY', divNode + '.input2Y', f = 1)
         cmds.connectAttr(leftDisNode + '.distance', divNode + '.input1X', f = 1)
-        cmds.setAttr(divNode + '.input2Y', rightInitDis)
         cmds.connectAttr(rightDisNode + '.distance', divNode + '.input1Y', f = 1)
         
         # Scale IK start joints.
