@@ -54,21 +54,34 @@ class RigBipedCharacterDeform():
 
         return slaveJnts
 
-    def createSlaveJointsHelper(self, masterJnts = []):
+    def createSlaveJointsHelper(self, masterJnts = [], ignoreOrientConstraints = None, slaveJntsOrientToPreParent = False):
+        if ignoreOrientConstraints and (len(ignoreOrientConstraints) != len(masterJnts)):
+            cmds.error('The lengths of masterJnts and ignoreOrientConstraints lists do not match. Cannot create slave joints.')
+            return
+
+        if ignoreOrientConstraints == None:
+            ignoreOrientConstraints = []
+            masterJntsCount = len(masterJnts)
+            for i in range(masterJntsCount):
+                ignoreOrientConstraints.append(False)
 
         slaveJnts = []
 
         preParent = None
-        for masterJnt in masterJnts:
+        for masterJnt, ignoreOC in zip(masterJnts, ignoreOrientConstraints):
 
             if cmds.objExists(masterJnt):
                 cmds.select(cl = 1)
                 curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
                 cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+                if preParent and slaveJntsOrientToPreParent:
+                    cmds.delete(cmds.orientConstraint(preParent, curSlaveJoint, mo = 0))
                 cmds.makeIdentity(curSlaveJoint, apply = True)
         
                 pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
-                oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+                oc = None
+                if not ignoreOC:
+                    oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
 
                 curSlaveJntsInfo = (curSlaveJoint, pc, oc)
                 slaveJnts.append(curSlaveJntsInfo)
@@ -219,10 +232,22 @@ class RigBipedCharacterDeform():
 
         # Possibly create neck muscle slave joints.
         if createNeckMuscleSlaveJoints:
-            leftNeckMuscleSlaveJnts = self.createSlaveJointsHelper(leftNeckMuscleMasterJnts)
+            leftNeckMuscleMasterJntsCount = len(leftNeckMuscleMasterJnts)
+            leftNeckMuscleSlaveJntsIgnoreOCs = []
+            for i in range(leftNeckMuscleMasterJntsCount):
+                leftNeckMuscleSlaveJntsIgnoreOCs.append(True)
+            leftNeckMuscleSlaveJntsIgnoreOCs[0] = False
+            leftNeckMuscleSlaveJntsIgnoreOCs[-1] = False
+            leftNeckMuscleSlaveJnts = self.createSlaveJointsHelper(leftNeckMuscleMasterJnts, leftNeckMuscleSlaveJntsIgnoreOCs, True)
             cmds.parent(leftNeckMuscleSlaveJnts[0][0], neckSlaveJnts[0][0])
 
-            rightNeckMuscleSlaveJnts = self.createSlaveJointsHelper(rightNeckMuscleMasterJnts)
+            rightNeckMuscleMasterJntsCount = len(rightNeckMuscleMasterJnts)
+            rightNeckMuscleSlaveJntsIgnoreOCs = []
+            for i in range(rightNeckMuscleMasterJntsCount):
+                rightNeckMuscleSlaveJntsIgnoreOCs.append(True)
+            rightNeckMuscleSlaveJntsIgnoreOCs[0] = False
+            rightNeckMuscleSlaveJntsIgnoreOCs[-1] = False
+            rightNeckMuscleSlaveJnts = self.createSlaveJointsHelper(rightNeckMuscleMasterJnts, rightNeckMuscleSlaveJntsIgnoreOCs, True)
             cmds.parent(rightNeckMuscleSlaveJnts[0][0], neckSlaveJnts[0][0])
 
         # Create upper chest slaves and parent them to the spine.
