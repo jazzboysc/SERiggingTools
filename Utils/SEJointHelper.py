@@ -1,5 +1,15 @@
 import maya.cmds as cmds
+import pymel.core as pm
 from ..Base import SERigEnum
+
+def selectSkinJointsFromSelectedSkinObject():
+    res = cmds.ls(sl = 1)
+    if len(res) > 0:
+        sc = pm.mel.findRelatedSkinCluster(res[0])
+        jnts = cmds.skinCluster(sc, q = 1, inf = 1)
+        cmds.select(jnts, r = 1)
+    else:
+        cmds.warning('Please select a skin object.')
 
 def listHierarchy(topJoint, withEndJoints = True):
 
