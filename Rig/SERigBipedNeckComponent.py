@@ -649,8 +649,10 @@ class RigMuscleSplineHumanNeck(RigComponent):
         for i in range(1, keepOutJointCount + 1):
             curLeftMuscleSplineControl = 'iControl' + leftPrefix + str(i)
             cmds.setAttr(curLeftMuscleSplineControl + '.tangentLength', 0)
+            cmds.setAttr(curLeftMuscleSplineControl + '.jiggle', 0)
             curRightMuscleSplineControl = 'iControl' + rightPrefix + str(i)
             cmds.setAttr(curRightMuscleSplineControl + '.tangentLength', 0)
+            cmds.setAttr(curRightMuscleSplineControl + '.jiggle', 0)
 
         cmds.hide(self.NeckKeepOutSystemGroup)
 
