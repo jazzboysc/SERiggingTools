@@ -416,9 +416,9 @@ class RigFixedEndsIKSpine(RigComponent):
             cmds.orientConstraint(ikSpineJoint, spineJoint, mo = 1)
             cmds.pointConstraint(ikSpineJoint, spineJoint, mo = 1)
 
-        # Control original chest begin joint via chest begin proxy joint.
-        cmds.orientConstraint(chestBeginProxyJoint, spineJoints[-1], mo = 1)
-        cmds.pointConstraint(chestBeginProxyJoint, spineJoints[-1], mo = 1)
+        # Control original chest begin joint via chest begin local control.
+        cmds.orientConstraint(chestBeginLocalCtrl.ControlObject, spineJoints[-1], mo = 1)
+        cmds.pointConstraint(chestBeginLocalCtrl.ControlObject, spineJoints[-1], mo = 1)
 
         # Control original pelvis joint via pelvis local control.
         cmds.orientConstraint(pelvisLocalCtrl.ControlObject, spineJoints[0], mo = 1)
