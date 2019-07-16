@@ -213,6 +213,7 @@ class RigFixedEndsIKSpine(RigComponent):
 
         self.UpperBodyCtrl = None
         self.ChestBeginCtrl = None
+        self.ChestBeginLocalCtrl = None
         self.PelvisCtrl = None
         self.PelvisLocalCtrl = None
         self.FKSpine0Ctrl = None
@@ -338,9 +339,26 @@ class RigFixedEndsIKSpine(RigComponent):
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, pelvisLocalCtrl.ControlGroup, 'PelvisLocalCtrl', 'ControlOwner')
         self.PelvisLocalCtrl = pelvisLocalCtrl
 
+        chestBeginLocalCtrl = SERigControl.RigCircleControl(
+                                rigSide = SERigEnum.eRigSide.RS_Center,
+                                rigType = SERigEnum.eRigType.RT_SpineChestLocal,
+                                prefix = self.Prefix + 'ChestLocal', 
+                                translateTo = chestBeginProxyJoint,
+                                rotateTo = chestBeginProxyJoint,
+                                scale = rigScale*22,
+                                parent = upperBodyCtrl.ControlObject,
+                                lockChannels = ['s', 't', 'v'],
+                                fitToSurroundingMeshes = True,
+                                surroundingMeshes = surroundingMeshes,
+                                postFitScale = 1.35
+                                )
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, chestBeginLocalCtrl.ControlGroup, 'ChestBeginLocalCtrl', 'ControlOwner')
+        self.ChestBeginLocalCtrl = chestBeginLocalCtrl
+
         cmds.parent(pelvisProxyJoint, chestBeginProxyJoint, self.JointsGrp)
 
         cmds.parentConstraint(chestBeginCtrl.ControlObject, chestBeginProxyJoint)
+        cmds.parentConstraint(chestBeginCtrl.ControlObject, chestBeginLocalCtrl.ControlGroup)
         cmds.parentConstraint(pelvisCtrl.ControlObject, pelvisProxyJoint)
         cmds.parentConstraint(pelvisCtrl.ControlObject, pelvisLocalCtrl.ControlGroup)
 
@@ -585,8 +603,9 @@ class RigFixedEndsIKSpine(RigComponent):
 
             cmds.orientConstraint(FKSpine1Ctrl.ControlObject, jnt2)
 
-            # Attach IK_ChestBegin control to FK spine_1 control.
+            # Attach ChestBegin controls to FK spine_1 control.
             cmds.parent(chestBeginCtrl.ControlGroup, FKSpine1Ctrl.ControlObject)
+            cmds.parent(chestBeginLocalCtrl.ControlGroup, FKSpine1Ctrl.ControlObject)
 
             cmds.hide(jnt0)
 
