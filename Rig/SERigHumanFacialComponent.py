@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import pymel.core.general
 
 from ..Base.SERigComponent import RigComponent
 from ..Base import SERigControl
@@ -8,6 +9,57 @@ from ..Utils import SEStringHelper
 from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
+
+
+def connectFacialWrinkleMapAttrToMaterialAttr():
+    facialObject = cmds.ls(sl = True)
+    if facialObject:
+        facialObject = facialObject[0]
+    else:
+        cmds.warning('Please select facial mesh.')
+        return
+
+    facialMaterial = getFacialMaterial()
+
+    if facialObject and facialMaterial:
+        try:
+            for attr in SERigNaming.gWM_AttrList:
+                cmds.connectAttr(facialObject + '.' + attr, facialMaterial + '.' + attr)
+        except:
+            cmds.warning('Cannot connect attributes.')
+
+
+def getFacialMaterial():
+    res = None
+
+    selectedTransform = pymel.core.general.selected()
+    if selectedTransform:
+        selectedTransform = selectedTransform[0]
+    else:
+        cmds.warning('Please select facial mesh.')
+        return
+
+    shape = str(selectedTransform.getShape())
+
+    shadeEng = cmds.listConnections(shape, type = 'shadingEngine')
+    connections = cmds.listConnections(shadeEng)
+    materials = cmds.ls(connections, materials = True)
+    unique_materials_set = set(materials)
+    materials = list(unique_materials_set)
+
+    if len(materials) > 0:
+        res = materials[0]
+
+    return res
+
+
+def createFacialWrinkleMapAttributes():
+    facialObject = cmds.ls(sl = True)[0]
+
+    for attr in SERigNaming.gWM_AttrList:
+        cmds.addAttr(facialObject, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.setAttr(facialObject + '.' + attr, cb = 1)
+
 
 #-----------------------------------------------------------------------------
 def getAuLipCloseAttrName(bufferObject):

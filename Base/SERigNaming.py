@@ -65,6 +65,28 @@ sAU_Blink_L_Attr  = 'BlinkL'
 sAU_Blink_R_Attr  = 'BlinkR'
 sAU_LipClose_Attr = 'LipClose'
 
+sWM01_browsRaiseInner_R_Attr = 'WM01_browsRaiseInner_R'
+sWM01_browsRaiseInner_L_Attr = 'WM01_browsRaiseInner_L'
+sWM01_browsRaiseOuter_R_Attr = 'WM01_browsRaiseOuter_R'
+sWM01_browsRaiseOuter_L_Attr = 'WM01_browsRaiseOuter_L'
+sWM02_browsDown_L_Attr = 'WM02_browsDown_L'
+sWM02_browsDown_R_Attr = 'WM02_browsDown_R'
+sWM02_browsLateral_L_Attr = 'WM02_browsLateral_L'
+sWM02_browsLateral_R_Attr = 'WM02_browsLateral_R'
+sWM02_noseWrinkler_L_Attr = 'WM02_noseWrinkler_L'
+sWM02_noseWrinkler_R_Attr = 'WM02_noseWrinkler_R'
+
+gWM_AttrList = [sWM01_browsRaiseInner_R_Attr,
+                sWM01_browsRaiseInner_L_Attr,
+                sWM01_browsRaiseOuter_R_Attr,
+                sWM01_browsRaiseOuter_L_Attr,
+                sWM02_browsDown_L_Attr,
+                sWM02_browsDown_R_Attr,
+                sWM02_browsLateral_L_Attr,
+                sWM02_browsLateral_R_Attr,
+                sWM02_noseWrinkler_L_Attr,
+                sWM02_noseWrinkler_R_Attr]
+
 s_JointsGroup        = '_' + sJointsGroup
 s_ModelGroup         = '_' + sModelGroup
 s_BuilderGroup       = '_' + sBuilderGroup
