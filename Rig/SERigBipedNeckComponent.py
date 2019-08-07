@@ -176,6 +176,7 @@ class RigSimpleHumanNeck(RigComponent):
                 # Add Head follow world rotation switch.
                 cmds.addAttr(curFKControl.ControlObject, ln = SERigNaming.sHeadFkFollowWorldSwitch, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
                 cmds.setAttr(curFKControl.ControlObject + '.' + SERigNaming.sHeadFkFollowWorldSwitch, cb = 1)
+                cmds.setAttr(curFKControl.ControlObject + '.' + SERigNaming.sHeadFkFollowWorldSwitch, k = 1)
                 cmds.connectAttr(curFKControl.ControlObject + '.' + SERigNaming.sHeadFkFollowWorldSwitch, oc + '.' + locatorHeadLocalToWorldRot + 'W0')
 
             self.FKNeckControls.append(curFKControl)

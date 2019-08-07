@@ -480,6 +480,7 @@ class RigHumanLeg(RigHumanLimb):
                 cmds.addAttr(footIKMainControl.ControlObject, ln = at, at = 'float', k = 1, dv = 0.0)
                 cmds.setAttr(footIKMainControl.ControlObject + '.' + at, cb = 1)
                 cmds.connectAttr(footIKMainControl.ControlObject + '.' + at, drivenAt)
+                cmds.setAttr(footIKMainControl.ControlObject + '.' + at, k = 1)
 
         # Create leg PV control.
         legPVControl = SERigControl.RigDiamondControl(
@@ -718,10 +719,12 @@ class RigHumanLeg(RigHumanLimb):
         cmds.addAttr(footIKMainControl.ControlObject, ln = SERigNaming.sFootToeStartRotAngleAttr, at = 'float', k = 1, dv = 15.0, 
                      hasMinValue = True, min = 0.0, hasMaxValue = True, max = 60.0)
         cmds.setAttr(footIKMainControl.ControlObject + '.' + SERigNaming.sFootToeStartRotAngleAttr, cb = 1)
+        cmds.setAttr(footIKMainControl.ControlObject + '.' + SERigNaming.sFootToeStartRotAngleAttr, k = 1)
 
         cmds.addAttr(footIKMainControl.ControlObject, ln = SERigNaming.sFootToeRotAngleRangeAttr, at = 'float', k = 1, dv = 30.0, 
                      hasMinValue = True, min = 0.0, hasMaxValue = True, max = 60.0)
         cmds.setAttr(footIKMainControl.ControlObject + '.' + SERigNaming.sFootToeRotAngleRangeAttr, cb = 1)
+        cmds.setAttr(footIKMainControl.ControlObject + '.' + SERigNaming.sFootToeRotAngleRangeAttr, k = 1)
         
         # Create foot swive control expressions.
         footBaseSwiveEN = SERigNaming.sExpressionPrefix + self.Prefix + 'FootBaseSwive'
