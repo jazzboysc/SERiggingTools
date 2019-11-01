@@ -477,7 +477,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.makeIdentity(upperLipBlendJoint, apply = True)
         cmds.setAttr(upperLipBlendJoint + '.radius', 0.5)
 
-        # Lock jaw offset joint's motion.
+        # Lock jaw offset joint's motion. Later when jaw IK handle is created on jaw and jaw end joints, we don't want jaw offset joint rotate.
         lockAttrList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz']
         for attr in lockAttrList:
             cmds.setAttr(jawOffsetJoint + '.' + attr, l = True)
