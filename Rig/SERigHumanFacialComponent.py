@@ -441,7 +441,7 @@ class RigHumanFacialSystem(RigComponent):
             cmds.warning('Failed building facial system, head aim IK control does not exist.')
             return
 
-        # Get input facial joints.
+        # Get input facial guide joints.
         jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
         jawOffsetJoint = SEJointHelper.getFacialJawOffsetJoint(facialJoints)
         lowerLipBeginJoint = SEJointHelper.getFacialLowerLipBeginJoint(facialJoints)
