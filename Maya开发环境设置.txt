@@ -1,0 +1,13 @@
+1 安装Maya2017，然后升级到update3
+
+2 解压缩Maya2017u3_DEVKIT_Windows软件开发包，把devkitBase目录下的devkit和mkspecs子目录复制到C:\Program Files\Autodesk\Maya2017目录下，覆盖原有内容
+
+3 安装Visual Studio Code
+
+4 启动Visual Studio Code，按ctrl+shift+p，输入Python: Select Interpreter命令，之后选择一个已经安装的本地Python环境
+
+5 打开Maya Python工程，通过File->Open Folder，打开一个本地工程目录
+
+6 为该工程添加Maya Python Path，按ctrl+n，然后按ctrl+s，在弹出的文件保存对话框，输入.env并保存
+
+7 在刚刚创建的.env文件中，输入本地Maya2017 python stub路径，例如： PYTHONPATH=C:\Program Files\Autodesk\Maya2017\devkit\other\pymel\extras\completion\py，保存后，在代码编辑器中输入maya API代码，编辑器会实现自动补全功能
