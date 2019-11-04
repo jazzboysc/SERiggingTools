@@ -417,7 +417,15 @@ class RigHumanFacialSystem(RigComponent):
                       SERigNaming.sAU_07_R_Attr,
                       SERigNaming.sAU_Blink_L_Attr,
                       SERigNaming.sAU_Blink_R_Attr,
-                      SERigNaming.sAU_LipClose_Attr]
+                      SERigNaming.sAU_LipClose_Attr,
+                      SERigNaming.sAU_Eye_L_LookLeft_Attr,
+                      SERigNaming.sAU_Eye_L_LookRight_Attr,
+                      SERigNaming.sAU_Eye_L_LookUp_Attr,
+                      SERigNaming.sAU_Eye_L_LookDown_Attr,
+                      SERigNaming.sAU_Eye_R_LookLeft_Attr,
+                      SERigNaming.sAU_Eye_R_LookRight_Attr,
+                      SERigNaming.sAU_Eye_R_LookUp_Attr,
+                      SERigNaming.sAU_Eye_R_LookDown_Attr]
 
         for attr in auAttrList:
             cmds.addAttr(dataBufferGroup, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
