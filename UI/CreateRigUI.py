@@ -340,7 +340,7 @@ class mainRigWindow(QtWidgets.QDialog):
         limbControlOptionLayout = QtWidgets.QHBoxLayout()
         limbControlOptionLayout.addWidget(QtWidgets.QLabel("Create Compact Foot Control :"))
         self.compactFootControlCheckBox = QtWidgets.QCheckBox()
-        self.compactFootControlCheckBox.setChecked(True)
+        self.compactFootControlCheckBox.setChecked(False)
         limbControlOptionLayout.addWidget(self.compactFootControlCheckBox)
 
         limbControlOptionLayout.addWidget(QtWidgets.QLabel("Create Cube Arm IK Control :"))

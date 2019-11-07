@@ -157,22 +157,26 @@ class RigBipedCharacterDeform():
         upperBodyUpperLimbSlaveMasterJnts = []
         for i in upperBodyUpperLimbJoints:
             curUpperLimbSlaveMasterJnts = self.createUpperLimbTwistJoints(baseRig, i, knobCount = upperBodyUpperLimbKnobCount)
-            upperBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
+            if curUpperLimbSlaveMasterJnts:
+                upperBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
 
         upperBodyLowerLimbSlaveMasterJnts = []
         for i in upperBodyLowerLimbJoints:
             curLowerLimbSlaveMasterJnts = self.createLowerLimbTwistJoints(baseRig, i, knobCount = upperBodyLowerLimbKnobCount)
-            upperBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
+            if curLowerLimbSlaveMasterJnts:
+                upperBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
 
         lowerBodyUpperLimbSlaveMasterJnts = []
         for i in lowerBodyUpperLimbJoints:
             curUpperLimbSlaveMasterJnts = self.createUpperLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyUpperLimbKnobCount)
-            lowerBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
+            if curUpperLimbSlaveMasterJnts:
+                lowerBodyUpperLimbSlaveMasterJnts.append(curUpperLimbSlaveMasterJnts)
 
         lowerBodyLowerLimbSlaveMasterJnts = []
         for i in lowerBodyLowerLimbJoints:
             curLowerLimbSlaveMasterJnts = self.createLowerLimbTwistJoints(baseRig, i, twistJointRadiusScale = 2.0, knobCount = lowerBodyLowerLimbKnobCount)
-            lowerBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
+            if curLowerLimbSlaveMasterJnts:
+                lowerBodyLowerLimbSlaveMasterJnts.append(curLowerLimbSlaveMasterJnts)
 
         # Create slave joints.
 
@@ -320,9 +324,14 @@ class RigBipedCharacterDeform():
         # If this function succeeded, joints upon which slave joints will be created are returned through this list.
         slaveMasters = []
 
+        if knobCount <= 0 or knobCount > maxKnobCount:
+            # No twist joints needed, just return the upper limb joint.
+            slaveMasters.append(upperLimbJoint)
+            return slaveMasters
+
         if baseRig == None or upperLimbJoint == None:
             print('Unable to create upper limb twist joints.')
-            return
+            return None
 
         prefix = upperLimbJoint
 
@@ -330,7 +339,7 @@ class RigBipedCharacterDeform():
         childJoint = SEJointHelper.getFirstChildJoint(upperLimbJoint)
         if childJoint == None:
             print('No child joint found for upper limb:' + upperLimbJoint)
-            return
+            return None
 
         # Find parent joint.
         parentJoint = None
@@ -429,6 +438,12 @@ class RigBipedCharacterDeform():
         if childJoint == None:
             print('No child joint found for lower limb:' + lowerLimbJoint)
             return slaveMasters
+
+        if knobCount <= 0 or knobCount > maxKnobCount:
+            # No twist joints needed, just return the lower limb joint and its child joint.
+            slaveMasters.append(lowerLimbJoint)
+            slaveMasters.append(childJoint)
+            return slaveMasters               
 
         # Create twist end joints.
         twistBeginJoint = cmds.duplicate(lowerLimbJoint, n = prefix + SERigNaming.s_TwistBegin, parentOnly = True)[0]
