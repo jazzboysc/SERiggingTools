@@ -152,7 +152,7 @@ class RigBipedCharacter():
             cmds.error('Cannot find model group.')
 
         # Get surrounding meshes from model group.
-        surroundingMeshes = cmds.listRelatives(modelGrp, c = 1)
+        surroundingMeshes = cmds.listRelatives(cmds.ls(type = 'mesh'), type ='transform', p = True)
 
         # Parent the imported skeleton to the rig base.
         cmds.parent(rootJnt, baseRig.JointsGrp)

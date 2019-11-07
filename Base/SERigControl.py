@@ -146,7 +146,7 @@ class RigControl():
 
         for mesh in surroundingMeshes:
             res = SEMathHelper.rayIntersect(mesh, rayStartPos, rayDir)
-            if res[0]:
+            if res and res[0]:
                 curFirstHit = (res[0].x, res[0].y, res[0].z)
                 curDis = SEMathHelper.getDistance3(curFirstHit, rayStartPos)
                 if curDis < minDis:
@@ -155,6 +155,11 @@ class RigControl():
                 elif curDis < secondMinDis:
                     secondMinDis = curDis
                     secondMinHit = curFirstHit
+            elif res == None:
+                cmds.warning('Does not hit anything with:')
+                #print mesh
+                #print rayStartPos
+                #print rayDir
 
         res = None
         if secondMinHit:
