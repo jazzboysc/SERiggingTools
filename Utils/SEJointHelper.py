@@ -1,6 +1,9 @@
 import maya.cmds as cmds
 import pymel.core as pm
+
 from ..Base import SERigEnum
+from ..Base import SERigNaming
+from . import SERigObjectTypeHelper
 
 def selectSkinJointsFromSelectedSkinObject():
     res = cmds.ls(sl = 1)
@@ -263,3 +266,138 @@ def getFacialRightEyelidLowerJoint(facialJoints):
 def getFacialRightEyelidLowerEndJoint(facialJoints):
     rightEyelidLowerEndJoint = facialJoints[18]
     return rightEyelidLowerEndJoint
+
+
+def getBuilderSpineJoints():
+    spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
+    return spineJnts
+
+def getBuilderUpperChestJoints():
+    upperChestJnts = ['L_Clav', 'R_Clav', 'C_ChestEnd', 'L_Breast', 'R_Breast']
+    return upperChestJnts
+
+def getBuilderChestEndJoint():
+    return ['C_ChestEnd']
+
+def getSlaveChestEndJoint():
+    builderJnt = getBuilderChestEndJoint()[0]
+    slaveJnt = SERigNaming.sSlavePrefix + builderJnt
+    return [slaveJnt]
+
+def getBuilderBreastJoints():
+    return ['L_Breast', 'R_Breast']
+
+def getSlaveBreastJoints():
+    slaveJnts = []
+
+    builderJnts = getBuilderBreastJoints()
+    for jnt in builderJnts:
+        slaveJnt = SERigNaming.sSlavePrefix + jnt
+        slaveJnts.append(slaveJnt)
+
+    return slaveJnts
+
+def getBuilderLeftLegJoints():
+    leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
+    return leftLegJnts
+
+def getBuilderRightLegJoints():
+    rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
+    return rightLegJnts
+
+def getBuilderLeftArmJoints():
+    leftArmJnts = ['L_Shoulder', 'L_Elbow', 'L_Wrist']
+    return leftArmJnts
+
+def getBuilderRightArmJoints():
+    rightArmJnts = ['R_Shoulder', 'R_Elbow', 'R_Wrist']
+    return rightArmJnts
+
+def getBuilderLeftHandJoints():
+    leftHandJnts = ['L_Thumb_0', 'L_Index_0', 'L_Middle_0', 'L_Ring_0', 'L_Pinky_0']
+    return leftHandJnts
+
+def getBuilderRightHandJoints():
+    rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
+    return rightHandJnts
+
+def getBuilderNeckJoints():
+    neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
+    return neckJnts
+
+def getBuilderUpperBodyUpperLimbJoints():
+    upperBodyUpperLimbJoints = ['L_Shoulder', 'R_Shoulder']
+    return upperBodyUpperLimbJoints
+
+def getBuilderUpperBodyLowerLimbJoints():
+    upperBodyLowerLimbJoints = ['L_Elbow', 'R_Elbow']
+    return upperBodyLowerLimbJoints
+
+def getBuilderLowerBodyUpperLimbJoints():
+    lowerBodyUpperLimbJoints = ['L_Hip', 'R_Hip']
+    return lowerBodyUpperLimbJoints
+
+def getBuilderLowerBodyLowerLimbJoints():
+    lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
+    return lowerBodyLowerLimbJoints
+
+def isBodyDeformationJoint(jnt, includeBreast = False, includeNeckMuscle = False, includeLimeEnd = False, includeChestEnd = False):
+    res = True
+
+    jntTag = cmds.getAttr(jnt + '.otherType')
+
+    if jntTag == SERigNaming.sJointTagSlaveRoot:
+        res = False
+
+    elif jntTag == SERigNaming.sJointTagFacialRoot:
+        res = False
+
+    elif jntTag == SERigNaming.sJointTagFacialBase:
+        res = False
+    
+    elif jntTag == SERigNaming.sJointTagSlaveBreast and includeBreast == False:
+        res = False
+
+    elif jntTag == SERigNaming.sJointTagSlaveChestEnd and includeChestEnd == False:
+        res = False
+
+    elif (jntTag == SERigNaming.sJointTagSlaveToeEnd or jntTag == SERigNaming.sJointTagSlaveFingerEnd) and includeLimeEnd == False:
+        res = False
+
+    elif jntTag == SERigNaming.sJointTagSlaveNeckMuscle and includeNeckMuscle == False:
+        res = False
+
+    return res
+
+def getBodyDeformationJoints(includeBreast = False, includeNeckMuscle = False, includeLimeEnd = False, includeChestEnd = False):
+    # Get selected rig character.
+    selected = cmds.ls(sl = True)
+    if selected:
+        selected = selected[0]
+    else:
+        print('Please select a rig character top group.')
+        return None
+
+    characterGroup = ''
+    if SERigObjectTypeHelper.isRigCharacterGroup(selected):
+        characterGroup = selected
+    else:
+        print('Please select a rig character top group.')
+        return None       
+
+    # Get deformation joints from deformation group based on specific rules passed in to the function.
+    deformationGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
+    if deformationGrp:
+        slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
+        deformationJoints = []
+
+        for jnt in slaveJoints:
+            res = isBodyDeformationJoint(jnt, includeBreast, includeNeckMuscle, includeLimeEnd, includeChestEnd)
+            if  res == True:
+                deformationJoints.append(jnt)
+
+        return deformationJoints
+
+    else:
+        print('Deformation group not found.')
+        return None

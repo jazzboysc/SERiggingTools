@@ -195,12 +195,20 @@ class RigBipedCharacterDeform():
             curFingerMasterJnts = SEJointHelper.listHierarchy(fingerTopJoint)
             curFingerSlaveJnts = self.createSlaveJointsHelper(curFingerMasterJnts)
             cmds.parent(curFingerSlaveJnts[0][0], leftLowerArmSlaveJnts[-1][0])
+            
+            # Tagging fingger end joints.
+            cmds.setAttr(curFingerSlaveJnts[-1][0] + '.type', 18)
+            cmds.setAttr(curFingerSlaveJnts[-1][0] + '.otherType', SERigNaming.sJointTagSlaveFingerEnd, type = 'string')
 
         rightHandSlaveJnts = []
         for fingerTopJoint in rightHandJnts:
             curFingerMasterJnts = SEJointHelper.listHierarchy(fingerTopJoint)
             curFingerSlaveJnts = self.createSlaveJointsHelper(curFingerMasterJnts)
             cmds.parent(curFingerSlaveJnts[0][0], rightLowerArmSlaveJnts[-1][0])
+
+            # Tagging fingger end joints.
+            cmds.setAttr(curFingerSlaveJnts[-1][0] + '.type', 18)
+            cmds.setAttr(curFingerSlaveJnts[-1][0] + '.otherType', SERigNaming.sJointTagSlaveFingerEnd, type = 'string')
 
         # Create leg slaves.
         leftUpperLegSlaveJnts = self.createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0])
@@ -221,6 +229,10 @@ class RigBipedCharacterDeform():
         # Create root slave and parent the spine slave to the root slave.
         rootSlaveJnt = self.createSlaveJointsHelperNoHierarchy([rootJnt])
 
+        # Tagging root slave joint.
+        cmds.setAttr(rootSlaveJnt[0][0] + '.type', 18)
+        cmds.setAttr(rootSlaveJnt[0][0] + '.otherType', SERigNaming.sJointTagSlaveRoot, type = 'string')
+
         cmds.parent(spineSlaveJnts[0][0], rootSlaveJnt[0][0])
 
         # Create neck slaves and parent them to the spine slave.
@@ -228,11 +240,19 @@ class RigBipedCharacterDeform():
 
         cmds.parent(neckSlaveJnts[0][0], spineSlaveJnts[-1][0])
 
-        # Create facial slaves and parent them to the neck slave.
+        # Tagging facial root joint.
+        cmds.setAttr(neckSlaveJnts[-1][0] + '.type', 18)
+        cmds.setAttr(neckSlaveJnts[-1][0] + '.otherType', SERigNaming.sJointTagFacialRoot, type = 'string')        
+
+        # Create facial base joints and parent them to the neck slave.
         facialSlaveJnts = self.createSlaveJointsHelperNoHierarchy(facialJnts)
 
         for facialSlaveJoint in facialSlaveJnts:
             cmds.parent(facialSlaveJoint[0], neckSlaveJnts[-1][0])
+
+            # Tagging facial base joints.
+            cmds.setAttr(facialSlaveJoint[0] + '.type', 18)
+            cmds.setAttr(facialSlaveJoint[0] + '.otherType', SERigNaming.sJointTagFacialBase, type = 'string')
 
         # Possibly create neck muscle slave joints.
         if createNeckMuscleSlaveJoints:
@@ -245,6 +265,11 @@ class RigBipedCharacterDeform():
             leftNeckMuscleSlaveJnts = self.createSlaveJointsHelper(leftNeckMuscleMasterJnts, leftNeckMuscleSlaveJntsIgnoreOCs, True)
             cmds.parent(leftNeckMuscleSlaveJnts[0][0], neckSlaveJnts[0][0])
 
+            # Tagging left neck muscle slave joints.
+            for leftNeckMuscleSlaveJnt in leftNeckMuscleSlaveJnts:
+                cmds.setAttr(leftNeckMuscleSlaveJnt[0] + '.type', 18)
+                cmds.setAttr(leftNeckMuscleSlaveJnt[0] + '.otherType', SERigNaming.sJointTagSlaveNeckMuscle, type = 'string')
+
             rightNeckMuscleMasterJntsCount = len(rightNeckMuscleMasterJnts)
             rightNeckMuscleSlaveJntsIgnoreOCs = []
             for i in range(rightNeckMuscleMasterJntsCount):
@@ -254,10 +279,26 @@ class RigBipedCharacterDeform():
             rightNeckMuscleSlaveJnts = self.createSlaveJointsHelper(rightNeckMuscleMasterJnts, rightNeckMuscleSlaveJntsIgnoreOCs, True)
             cmds.parent(rightNeckMuscleSlaveJnts[0][0], neckSlaveJnts[0][0])
 
+            # Tagging right neck muscle slave joints.
+            for rightNeckMuscleSlaveJnt in rightNeckMuscleSlaveJnts:
+                cmds.setAttr(rightNeckMuscleSlaveJnt[0] + '.type', 18)
+                cmds.setAttr(rightNeckMuscleSlaveJnt[0] + '.otherType', SERigNaming.sJointTagSlaveNeckMuscle, type = 'string')
+
         # Create upper chest slaves and parent them to the spine.
         upperChestSlaveJnts = self.createSlaveJointsHelperNoHierarchy(upperChestJnts)
         for upperChestSlaveJointInfo in upperChestSlaveJnts:
             cmds.parent(upperChestSlaveJointInfo[0], spineSlaveJnts[-1][0])
+
+        # Tagging slave chest end joint.
+        slaveChestEndJoint = SEJointHelper.getSlaveChestEndJoint()
+        cmds.setAttr(slaveChestEndJoint[0] + '.type', 18)
+        cmds.setAttr(slaveChestEndJoint[0] + '.otherType', SERigNaming.sJointTagSlaveChestEnd, type = 'string')
+
+        # Tagging slave breast joints.
+        slaveBreastJoints = SEJointHelper.getSlaveBreastJoints()
+        for slaveBreastJnt in slaveBreastJoints:
+            cmds.setAttr(slaveBreastJnt + '.type', 18)
+            cmds.setAttr(slaveBreastJnt + '.otherType', SERigNaming.sJointTagSlaveBreast, type = 'string')           
 
         # Parent arm slaves to upper chest slaves.
         cmds.parent(leftUpperArmSlaveJnts[0][0], upperChestSlaveJnts[0][0])
@@ -272,6 +313,12 @@ class RigBipedCharacterDeform():
 
         cmds.parent(leftFootSlaveJnts[0][0], leftLowerLegSlaveJnts[-1][0])
         cmds.parent(rightFootSlaveJnts[0][0], rightLowerLegSlaveJnts[-1][0])
+
+        # Tagging toe end joints.
+        cmds.setAttr(leftFootSlaveJnts[-1][0] + '.type', 18)
+        cmds.setAttr(leftFootSlaveJnts[-1][0] + '.otherType', SERigNaming.sJointTagSlaveToeEnd, type = 'string')
+        cmds.setAttr(rightFootSlaveJnts[-1][0] + '.type', 18)
+        cmds.setAttr(rightFootSlaveJnts[-1][0] + '.otherType', SERigNaming.sJointTagSlaveToeEnd, type = 'string')
 
         # Create slave joint scale constraints.
         ocList = cmds.listRelatives(rootSlaveJnt[0][0], ad = 1, type = 'orientConstraint')

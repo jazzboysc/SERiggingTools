@@ -158,13 +158,13 @@ class RigBipedCharacter():
         cmds.parent(rootJnt, baseRig.JointsGrp)
 
         # Prepare joints.
-        spineJnts = ['C_Pelvis', 'C_Spine_0', 'C_Spine_1', 'C_Spine_2', 'C_Spine_3', 'C_ChestBegin']
+        spineJnts = SEJointHelper.getBuilderSpineJoints()
 
-        upperChestJnts = ['L_Clav', 'R_Clav', 'C_ChestEnd', 'L_Breast', 'R_Breast']
+        upperChestJnts = SEJointHelper.getBuilderUpperChestJoints()
 
-        leftLegJnts = ['L_Hip', 'L_Knee', 'L_Ankle', 'L_Ball', 'L_Toe']
+        leftLegJnts = SEJointHelper.getBuilderLeftLegJoints()
 
-        rightLegJnts = ['R_Hip', 'R_Knee', 'R_Ankle', 'R_Ball', 'R_Toe']
+        rightLegJnts = SEJointHelper.getBuilderRightLegJoints()
 
         leftFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.buildFootHelperJointsMapForLeftSide(legJoints = leftLegJnts,
             footExtLocator = 'locator_L_Foot_Ext', footIntLocator = 'locator_L_Foot_Int', footBaseLocator = 'locator_L_Foot_Base',
@@ -172,15 +172,15 @@ class RigBipedCharacter():
 
         rightFootHelperJoints = SERigBipedLimbComponent.RigHumanLeg.mirrorFootHelperJointsMapForRightSide(leftFootHelperJoints)
 
-        leftArmJnts = ['L_Shoulder', 'L_Elbow', 'L_Wrist']
+        leftArmJnts = SEJointHelper.getBuilderLeftArmJoints()
 
-        rightArmJnts = ['R_Shoulder', 'R_Elbow', 'R_Wrist']
+        rightArmJnts = SEJointHelper.getBuilderRightArmJoints()
 
-        leftHandJnts = ['L_Thumb_0', 'L_Index_0', 'L_Middle_0', 'L_Ring_0', 'L_Pinky_0']
+        leftHandJnts = SEJointHelper.getBuilderLeftHandJoints()
 
-        rightHandJnts = ['R_Thumb_0', 'R_Index_0', 'R_Middle_0', 'R_Ring_0', 'R_Pinky_0']
+        rightHandJnts = SEJointHelper.getBuilderRightHandJoints()
 
-        neckJnts = ['C_Neck_0', 'C_Neck_1', 'C_Head', 'C_FacialRoot']
+        neckJnts = SEJointHelper.getBuilderNeckJoints()
 
         facialJnts = SEJointHelper.getFacialJoints()
 
@@ -223,10 +223,10 @@ class RigBipedCharacter():
 
         # Setup model deformation.
 
-        upperBodyUpperLimbJoints = ['L_Shoulder', 'R_Shoulder']
-        upperBodyLowerLimbJoints = ['L_Elbow', 'R_Elbow']
-        lowerBodyUpperLimbJoints = ['L_Hip', 'R_Hip']
-        lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
+        upperBodyUpperLimbJoints = SEJointHelper.getBuilderUpperBodyUpperLimbJoints()
+        upperBodyLowerLimbJoints = SEJointHelper.getBuilderUpperBodyLowerLimbJoints()
+        lowerBodyUpperLimbJoints = SEJointHelper.getBuilderLowerBodyUpperLimbJoints()
+        lowerBodyLowerLimbJoints = SEJointHelper.getBuilderLowerBodyLowerLimbJoints()
 
         if self.RigDeform:
 
