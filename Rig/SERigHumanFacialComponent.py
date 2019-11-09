@@ -301,6 +301,24 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.warning('Failed creating eyelid motion logic.')
 
 
+def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint):
+    if cmds.objExists(eyeBlockingSphere) and cmds.objExists(eyeEndIkJoint):
+        locatorEyeEnd = cmds.spaceLocator(n = 'locator_' + eyeEndIkJoint)[0]
+        cmds.delete(cmds.pointConstraint(eyeEndIkJoint, locatorEyeEnd, mo = 0))
+        cmds.parent(locatorEyeEnd, eyeEndIkJoint)
+
+        attrList = ['L', 'R', 'U', 'D']
+        for attr in attrList:
+            # hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0
+            cmds.addAttr(locatorEyeEnd, ln = attr, at = 'float', k = 1, dv = 0.0)
+            cmds.setAttr(locatorEyeEnd + '.' + attr, cb = 1)
+
+        locatorEyeEndShape = cmds.listRelatives(locatorEyeEnd, s = 1)[0]
+        cpos = cmds.createNode('closestPointOnSurface')
+        cmds.connectAttr(locatorEyeEndShape + '.worldPosition[0]', cpos + '.inPosition', f = 1)
+        cmds.connectAttr(eyeBlockingSphere + '.worldSpace[0]', cpos + '.inputSurface', f = 1)
+
+
 #-----------------------------------------------------------------------------
 # Rig Human Facial System Class
 # Sun Che
@@ -755,9 +773,23 @@ class RigHumanFacialSystem(RigComponent):
         leftEyeEndIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'L_EyeEnd')
         cmds.delete(cmds.parentConstraint(leftEyeIkJoint, leftEyeEndIkJoint, mo = 0))
         cmds.parent(leftEyeEndIkJoint, leftEyeIkJoint)
-        cmds.setAttr(leftEyeEndIkJoint + '.translateX', 2.0)
+
+        # Place left IK eye end joint via blocking sphere radius.
+        leftEyeBSRadius = 2.0
+        if cmds.objExists(SERigNaming.sLeftEyeBlockingSphere):
+            leftEyeBSRadius = SEJointHelper.getEyeBlockingSphereRadius(SERigNaming.sLeftEyeBlockingSphere)
+            cmds.parent(SERigNaming.sLeftEyeBlockingSphere, self.RigPartsGrp)
+            cmds.parentConstraint(facialAttachPoint, SERigNaming.sLeftEyeBlockingSphere, mo = 1)
+        else:
+            cmds.warning('Left eye blocking sphere not found.')
+
+        cmds.setAttr(leftEyeEndIkJoint + '.translateX', leftEyeBSRadius)
         cmds.makeIdentity(leftEyeEndIkJoint, apply = True)
         cmds.setAttr(leftEyeEndIkJoint + '.radius', 0.5)
+
+        # Create left eyeball rotation tracking logic.
+        if cmds.objExists(SERigNaming.sLeftEyeBlockingSphere):
+            createEyeballRotationTrackingLogic(SERigNaming.sLeftEyeBlockingSphere, leftEyeEndIkJoint)
 
         cmds.select(cl = 1)
         rightEyeIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'R_Eye')
@@ -774,9 +806,23 @@ class RigHumanFacialSystem(RigComponent):
         rightEyeEndIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'R_EyeEnd')
         cmds.delete(cmds.parentConstraint(rightEyeIkJoint, rightEyeEndIkJoint, mo = 0))
         cmds.parent(rightEyeEndIkJoint, rightEyeIkJoint)
-        cmds.setAttr(rightEyeEndIkJoint + '.translateX', -2.0)
+
+        # Place right IK eye end joint via blocking sphere radius.
+        rightEyeBSRadius = 2.0
+        if cmds.objExists(SERigNaming.sRightEyeBlockingSphere):
+            rightEyeBSRadius = SEJointHelper.getEyeBlockingSphereRadius(SERigNaming.sRightEyeBlockingSphere)
+            cmds.parent(SERigNaming.sRightEyeBlockingSphere, self.RigPartsGrp)
+            cmds.parentConstraint(facialAttachPoint, SERigNaming.sRightEyeBlockingSphere, mo = 1)
+        else:
+            cmds.warning('Right eye blocking sphere not found.')
+
+        cmds.setAttr(rightEyeEndIkJoint + '.translateX', -rightEyeBSRadius)
         cmds.makeIdentity(rightEyeEndIkJoint, apply = True)
         cmds.setAttr(rightEyeEndIkJoint + '.radius', 0.5)
+
+        # Create right eyeball rotation tracking logic.
+        if cmds.objExists(SERigNaming.sRightEyeBlockingSphere):
+            createEyeballRotationTrackingLogic(SERigNaming.sRightEyeBlockingSphere, rightEyeEndIkJoint)        
 
         # Create eye base locators.
         locatorLeftEyeBase = cmds.spaceLocator(n = 'locator_L_EyeBase')[0]

@@ -172,3 +172,5 @@ sJointTagSlaveFacial      = 'SlaveFacial'
 sJointTagFacialBase       = 'FacialBase'
 sJointTagFacialRoot       = 'FacialRoot'
 
+sLeftEyeBlockingSphere   = 'L_Eye_BS'
+sRightEyeBlockingSphere  = 'R_Eye_BS'

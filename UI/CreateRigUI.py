@@ -392,7 +392,7 @@ class mainRigWindow(QtWidgets.QDialog):
         self.neckMuscleSplineJointCountLine = QtWidgets.QLineEdit()
         self.neckMuscleSplineJointCountLine.setValidator(QtGui.QIntValidator(3, 7))
         neckOptionLayout.addWidget(self.neckMuscleSplineJointCountLine)
-        self.neckMuscleSplineJointCountLine.setText('5')
+        self.neckMuscleSplineJointCountLine.setText('3')
         neckOptionLayout.addWidget(QtWidgets.QLabel("(3 - 7)"))
         neckOptionLayout.addSpacing(270)
         headConfigTabPageLayout.addLayout(neckOptionLayout)

@@ -401,3 +401,9 @@ def getBodyDeformationJoints(includeBreast = False, includeNeckMuscle = False, i
     else:
         print('Deformation group not found.')
         return None
+
+
+def getEyeBlockingSphereRadius(blockingSphere):
+    shapeBB = cmds.exactWorldBoundingBox(blockingSphere)
+    shapeSizeX = (shapeBB[3] - shapeBB[0]) * 0.5
+    return shapeSizeX
