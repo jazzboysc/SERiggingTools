@@ -30,6 +30,9 @@ class RigBase():
         self.DeformationGrp = cmds.group(n = SERigNaming.sDeformationGroup, em = 1, p = self.RigGrp)
         self.Global01Control = None
         self.Global02Control = None
+        self.JointsGrp = None
+        self.RigCompsGrp = None
+        self.RigPartsGrp = None
 
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.DeformationGrp, SERigNaming.sDeformationGroupAttr, SERigNaming.sDeformationGroupOwnerAttr)
 
@@ -73,6 +76,8 @@ class RigBase():
         # Create more groups.
         self.JointsGrp = cmds.group(n = SERigNaming.sJointsGroup, em = 1, p = global2Ctrl.ControlObject)
         self.RigCompsGrp = cmds.group(n = SERigNaming.sRigCompsGroup, em = 1, p = global2Ctrl.ControlObject)
+        
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.JointsGrp, SERigNaming.sMasterJointsGroupAttr, SERigNaming.sMasterJointsGroupOwnerAttr)
 
         self.RigPartsGrp = cmds.group(n = SERigNaming.sRigPartsGroup, em = 1, p = self.RigGrp)
         cmds.setAttr(self.RigPartsGrp + '.it', 0, l = 1) # Not inheriting transform

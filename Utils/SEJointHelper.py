@@ -369,21 +369,36 @@ def isBodyDeformationJoint(jnt, includeBreast = False, includeNeckMuscle = False
 
     return res
 
-def getBodyDeformationJoints(includeBreast = False, includeNeckMuscle = False, includeLimeEnd = False, includeChestEnd = False):
+def isFacialBaseJoint(jnt):
+    jntTag = cmds.getAttr(jnt + '.otherType')
+    if jntTag == SERigNaming.sJointTagFacialBase:
+        return True
+    else:
+        return False
+
+
+def getSelectedRigCharacterGroup():
     # Get selected rig character.
     selected = cmds.ls(sl = True)
     if selected:
         selected = selected[0]
     else:
-        print('Please select a rig character top group.')
+        cmds.warning('Please select a rig character top group.')
         return None
 
     characterGroup = ''
     if SERigObjectTypeHelper.isRigCharacterGroup(selected):
         characterGroup = selected
     else:
-        print('Please select a rig character top group.')
-        return None       
+        cmds.warning('Please select a rig character top group.')
+        return None
+
+    return characterGroup
+
+def getBodyDeformationJoints(includeBreast = False, includeNeckMuscle = False, includeLimeEnd = False, includeChestEnd = False):
+    characterGroup = getSelectedRigCharacterGroup()
+    if characterGroup == None:
+        return None
 
     # Get deformation joints from deformation group based on specific rules passed in to the function.
     deformationGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
@@ -402,6 +417,26 @@ def getBodyDeformationJoints(includeBreast = False, includeNeckMuscle = False, i
         print('Deformation group not found.')
         return None
 
+def getFacialBaseJoints():
+    characterGroup = getSelectedRigCharacterGroup()
+    if characterGroup == None:
+        return None
+
+    masterJointsGrp = SERigObjectTypeHelper.getCharacterMasterJointsGroup(characterGroup)
+    if masterJointsGrp:
+        masterJoints = cmds.listRelatives(masterJointsGrp, type = 'joint', ad = True)
+        facialBaseJoints = []
+
+        for jnt in masterJoints:
+            res = isFacialBaseJoint(jnt)
+            if  res == True:
+                facialBaseJoints.append(jnt)
+
+        return facialBaseJoints
+
+    else:
+        print('Master joints group not found.')
+        return None        
 
 def getEyeBlockingSphereRadius(blockingSphere):
     shapeBB = cmds.exactWorldBoundingBox(blockingSphere)

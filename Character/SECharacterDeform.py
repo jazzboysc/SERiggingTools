@@ -250,9 +250,9 @@ class RigBipedCharacterDeform():
         for facialSlaveJoint in facialSlaveJnts:
             cmds.parent(facialSlaveJoint[0], neckSlaveJnts[-1][0])
 
-            # Tagging facial base joints.
+            # Tagging facial slave joints.
             cmds.setAttr(facialSlaveJoint[0] + '.type', 18)
-            cmds.setAttr(facialSlaveJoint[0] + '.otherType', SERigNaming.sJointTagFacialBase, type = 'string')
+            cmds.setAttr(facialSlaveJoint[0] + '.otherType', SERigNaming.sJointTagFacialSlave, type = 'string')
 
         # Possibly create neck muscle slave joints.
         if createNeckMuscleSlaveJoints:

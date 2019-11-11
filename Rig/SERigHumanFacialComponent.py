@@ -552,6 +552,10 @@ class RigHumanFacialSystem(RigComponent):
         rightEyeJoint = SEJointHelper.getFacialRightEyeJoint(facialJoints)
         rightEyelidUpperJoint = SEJointHelper.getFacialRightEyelidUpperJoint(facialJoints)
         rightEyelidLowerJoint = SEJointHelper.getFacialRightEyelidLowerJoint(facialJoints)
+        leftEyelidUpperEndJoint = SEJointHelper.getFacialLeftEyelidUpperEndJoint(facialJoints)
+        leftEyelidLowerEndJoint = SEJointHelper.getFacialLeftEyelidLowerEndJoint(facialJoints)
+        rightEyelidUpperEndJoint = SEJointHelper.getFacialRightEyelidUpperEndJoint(facialJoints)
+        rightEyelidLowerEndJoint = SEJointHelper.getFacialRightEyelidLowerEndJoint(facialJoints)
 
         checkList = [jawJoint, jawOffsetJoint, lowerLipBeginJoint, lowerLipEndJoint, upperLipBeginJoint, upperLipEndJoint,
                      leftEyeJoint, leftEyelidUpperJoint, leftEyelidLowerJoint, rightEyeJoint, rightEyelidUpperJoint, rightEyelidLowerJoint]
@@ -852,6 +856,7 @@ class RigHumanFacialSystem(RigComponent):
             leftEyeBSRadius = SEJointHelper.getEyeBlockingSphereRadius(SERigNaming.sLeftEyeBlockingSphere)
             cmds.parent(SERigNaming.sLeftEyeBlockingSphere, self.RigPartsGrp)
             cmds.parentConstraint(facialAttachPoint, SERigNaming.sLeftEyeBlockingSphere, mo = 1)
+            cmds.hide(SERigNaming.sLeftEyeBlockingSphere)
         else:
             cmds.warning('Left eye blocking sphere not found.')
 
@@ -885,6 +890,7 @@ class RigHumanFacialSystem(RigComponent):
             rightEyeBSRadius = SEJointHelper.getEyeBlockingSphereRadius(SERigNaming.sRightEyeBlockingSphere)
             cmds.parent(SERigNaming.sRightEyeBlockingSphere, self.RigPartsGrp)
             cmds.parentConstraint(facialAttachPoint, SERigNaming.sRightEyeBlockingSphere, mo = 1)
+            cmds.hide(SERigNaming.sRightEyeBlockingSphere)
         else:
             cmds.warning('Right eye blocking sphere not found.')
 
@@ -1011,6 +1017,15 @@ class RigHumanFacialSystem(RigComponent):
         # Create eyelid motion logic.
         createEyelidMotionLogic(self.DataBuffer, leftEyeJoint, rightEyeJoint, leftEyelidUpperJoint, rightEyelidUpperJoint, 
                                 leftEyelidLowerJoint, rightEyelidLowerJoint)
+
+        # Tagging facial base joints.
+        facialBaseJnts = [jawOffsetJoint, lowerLipBlendJoint, upperLipBlendJoint, leftEyelidUpperEndJoint, leftEyelidLowerEndJoint, rightEyelidUpperEndJoint, rightEyelidLowerEndJoint]
+        facialBaseNeckJnts = SEJointHelper.getBuilderNeckJoints()
+        facialBaseNeckJnts = facialBaseNeckJnts[0:-1]  # Exclude facial root joint
+        facialBaseJnts = facialBaseJnts + facialBaseNeckJnts
+        for facialBaseJnt in facialBaseJnts:
+            cmds.setAttr(facialBaseJnt + '.type', 18)
+            cmds.setAttr(facialBaseJnt + '.otherType', SERigNaming.sJointTagFacialBase, type = 'string')
 
         # Create controls visibility expression.
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl

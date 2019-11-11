@@ -366,6 +366,18 @@ def getCharacterDeformationGroup(characterGroup):
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
 
+def getCharacterMasterJointsGroup(characterGroup):
+    if cmds.objExists(characterGroup):
+        try:
+            res = cmds.listConnections(characterGroup + '.' + SERigNaming.sMasterJointsGroupAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find character group: ' + characterGroup + ' master joints group')
+            return None
+    else:
+        cmds.warning('Cannot find character group: ' + characterGroup)
+        return None
+
 def getCharacterModelGroup(characterGroup):
     if cmds.objExists(characterGroup):
         try:
