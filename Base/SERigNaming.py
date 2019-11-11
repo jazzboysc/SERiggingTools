@@ -174,3 +174,12 @@ sJointTagFacialRoot       = 'FacialRoot'
 
 sLeftEyeBlockingSphere   = 'L_Eye_BS'
 sRightEyeBlockingSphere  = 'R_Eye_BS'
+
+sLeftEyeTurnLeftAnimCurve    = 'AC_L_Eye_TurnLeft'
+sLeftEyeTurnRightAnimCurve   = 'AC_L_Eye_TurnRight'
+sLeftEyeTurnUpAnimCurve      = 'AC_L_Eye_TurnUp'
+sLeftEyeTurnDownAnimCurve    = 'AC_L_Eye_TurnDown'
+sRightEyeTurnLeftAnimCurve   = 'AC_R_Eye_TurnLeft'
+sRightEyeTurnRightAnimCurve  = 'AC_R_Eye_TurnRight'
+sRightEyeTurnUpAnimCurve     = 'AC_R_Eye_TurnUp'
+sRightEyeTurnDownAnimCurve   = 'AC_R_Eye_TurnDown'

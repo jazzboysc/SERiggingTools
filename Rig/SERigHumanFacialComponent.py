@@ -301,7 +301,7 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.warning('Failed creating eyelid motion logic.')
 
 
-def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint):
+def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint, rigSide):
     if cmds.objExists(eyeBlockingSphere) and cmds.objExists(eyeEndIkJoint):
         locatorEyeEnd = cmds.spaceLocator(n = 'locator_' + eyeEndIkJoint)[0]
         cmds.delete(cmds.pointConstraint(eyeEndIkJoint, locatorEyeEnd, mo = 0))
@@ -309,14 +309,86 @@ def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint):
 
         attrList = ['L', 'R', 'U', 'D']
         for attr in attrList:
-            # hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0
-            cmds.addAttr(locatorEyeEnd, ln = attr, at = 'float', k = 1, dv = 0.0)
+            cmds.addAttr(locatorEyeEnd, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
             cmds.setAttr(locatorEyeEnd + '.' + attr, cb = 1)
 
         locatorEyeEndShape = cmds.listRelatives(locatorEyeEnd, s = 1)[0]
+        eyeBlockingSphereShape = cmds.listRelatives(eyeBlockingSphere, s = 1)[0]
         cpos = cmds.createNode('closestPointOnSurface')
         cmds.connectAttr(locatorEyeEndShape + '.worldPosition[0]', cpos + '.inPosition', f = 1)
-        cmds.connectAttr(eyeBlockingSphere + '.worldSpace[0]', cpos + '.inputSurface', f = 1)
+        cmds.connectAttr(eyeBlockingSphereShape + '.worldSpace[0]', cpos + '.inputSurface', f = 1)
+
+        # Get neutral uv position.
+        neutralU = cmds.getAttr(cpos + '.parameterU')
+        neutralV = cmds.getAttr(cpos + '.parameterV')
+
+        minV = neutralV - 0.25
+        maxV = neutralV + 0.25
+        minU = neutralU - 0.5
+        maxU = neutralU + 0.5
+
+        # Create uv remapping animCurve nodes.
+
+        # Turn left.
+        eyeTurnLeftAnimCurveName = ''
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            eyeTurnLeftAnimCurveName = SERigNaming.sLeftEyeTurnLeftAnimCurve
+        else:
+            eyeTurnLeftAnimCurveName = SERigNaming.sRightEyeTurnLeftAnimCurve
+
+        eyeTurnLeftAnimCurve = cmds.createNode('animCurveUL', n = eyeTurnLeftAnimCurveName)
+        cmds.setKeyframe(eyeTurnLeftAnimCurve, float = neutralV, value = 0.0, itt = 'linear', ott = 'linear')
+        cmds.setKeyframe(eyeTurnLeftAnimCurve, float = minV, value = 1.0, itt = 'linear', ott = 'linear')
+        cmds.keyTangent(eyeTurnLeftAnimCurve, weightedTangents = False)
+
+        cmds.connectAttr(cpos + '.parameterV', eyeTurnLeftAnimCurve + '.input', f = 1)
+        cmds.connectAttr(eyeTurnLeftAnimCurve + '.output', locatorEyeEnd + '.L', f = 1)
+
+        # Turn right.
+        eyeTurnRightAnimCurveName = ''
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            eyeTurnRightAnimCurveName = SERigNaming.sLeftEyeTurnRightAnimCurve
+        else:
+            eyeTurnRightAnimCurveName = SERigNaming.sRightEyeTurnRightAnimCurve
+
+        eyeTurnRightAnimCurve = cmds.createNode('animCurveUL', n = eyeTurnRightAnimCurveName)
+        cmds.setKeyframe(eyeTurnRightAnimCurve, float = neutralV, value = 0.0, itt = 'linear', ott = 'linear')
+        cmds.setKeyframe(eyeTurnRightAnimCurve, float = maxV, value = 1.0, itt = 'linear', ott = 'linear')
+        cmds.keyTangent(eyeTurnRightAnimCurve, weightedTangents = False)
+
+        cmds.connectAttr(cpos + '.parameterV', eyeTurnRightAnimCurve + '.input', f = 1)
+        cmds.connectAttr(eyeTurnRightAnimCurve + '.output', locatorEyeEnd + '.R', f = 1)
+
+        # Turn up.
+        eyeTurnUpAnimCurveName = ''
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            eyeTurnUpAnimCurveName = SERigNaming.sLeftEyeTurnUpAnimCurve
+        else:
+            eyeTurnUpAnimCurveName = SERigNaming.sRightEyeTurnUpAnimCurve
+
+        eyeTurnUpAnimCurve = cmds.createNode('animCurveUL', n = eyeTurnUpAnimCurveName)
+        cmds.setKeyframe(eyeTurnUpAnimCurve, float = neutralU, value = 0.0, itt = 'linear', ott = 'linear')
+        cmds.setKeyframe(eyeTurnUpAnimCurve, float = maxU, value = 1.0, itt = 'linear', ott = 'linear')
+        cmds.keyTangent(eyeTurnUpAnimCurve, weightedTangents = False)
+
+        cmds.connectAttr(cpos + '.parameterU', eyeTurnUpAnimCurve + '.input', f = 1)
+        cmds.connectAttr(eyeTurnUpAnimCurve + '.output', locatorEyeEnd + '.U', f = 1)
+
+        # Turn down.
+        eyeTurnDownAnimCurveName = ''
+        if rigSide == SERigEnum.eRigSide.RS_Left:
+            eyeTurnDownAnimCurveName = SERigNaming.sLeftEyeTurnDownAnimCurve
+        else:
+            eyeTurnDownAnimCurveName = SERigNaming.sRightEyeTurnDownAnimCurve
+
+        eyeTurnDownAnimCurve = cmds.createNode('animCurveUL', n = eyeTurnDownAnimCurveName)
+        cmds.setKeyframe(eyeTurnDownAnimCurve, float = neutralU, value = 0.0, itt = 'linear', ott = 'linear')
+        cmds.setKeyframe(eyeTurnDownAnimCurve, float = minU, value = 1.0, itt = 'linear', ott = 'linear')
+        cmds.keyTangent(eyeTurnDownAnimCurve, weightedTangents = False)
+
+        cmds.connectAttr(cpos + '.parameterU', eyeTurnDownAnimCurve + '.input', f = 1)
+        cmds.connectAttr(eyeTurnDownAnimCurve + '.output', locatorEyeEnd + '.D', f = 1)
+
 
 
 #-----------------------------------------------------------------------------
@@ -789,7 +861,7 @@ class RigHumanFacialSystem(RigComponent):
 
         # Create left eyeball rotation tracking logic.
         if cmds.objExists(SERigNaming.sLeftEyeBlockingSphere):
-            createEyeballRotationTrackingLogic(SERigNaming.sLeftEyeBlockingSphere, leftEyeEndIkJoint)
+            createEyeballRotationTrackingLogic(SERigNaming.sLeftEyeBlockingSphere, leftEyeEndIkJoint, SERigEnum.eRigSide.RS_Left)
 
         cmds.select(cl = 1)
         rightEyeIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'R_Eye')
@@ -822,7 +894,7 @@ class RigHumanFacialSystem(RigComponent):
 
         # Create right eyeball rotation tracking logic.
         if cmds.objExists(SERigNaming.sRightEyeBlockingSphere):
-            createEyeballRotationTrackingLogic(SERigNaming.sRightEyeBlockingSphere, rightEyeEndIkJoint)        
+            createEyeballRotationTrackingLogic(SERigNaming.sRightEyeBlockingSphere, rightEyeEndIkJoint, SERigEnum.eRigSide.RS_Right)
 
         # Create eye base locators.
         locatorLeftEyeBase = cmds.spaceLocator(n = 'locator_L_EyeBase')[0]
