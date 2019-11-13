@@ -390,6 +390,58 @@ def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint, rigSide
         cmds.connectAttr(eyeTurnDownAnimCurve + '.output', locatorEyeEnd + '.D', f = 1)
 
 
+def createFACS_DataBuffer(facialComponentGroup):
+    prefix = SERigObjectTypeHelper.getCharacterComponentPrefix(facialComponentGroup)
+    rigPartsGroup = SERigObjectTypeHelper.getCharacterComponentRigPartsGroup(facialComponentGroup)
+
+    if prefix == None or rigPartsGroup == None:
+        cmds.error('Failed creating FACS data buffer for: ' + facialComponentGroup)
+        return None
+
+    bufferName = prefix + '_FACS_DataBufferGrp'
+    if cmds.objExists(bufferName):
+        # TODO: 
+        # Delete the existing buffer?
+        cmds.warning('FACS data buffer already exists.')
+        return bufferName
+
+    # Create a new data buffer.
+    dataBufferGroup = cmds.group(n = bufferName, em = 1, p = rigPartsGroup)
+
+    singleAttributeLockList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'v']
+    for attr in singleAttributeLockList:
+        cmds.setAttr(dataBufferGroup + '.' + attr, l = 1, k = 0, cb = 0)
+
+    auAttrList = [SERigNaming.sAU_01_L_Attr,
+                    SERigNaming.sAU_01_R_Attr,
+                    SERigNaming.sAU_02_L_Attr,
+                    SERigNaming.sAU_02_R_Attr,
+                    SERigNaming.sAU_05_L_Attr,
+                    SERigNaming.sAU_05_R_Attr,
+                    SERigNaming.sAU_06_L_Attr,
+                    SERigNaming.sAU_06_R_Attr,
+                    SERigNaming.sAU_07_L_Attr,
+                    SERigNaming.sAU_07_R_Attr,
+                    SERigNaming.sAU_Blink_L_Attr,
+                    SERigNaming.sAU_Blink_R_Attr,
+                    SERigNaming.sAU_LipClose_Attr,
+                    SERigNaming.sAU_Eye_L_LookLeft_Attr,
+                    SERigNaming.sAU_Eye_L_LookRight_Attr,
+                    SERigNaming.sAU_Eye_L_LookUp_Attr,
+                    SERigNaming.sAU_Eye_L_LookDown_Attr,
+                    SERigNaming.sAU_Eye_R_LookLeft_Attr,
+                    SERigNaming.sAU_Eye_R_LookRight_Attr,
+                    SERigNaming.sAU_Eye_R_LookUp_Attr,
+                    SERigNaming.sAU_Eye_R_LookDown_Attr]
+
+    for attr in auAttrList:
+        cmds.addAttr(dataBufferGroup, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.setAttr(dataBufferGroup + '.' + attr, cb = 1)
+
+    SERigObjectTypeHelper.linkRigObjects(facialComponentGroup, dataBufferGroup, SERigNaming.sFACS_DataBufferAttr)
+
+    return dataBufferGroup
+
 
 #-----------------------------------------------------------------------------
 # Rig Human Facial System Class
@@ -486,42 +538,6 @@ class RigHumanFacialSystem(RigComponent):
             cmds.parentConstraint(jawEndJoint, ikChinJoint01, mo = 1)
             cmds.parent(chinBulgeIK, throatIk_OffsetGrp)
 
-
-    def _createDataBuffer(self):
-        dataBufferGroup = cmds.group(n = self.Prefix + '_DataBufferGrp', em = 1, p = self.RigPartsGrp)
-        self.DataBuffer = dataBufferGroup
-
-        singleAttributeLockList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'v']
-        for attr in singleAttributeLockList:
-            cmds.setAttr(self.DataBuffer + '.' + attr, l = 1, k = 0, cb = 0)
-
-        auAttrList = [SERigNaming.sAU_01_L_Attr,
-                      SERigNaming.sAU_01_R_Attr,
-                      SERigNaming.sAU_02_L_Attr,
-                      SERigNaming.sAU_02_R_Attr,
-                      SERigNaming.sAU_05_L_Attr,
-                      SERigNaming.sAU_05_R_Attr,
-                      SERigNaming.sAU_06_L_Attr,
-                      SERigNaming.sAU_06_R_Attr,
-                      SERigNaming.sAU_07_L_Attr,
-                      SERigNaming.sAU_07_R_Attr,
-                      SERigNaming.sAU_Blink_L_Attr,
-                      SERigNaming.sAU_Blink_R_Attr,
-                      SERigNaming.sAU_LipClose_Attr,
-                      SERigNaming.sAU_Eye_L_LookLeft_Attr,
-                      SERigNaming.sAU_Eye_L_LookRight_Attr,
-                      SERigNaming.sAU_Eye_L_LookUp_Attr,
-                      SERigNaming.sAU_Eye_L_LookDown_Attr,
-                      SERigNaming.sAU_Eye_R_LookLeft_Attr,
-                      SERigNaming.sAU_Eye_R_LookRight_Attr,
-                      SERigNaming.sAU_Eye_R_LookUp_Attr,
-                      SERigNaming.sAU_Eye_R_LookDown_Attr]
-
-        for attr in auAttrList:
-            cmds.addAttr(dataBufferGroup, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
-            cmds.setAttr(dataBufferGroup + '.' + attr, cb = 1)
-            
-
     def build(
             self,
             facialJoints = [],
@@ -585,7 +601,7 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setAttr(jawOffsetJoint + '.' + attr, l = True)
 
         # Create data buffer group.
-        self._createDataBuffer()
+        self.DataBuffer = createFACS_DataBuffer(self.TopGrp)
 
         # Create IK joints group.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)

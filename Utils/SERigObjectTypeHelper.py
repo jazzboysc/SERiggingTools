@@ -413,6 +413,19 @@ def getCharacterComponentRigPartsGroup(characterComponentGroup):
     else:
         cmds.warning('Cannot find character component: ' + characterComponentGroup)
         return None
+
+def getCharacterComponentPrefix(characterComponentGroup):
+    if cmds.objExists(characterComponentGroup):
+        try:
+            res = cmds.getAttr(characterComponentGroup + '.' + SERigNaming.sRigComponentPrefix)
+            return res
+        except:
+            cmds.warning('Cannot find character component prefix : ' + characterComponentGroup)
+            return None                 
+    else:
+        cmds.warning('Cannot find character component: ' + characterComponentGroup)
+        return None
+
     
 def isRigCharacterGroup(inputObject):
     if cmds.objExists(inputObject):
