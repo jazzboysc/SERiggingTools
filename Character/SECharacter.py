@@ -351,7 +351,7 @@ class RigBipedCharacter():
                     surroundingMeshes = surroundingMeshes
                     )
         self.Spine = spine
-        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Spine.TopGrp, 'SpineComponent', 'ComponentOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Spine.TopGrp, SERigNaming.sSpineComponentAttr, 'ComponentOwner')
 
         # Left Leg.
         leftLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'L_Leg', baseRig = self.BaseRig,
@@ -370,7 +370,7 @@ class RigBipedCharacter():
                 surroundingMeshes = surroundingMeshes
                 )
         self.LeftLeg = leftLeg
-        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftLeg.TopGrp, 'LeftLegComponent', 'ComponentOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftLeg.TopGrp, SERigNaming.sLeftLegComponentAttr, 'ComponentOwner')
 
         # Right Leg.
         rightLeg = SERigBipedLimbComponent.RigHumanLeg(prefix = 'R_Leg', baseRig = self.BaseRig,
@@ -389,7 +389,7 @@ class RigBipedCharacter():
                 surroundingMeshes = surroundingMeshes
                 )
         self.RightLeg = rightLeg
-        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightLeg.TopGrp, 'RightLegComponent', 'ComponentOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightLeg.TopGrp, SERigNaming.sRightLegComponentAttr, 'ComponentOwner')
 
         # Left arm.
         leftArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'L_Arm', baseRig = self.BaseRig,
@@ -408,7 +408,7 @@ class RigBipedCharacter():
                 surroundingMeshes = surroundingMeshes
                 )
         self.LeftArm = leftArm
-        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftArm.TopGrp, 'LeftArmComponent', 'ComponentOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftArm.TopGrp, SERigNaming.sLeftArmComponentAttr, 'ComponentOwner')
 
         # Right arm.
         rightArm = SERigBipedLimbComponent.RigHumanArm(prefix = 'R_Arm', baseRig = self.BaseRig,
@@ -427,7 +427,7 @@ class RigBipedCharacter():
                 surroundingMeshes = surroundingMeshes
                 )
         self.RightArm = rightArm
-        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightArm.TopGrp, 'RightArmComponent', 'ComponentOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightArm.TopGrp, SERigNaming.sRightArmComponentAttr, 'ComponentOwner')
 
         # Left hand.
         leftHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'L_Hand', baseRig = self.BaseRig,
@@ -445,7 +445,7 @@ class RigBipedCharacter():
                 surroundingMeshes = surroundingMeshes
                 )
         self.LeftHand = leftHand
-        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftHand.TopGrp, 'LeftHandComponent', 'ComponentOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.LeftHand.TopGrp, SERigNaming.sLeftHandComponentAttr, 'ComponentOwner')
 
         # Right hand.
         rightHand = SERigBipedLimbComponent.RigHumanHand(prefix = 'R_Hand', baseRig = self.BaseRig,
@@ -463,7 +463,7 @@ class RigBipedCharacter():
                 surroundingMeshes = surroundingMeshes
                 )
         self.RightHand = rightHand
-        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightHand.TopGrp, 'RightHandComponent', 'ComponentOwner')
+        SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.RightHand.TopGrp, SERigNaming.sRightHandComponentAttr, 'ComponentOwner')
 
         # Neck.
         neck = None
@@ -501,7 +501,7 @@ class RigBipedCharacter():
 
         if neck:
             self.Neck = neck
-            SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Neck.TopGrp, 'NeckComponent', 'ComponentOwner')
+            SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.Neck.TopGrp, SERigNaming.sNeckComponentAttr, 'ComponentOwner')
 
         if createFacialSystem and not createSimpleFKNeck:
             facialSystem = SERigHumanFacialComponent.RigHumanFacialSystem(prefix = 'C_Face', baseRig = self.BaseRig, 
@@ -518,4 +518,4 @@ class RigBipedCharacter():
                 headAimIkControl = neck.HeadAimIKControl
                 )
             self.FacialSystem = facialSystem
-            SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.FacialSystem.TopGrp, 'FacialComponent', 'ComponentOwner')
+            SERigObjectTypeHelper.linkRigObjects(self.BaseRig.TopGrp, self.FacialSystem.TopGrp, SERigNaming.sFacialComponentAttr, 'ComponentOwner')

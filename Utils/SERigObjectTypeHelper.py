@@ -263,7 +263,7 @@ def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlInde
     '''
 
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
-    if control == None: return None;
+    if control == None: return None
     return getRigCtrlTransByCtrlName(control)
 
 def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
@@ -279,7 +279,7 @@ def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIn
 
     '''
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
-    if control == None: return;
+    if control == None: return
     if cmds.objExists(control):
         setOneRigTrans(control, translateX, translateY, translateZ)
     else:
@@ -298,7 +298,7 @@ def setRigControlRotation(characterName, rigSideStr, rigTypeStr, rigControlIndex
 
     '''
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)   
-    if control == None: return;
+    if control == None: return
     if cmds.objExists(control):
         setOneRigRot(control, rotateX, rotateY, rotateZ)
     else:
@@ -321,7 +321,7 @@ def setRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlInde
     setOneRigRotAndTrans(control,translateX, translateY, translateZ, rotateX, rotateY, rotateZ)  
 
 def setOneRigRotAndTrans(control, translateX, translateY, translateZ, rotateX, rotateY, rotateZ):
-    if control == None: return;
+    if control == None: return
     if cmds.objExists(control):
         setOneRigRot(control, rotateX, rotateY, rotateZ)
         setOneRigTrans(control, translateX, translateY, translateZ)
@@ -388,6 +388,30 @@ def getCharacterModelGroup(characterGroup):
             return None
     else:
         cmds.warning('Cannot find character group: ' + characterGroup)
+        return None
+
+def getCharacterFacialComponentGroup(characterGroup):
+    if cmds.objExists(characterGroup):
+        try:
+            res = cmds.listConnections(characterGroup + '.' + SERigNaming.sFacialComponentAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find character : ' + characterGroup + ' facial component')
+            return None
+    else:
+        cmds.warning('Cannot find character group: ' + characterGroup)
+        return None
+
+def getCharacterComponentRigPartsGroup(characterComponentGroup):
+    if cmds.objExists(characterComponentGroup):
+        try:
+            res = cmds.listConnections(characterComponentGroup + '.' + SERigNaming.sRigPartsGroupAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find character component: ' + characterComponentGroup + ' rig parts group')
+            return None                 
+    else:
+        cmds.warning('Cannot find character component: ' + characterComponentGroup)
         return None
     
 def isRigCharacterGroup(inputObject):

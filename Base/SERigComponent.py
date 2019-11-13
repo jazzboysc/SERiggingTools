@@ -41,6 +41,12 @@ class RigComponent():
         cmds.setAttr(self.TopGrp + '.' + 'RigType', SERigEnum.eRigTypeStringTable[self.RigType], type = 'string', l = 1)
         cmds.setAttr(self.TopGrp + '.' + 'Prefix', self.Prefix, type = 'string', l = 1)
 
+        # Link component's sub groups to the top group.
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ControlsGrp, SERigNaming.sControlsGroupAttr)
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.JointsGrp, SERigNaming.sJointsGroupAttr)
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.RigPartsGrp, SERigNaming.sRigPartsGroupAttr)
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.RigPartsFixedGrp, SERigNaming.sRigPartsFixedGroupAttr)
+
         # Parent this component to the rig base.
         if baseRig:
             cmds.parent(self.TopGrp, baseRig.RigCompsGrp)
