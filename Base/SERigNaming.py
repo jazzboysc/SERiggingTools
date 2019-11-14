@@ -70,27 +70,148 @@ sFootRotateZAttr          = 'footRotateZ'
 sFootToeStartRotAngleAttr = 'toeStartRotAngle'
 sFootToeRotAngleRangeAttr  = 'toeRotAngleRange'
 
-sAU_01_L_Attr = 'AU01L'
-sAU_01_R_Attr = 'AU01R'
-sAU_02_L_Attr = 'AU02L'
-sAU_02_R_Attr = 'AU02R'
-sAU_05_L_Attr = 'AU05L'
-sAU_05_R_Attr = 'AU05R'
-sAU_06_L_Attr = 'AU06L'
-sAU_06_R_Attr = 'AU06R'
-sAU_07_L_Attr = 'AU07L'
-sAU_07_R_Attr = 'AU07R'
-sAU_Blink_L_Attr  = 'BlinkL'
-sAU_Blink_R_Attr  = 'BlinkR'
-sAU_LipClose_Attr = 'LipClose'
-sAU_Eye_L_LookLeft_Attr  = 'Eye_L_LookLeft'
-sAU_Eye_L_LookRight_Attr = 'Eye_L_LookRight'
-sAU_Eye_L_LookUp_Attr    = 'Eye_L_LookUp'
-sAU_Eye_L_LookDown_Attr  = 'Eye_L_LookDown'
-sAU_Eye_R_LookLeft_Attr  = 'Eye_R_LookLeft'
-sAU_Eye_R_LookRight_Attr = 'Eye_R_LookRight'
-sAU_Eye_R_LookUp_Attr    = 'Eye_R_LookUp'
-sAU_Eye_R_LookDown_Attr  = 'Eye_R_LookDown'
+sAU_01_L_Attr        = 'AU01L'
+sAU_01_R_Attr        = 'AU01R'
+sAU_02_L_Attr        = 'AU02L'
+sAU_02_R_Attr        = 'AU02R'
+sAU_04_L_Attr        = 'AU04L'
+sAU_04_R_Attr        = 'AU04R'
+sAU_05_L_Attr        = 'AU05L'
+sAU_05_R_Attr        = 'AU05R'
+sAU_06_L_Attr        = 'AU06L'
+sAU_06_R_Attr        = 'AU06R'
+sAU_07_L_Attr        = 'AU07L'
+sAU_07_R_Attr        = 'AU07R'
+sAU_09_L_Attr        = 'AU09L'
+sAU_09_R_Attr        = 'AU09R'
+sAU_10_L_Attr        = 'AU10L'
+sAU_10_R_Attr        = 'AU10R'
+sAU_11_L_Attr        = 'AU11L'
+sAU_11_R_Attr        = 'AU11R'
+sAU_12_L_Attr        = 'AU12L'
+sAU_12_R_Attr        = 'AU12R'
+sAU_12_OL_Attr       = 'AU12OL'
+sAU_12_OR_Attr       = 'AU12OR'
+sAU_12_Blink_L_Attr  = 'AU12_BlinkL'
+sAU_12_Blink_R_Attr  = 'AU12_BlinkR'
+sAU_13_L_Attr        = 'AU13L'
+sAU_13_R_Attr        = 'AU13R'
+sAU_14_L_Attr        = 'AU14L'
+sAU_14_R_Attr        = 'AU14R'
+sAU_15_L_Attr        = 'AU15L'
+sAU_15_R_Attr        = 'AU15R'
+sAU_16_L_Attr        = 'AU16L'
+sAU_16_R_Attr        = 'AU16R'
+sAU_17_L_Attr        = 'AU17L'
+sAU_17_R_Attr        = 'AU17R'
+sAU_18_L_Attr        = 'AU18L'
+sAU_18_R_Attr        = 'AU18R'
+sAU_20_L_Attr        = 'AU20L'
+sAU_20_R_Attr        = 'AU20R'
+sAU_20_NL_Attr       = 'AU20NL'
+sAU_20_NR_Attr       = 'AU20NR'
+sAU_22_L_Attr        = 'AU22L'
+sAU_22_R_Attr        = 'AU22R'
+sAU_23_D_Attr        = 'AU23D'
+sAU_23_U_Attr        = 'AU23U'
+sAU_24_Attr          = 'AU24'
+sAU_25_D_Attr        = 'AU25D'
+sAU_25_U_Attr        = 'AU25U'
+sAU_26_Fix_Attr      = 'AU26_Fix'
+sAU_26_CloseFix_Attr = 'AU26_CloseFix'
+sAU_28_D_Attr        = 'AU28D'
+sAU_28_U_Attr        = 'AU28U'
+sAU_Puff_L_Attr           = 'PuffL'
+sAU_Puff_R_Attr           = 'PuffR'
+sAU_Shrink_L_Attr         = 'ShrinkL'
+sAU_Shrink_R_Attr         = 'ShrinkR'
+sAU_Blink_L_Attr          = 'BlinkL'
+sAU_Blink_R_Attr          = 'BlinkR'
+sAU_Throat_Attr           = 'Throat'
+sAU_JawForward_Attr       = 'JawForward'
+sAU_LipClose_Attr         = 'LipClose'
+sAU_LowLipCompress_Attr   = 'LowLipCompress'
+sAU_UpLipCompress_Attr    = 'UpLipCompress'
+sAU_Eye_L_LookLeft_Attr   = 'Eye_L_LookLeft'
+sAU_Eye_L_LookRight_Attr  = 'Eye_L_LookRight'
+sAU_Eye_L_LookUp_Attr     = 'Eye_L_LookUp'
+sAU_Eye_L_LookDown_Attr   = 'Eye_L_LookDown'
+sAU_Eye_R_LookLeft_Attr   = 'Eye_R_LookLeft'
+sAU_Eye_R_LookRight_Attr  = 'Eye_R_LookRight'
+sAU_Eye_R_LookUp_Attr     = 'Eye_R_LookUp'
+sAU_Eye_R_LookDown_Attr   = 'Eye_R_LookDown'
+
+auAttrList = [
+                sAU_01_L_Attr,
+                sAU_01_R_Attr,
+                sAU_02_L_Attr,
+                sAU_02_R_Attr,
+                sAU_04_L_Attr,
+                sAU_04_R_Attr,
+                sAU_05_L_Attr,
+                sAU_05_R_Attr,
+                sAU_06_L_Attr,
+                sAU_06_R_Attr,
+                sAU_07_L_Attr,
+                sAU_07_R_Attr,
+                sAU_09_L_Attr,
+                sAU_09_R_Attr,
+                sAU_10_L_Attr,
+                sAU_10_R_Attr,
+                sAU_11_L_Attr,
+                sAU_11_R_Attr,
+                sAU_12_L_Attr,
+                sAU_12_R_Attr,
+                sAU_12_OL_Attr,
+                sAU_12_OR_Attr,
+                sAU_12_Blink_L_Attr,
+                sAU_12_Blink_R_Attr,
+                sAU_13_L_Attr,
+                sAU_13_R_Attr,
+                sAU_14_L_Attr,
+                sAU_14_R_Attr,
+                sAU_15_L_Attr,
+                sAU_15_R_Attr,
+                sAU_16_L_Attr,
+                sAU_16_R_Attr,
+                sAU_17_L_Attr,
+                sAU_17_R_Attr,
+                sAU_18_L_Attr,
+                sAU_18_R_Attr,
+                sAU_20_L_Attr,
+                sAU_20_R_Attr,
+                sAU_20_NL_Attr,
+                sAU_20_NR_Attr,
+                sAU_22_L_Attr,
+                sAU_22_R_Attr,
+                sAU_23_D_Attr,
+                sAU_23_U_Attr,
+                sAU_24_Attr,
+                sAU_25_D_Attr,
+                sAU_25_U_Attr,
+                sAU_26_Fix_Attr,
+                sAU_26_CloseFix_Attr,
+                sAU_28_D_Attr,
+                sAU_28_U_Attr,
+                sAU_Puff_L_Attr,
+                sAU_Puff_R_Attr,
+                sAU_Shrink_L_Attr,
+                sAU_Shrink_R_Attr,
+                sAU_Blink_L_Attr,
+                sAU_Blink_R_Attr,
+                sAU_Throat_Attr,
+                sAU_JawForward_Attr,
+                sAU_LipClose_Attr,
+                sAU_LowLipCompress_Attr,
+                sAU_UpLipCompress_Attr,
+                sAU_Eye_L_LookLeft_Attr,
+                sAU_Eye_L_LookRight_Attr,
+                sAU_Eye_L_LookUp_Attr,
+                sAU_Eye_L_LookDown_Attr,
+                sAU_Eye_R_LookLeft_Attr,
+                sAU_Eye_R_LookRight_Attr,
+                sAU_Eye_R_LookUp_Attr,
+                sAU_Eye_R_LookDown_Attr]
 
 sWM01_browsRaiseInner_R_Attr = 'WM01_browsRaiseInner_R'
 sWM01_browsRaiseInner_L_Attr = 'WM01_browsRaiseInner_L'

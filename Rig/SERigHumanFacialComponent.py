@@ -10,7 +10,7 @@ from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
 
-
+#-----------------------------------------------------------------------------
 def connectFacialWrinkleMapAttrToMaterialAttr():
     facialObject = cmds.ls(sl = True)
     if facialObject:
@@ -28,7 +28,7 @@ def connectFacialWrinkleMapAttrToMaterialAttr():
         except:
             cmds.warning('Cannot connect attributes.')
 
-
+#-----------------------------------------------------------------------------
 def getFacialMaterial():
     res = None
 
@@ -52,7 +52,7 @@ def getFacialMaterial():
 
     return res
 
-
+#-----------------------------------------------------------------------------
 def createFacialWrinkleMapAttributes():
     facialObject = cmds.ls(sl = True)[0]
 
@@ -60,96 +60,13 @@ def createFacialWrinkleMapAttributes():
         cmds.addAttr(facialObject, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
         cmds.setAttr(facialObject + '.' + attr, cb = 1)
 
-
 #-----------------------------------------------------------------------------
-def getAuLipCloseAttrName(bufferObject):
+def getFacialActionUnitAttrName(bufferObject, actionUnitType):
     res = None
     if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_LipClose_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAuBlinkLAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_Blink_L_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAuBlinkRAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_Blink_R_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu01LAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_01_L_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu01RAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_01_R_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu02LAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_02_L_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu02RAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_02_R_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu05LAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_05_L_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu05RAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_05_R_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu06LAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_06_L_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu06RAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_06_R_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu07LAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_07_L_Attr
-
-    return res
-#-----------------------------------------------------------------------------
-def getAu07RAttrName(bufferObject):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.sAU_07_R_Attr
+        res = bufferObject + '.' + SERigNaming.auAttrList[actionUnitType]
+    else:
+        cmds.warning('Buffer object does not exist: ' + bufferObject)
 
     return res
 #-----------------------------------------------------------------------------
@@ -164,14 +81,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
        cmds.objExists(leftEyelidLowerJoint) and cmds.objExists(rightEyelidLowerJoint):
 
         # Upper eyelid AU05.
-        au05LAttr = getAu05LAttrName(auDataBuffer)
+        au05LAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_L)
         animCurveAu05L = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu05L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu05L, float = 1.0, value = 8.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAu05L, weightedTangents = False)
         cmds.connectAttr(au05LAttr, animCurveAu05L + '.input')
 
-        au05RAttr = getAu05RAttrName(auDataBuffer)
+        au05RAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_R)
         animCurveAu05R = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu05R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu05R, float = 1.0, value = 8.0, itt = 'linear', ott = 'linear')
@@ -179,14 +96,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(au05RAttr, animCurveAu05R + '.input')
 
         # Upper eyelid AU06.
-        au06LAttr = getAu06LAttrName(auDataBuffer)
+        au06LAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
         animCurveAu06L = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu06L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu06L, float = 1.0, value = -7.23, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAu06L, weightedTangents = False)
         cmds.connectAttr(au06LAttr, animCurveAu06L + '.input')
 
-        au06RAttr = getAu06RAttrName(auDataBuffer)
+        au06RAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
         animCurveAu06R = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu06R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu06R, float = 1.0, value = -7.23, itt = 'linear', ott = 'linear')
@@ -194,14 +111,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(au06RAttr, animCurveAu06R + '.input')
 
         # Upper eyelid blink.
-        blinkLAttr = getAuBlinkLAttrName(auDataBuffer)
+        blinkLAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
         animCurveAuBlinkL = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAuBlinkL, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAuBlinkL, float = 1.0, value = -27.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAuBlinkL, weightedTangents = False)
         cmds.connectAttr(blinkLAttr, animCurveAuBlinkL + '.input')
 
-        blinkRAttr = getAuBlinkRAttrName(auDataBuffer)
+        blinkRAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
         animCurveAuBlinkR = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAuBlinkR, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAuBlinkR, float = 1.0, value = -27.0, itt = 'linear', ott = 'linear')
@@ -239,14 +156,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
 
 
         # lower eyelid AU06.
-        au06LAttr = getAu06LAttrName(auDataBuffer)
+        au06LAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
         animCurveAu06L = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu06L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu06L, float = 1.0, value = 15.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAu06L, weightedTangents = False)
         cmds.connectAttr(au06LAttr, animCurveAu06L + '.input')
 
-        au06RAttr = getAu06RAttrName(auDataBuffer)
+        au06RAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
         animCurveAu06R = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu06R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu06R, float = 1.0, value = 15.0, itt = 'linear', ott = 'linear')
@@ -254,14 +171,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(au06RAttr, animCurveAu06R + '.input')
 
         # lower eyelid AU07.
-        au07LAttr = getAu07LAttrName(auDataBuffer)
+        au07LAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_L)
         animCurveAu07L = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu07L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu07L, float = 1.0, value = 12.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAu07L, weightedTangents = False)
         cmds.connectAttr(au07LAttr, animCurveAu07L + '.input')
 
-        au07RAttr = getAu07RAttrName(auDataBuffer)
+        au07RAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_R)
         animCurveAu07R = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu07R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu07R, float = 1.0, value = 12.0, itt = 'linear', ott = 'linear')
@@ -269,14 +186,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(au07RAttr, animCurveAu07R + '.input')
 
         # lower eyelid blink.
-        blinkLAttr = getAuBlinkLAttrName(auDataBuffer)
+        blinkLAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
         animCurveAuBlinkL = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAuBlinkL, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAuBlinkL, float = 1.0, value = 2.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAuBlinkL, weightedTangents = False)
         cmds.connectAttr(blinkLAttr, animCurveAuBlinkL + '.input')
 
-        blinkRAttr = getAuBlinkRAttrName(auDataBuffer)
+        blinkRAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
         animCurveAuBlinkR = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAuBlinkR, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAuBlinkR, float = 1.0, value = 2.0, itt = 'linear', ott = 'linear')
@@ -412,35 +329,25 @@ def createFACS_DataBuffer(facialComponentGroup):
     for attr in singleAttributeLockList:
         cmds.setAttr(dataBufferGroup + '.' + attr, l = 1, k = 0, cb = 0)
 
-    auAttrList = [SERigNaming.sAU_01_L_Attr,
-                    SERigNaming.sAU_01_R_Attr,
-                    SERigNaming.sAU_02_L_Attr,
-                    SERigNaming.sAU_02_R_Attr,
-                    SERigNaming.sAU_05_L_Attr,
-                    SERigNaming.sAU_05_R_Attr,
-                    SERigNaming.sAU_06_L_Attr,
-                    SERigNaming.sAU_06_R_Attr,
-                    SERigNaming.sAU_07_L_Attr,
-                    SERigNaming.sAU_07_R_Attr,
-                    SERigNaming.sAU_Blink_L_Attr,
-                    SERigNaming.sAU_Blink_R_Attr,
-                    SERigNaming.sAU_LipClose_Attr,
-                    SERigNaming.sAU_Eye_L_LookLeft_Attr,
-                    SERigNaming.sAU_Eye_L_LookRight_Attr,
-                    SERigNaming.sAU_Eye_L_LookUp_Attr,
-                    SERigNaming.sAU_Eye_L_LookDown_Attr,
-                    SERigNaming.sAU_Eye_R_LookLeft_Attr,
-                    SERigNaming.sAU_Eye_R_LookRight_Attr,
-                    SERigNaming.sAU_Eye_R_LookUp_Attr,
-                    SERigNaming.sAU_Eye_R_LookDown_Attr]
-
-    for attr in auAttrList:
+    for attr in SERigNaming.auAttrList:
         cmds.addAttr(dataBufferGroup, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
         cmds.setAttr(dataBufferGroup + '.' + attr, cb = 1)
 
     SERigObjectTypeHelper.linkRigObjects(facialComponentGroup, dataBufferGroup, SERigNaming.sFACS_DataBufferAttr)
 
     return dataBufferGroup
+
+def getFACS_DataBuffer(facialComponentGroup):
+    if cmds.objExists(facialComponentGroup):
+        try:
+            res = cmds.listConnections(facialComponentGroup + '.' + SERigNaming.sFACS_DataBufferAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find facial component: ' + facialComponentGroup + ' FACS data buffer')
+            return None
+    else:
+        cmds.warning('Cannot find facial component: ' + facialComponentGroup)
+        return None
 
 
 #-----------------------------------------------------------------------------
@@ -847,7 +754,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.transformLimits(onFaceLipCloseControl.ControlObject, ty = (0.0, 1.0), ety = (True, True))
 
         # For now, connect the control's ty to the data buffer attribute directly.
-        dataBufferLipCloseAttr = getAuLipCloseAttrName(self.DataBuffer)
+        dataBufferLipCloseAttr = getFacialActionUnitAttrName(self.DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_LipClose)
         cmds.connectAttr(onFaceLipCloseControl.ControlObject + '.ty', dataBufferLipCloseAttr)
 
         # Create IK eye joints.
