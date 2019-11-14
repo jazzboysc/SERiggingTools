@@ -20,6 +20,7 @@ sceneScale = 1.0
 
 modelFilePath = '%s/%s/Model/%s_Model.ma'
 builderFilePath = '%s/%s/Builder/%s_Builder.ma'
+faceControlsUIFilePath = '%s/%s/Builder/FaceControls_UI.ma'
 
 rootJnt = 'Root'
 headJnt = 'C_Head'
@@ -120,6 +121,20 @@ class RigBipedCharacter():
         else:
             print(builderFile + ' does not exist.')
             return
+
+        # Import face controls UI.
+        if createFacialSystem and not createSimpleFKNeck:
+            faceControlsUIFile = faceControlsUIFilePath % (mainProjectPath, self.CharacterName)
+            if os.path.isfile(faceControlsUIFile):
+                print('Importing face controls UI file: ' + faceControlsUIFile)
+                try:
+                    cmds.file(faceControlsUIFile, i = 1)
+                except:
+                    print('Invalid face controls UI file: ' + faceControlsUIFile)
+                    return
+            else:
+                print(faceControlsUIFile + ' does not exist.')
+                return
 
         # Adjust default perspective camera's focal length and orientation to fit the character.
         if usePortraitCameraFocalLength:

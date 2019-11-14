@@ -70,6 +70,24 @@ def getFacialActionUnitAttrName(bufferObject, actionUnitType):
 
     return res
 #-----------------------------------------------------------------------------
+def getFaceControlsUIGroup():
+    # TODO:
+    # Hard coded for now.
+    if cmds.objExists('FaceControls_Grp'):
+        return 'FaceControls_Grp'
+    else:
+        cmds.warning('Face controls UI group does not exist.')
+        return None
+#-----------------------------------------------------------------------------
+def getFaceControlsOffsetControl():
+    # TODO:
+    # Hard coded for now.
+    if cmds.objExists('FaceControls_Offset_Ctrl'):
+        return 'FaceControls_Offset_Ctrl'
+    else:
+        cmds.warning('Face controls offset control does not exist.')
+        return None
+#-----------------------------------------------------------------------------        
 
 
 #-----------------------------------------------------------------------------
@@ -461,6 +479,20 @@ class RigHumanFacialSystem(RigComponent):
         if not headAimIkControl and not cmds.objExists(headAimIkControl.ControlGroup):
             cmds.warning('Failed building facial system, head aim IK control does not exist.')
             return
+
+        # Setup FACS face controls.
+        faceControlsUIGroup = getFaceControlsUIGroup()
+        if faceControlsUIGroup == None:
+            cmds.warning('Failed building facial system, face controls UI group does not exist.')
+            return
+
+        cmds.delete(cmds.pointConstraint(facialAttachPoint, faceControlsUIGroup, mo = 0))
+        cmds.parent(faceControlsUIGroup, self.ControlsGrp)
+
+        faceControlsOffsetControl = getFaceControlsOffsetControl()
+        if faceControlsOffsetControl:
+            cmds.setAttr(faceControlsOffsetControl + '.tx', 10.0)
+            cmds.setAttr(faceControlsOffsetControl + '.ty', -1.0)
 
         # Get input facial guide joints.
         jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
