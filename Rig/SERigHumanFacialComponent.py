@@ -10,6 +10,50 @@ from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
 
+facialControlsTable = {}
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)]       = 'Brow_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Right, 0)]      = 'Brow_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Left, 0)]       = 'Brow_L_002_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Right, 0)]      = 'Brow_R_002_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_UpperLid, SERigEnum.eRigSide.RS_Left, 0)]        = 'UpperLid_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_UpperLid, SERigEnum.eRigSide.RS_Right, 0)]       = 'UpperLid_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_LowerLid, SERigEnum.eRigSide.RS_Left, 0)]        = 'LowerLid_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_LowerLid, SERigEnum.eRigSide.RS_Right, 0)]       = 'LowerLid_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_OuterEyeCorner, SERigEnum.eRigSide.RS_Left, 0)]  = 'EyeCorner_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_OuterEyeCorner, SERigEnum.eRigSide.RS_Right, 0)] = 'EyeCorner_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Nosewing, SERigEnum.eRigSide.RS_Left, 0)]        = 'Nosewing_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Nosewing, SERigEnum.eRigSide.RS_Right, 0)]       = 'Nosewing_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Muzzle, SERigEnum.eRigSide.RS_Left, 0)]          = 'Muzzle_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Muzzle, SERigEnum.eRigSide.RS_Right, 0)]         = 'Muzzle_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Left, 0)]        = 'UpperLip_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Center, 0)]      = 'UpperLip_C_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Right, 0)]       = 'UpperLip_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_LowerLip, SERigEnum.eRigSide.RS_Left, 0)]        = 'LowerLip_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_LowerLip, SERigEnum.eRigSide.RS_Center, 0)]      = 'LowerLip_C_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_LowerLip, SERigEnum.eRigSide.RS_Right, 0)]       = 'LowerLip_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Mouth, SERigEnum.eRigSide.RS_Center, 0)]         = 'Mouth_C_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_MouthCorner, SERigEnum.eRigSide.RS_Left, 0)]     = 'MouthCorner_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_MouthCorner, SERigEnum.eRigSide.RS_Right, 0)]    = 'MouthCorner_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_MouthCorner, SERigEnum.eRigSide.RS_Left, 1)]     = 'MouthCorner_L_002_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_MouthCorner, SERigEnum.eRigSide.RS_Right, 1)]    = 'MouthCorner_R_002_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Jaw, SERigEnum.eRigSide.RS_Center, 0)]           = 'Jaw_C_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Cheek, SERigEnum.eRigSide.RS_Left, 0)]           = 'Cheek_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Cheek, SERigEnum.eRigSide.RS_Right, 0)]          = 'Cheek_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Left, 0)]            = 'Chin_L_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Left, 1)]            = 'Chin_L_002_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Center, 0)]          = 'Chin_C_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Right, 0)]           = 'Chin_R_001_Ctrl'
+facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Right, 1)]           = 'Chin_R_002_Ctrl'
+
+#-----------------------------------------------------------------------------
+def getFacialControlObject(facialControlType, rigSide, controlIndex):
+    controlObject = None 
+    try:
+        controlObject = facialControlsTable[(facialControlType, rigSide, controlIndex)]
+    except:
+        cmds.warning('Facial control object not found.')
+
+    return controlObject
 #-----------------------------------------------------------------------------
 def connectFacialWrinkleMapAttrToMaterialAttr():
     facialObject = cmds.ls(sl = True)
@@ -87,7 +131,8 @@ def getFaceControlsOffsetControl():
     else:
         cmds.warning('Face controls offset control does not exist.')
         return None
-#-----------------------------------------------------------------------------        
+#-----------------------------------------------------------------------------
+
 
 
 #-----------------------------------------------------------------------------

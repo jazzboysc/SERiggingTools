@@ -199,3 +199,23 @@ eRigFacialActionUnitType = SE_RigEnum(
     AU_Eye_R_LookUp     = 68,
     AU_Eye_R_LookDown   = 69
     )
+
+eRigFacialControlType = SE_RigEnum(
+    RFCT_InnerBrow       = 0,
+    RFCT_OuterBrow       = 1,
+    RFCT_UpperLid        = 2,
+    RFCT_LowerLid        = 3,
+    RFCT_OuterEyeCorner  = 4,
+    RFCT_Nosewing        = 5,
+    RFCT_Muzzle          = 6,
+    RFCT_UpperLip        = 7,
+    RFCT_LowerLip        = 8,
+    RFCT_Mouth           = 9,
+    RFCT_MouthCorner     = 10,
+    RFCT_Jaw             = 11,
+    RFCT_Cheek           = 12,
+    RFCT_Chin            = 13
+    )
+
+
+
