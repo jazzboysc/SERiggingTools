@@ -439,7 +439,8 @@ def getFACS_DataBuffer(facialComponentGroup):
         cmds.warning('Cannot find facial component: ' + facialComponentGroup)
         return None
 #-----------------------------------------------------------------------------
-def createFACS_FacialControlLogic():
+def createFACS_FacialControlLogic(inFACS_DataBuffer):
+    # Inner brows (tx, ty).
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftInnerBrowControlObj:
         createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'tx', -1, 1, 0, 0)
@@ -450,13 +451,39 @@ def createFACS_FacialControlLogic():
         createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'tx', -1, 1, 0, 0)
         createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'ty', 1, 1, 0, 0)
 
+    # Outer brows (ty).
     leftOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftOuterBrowControlObj:
         createFacialControlObjectTranslateRemapping(leftOuterBrowControlObj, 'ty')
 
     rightOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Right, 0)
     if rightOuterBrowControlObj:
-        createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, 'ty')        
+        createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, 'ty')
+
+    # Upper eyelid (ty).
+    leftUpperEyelidControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLid, SERigEnum.eRigSide.RS_Left, 0)
+    unitConversionNodeL = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
+    cmds.connectAttr(leftUpperEyelidControlObj + '.ty', unitConversionNodeL + '.input')
+
+    rightUpperEyelidControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLid, SERigEnum.eRigSide.RS_Right, 0)
+    unitConversionNodeR = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
+    cmds.connectAttr(rightUpperEyelidControlObj + '.ty', unitConversionNodeR + '.input')
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 0.5)
+    cmds.setAttr(clampNode + '.maxG', 0.5)
+
+    cmds.connectAttr(unitConversionNodeL + '.output', clampNode + '.inputR')
+    cmds.connectAttr(unitConversionNodeR + '.output', clampNode + '.inputG')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
+    cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
 
 #-----------------------------------------------------------------------------
 # Rig Human Facial System Class
@@ -1073,7 +1100,7 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setAttr(facialBaseJnt + '.otherType', SERigNaming.sJointTagFacialBase, type = 'string')
 
         # Create FACS face controls logic.
-        createFACS_FacialControlLogic()
+        createFACS_FacialControlLogic(self.DataBuffer)
 
         # Create controls visibility expression.
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
