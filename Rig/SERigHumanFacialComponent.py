@@ -55,6 +55,35 @@ def getFacialControlObject(facialControlType, rigSide, controlIndex):
 
     return controlObject
 #-----------------------------------------------------------------------------
+def getFacialControlObjectTranslateRemappingNode(facialControlObject, channel = 'tx'):
+    remappingNode = facialControlObject + '_' + channel + '_remapping'
+    if cmds.objExists(remappingNode):
+        return remappingNode
+    else:
+        cmds.warning('Facial control translate remapping node not found.')
+        return None
+#-----------------------------------------------------------------------------
+def createFacialControlObjectTranslateRemapping(facialControlObject, channel = 'tx', input0 = 0, output0 = 0, input1 = 1, output1 = 1):
+    remappingNode = None
+
+    if cmds.objExists(facialControlObject):
+        nodeName = facialControlObject + '_' + channel + '_remapping'
+        if cmds.objExists(nodeName):
+            cmds.warning('Facial control translate remapping node already created.')
+            return nodeName
+
+        remappingNode = cmds.createNode('animCurveUU', n = nodeName)
+        cmds.setKeyframe(remappingNode, float = input0, value = output0, itt = 'linear', ott = 'linear')
+        cmds.setKeyframe(remappingNode, float = input1, value = output1, itt = 'linear', ott = 'linear')
+        cmds.keyTangent(remappingNode, weightedTangents = False)
+
+        cmds.connectAttr(facialControlObject + '.' + channel, remappingNode + '.input', f = 1)
+
+    else:
+        cmds.warning('Facial control object not found.')
+
+    return remappingNode
+#-----------------------------------------------------------------------------
 def connectFacialWrinkleMapAttrToMaterialAttr():
     facialObject = cmds.ls(sl = True)
     if facialObject:
@@ -279,8 +308,7 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
 
     else:
         cmds.warning('Failed creating eyelid motion logic.')
-
-
+#-----------------------------------------------------------------------------
 def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint, rigSide):
     if cmds.objExists(eyeBlockingSphere) and cmds.objExists(eyeEndIkJoint):
         locatorEyeEnd = cmds.spaceLocator(n = 'locator_' + eyeEndIkJoint)[0]
@@ -368,8 +396,7 @@ def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint, rigSide
 
         cmds.connectAttr(cpos + '.parameterU', eyeTurnDownAnimCurve + '.input', f = 1)
         cmds.connectAttr(eyeTurnDownAnimCurve + '.output', locatorEyeEnd + '.D', f = 1)
-
-
+#-----------------------------------------------------------------------------
 def createFACS_DataBuffer(facialComponentGroup):
     prefix = SERigObjectTypeHelper.getCharacterComponentPrefix(facialComponentGroup)
     rigPartsGroup = SERigObjectTypeHelper.getCharacterComponentRigPartsGroup(facialComponentGroup)
@@ -399,7 +426,7 @@ def createFACS_DataBuffer(facialComponentGroup):
     SERigObjectTypeHelper.linkRigObjects(facialComponentGroup, dataBufferGroup, SERigNaming.sFACS_DataBufferAttr)
 
     return dataBufferGroup
-
+#-----------------------------------------------------------------------------
 def getFACS_DataBuffer(facialComponentGroup):
     if cmds.objExists(facialComponentGroup):
         try:
@@ -411,7 +438,25 @@ def getFACS_DataBuffer(facialComponentGroup):
     else:
         cmds.warning('Cannot find facial component: ' + facialComponentGroup)
         return None
+#-----------------------------------------------------------------------------
+def createFACS_FacialControlLogic():
+    leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
+    if leftInnerBrowControlObj:
+        createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'tx', -1, 1, 0, 0)
+        createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'ty', 1, 1, 0, 0)
 
+    rightInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Right, 0)
+    if rightInnerBrowControlObj:
+        createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'tx', -1, 1, 0, 0)
+        createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'ty', 1, 1, 0, 0)
+
+    leftOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Left, 0)
+    if leftOuterBrowControlObj:
+        createFacialControlObjectTranslateRemapping(leftOuterBrowControlObj, 'ty')
+
+    rightOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Right, 0)
+    if rightOuterBrowControlObj:
+        createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, 'ty')        
 
 #-----------------------------------------------------------------------------
 # Rig Human Facial System Class
@@ -1026,6 +1071,9 @@ class RigHumanFacialSystem(RigComponent):
         for facialBaseJnt in facialBaseJnts:
             cmds.setAttr(facialBaseJnt + '.type', 18)
             cmds.setAttr(facialBaseJnt + '.otherType', SERigNaming.sJointTagFacialBase, type = 'string')
+
+        # Create FACS face controls logic.
+        createFACS_FacialControlLogic()
 
         # Create controls visibility expression.
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
