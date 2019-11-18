@@ -443,22 +443,36 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     # Inner brows controls (tx, ty).
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftInnerBrowControlObj:
-        createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'tx', -1, 1, 0, 0)
-        createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'ty', 1, 1, 0, 0)
+        remappingNode = createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'tx', -1, 1, 0, 0)
+        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_04_L)
+        cmds.connectAttr(remappingNode + '.output', tempBufferInput)
+
+        remappingNode = createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'ty', 1, 1, 0, 0)
+        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_01_L)
+        cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     rightInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Right, 0)
     if rightInnerBrowControlObj:
-        createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'tx', -1, 1, 0, 0)
-        createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'ty', 1, 1, 0, 0)
+        remappingNode = createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'tx', -1, 1, 0, 0)
+        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_04_R)
+        cmds.connectAttr(remappingNode + '.output', tempBufferInput)
+
+        remappingNode = createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'ty', 1, 1, 0, 0)
+        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_01_R)
+        cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     # Outer brows controls (ty).
     leftOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftOuterBrowControlObj:
-        createFacialControlObjectTranslateRemapping(leftOuterBrowControlObj, 'ty')
+        remappingNode = createFacialControlObjectTranslateRemapping(leftOuterBrowControlObj, 'ty')
+        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_02_L)
+        cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     rightOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Right, 0)
     if rightOuterBrowControlObj:
-        createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, 'ty')
+        remappingNode = createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, 'ty')
+        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_02_R)
+        cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     # Upper eyelid controls (ty).
     leftUpperEyelidControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLid, SERigEnum.eRigSide.RS_Left, 0)
@@ -496,6 +510,15 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
 
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_R)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
+    # Lower eyelid controls (ty).
+    leftLowerEyelidControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_LowerLid, SERigEnum.eRigSide.RS_Left, 0)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_L)
+    cmds.connectAttr(leftLowerEyelidControlObj + '.ty', tempBufferInput)
+
+    rightLowerEyelidControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_LowerLid, SERigEnum.eRigSide.RS_Right, 0)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_R)
+    cmds.connectAttr(rightLowerEyelidControlObj + '.ty', tempBufferInput)
 
 
 #-----------------------------------------------------------------------------
