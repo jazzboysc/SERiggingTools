@@ -140,6 +140,8 @@ sAU_Eye_R_LookLeft_Attr   = 'Eye_R_LookLeft'
 sAU_Eye_R_LookRight_Attr  = 'Eye_R_LookRight'
 sAU_Eye_R_LookUp_Attr     = 'Eye_R_LookUp'
 sAU_Eye_R_LookDown_Attr   = 'Eye_R_LookDown'
+sAU_10_OL_Attr            = 'AU10OL'
+sAU_10_OR_Attr            = 'AU10OR'
 
 auAttrList = [
                 sAU_01_L_Attr,
@@ -211,7 +213,10 @@ auAttrList = [
                 sAU_Eye_R_LookLeft_Attr,
                 sAU_Eye_R_LookRight_Attr,
                 sAU_Eye_R_LookUp_Attr,
-                sAU_Eye_R_LookDown_Attr]
+                sAU_Eye_R_LookDown_Attr,
+                sAU_10_OL_Attr,
+                sAU_10_OR_Attr
+                ]
 
 sWM01_browsRaiseInner_R_Attr = 'WM01_browsRaiseInner_R'
 sWM01_browsRaiseInner_L_Attr = 'WM01_browsRaiseInner_L'

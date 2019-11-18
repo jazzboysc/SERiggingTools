@@ -55,19 +55,19 @@ def getFacialControlObject(facialControlType, rigSide, controlIndex):
 
     return controlObject
 #-----------------------------------------------------------------------------
-def getFacialControlObjectTranslateRemappingNode(facialControlObject, channel = 'tx'):
-    remappingNode = facialControlObject + '_' + channel + '_remapping'
+def getFacialControlObjectTranslateRemappingNode(facialControlObject, suffix, channel):
+    remappingNode = facialControlObject + '_' + channel + suffix
     if cmds.objExists(remappingNode):
         return remappingNode
     else:
         cmds.warning('Facial control translate remapping node not found.')
         return None
 #-----------------------------------------------------------------------------
-def createFacialControlObjectTranslateRemapping(facialControlObject, channel = 'tx', input0 = 0, output0 = 0, input1 = 1, output1 = 1):
+def createFacialControlObjectTranslateRemapping(facialControlObject, suffix, channel, input0 = 0, output0 = 0, input1 = 1, output1 = 1):
     remappingNode = None
 
     if cmds.objExists(facialControlObject):
-        nodeName = facialControlObject + '_' + channel + '_remapping'
+        nodeName = facialControlObject + '_' + channel + suffix
         if cmds.objExists(nodeName):
             cmds.warning('Facial control translate remapping node already created.')
             return nodeName
@@ -443,34 +443,34 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     # Inner brows controls (tx, ty).
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftInnerBrowControlObj:
-        remappingNode = createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'tx', -1, 1, 0, 0)
+        remappingNode = createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, '_remapping', 'tx', -1, 1, 0, 0)
         tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_04_L)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
-        remappingNode = createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'ty', 1, 1, 0, 0)
+        remappingNode = createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, '_remapping', 'ty', 1, 1, 0, 0)
         tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_01_L)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     rightInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Right, 0)
     if rightInnerBrowControlObj:
-        remappingNode = createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'tx', -1, 1, 0, 0)
+        remappingNode = createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, '_remapping', 'tx', -1, 1, 0, 0)
         tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_04_R)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
-        remappingNode = createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'ty', 1, 1, 0, 0)
+        remappingNode = createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, '_remapping', 'ty', 1, 1, 0, 0)
         tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_01_R)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     # Outer brows controls (ty).
     leftOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftOuterBrowControlObj:
-        remappingNode = createFacialControlObjectTranslateRemapping(leftOuterBrowControlObj, 'ty')
+        remappingNode = createFacialControlObjectTranslateRemapping(leftOuterBrowControlObj, '_remapping', 'ty')
         tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_02_L)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     rightOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Right, 0)
     if rightOuterBrowControlObj:
-        remappingNode = createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, 'ty')
+        remappingNode = createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, '_remapping', 'ty')
         tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_02_R)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
@@ -536,6 +536,55 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
 
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
     cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
+
+    # Nosewing controls (tx, ty).
+    leftNosewingControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Nosewing, SERigEnum.eRigSide.RS_Left, 0)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_09_L)
+    cmds.connectAttr(leftNosewingControlObj + '.ty', tempBufferInput)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_11_L)
+    cmds.connectAttr(leftNosewingControlObj + '.tx', tempBufferInput)
+
+    rightNosewingControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Nosewing, SERigEnum.eRigSide.RS_Right, 0)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_09_R)
+    cmds.connectAttr(rightNosewingControlObj + '.ty', tempBufferInput)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_11_R)
+    cmds.connectAttr(rightNosewingControlObj + '.tx', tempBufferInput)
+
+    # Muzzle controls (ty).
+    leftMuzzleControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Muzzle, SERigEnum.eRigSide.RS_Left, 0)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_L)
+    cmds.connectAttr(leftMuzzleControlObj + '.ty', tempBufferInput)
+
+    rightMuzzleControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Muzzle, SERigEnum.eRigSide.RS_Right, 0)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_R)
+    cmds.connectAttr(rightMuzzleControlObj + '.ty', tempBufferInput)
+
+    # Lip and mouth controls.
+    leftUpperlipControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Left, 0)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_OL)
+    cmds.connectAttr(leftUpperlipControlObj + '.ty', tempBufferInput)
+
+    rightUpperlipControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Right, 0)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_OR)
+    cmds.connectAttr(rightUpperlipControlObj + '.ty', tempBufferInput)
+
+    # AU 23 U.
+    centerUpperlipControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Center, 0)
+    centerUpperlipControlRemappingNodeAU23U = createFacialControlObjectTranslateRemapping(centerUpperlipControlObj, '_AU23U', 'tz', -1, 1, 0, 0)
+
+    mouthControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Mouth, SERigEnum.eRigSide.RS_Center, 0)
+    mouthControlRemappingNodeAU23U = createFacialControlObjectTranslateRemapping(mouthControlObj, '_AU23U', 'tz', -1, 1, 0, 0)    
+    
+    au23UBlend = cmds.createNode('blendWeighted')
+    cmds.connectAttr(centerUpperlipControlRemappingNodeAU23U + '.output', au23UBlend + '.input[0]', f = 1)
+    cmds.connectAttr(mouthControlRemappingNodeAU23U + '.output', au23UBlend + '.input[1]', f = 1)
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_23_U)
+    cmds.connectAttr(au23UBlend + '.output', clampNode + '.inputR')
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
 
 
