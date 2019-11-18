@@ -110,8 +110,8 @@ sAU_20_L_Attr        = 'AU20L'
 sAU_20_R_Attr        = 'AU20R'
 sAU_20_NL_Attr       = 'AU20NL'
 sAU_20_NR_Attr       = 'AU20NR'
-sAU_22_L_Attr        = 'AU22L'
-sAU_22_R_Attr        = 'AU22R'
+sAU_22_D_Attr        = 'AU22D'
+sAU_22_U_Attr        = 'AU22U'
 sAU_23_D_Attr        = 'AU23D'
 sAU_23_U_Attr        = 'AU23U'
 sAU_24_Attr          = 'AU24'
@@ -184,8 +184,8 @@ auAttrList = [
                 sAU_20_R_Attr,
                 sAU_20_NL_Attr,
                 sAU_20_NR_Attr,
-                sAU_22_L_Attr,
-                sAU_22_R_Attr,
+                sAU_22_D_Attr,
+                sAU_22_U_Attr,
                 sAU_23_D_Attr,
                 sAU_23_U_Attr,
                 sAU_24_Attr,
