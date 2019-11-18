@@ -568,7 +568,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_OR)
     cmds.connectAttr(rightUpperlipControlObj + '.ty', tempBufferInput)
 
-    # AU 22,23 U.
+    # AU 22,23 U (tz).
     centerUpperlipControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Center, 0)
     centerUpperlipControlRemappingNodeAU23U = createFacialControlObjectTranslateRemapping(centerUpperlipControlObj, '_AU23U', 'tz', -1, 1, 0, 0)
     centerUpperlipControlRemappingNodeAU22U = createFacialControlObjectTranslateRemapping(centerUpperlipControlObj, '_AU22U', 'tz', 1, 1, 0, 0)
@@ -596,6 +596,33 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_22_U)
     cmds.connectAttr(au22UBlend + '.output', clampNode + '.inputG')
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
+    # AU 17,28 U (ty).
+    centerUpperlipControlRemappingNodeAU17U = createFacialControlObjectTranslateRemapping(centerUpperlipControlObj, '_AU17U', 'ty', 1, 1, 0, 0)
+    centerUpperlipControlRemappingNodeAU28U = createFacialControlObjectTranslateRemapping(centerUpperlipControlObj, '_AU28U', 'ty', -1, 1, 0, 0)
+
+    mouthControlRemappingNodeAU17U = createFacialControlObjectTranslateRemapping(mouthControlObj, '_AU17U', 'ty', 1, 1, 0, 0)
+    mouthControlRemappingNodeAU28U = createFacialControlObjectTranslateRemapping(mouthControlObj, '_AU28U', 'ty', -1, 1, 0, 0)
+
+    au17UBlend = cmds.createNode('blendWeighted')
+    cmds.connectAttr(centerUpperlipControlRemappingNodeAU17U + '.output', au17UBlend + '.input[0]', f = 1)
+    cmds.connectAttr(mouthControlRemappingNodeAU17U + '.output', au17UBlend + '.input[1]', f = 1)
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_17_U)
+    cmds.connectAttr(au17UBlend + '.output', clampNode + '.inputR')
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    au28UBlend = cmds.createNode('blendWeighted')
+    cmds.connectAttr(centerUpperlipControlRemappingNodeAU28U + '.output', au28UBlend + '.input[0]', f = 1)
+    cmds.connectAttr(mouthControlRemappingNodeAU28U + '.output', au28UBlend + '.input[1]', f = 1)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_U)
+    cmds.connectAttr(au28UBlend + '.output', clampNode + '.inputG')
+    cmds.connectAttr(clampNode + '.outputG', tempBufferInput)    
 
     # AU 22,23 D.
     centerLowerlipControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_LowerLip, SERigEnum.eRigSide.RS_Center, 0)
