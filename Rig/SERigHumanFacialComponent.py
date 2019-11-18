@@ -520,6 +520,24 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_R)
     cmds.connectAttr(rightLowerEyelidControlObj + '.ty', tempBufferInput)
 
+    # Eye corner controls (tx).
+    leftOuterEyeCornerControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterEyeCorner, SERigEnum.eRigSide.RS_Left, 0)
+    unitConversionNodeL = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
+    cmds.connectAttr(leftOuterEyeCornerControlObj + '.tx', unitConversionNodeL + '.input')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
+    cmds.connectAttr(unitConversionNodeL + '.output', tempBufferInput)
+
+    rightOuterEyeCornerControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterEyeCorner, SERigEnum.eRigSide.RS_Right, 0)
+    unitConversionNodeR = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
+    cmds.connectAttr(rightOuterEyeCornerControlObj + '.tx', unitConversionNodeR + '.input')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
+    cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
+
+
 
 #-----------------------------------------------------------------------------
 # Rig Human Facial System Class
