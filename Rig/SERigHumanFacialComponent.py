@@ -440,7 +440,7 @@ def getFACS_DataBuffer(facialComponentGroup):
         return None
 #-----------------------------------------------------------------------------
 def createFACS_FacialControlLogic(inFACS_DataBuffer):
-    # Inner brows (tx, ty).
+    # Inner brows controls (tx, ty).
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftInnerBrowControlObj:
         createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, 'tx', -1, 1, 0, 0)
@@ -451,7 +451,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
         createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'tx', -1, 1, 0, 0)
         createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, 'ty', 1, 1, 0, 0)
 
-    # Outer brows (ty).
+    # Outer brows controls (ty).
     leftOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftOuterBrowControlObj:
         createFacialControlObjectTranslateRemapping(leftOuterBrowControlObj, 'ty')
@@ -460,7 +460,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     if rightOuterBrowControlObj:
         createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, 'ty')
 
-    # Upper eyelid (ty).
+    # Upper eyelid controls (ty).
     leftUpperEyelidControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLid, SERigEnum.eRigSide.RS_Left, 0)
     unitConversionNodeL = cmds.createNode('unitConversion')
     cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
@@ -472,8 +472,8 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     cmds.connectAttr(rightUpperEyelidControlObj + '.ty', unitConversionNodeR + '.input')
 
     clampNode = cmds.createNode('clamp')
-    cmds.setAttr(clampNode + '.maxR', 0.5)
-    cmds.setAttr(clampNode + '.maxG', 0.5)
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
 
     cmds.connectAttr(unitConversionNodeL + '.output', clampNode + '.inputR')
     cmds.connectAttr(unitConversionNodeR + '.output', clampNode + '.inputG')
@@ -482,6 +482,19 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
+    cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 0.5)
+    cmds.setAttr(clampNode + '.maxG', 0.5)
+
+    cmds.connectAttr(leftUpperEyelidControlObj + '.ty', clampNode + '.inputR')
+    cmds.connectAttr(rightUpperEyelidControlObj + '.ty', clampNode + '.inputG')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_L)
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_R)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
 
