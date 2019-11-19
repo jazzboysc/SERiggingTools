@@ -863,7 +863,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
 
     cmds.connectAttr(chinCenterControlObj + '.ty', clampNode + '.inputR')
     # TODO:
-    # Hard coded for now
+    # Hard coded control name for now.
     cmds.connectAttr(clampNode + '.outputR', 'FK_OnFace_LipClose_Ctrl.ty')
 
     unitConversionNode = cmds.createNode('unitConversion')
@@ -876,6 +876,17 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
 
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_25_U)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
+    # Jaw control (tx, ty, tz).
+    jawControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Jaw, SERigEnum.eRigSide.RS_Center, 0)
+
+    # TODO:
+    # Hard coded control name for now.
+    onFaceJawControl = 'IK_OnFace_Jaw_Ctrl'
+    cmds.connectAttr(jawControlObj + '.tx', onFaceJawControl + '.tx')
+    cmds.connectAttr(jawControlObj + '.ty', onFaceJawControl + '.ty')
+    cmds.connectAttr(jawControlObj + '.tz', onFaceJawControl + '.tz')
+
 
 
 #-----------------------------------------------------------------------------
