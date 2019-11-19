@@ -854,7 +854,28 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Shrink_R)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
+    # Chin center control (ty).
+    chinCenterControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Center, 0)
+    
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
 
+    cmds.connectAttr(chinCenterControlObj + '.ty', clampNode + '.inputR')
+    # TODO:
+    # Hard coded for now
+    cmds.connectAttr(clampNode + '.outputR', 'FK_OnFace_LipClose_Ctrl.ty')
+
+    unitConversionNode = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNode + '.conversionFactor', -1.0)
+    cmds.connectAttr(chinCenterControlObj + '.ty', unitConversionNode + '.input')
+    cmds.connectAttr(unitConversionNode + '.output', clampNode + '.inputG')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_25_D)
+    cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_25_U)
+    cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
 
 #-----------------------------------------------------------------------------
@@ -1166,6 +1187,7 @@ class RigHumanFacialSystem(RigComponent):
                                 )
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, onFaceIKJawControl.ControlGroup, 'OnFaceIkJawControl', 'ControlOwner')
         self.OnFaceIKJawControl = onFaceIKJawControl
+        cmds.hide(onFaceIKJawControl.ControlGroup)
 
         offsetGrpName = onFaceIKJawControl.Prefix + SERigNaming.sOffsetGroup
         resOffsetGrp = onFaceIKJawControl.InsertNewGroup(offsetGrpName)
