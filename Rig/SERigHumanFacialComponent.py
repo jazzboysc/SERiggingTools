@@ -309,7 +309,7 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
     else:
         cmds.warning('Failed creating eyelid motion logic.')
 #-----------------------------------------------------------------------------
-def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint, rigSide):
+def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint, rigSide, inFACS_DataBuffer):
     if cmds.objExists(eyeBlockingSphere) and cmds.objExists(eyeEndIkJoint):
         locatorEyeEnd = cmds.spaceLocator(n = 'locator_' + eyeEndIkJoint)[0]
         cmds.delete(cmds.pointConstraint(eyeEndIkJoint, locatorEyeEnd, mo = 0))
@@ -396,6 +396,30 @@ def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint, rigSide
 
         cmds.connectAttr(cpos + '.parameterU', eyeTurnDownAnimCurve + '.input', f = 1)
         cmds.connectAttr(eyeTurnDownAnimCurve + '.output', locatorEyeEnd + '.D', f = 1)
+
+        if cmds.objExists(inFACS_DataBuffer):
+            tempBufferInputL = None
+            tempBufferInputR = None
+            tempBufferInputU = None
+            tempBufferInputD = None
+            if rigSide == SERigEnum.eRigSide.RS_Left:
+                tempBufferInputL = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft)
+                tempBufferInputR = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight)
+                tempBufferInputU = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp)
+                tempBufferInputD = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown)
+            else:
+                tempBufferInputL = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft)
+                tempBufferInputR = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight)
+                tempBufferInputU = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp)
+                tempBufferInputD = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown)
+                        
+            cmds.connectAttr(locatorEyeEnd + '.L', tempBufferInputL)
+            cmds.connectAttr(locatorEyeEnd + '.R', tempBufferInputR)
+            cmds.connectAttr(locatorEyeEnd + '.D', tempBufferInputD)
+            cmds.connectAttr(locatorEyeEnd + '.U', tempBufferInputU)
+        else:
+            cmds.warning('createEyeballRotationTrackingLogic: FACS data buffer does not exist.')
+
 #-----------------------------------------------------------------------------
 def createFACS_DataBuffer(facialComponentGroup):
     prefix = SERigObjectTypeHelper.getCharacterComponentPrefix(facialComponentGroup)
@@ -742,6 +766,29 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_18_L)
     cmds.connectAttr(au18LBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    # AU 13 (ty).
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_13_L)
+    cmds.connectAttr(leftMouthCornerControl02Obj + '.ty', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_13_R)
+    cmds.connectAttr(rightMouthCornerControl02Obj + '.ty', tempBufferInput)
+
+    # AU 12 OL, OR (ty).
+    leftLowerLipControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_LowerLip, SERigEnum.eRigSide.RS_Left, 0)
+    unitConversionNodeL = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
+    cmds.connectAttr(leftLowerLipControl01Obj + '.ty', unitConversionNodeL + '.input')
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_OL)
+    cmds.connectAttr(unitConversionNodeL + '.output', tempBufferInput)
+
+    rightLowerLipControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_LowerLip, SERigEnum.eRigSide.RS_Right, 0)
+    unitConversionNodeR = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
+    cmds.connectAttr(rightLowerLipControl01Obj + '.ty', unitConversionNodeR + '.input')
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_OR)
+    cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
+
 
 
 #-----------------------------------------------------------------------------
@@ -1197,7 +1244,7 @@ class RigHumanFacialSystem(RigComponent):
 
         # Create left eyeball rotation tracking logic.
         if cmds.objExists(SERigNaming.sLeftEyeBlockingSphere):
-            createEyeballRotationTrackingLogic(SERigNaming.sLeftEyeBlockingSphere, leftEyeEndIkJoint, SERigEnum.eRigSide.RS_Left)
+            createEyeballRotationTrackingLogic(SERigNaming.sLeftEyeBlockingSphere, leftEyeEndIkJoint, SERigEnum.eRigSide.RS_Left, self.DataBuffer)
 
         cmds.select(cl = 1)
         rightEyeIkJoint = cmds.joint(n = SERigNaming.sIKPrefix + 'R_Eye')
@@ -1231,7 +1278,7 @@ class RigHumanFacialSystem(RigComponent):
 
         # Create right eyeball rotation tracking logic.
         if cmds.objExists(SERigNaming.sRightEyeBlockingSphere):
-            createEyeballRotationTrackingLogic(SERigNaming.sRightEyeBlockingSphere, rightEyeEndIkJoint, SERigEnum.eRigSide.RS_Right)
+            createEyeballRotationTrackingLogic(SERigNaming.sRightEyeBlockingSphere, rightEyeEndIkJoint, SERigEnum.eRigSide.RS_Right, self.DataBuffer)
 
         # Create eye base locators.
         locatorLeftEyeBase = cmds.spaceLocator(n = 'locator_L_EyeBase')[0]
