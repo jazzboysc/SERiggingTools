@@ -767,6 +767,40 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     cmds.connectAttr(au18LBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
+    # AU 15 (ty).
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
+
+    unitConversionNodeL = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
+    cmds.connectAttr(leftMouthCornerControl01Obj + '.ty', unitConversionNodeL + '.input')
+    
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_15_L)
+    cmds.connectAttr(unitConversionNodeL + '.output', clampNode + '.inputR')
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    unitConversionNodeR = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
+    cmds.connectAttr(rightMouthCornerControl01Obj + '.ty', unitConversionNodeR + '.input')
+    
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_15_R)
+    cmds.connectAttr(unitConversionNodeR + '.output', clampNode + '.inputG')
+    cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
+    # AU 14 (tx).
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_14_L)
+    cmds.connectAttr(leftMouthCornerControl01Obj + '.tx', clampNode + '.inputR')
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_14_R)
+    cmds.connectAttr(rightMouthCornerControl01Obj + '.tx', clampNode + '.inputG')
+    cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
     # AU 13 (ty).
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_13_L)
     cmds.connectAttr(leftMouthCornerControl02Obj + '.ty', tempBufferInput)
@@ -788,6 +822,38 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     cmds.connectAttr(rightLowerLipControl01Obj + '.ty', unitConversionNodeR + '.input')
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_OR)
     cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
+
+    # Cheek controls (tx).
+    leftCheekControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Cheek, SERigEnum.eRigSide.RS_Left, 0)
+    rightCheekControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Cheek, SERigEnum.eRigSide.RS_Right, 0)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Puff_L)
+    cmds.connectAttr(leftCheekControl01Obj + '.tx', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Puff_R)
+    cmds.connectAttr(rightCheekControl01Obj + '.tx', tempBufferInput)
+
+    unitConversionNodeL = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeL + '.conversionFactor', -2.0)
+    cmds.connectAttr(leftCheekControl01Obj + '.tx', unitConversionNodeL + '.input')
+
+    unitConversionNodeR = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeR + '.conversionFactor', -2.0)
+    cmds.connectAttr(rightCheekControl01Obj + '.tx', unitConversionNodeR + '.input')
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
+
+    cmds.connectAttr(unitConversionNodeL + '.output', clampNode + '.inputR')
+    cmds.connectAttr(unitConversionNodeR + '.output', clampNode + '.inputG')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Shrink_L)
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Shrink_R)
+    cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
+
 
 
 
