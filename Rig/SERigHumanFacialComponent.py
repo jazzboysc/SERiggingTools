@@ -679,6 +679,69 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     cmds.connectAttr(au28DBlend + '.output', clampNode + '.inputG')
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
+    # AU 12 L,18 R (tx).
+    rightMouthCornerControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_MouthCorner, SERigEnum.eRigSide.RS_Right, 0)
+    leftMouthCornerControl02Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_MouthCorner, SERigEnum.eRigSide.RS_Left, 1)
+    rightMouthCornerControl01RemappingNodeAU18R = createFacialControlObjectTranslateRemapping(rightMouthCornerControl01Obj, '_AU18R', 'tx', -1, 0.7, 0, 0)
+    leftMouthCornerControl02RemappingNodeAU12L = createFacialControlObjectTranslateRemapping(leftMouthCornerControl02Obj, '_AU12L', 'tx', 1, 1, 0, 0)
+    mouthControlRemappingNodeAU18R = createFacialControlObjectTranslateRemapping(mouthControlObj, '_AU18R', 'tx', 1, 1, 0, 0)
+    mouthControlRemappingNodeAU12L = createFacialControlObjectTranslateRemapping(mouthControlObj, '_AU12L', 'tx', 1, 1, 0, 0)
+
+    au12LBlend = cmds.createNode('blendWeighted')
+    cmds.connectAttr(leftMouthCornerControl02RemappingNodeAU12L + '.output', au12LBlend + '.input[0]', f = 1)
+    cmds.connectAttr(mouthControlRemappingNodeAU12L + '.output', au12LBlend + '.input[1]', f = 1)
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_L)
+    cmds.connectAttr(au12LBlend + '.output', clampNode + '.inputR')
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    au18RBlend = cmds.createNode('blendWeighted')
+    cmds.connectAttr(rightMouthCornerControl01RemappingNodeAU18R + '.output', au18RBlend + '.input[0]', f = 1)
+    cmds.connectAttr(mouthControlRemappingNodeAU18R + '.output', au18RBlend + '.input[1]', f = 1)
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_18_R)
+    cmds.connectAttr(au18RBlend + '.output', clampNode + '.inputR')
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    # AU 12 R,18 L (tx).
+    leftMouthCornerControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_MouthCorner, SERigEnum.eRigSide.RS_Left, 0)
+    rightMouthCornerControl02Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_MouthCorner, SERigEnum.eRigSide.RS_Right, 1)
+    leftMouthCornerControl01RemappingNodeAU18L = createFacialControlObjectTranslateRemapping(leftMouthCornerControl01Obj, '_AU18L', 'tx', -1, 0.7, 0, 0)
+    rightMouthCornerControl02RemappingNodeAU12R = createFacialControlObjectTranslateRemapping(rightMouthCornerControl02Obj, '_AU12R', 'tx', 1, 1, 0, 0)
+    mouthControlRemappingNodeAU18L = createFacialControlObjectTranslateRemapping(mouthControlObj, '_AU18L', 'tx', -1, 1, 0, 0)
+    mouthControlRemappingNodeAU12R = createFacialControlObjectTranslateRemapping(mouthControlObj, '_AU12R', 'tx', -1, 1, 0, 0)
+
+    au12RBlend = cmds.createNode('blendWeighted')
+    cmds.connectAttr(rightMouthCornerControl02RemappingNodeAU12R + '.output', au12RBlend + '.input[0]', f = 1)
+    cmds.connectAttr(mouthControlRemappingNodeAU12R + '.output', au12RBlend + '.input[1]', f = 1)
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_R)
+    cmds.connectAttr(au12RBlend + '.output', clampNode + '.inputR')
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
+
+    au18LBlend = cmds.createNode('blendWeighted')
+    cmds.connectAttr(leftMouthCornerControl01RemappingNodeAU18L + '.output', au18LBlend + '.input[0]', f = 1)
+    cmds.connectAttr(mouthControlRemappingNodeAU18L + '.output', au18LBlend + '.input[1]', f = 1)
+
+    clampNode = cmds.createNode('clamp')
+    cmds.setAttr(clampNode + '.maxR', 1.0)
+    cmds.setAttr(clampNode + '.maxG', 1.0)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_18_L)
+    cmds.connectAttr(au18LBlend + '.output', clampNode + '.inputR')
+    cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
 
 #-----------------------------------------------------------------------------
