@@ -463,7 +463,7 @@ def getFACS_DataBuffer(facialComponentGroup):
         cmds.warning('Cannot find facial component: ' + facialComponentGroup)
         return None
 #-----------------------------------------------------------------------------
-def createFACS_FacialControlLogic(inFACS_DataBuffer):
+def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     # Inner brows controls (tx, ty).
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftInnerBrowControlObj:
@@ -938,6 +938,21 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_JawForward)
     cmds.connectAttr(unitConversionNode + '.output', tempBufferInput)
 
+    # AU 26 Fix, LipClose Fix.
+    jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
+    jawJointRemappingNodeAU26Fix = SEJointHelper.createJointRotationRemapping(jawJoint, 'AU26_Fix', 'rz', 0, 0, -22, 1)
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_26_Fix)
+    cmds.connectAttr(jawJointRemappingNodeAU26Fix + '.output', tempBufferInput)
+
+    tempBufferAU26FixOutput = tempBufferInput
+    tempBufferLipCloseOutput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_LipClose)
+    tempBufferAU26CloseFixInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_26_CloseFix)
+
+    mulNode = cmds.createNode('multiplyDivide')
+    cmds.setAttr(mulNode + '.operation', 1)
+    cmds.connectAttr(tempBufferAU26FixOutput, mulNode + '.input1X')
+    cmds.connectAttr(tempBufferLipCloseOutput, mulNode + '.input2X')
+    cmds.connectAttr(mulNode + '.outputX', tempBufferAU26CloseFixInput)
 
 
 #-----------------------------------------------------------------------------
@@ -1558,7 +1573,8 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setAttr(facialBaseJnt + '.otherType', SERigNaming.sJointTagFacialBase, type = 'string')
 
         # Create FACS face controls logic.
-        createFACS_FacialControlLogic(self.DataBuffer)
+        facialJoints = SEJointHelper.getFacialJoints()
+        createFACS_FacialControlLogic(self.DataBuffer, facialJoints)
 
         # Create controls visibility expression.
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl
