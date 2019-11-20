@@ -922,10 +922,21 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
 
     # TODO:
     # Hard coded control name for now.
-    onFaceJawControl = 'IK_OnFace_Jaw_Ctrl'
-    cmds.connectAttr(jawControlObj + '.tx', onFaceJawControl + '.tx')
-    cmds.connectAttr(jawControlObj + '.ty', onFaceJawControl + '.ty')
-    cmds.connectAttr(jawControlObj + '.tz', onFaceJawControl + '.tz')
+    onFaceJawControlObj = 'IK_OnFace_Jaw_Ctrl'
+    cmds.connectAttr(jawControlObj + '.tx', onFaceJawControlObj + '.tx')
+    cmds.connectAttr(jawControlObj + '.ty', onFaceJawControlObj + '.ty')
+    cmds.connectAttr(jawControlObj + '.tz', onFaceJawControlObj + '.tz')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_24)
+    jawControlRemappingNodeAU24 = createFacialControlObjectTranslateRemapping(onFaceJawControlObj, '_AU24', 'ty', 0.05, 0, 0.25, 1)
+    cmds.connectAttr(jawControlRemappingNodeAU24 + '.output', tempBufferInput)
+
+    unitConversionNode = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNode + '.conversionFactor', 0.1)
+    cmds.connectAttr(onFaceJawControlObj + '.jawForward', unitConversionNode + '.input')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_JawForward)
+    cmds.connectAttr(unitConversionNode + '.output', tempBufferInput)
 
 
 
@@ -1053,8 +1064,9 @@ class RigHumanFacialSystem(RigComponent):
 
         faceControlsOffsetControl = getFaceControlsOffsetControl()
         if faceControlsOffsetControl:
-            cmds.setAttr(faceControlsOffsetControl + '.tx', 10.0)
-            cmds.setAttr(faceControlsOffsetControl + '.ty', -1.0)
+            cmds.setAttr(faceControlsOffsetControl + '.tx', 0.0)
+            cmds.setAttr(faceControlsOffsetControl + '.ty', -1.25)
+            cmds.setAttr(faceControlsOffsetControl + '.tz', 0.25)
 
         # Get input facial guide joints.
         jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
