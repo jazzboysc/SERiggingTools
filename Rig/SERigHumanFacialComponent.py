@@ -877,6 +877,46 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer):
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_25_U)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
+    # Chin controls (ty).
+    leftChinControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Left, 0)
+    rightChinControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Right, 0)
+    leftChinControl02Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Left, 1)
+    rightChinControl02Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Right, 1)
+
+    unitConversionNodeL = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
+    cmds.connectAttr(leftChinControl01Obj + '.ty', unitConversionNodeL + '.input')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_16_L)
+    cmds.connectAttr(unitConversionNodeL + '.output', tempBufferInput)
+
+    unitConversionNodeR = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
+    cmds.connectAttr(rightChinControl01Obj + '.ty', unitConversionNodeR + '.input')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_16_R)
+    cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
+
+    unitConversionNodeL = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
+    cmds.connectAttr(leftChinControl02Obj + '.ty', unitConversionNodeL + '.input')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_L)
+    cmds.connectAttr(unitConversionNodeL + '.output', tempBufferInput)
+
+    unitConversionNodeR = cmds.createNode('unitConversion')
+    cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
+    cmds.connectAttr(rightChinControl02Obj + '.ty', unitConversionNodeR + '.input')
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_R)
+    cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_NL)
+    cmds.connectAttr(leftChinControl02Obj + '.tx', tempBufferInput)
+
+    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_NR)
+    cmds.connectAttr(rightChinControl02Obj + '.tx', tempBufferInput)
+
     # Jaw control (tx, ty, tz).
     jawControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Jaw, SERigEnum.eRigSide.RS_Center, 0)
 
@@ -1009,6 +1049,7 @@ class RigHumanFacialSystem(RigComponent):
 
         cmds.delete(cmds.pointConstraint(facialAttachPoint, faceControlsUIGroup, mo = 0))
         cmds.parent(faceControlsUIGroup, self.ControlsGrp)
+        cmds.parentConstraint(facialAttachPoint, faceControlsUIGroup, mo = 1)
 
         faceControlsOffsetControl = getFaceControlsOffsetControl()
         if faceControlsOffsetControl:
