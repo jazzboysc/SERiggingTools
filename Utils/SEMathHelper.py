@@ -92,3 +92,27 @@ def getLocalVecToWorldSpace(object, vec = MVector.kXaxisVector):
     matrix = getWorldTransform(object)
     vec = (vec * matrix).normal()
     return vec
+
+def getMeshVertices(mesh):
+    cmds.select(cl = True)
+    om.MGlobal.selectByName(mesh)
+    sList = om.MSelectionList()
+
+    om.MGlobal.getActiveSelectionList(sList)
+    item = om.MDagPath()
+    sList.getDagPath(0, item)
+    item.extendToShape()
+
+    fnMesh = om.MFnMesh(item)
+
+    vertices = om.MPointArray()
+    fnMesh.getPoints(vertices, om.MSpace.kObject)
+    return vertices
+
+def createMeshSkinProxyJoints(mesh):
+    vertices = getMeshVertices(mesh)
+    for i in range(vertices.length()):
+        proxyJnt = cmds.createNode('joint', n = 'SkinProxyJnt' + str(i))
+        cmds.setAttr(proxyJnt + '.tx', vertices[i].x)
+        cmds.setAttr(proxyJnt + '.ty', vertices[i].y)
+        cmds.setAttr(proxyJnt + '.tz', vertices[i].z)
