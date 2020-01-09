@@ -317,6 +317,9 @@ sJointTagSlaveFacial      = 'SlaveFacial'
 sJointTagFacialBase       = 'FacialBase'
 sJointTagFacialRoot       = 'FacialRoot'
 sJointTagFacialSlave      = 'FacialSlave'
+sJointTagFacialProxy      = 'FacialProxy'
+
+sFacialProxyJointPrefix   = 'FacialProxy_' 
 
 sLeftEyeBlockingSphere   = 'L_Eye_BS'
 sRightEyeBlockingSphere  = 'R_Eye_BS'

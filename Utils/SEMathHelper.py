@@ -3,6 +3,7 @@ import maya.OpenMaya as om
 from maya.api.OpenMaya import MVector, MMatrix, MPoint
 
 from math import sqrt
+from ..Base import SERigNaming
 
 def getWorldPosition(object):
     res = cmds.xform(object, q = True, t = True, ws = True)
@@ -109,10 +110,39 @@ def getMeshVertices(mesh):
     fnMesh.getPoints(vertices, om.MSpace.kObject)
     return vertices
 
-def createMeshSkinProxyJoints(mesh):
-    vertices = getMeshVertices(mesh)
+def createFacialSkinProxyJoints(cageMesh, facialMesh):
+    if not cmds.objExists(cageMesh) or not cmds.objExists(facialMesh):
+        cmds.error('Cage mesh or facial mesh does not exist.')
+        return
+
+    vertices = getMeshVertices(cageMesh)
+    proxyJnts = []
     for i in range(vertices.length()):
-        proxyJnt = cmds.createNode('joint', n = 'SkinProxyJnt' + str(i))
+        proxyJnt = cmds.createNode('joint', n = SERigNaming.sFacialProxyJointPrefix + str(i))
+        proxyJnts.append(proxyJnt)
+        
+        # Tagging skin proxy joints.
+        cmds.setAttr(proxyJnt + '.type', 18)
+        cmds.setAttr(proxyJnt + '.otherType', SERigNaming.sJointTagFacialProxy, type = 'string')
+        cmds.setAttr(proxyJnt + '.radius', 0.5)
+
         cmds.setAttr(proxyJnt + '.tx', vertices[i].x)
         cmds.setAttr(proxyJnt + '.ty', vertices[i].y)
         cmds.setAttr(proxyJnt + '.tz', vertices[i].z)
+
+    # Create a one-to-one influence relationship between cage mesh vertices and skin proxy joints. 
+    cageMeshSC = cmds.skinCluster(proxyJnts, cageMesh, normalizeWeights = 2, maximumInfluences = 1)[0]
+
+    # Bind skin proxy joints to facial mesh.
+    facialMeshSC = cmds.skinCluster(proxyJnts, facialMesh, normalizeWeights = 2, maximumInfluences = 4)[0]
+
+    cageMeshCurUVSet = cmds.polyUVSet(cageMesh, query = True, currentUVSet = True)[0]
+    facialMeshCurUVSet = cmds.polyUVSet(facialMesh, query = True, currentUVSet = True)[0]
+
+    # Transfer cage mesh's skin weights to facial mesh based on their current uv sets.
+    cmds.copySkinWeights(ss = cageMeshSC, ds = facialMeshSC, noMirror = True, surfaceAssociation = 'closestPoint', 
+        uvSpace = (cageMeshCurUVSet, facialMeshCurUVSet), influenceAssociation = 'closestJoint', normalize = True)
+
+    # We have done skin weights transfer, unbind cage mesh's skin.
+    cmds.skinCluster(cageMesh, e = True, ub = True)
+
