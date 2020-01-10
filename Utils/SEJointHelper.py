@@ -342,6 +342,47 @@ def getBuilderLowerBodyLowerLimbJoints():
     lowerBodyLowerLimbJoints = ['L_Knee', 'R_Knee']
     return lowerBodyLowerLimbJoints
 #-----------------------------------------------------------------------------
+def jointAddTag(jnt, tag):
+    jntTags = cmds.getAttr(jnt + '.otherType')
+    tagExist = jntTags.find(tag)
+    
+    if tagExist == -1:
+        if len(jntTags) > 0:
+            jntTags = jntTags + ',' + tag
+        else:
+            jntTags = tag
+        cmds.setAttr(jnt + '.otherType', jntTags, type = 'string')
+    else:
+        cmds.warning('Tag already exists.')
+#-----------------------------------------------------------------------------
+def jointRemoveTag(jnt, tag):
+    jntTags = cmds.getAttr(jnt + '.otherType')
+    tagExist = jntTags.find(tag)
+    if tagExist == -1:
+        cmds.warning('Tag does not exist.')
+
+    curTags = jntTags.split(',')
+    newTags = []
+    
+    for curTag in curTags:
+        if curTag != tag:
+            newTags.append(curTag)
+        
+    jntTags = ''
+    if len(newTags) > 0:
+        for i in range(len(newTags) - 1):
+            jntTags = jntTags + newTags[i] + ','
+        jntTags += newTags[-1]
+        
+    cmds.setAttr(jnt + '.otherType', jntTags, type = 'string')
+#-----------------------------------------------------------------------------
+def jointHasTag(jnt, tag):
+    jntTags = cmds.getAttr(jnt + '.otherType')
+    if jntTags.find(tag) >= 0:
+        return True
+        
+    return False
+#-----------------------------------------------------------------------------
 def isBodyDeformationJoint(jnt, includeBreast = False, includeNeckMuscle = False, includeLimeEnd = False, includeChestEnd = False):
     res = True
 
