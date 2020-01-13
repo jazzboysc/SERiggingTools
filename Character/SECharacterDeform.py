@@ -230,8 +230,7 @@ class RigBipedCharacterDeform():
         rootSlaveJnt = self.createSlaveJointsHelperNoHierarchy([rootJnt])
 
         # Tagging root slave joint.
-        cmds.setAttr(rootSlaveJnt[0][0] + '.type', 18)
-        cmds.setAttr(rootSlaveJnt[0][0] + '.otherType', SERigNaming.sJointTagSlaveRoot, type = 'string')
+        SEJointHelper.jointAddTag(rootSlaveJnt[0][0], SERigNaming.sJointTagSlaveRoot)
 
         cmds.parent(spineSlaveJnts[0][0], rootSlaveJnt[0][0])
 
@@ -241,8 +240,7 @@ class RigBipedCharacterDeform():
         cmds.parent(neckSlaveJnts[0][0], spineSlaveJnts[-1][0])
 
         # Tagging facial root joint.
-        cmds.setAttr(neckSlaveJnts[-1][0] + '.type', 18)
-        cmds.setAttr(neckSlaveJnts[-1][0] + '.otherType', SERigNaming.sJointTagFacialRoot, type = 'string')        
+        SEJointHelper.jointAddTag(neckSlaveJnts[-1][0], SERigNaming.sJointTagFacialRoot)
 
         # Create facial base joints and parent them to the neck slave.
         facialSlaveJnts = self.createSlaveJointsHelperNoHierarchy(facialJnts)
@@ -251,8 +249,7 @@ class RigBipedCharacterDeform():
             cmds.parent(facialSlaveJoint[0], neckSlaveJnts[-1][0])
 
             # Tagging facial slave joints.
-            cmds.setAttr(facialSlaveJoint[0] + '.type', 18)
-            cmds.setAttr(facialSlaveJoint[0] + '.otherType', SERigNaming.sJointTagFacialSlave, type = 'string')
+            SEJointHelper.jointAddTag(facialSlaveJoint[0], SERigNaming.sJointTagFacialSlave)
 
         # Possibly create neck muscle slave joints.
         if createNeckMuscleSlaveJoints:

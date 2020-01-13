@@ -498,10 +498,12 @@ def getSlaveFacialRootJoint(characterGroup):
     slaveJointsGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
     if slaveJointsGrp:
         slaveJoints = cmds.listRelatives(slaveJointsGrp, type = 'joint', ad = True)
-        return slaveJoints
-    else:
-        cmds.warning('Slave joints group not found.')
-        return None
+        for slaveJoint in slaveJoints:
+            if jointHasTag(slaveJoint, SERigNaming.sJointTagFacialRoot):
+                return slaveJoint
+
+    cmds.warning('Slave joints group not found.')
+    return None
 #-----------------------------------------------------------------------------
 def getEyeBlockingSphereRadius(blockingSphere):
     shapeBB = cmds.exactWorldBoundingBox(blockingSphere)
@@ -555,7 +557,12 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh):
         cmds.error('Facial mesh does not belong to a character rig.')
         return
 
-    # Possibly remove the skin cluster and related joints if the facial mesh is skinned.
+    facialRootJoint = getSlaveFacialRootJoint(rigCharacterGroup)
+    if facialRootJoint == None:
+        cmds.error('Slave facial root joint not found.')
+        return
+
+    # Possibly remove the skin cluster and related skin joints if the facial mesh is skinned.
     facialMeshSC = findRelatedSkinCluster(facialMesh)
     if facialMeshSC:
         cmds.warning('Facial mesh already skinned, removing old skin cluster and deleting influence joints.')
@@ -569,13 +576,17 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh):
         proxyJnt = cmds.createNode('joint', n = SERigNaming.sFacialProxyJointPrefix + str(i))
         proxyJnts.append(proxyJnt)
         
-        # Tagging skin proxy joints.
+        # Tagging facial skin proxy joints.
         jointAddTag(proxyJnt, SERigNaming.sJointTagFacialProxy)
         cmds.setAttr(proxyJnt + '.radius', 0.35)
 
+        # Moving proxy joints in position.
         cmds.setAttr(proxyJnt + '.tx', vertices[i].x)
         cmds.setAttr(proxyJnt + '.ty', vertices[i].y)
         cmds.setAttr(proxyJnt + '.tz', vertices[i].z)
+
+    cmds.parent(proxyJnts, facialRootJoint)
+    cmds.makeIdentity(proxyJnts, apply = True)
 
     # Create a one-to-one influence relationship between cage mesh vertices and skin proxy joints. 
     cageMeshSC = cmds.skinCluster(proxyJnts, cageMesh, normalizeWeights = 2, maximumInfluences = 1)[0]
