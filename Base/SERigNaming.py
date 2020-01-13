@@ -319,7 +319,7 @@ sJointTagFacialRoot       = 'FacialRoot'
 sJointTagFacialSlave      = 'FacialSlave'
 sJointTagFacialProxy      = 'FacialProxy'
 
-sFacialProxyJointPrefix   = 'FacialProxy_' 
+sFacialProxyJointPrefix   = 'Slave_FacialProxy_' 
 
 sLeftEyeBlockingSphere   = 'L_Eye_BS'
 sRightEyeBlockingSphere  = 'R_Eye_BS'

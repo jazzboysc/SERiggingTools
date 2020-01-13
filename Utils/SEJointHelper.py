@@ -1,4 +1,5 @@
 import maya.cmds as cmds
+import maya.OpenMaya as om
 import pymel.core as pm
 
 from ..Base import SERigEnum
@@ -6,10 +7,16 @@ from ..Base import SERigNaming
 from . import SERigObjectTypeHelper
 
 #-----------------------------------------------------------------------------
+def findRelatedSkinCluster(skinObject):
+    sc = pm.mel.findRelatedSkinCluster(skinObject)
+    if sc != '':
+        return sc
+    return None
+#-----------------------------------------------------------------------------
 def selectSkinJointsFromSelectedSkinObject():
     res = cmds.ls(sl = 1)
     if len(res) > 0:
-        sc = pm.mel.findRelatedSkinCluster(res[0])
+        sc = findRelatedSkinCluster(res[0])
         jnts = cmds.skinCluster(sc, q = 1, inf = 1)
         cmds.select(jnts, r = 1)
     else:
@@ -343,9 +350,15 @@ def getBuilderLowerBodyLowerLimbJoints():
     return lowerBodyLowerLimbJoints
 #-----------------------------------------------------------------------------
 def jointAddTag(jnt, tag):
+    labelType = cmds.getAttr(jnt + '.type')
+    if labelType != 18:
+        cmds.setAttr(jnt + '.type', 18)
+        cmds.setAttr(jnt + '.otherType', tag, type = 'string')
+        return
+
     jntTags = cmds.getAttr(jnt + '.otherType')
     tagExist = jntTags.find(tag)
-    
+
     if tagExist == -1:
         if len(jntTags) > 0:
             jntTags = jntTags + SERigNaming.sTagSeparator + tag
@@ -356,6 +369,11 @@ def jointAddTag(jnt, tag):
         cmds.warning('Tag already exists.')
 #-----------------------------------------------------------------------------
 def jointRemoveTag(jnt, tag):
+    labelType = cmds.getAttr(jnt + '.type')
+    if labelType != 18:
+        cmds.warning('Joint label type is not custom tag type.')
+        return
+
     jntTags = cmds.getAttr(jnt + '.otherType')
     tagExist = jntTags.find(tag)
     if tagExist == -1:
@@ -412,12 +430,7 @@ def isBodyDeformationJoint(jnt, includeBreast = False, includeNeckMuscle = False
     return res
 #-----------------------------------------------------------------------------
 def isFacialBaseJoint(jnt):
-    jntTag = cmds.getAttr(jnt + '.otherType')
-    if jntTag == SERigNaming.sJointTagFacialBase:
-        return True
-    else:
-        return False
-
+    return jointHasTag(jnt, SERigNaming.sJointTagFacialBase)
 #-----------------------------------------------------------------------------
 def getSelectedRigCharacterGroup():
     # Get selected rig character.
@@ -456,12 +469,13 @@ def getBodyDeformationJoints(includeBreast = False, includeNeckMuscle = False, i
         return deformationJoints
 
     else:
-        print('Deformation group not found.')
+        cmds.warning('Deformation group not found.')
         return None
 #-----------------------------------------------------------------------------
 def getFacialBaseJoints():
     characterGroup = getSelectedRigCharacterGroup()
     if characterGroup == None:
+        cmds.warning('Character group not found.')
         return None
 
     masterJointsGrp = SERigObjectTypeHelper.getCharacterMasterJointsGroup(characterGroup)
@@ -477,7 +491,7 @@ def getFacialBaseJoints():
         return facialBaseJoints
 
     else:
-        print('Master joints group not found.')
+        cmds.warning('Master joints group not found.')
         return None        
 
 def getEyeBlockingSphereRadius(blockingSphere):
@@ -505,4 +519,62 @@ def createJointRotationRemapping(joint, suffix, channel, input0 = 0, output0 = 0
         cmds.warning('Joint not found.')
 
     return remappingNode
+#-----------------------------------------------------------------------------
+def getMeshVertices(mesh):
+    cmds.select(cl = True)
+    om.MGlobal.selectByName(mesh)
+    sList = om.MSelectionList()
+
+    om.MGlobal.getActiveSelectionList(sList)
+    item = om.MDagPath()
+    sList.getDagPath(0, item)
+    item.extendToShape()
+
+    fnMesh = om.MFnMesh(item)
+
+    vertices = om.MPointArray()
+    fnMesh.getPoints(vertices, om.MSpace.kObject)
+    return vertices
+#-----------------------------------------------------------------------------
+def createFacialSkinProxyJoints(cageMesh, facialMesh):
+    if not cmds.objExists(cageMesh) or not cmds.objExists(facialMesh):
+        cmds.error('Cage mesh or facial mesh does not exist.')
+        return
+
+    # Possibly remove the skin cluster and related joints if the facial mesh is skinned.
+    facialMeshSC = findRelatedSkinCluster(facialMesh)
+    if facialMeshSC:
+        jnts = cmds.skinCluster(facialMeshSC, q = 1, inf = 1)
+        cmds.skinCluster(facialMesh, e = True, ub = True)
+        cmds.delete(jnts)
+
+    vertices = getMeshVertices(cageMesh)
+    proxyJnts = []
+    for i in range(vertices.length()):
+        proxyJnt = cmds.createNode('joint', n = SERigNaming.sFacialProxyJointPrefix + str(i))
+        proxyJnts.append(proxyJnt)
+        
+        # Tagging skin proxy joints.
+        jointAddTag(proxyJnt, SERigNaming.sJointTagFacialProxy)
+        cmds.setAttr(proxyJnt + '.radius', 0.35)
+
+        cmds.setAttr(proxyJnt + '.tx', vertices[i].x)
+        cmds.setAttr(proxyJnt + '.ty', vertices[i].y)
+        cmds.setAttr(proxyJnt + '.tz', vertices[i].z)
+
+    # Create a one-to-one influence relationship between cage mesh vertices and skin proxy joints. 
+    cageMeshSC = cmds.skinCluster(proxyJnts, cageMesh, normalizeWeights = 2, maximumInfluences = 1)[0]
+
+    # Bind skin proxy joints to facial mesh.
+    facialMeshSC = cmds.skinCluster(proxyJnts, facialMesh, normalizeWeights = 2, maximumInfluences = 4)[0]
+
+    cageMeshCurUVSet = cmds.polyUVSet(cageMesh, query = True, currentUVSet = True)[0]
+    facialMeshCurUVSet = cmds.polyUVSet(facialMesh, query = True, currentUVSet = True)[0]
+
+    # Transfer cage mesh's skin weights to facial mesh based on their current uv sets.
+    cmds.copySkinWeights(ss = cageMeshSC, ds = facialMeshSC, noMirror = True, surfaceAssociation = 'closestPoint', 
+        uvSpace = (cageMeshCurUVSet, facialMeshCurUVSet), influenceAssociation = 'closestJoint', normalize = True)
+
+    # We have done skin weights transfer, unbind cage mesh's skin.
+    cmds.skinCluster(cageMesh, e = True, ub = True)
 #-----------------------------------------------------------------------------
