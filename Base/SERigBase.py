@@ -34,6 +34,7 @@ class RigBase():
         self.RigCompsGrp = None
         self.RigPartsGrp = None
 
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.ModelGrp, SERigNaming.sModelGroupAttr, SERigNaming.sModelGroupOwnerAttr)
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, self.DeformationGrp, SERigNaming.sDeformationGroupAttr, SERigNaming.sDeformationGroupOwnerAttr)
 
         # Add custom attributes for the TopGrp object.

@@ -493,7 +493,16 @@ def getFacialBaseJoints():
     else:
         cmds.warning('Master joints group not found.')
         return None        
-
+#-----------------------------------------------------------------------------
+def getSlaveFacialRootJoint(characterGroup):
+    slaveJointsGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
+    if slaveJointsGrp:
+        slaveJoints = cmds.listRelatives(slaveJointsGrp, type = 'joint', ad = True)
+        return slaveJoints
+    else:
+        cmds.warning('Slave joints group not found.')
+        return None
+#-----------------------------------------------------------------------------
 def getEyeBlockingSphereRadius(blockingSphere):
     shapeBB = cmds.exactWorldBoundingBox(blockingSphere)
     shapeSizeX = (shapeBB[3] - shapeBB[0]) * 0.5
@@ -541,9 +550,15 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh):
         cmds.error('Cage mesh or facial mesh does not exist.')
         return
 
+    rigCharacterGroup = SERigObjectTypeHelper.findRelatedRigCharacterGroup(facialMesh)
+    if rigCharacterGroup == None:
+        cmds.error('Facial mesh does not belong to a character rig.')
+        return
+
     # Possibly remove the skin cluster and related joints if the facial mesh is skinned.
     facialMeshSC = findRelatedSkinCluster(facialMesh)
     if facialMeshSC:
+        cmds.warning('Facial mesh already skinned, removing old skin cluster and deleting influence joints.')
         jnts = cmds.skinCluster(facialMeshSC, q = 1, inf = 1)
         cmds.skinCluster(facialMesh, e = True, ub = True)
         cmds.delete(jnts)

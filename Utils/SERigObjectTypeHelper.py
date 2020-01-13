@@ -443,6 +443,20 @@ def isRigCharacterGroup(inputObject):
         # Object doesn't exist.
         return False
 
+def findRelatedRigCharacterGroup(inputObject):
+    if not cmds.objExists(inputObject):
+        return None
+
+    curParent = cmds.listRelatives(inputObject, p = True)
+    while curParent:
+        curParent = curParent[0]
+        if isRigCharacterGroup(curParent):
+            return curParent
+        
+        curParent = cmds.listRelatives(curParent, p = True)
+    
+    return None
+
 def getSpecificObjectsUnderNamespace(type = '', namespace = ''):
     res = []
 
