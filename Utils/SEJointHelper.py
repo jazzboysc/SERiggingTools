@@ -348,7 +348,7 @@ def jointAddTag(jnt, tag):
     
     if tagExist == -1:
         if len(jntTags) > 0:
-            jntTags = jntTags + ',' + tag
+            jntTags = jntTags + SERigNaming.sTagSeparator + tag
         else:
             jntTags = tag
         cmds.setAttr(jnt + '.otherType', jntTags, type = 'string')
@@ -361,7 +361,7 @@ def jointRemoveTag(jnt, tag):
     if tagExist == -1:
         cmds.warning('Tag does not exist.')
 
-    curTags = jntTags.split(',')
+    curTags = jntTags.split(SERigNaming.sTagSeparator)
     newTags = []
     
     for curTag in curTags:
@@ -371,9 +371,9 @@ def jointRemoveTag(jnt, tag):
     jntTags = ''
     if len(newTags) > 0:
         for i in range(len(newTags) - 1):
-            jntTags = jntTags + newTags[i] + ','
+            jntTags = jntTags + newTags[i] + SERigNaming.sTagSeparator
         jntTags += newTags[-1]
-        
+
     cmds.setAttr(jnt + '.otherType', jntTags, type = 'string')
 #-----------------------------------------------------------------------------
 def jointHasTag(jnt, tag):

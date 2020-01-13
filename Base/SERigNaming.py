@@ -332,3 +332,5 @@ sRightEyeTurnLeftAnimCurve   = 'AC_R_Eye_TurnLeft'
 sRightEyeTurnRightAnimCurve  = 'AC_R_Eye_TurnRight'
 sRightEyeTurnUpAnimCurve     = 'AC_R_Eye_TurnUp'
 sRightEyeTurnDownAnimCurve   = 'AC_R_Eye_TurnDown'
+
+sTagSeparator = '|'
