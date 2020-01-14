@@ -1083,6 +1083,12 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setAttr(faceControlsOffsetControl + '.ty', -1.25)
             cmds.setAttr(faceControlsOffsetControl + '.tz', 0.25)
 
+        faceProxyJointControlsGroup = cmds.group(n =SERigNaming.sFaceProxyJointControlsGroup, em = 1)
+        cmds.delete(cmds.pointConstraint(facialAttachPoint, faceProxyJointControlsGroup, mo = 0))
+        cmds.parent(faceProxyJointControlsGroup, self.ControlsGrp)
+        cmds.parentConstraint(facialAttachPoint, faceProxyJointControlsGroup, mo = 1)
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, faceProxyJointControlsGroup, SERigNaming.sFaceProxyControlGroupAttr, SERigNaming.sFaceProxyControlGroupOwnerAttr)
+
         # Get input facial guide joints.
         jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
         jawOffsetJoint = SEJointHelper.getFacialJawOffsetJoint(facialJoints)
@@ -1582,3 +1588,59 @@ class RigHumanFacialSystem(RigComponent):
         tempExpressionTail = mainControl + '.' + SERigNaming.sFacialControlsVisibilityAttr + ';'
         controlsVisES = self.ControlsGrp + '.visibility = ' + tempExpressionTail
         cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
+
+#-----------------------------------------------------------------------------
+def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, controlScale = 0.2):
+    selected = cmds.ls(sl = True)
+    if len(selected) != 2:
+        cmds.error('Please select cage mesh and facial mesh.')
+        return
+
+    cageMesh = selected[0]
+    facialMesh = selected[1]
+
+    cmds.setAttr(cageMesh + '.tx', 0.0)
+    cmds.setAttr(cageMesh + '.ty', 0.0)
+    cmds.setAttr(cageMesh + '.tz', 0.0)
+    cmds.setAttr(cageMesh + '.rx', 0.0)
+    cmds.setAttr(cageMesh + '.ry', 0.0)
+    cmds.setAttr(cageMesh + '.rz', 0.0)
+    cmds.setAttr(cageMesh + '.sx', 1.0)
+    cmds.setAttr(cageMesh + '.sy', 1.0)
+    cmds.setAttr(cageMesh + '.sz', 1.0)    
+
+    proxyJnts = SEJointHelper.createFacialSkinProxyJoints(cageMesh, facialMesh)
+
+    if deleteCageMesh:
+        cmds.delete(cageMesh)
+
+    # Delete old proxy joint controls.
+    rigCharacterGroup = SERigObjectTypeHelper.findRelatedRigCharacterGroup(facialMesh)
+    CharacterFacialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGroup)
+    proxyJointControlsGroup = SERigObjectTypeHelper.getFaceProxyJointControlsGroup(CharacterFacialComponent)
+    proxyGroupChildren = cmds.listRelatives(proxyJointControlsGroup, c = True, type = 'transform')
+    for child in proxyGroupChildren:
+        if SERigObjectTypeHelper.isRigControlGroup(child):
+            cmds.delete(child)
+    
+    # Create new proxy joint controls.
+    controlIndex = 0
+    for proxyJnt in proxyJnts:
+        proxyJointControl = SERigControl.RigCircleControl(
+                                rigSide = SERigEnum.eRigSide.RS_Unknown,
+                                rigType = SERigEnum.eRigType.RT_OnFaceProxy,
+                                rigFacing = SERigEnum.eRigFacing.RF_Z,
+                                rigControlIndex = controlIndex,
+                                prefix = proxyJnt, 
+                                translateTo = proxyJnt,
+                                rotateTo = proxyJnt,
+                                scale = controlScale,
+                                parent = proxyJointControlsGroup,
+                                lockChannels = ['r', 's', 'v'],
+                                overrideControlColor = True,
+                                controlColor = (0.0, 0.0, 0.2)
+                                )
+        cmds.parentConstraint(proxyJointControl.ControlObject, proxyJnt, mo = 0)
+
+        controlIndex += 1
+#-----------------------------------------------------------------------------

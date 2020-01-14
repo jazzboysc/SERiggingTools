@@ -402,6 +402,18 @@ def getCharacterFacialComponentGroup(characterGroup):
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
 
+def getFaceProxyJointControlsGroup(facialComponentGroup):
+    if cmds.objExists(facialComponentGroup):
+        try:
+            res = cmds.listConnections(facialComponentGroup + '.' + SERigNaming.sFaceProxyControlGroupAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find facial component : ' + facialComponentGroup + ' face proxy joint controls group')
+            return None
+    else:
+        cmds.warning('Cannot find facial component group: ' + facialComponentGroup)
+        return None
+
 def getCharacterComponentRigPartsGroup(characterComponentGroup):
     if cmds.objExists(characterComponentGroup):
         try:
@@ -432,6 +444,22 @@ def isRigCharacterGroup(inputObject):
         try:
             rigObjectTypeNode = cmds.listConnections(inputObject + '.RigObjectType')[0]
             if cmds.nodeType(rigObjectTypeNode) == 'RigCharacterType':
+                return True
+            else:
+                # This is not a rig character.
+                return False
+        except:
+            # Attribute doesn't exist.
+            return False
+    else:
+        # Object doesn't exist.
+        return False
+
+def isRigControlGroup(inputObject):
+    if cmds.objExists(inputObject):
+        try:
+            rigObjectTypeNode = cmds.listConnections(inputObject + '.RigObjectType')[0]
+            if cmds.nodeType(rigObjectTypeNode) == 'RigControlType':
                 return True
             else:
                 # This is not a rig character.

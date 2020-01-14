@@ -604,29 +604,6 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh):
 
     # We have done skin weights transfer, unbind cage mesh's skin.
     cmds.skinCluster(cageMesh, e = True, ub = True)
-#-----------------------------------------------------------------------------
-def createFacialSkinProxyJointsFromSelection(deleteCageMesh = True):
-    selected = cmds.ls(sl = True)
-    if len(selected) != 2:
-        cmds.error('Please select cage mesh and facial mesh.')
-        return
 
-    cageMesh = selected[0]
-    facialMesh = selected[1]
-
-    cmds.setAttr(cageMesh + '.tx', 0.0)
-    cmds.setAttr(cageMesh + '.ty', 0.0)
-    cmds.setAttr(cageMesh + '.tz', 0.0)
-    cmds.setAttr(cageMesh + '.rx', 0.0)
-    cmds.setAttr(cageMesh + '.ry', 0.0)
-    cmds.setAttr(cageMesh + '.rz', 0.0)
-    cmds.setAttr(cageMesh + '.sx', 1.0)
-    cmds.setAttr(cageMesh + '.sy', 1.0)
-    cmds.setAttr(cageMesh + '.sz', 1.0)    
-
-    createFacialSkinProxyJoints(cageMesh, facialMesh)
-
-    if deleteCageMesh:
-        cmds.delete(cageMesh)
-    
+    return proxyJnts
 #-----------------------------------------------------------------------------
