@@ -1599,6 +1599,16 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
     cageMesh = selected[0]
     facialMesh = selected[1]
 
+    tx = cmds.getAttr(cageMesh + '.tx')
+    ty = cmds.getAttr(cageMesh + '.ty')
+    tz = cmds.getAttr(cageMesh + '.tz')
+    rx = cmds.getAttr(cageMesh + '.rx')
+    ry = cmds.getAttr(cageMesh + '.ry')
+    rz = cmds.getAttr(cageMesh + '.rz')
+    sx = cmds.getAttr(cageMesh + '.sx')
+    sy = cmds.getAttr(cageMesh + '.sy')
+    sz = cmds.getAttr(cageMesh + '.sz')
+
     cmds.setAttr(cageMesh + '.tx', 0.0)
     cmds.setAttr(cageMesh + '.ty', 0.0)
     cmds.setAttr(cageMesh + '.tz', 0.0)
@@ -1607,12 +1617,22 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
     cmds.setAttr(cageMesh + '.rz', 0.0)
     cmds.setAttr(cageMesh + '.sx', 1.0)
     cmds.setAttr(cageMesh + '.sy', 1.0)
-    cmds.setAttr(cageMesh + '.sz', 1.0)    
+    cmds.setAttr(cageMesh + '.sz', 1.0)
 
     proxyJnts = SEJointHelper.createFacialSkinProxyJoints(cageMesh, facialMesh)
 
     if deleteCageMesh:
         cmds.delete(cageMesh)
+    else:
+        cmds.setAttr(cageMesh + '.tx', tx)
+        cmds.setAttr(cageMesh + '.ty', ty)
+        cmds.setAttr(cageMesh + '.tz', tz)
+        cmds.setAttr(cageMesh + '.rx', rx)
+        cmds.setAttr(cageMesh + '.ry', ry)
+        cmds.setAttr(cageMesh + '.rz', rz)
+        cmds.setAttr(cageMesh + '.sx', sx)
+        cmds.setAttr(cageMesh + '.sy', sy)
+        cmds.setAttr(cageMesh + '.sz', sz)
 
     # Delete old proxy joint controls.
     rigCharacterGroup = SERigObjectTypeHelper.findRelatedRigCharacterGroup(facialMesh)
@@ -1640,6 +1660,7 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
                                 overrideControlColor = True,
                                 controlColor = (0.0, 0.0, 0.2)
                                 )
+        proxyJointControl.InsertNewGroup(proxyJnt + SERigNaming.sDriverGroup)
         cmds.parentConstraint(proxyJointControl.ControlObject, proxyJnt, mo = 0)
 
         controlIndex += 1
