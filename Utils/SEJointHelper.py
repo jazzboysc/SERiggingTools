@@ -565,7 +565,7 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh):
     # Possibly remove the skin cluster and related skin joints if the facial mesh is skinned.
     facialMeshSC = findRelatedSkinCluster(facialMesh)
     if facialMeshSC:
-        cmds.warning('Facial mesh already skinned, removing old skin cluster and deleting influence joints.')
+        cmds.warning('Facial mesh already skinned, removing old skin cluster and deleting old influence joints.')
         jnts = cmds.skinCluster(facialMeshSC, q = 1, inf = 1)
         cmds.skinCluster(facialMesh, e = True, ub = True)
         cmds.delete(jnts)
@@ -589,11 +589,12 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh):
     cmds.makeIdentity(proxyJnts, apply = True)
 
     # Create a one-to-one influence relationship between cage mesh vertices and skin proxy joints. 
-    cageMeshSC = cmds.skinCluster(proxyJnts, cageMesh, normalizeWeights = 2, maximumInfluences = 1)[0]
+    cageMeshSC = cmds.skinCluster(proxyJnts, cageMesh, toSelectedBones = True, skinMethod = 0, normalizeWeights = 2, maximumInfluences = 1)[0]
 
     # Bind skin proxy joints to facial mesh.
-    facialMeshSC = cmds.skinCluster(proxyJnts, facialMesh, normalizeWeights = 2, maximumInfluences = 4)[0]
+    facialMeshSC = cmds.skinCluster(proxyJnts, facialMesh, toSelectedBones = True, skinMethod = 0, normalizeWeights = 2, maximumInfluences = 4)[0]
 
+    # Query mesh current uv set.
     cageMeshCurUVSet = cmds.polyUVSet(cageMesh, query = True, currentUVSet = True)[0]
     facialMeshCurUVSet = cmds.polyUVSet(facialMesh, query = True, currentUVSet = True)[0]
 
@@ -603,4 +604,29 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh):
 
     # We have done skin weights transfer, unbind cage mesh's skin.
     cmds.skinCluster(cageMesh, e = True, ub = True)
+#-----------------------------------------------------------------------------
+def createFacialSkinProxyJointsFromSelection(deleteCageMesh = True):
+    selected = cmds.ls(sl = True)
+    if len(selected) != 2:
+        cmds.error('Please select cage mesh and facial mesh.')
+        return
+
+    cageMesh = selected[0]
+    facialMesh = selected[1]
+
+    cmds.setAttr(cageMesh + '.tx', 0.0)
+    cmds.setAttr(cageMesh + '.ty', 0.0)
+    cmds.setAttr(cageMesh + '.tz', 0.0)
+    cmds.setAttr(cageMesh + '.rx', 0.0)
+    cmds.setAttr(cageMesh + '.ry', 0.0)
+    cmds.setAttr(cageMesh + '.rz', 0.0)
+    cmds.setAttr(cageMesh + '.sx', 1.0)
+    cmds.setAttr(cageMesh + '.sy', 1.0)
+    cmds.setAttr(cageMesh + '.sz', 1.0)    
+
+    createFacialSkinProxyJoints(cageMesh, facialMesh)
+
+    if deleteCageMesh:
+        cmds.delete(cageMesh)
+    
 #-----------------------------------------------------------------------------
