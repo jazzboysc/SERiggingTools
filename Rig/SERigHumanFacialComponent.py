@@ -1646,12 +1646,13 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
     # Create new proxy joint controls.
     controlIndex = 0
     for proxyJnt in proxyJnts:
+        tempName = 'FaceProxy_' + str(controlIndex)
         proxyJointControl = SERigControl.RigCircleControl(
                                 rigSide = SERigEnum.eRigSide.RS_Unknown,
                                 rigType = SERigEnum.eRigType.RT_OnFaceProxy,
                                 rigFacing = SERigEnum.eRigFacing.RF_Z,
                                 rigControlIndex = controlIndex,
-                                prefix = 'FaceProxy_' + str(controlIndex), 
+                                prefix = tempName, 
                                 translateTo = proxyJnt,
                                 rotateTo = proxyJnt,
                                 scale = controlScale,
@@ -1660,7 +1661,7 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
                                 overrideControlColor = True,
                                 controlColor = (0.0, 0.0, 0.2)
                                 )
-        proxyJointControl.InsertNewGroup(proxyJnt + SERigNaming.sDriverGroup)
+        proxyJointControl.InsertNewGroup(tempName + SERigNaming.sDriverGroup)
         cmds.parentConstraint(proxyJointControl.ControlObject, proxyJnt, mo = 0)
 
         controlIndex += 1
