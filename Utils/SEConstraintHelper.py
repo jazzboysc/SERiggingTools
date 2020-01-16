@@ -6,7 +6,8 @@ def createRivetConstraint(surfaceGeometry, rivetObject):
     if cmds.objExists(surfaceGeometry) and cmds.objExists(rivetObject):
         closest = cmds.createNode('closestPointOnMesh')
         cmds.connectAttr(surfaceGeometry + '.outMesh', closest + '.inMesh')
-        pos = cmds.xform(rivetObject, t = True, q = True)
+        cmds.connectAttr(surfaceGeometry + '.worldMatrix[0]', closest + '.inputMatrix') # Must support world space surface geometry.
+        pos = cmds.xform(rivetObject, rp = True, q = True, ws = True) # Must support world space rivet object.
         cmds.setAttr(closest + '.inPositionX', pos[0])
         cmds.setAttr(closest + '.inPositionY', pos[1])
         cmds.setAttr(closest + '.inPositionZ', pos[2])
