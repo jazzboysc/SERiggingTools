@@ -1668,10 +1668,13 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
                                 overrideControlColor = True,
                                 controlColor = (0.0, 0.0, 0.2)
                                 )
+        proxyJointControl.InsertNewGroup(tempName + '_Rivet' + SERigNaming.sDriverGroup)                        
         proxyJointControl.InsertNewGroup(tempName + SERigNaming.sDriverGroup)
         cmds.parentConstraint(proxyJointControl.ControlObject, proxyJnt, mo = 0)
 
         controlIndex += 1
+
+    cmds.select(cl = True)
 #-----------------------------------------------------------------------------
 def createFacialProxyControlRivetConstraints(surfaceGeometry, rigCharacterGroup):
     CharacterFacialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGroup)
