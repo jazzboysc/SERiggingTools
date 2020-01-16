@@ -1673,5 +1673,8 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
 
         controlIndex += 1
 #-----------------------------------------------------------------------------
-def createFacialProxyControlRivetConstraint(surfaceGeometry, rigCharacterGroup):
-    pass
+def createFacialProxyControlRivetConstraints(surfaceGeometry, rigCharacterGroup):
+    CharacterFacialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGroup)
+    rivetsGroup = SERigObjectTypeHelper.getFaceProxyControlRivetsGroup(CharacterFacialComponent)
+    print rivetsGroup
+#-----------------------------------------------------------------------------
