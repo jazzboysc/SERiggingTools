@@ -1083,11 +1083,18 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setAttr(faceControlsOffsetControl + '.ty', -1.25)
             cmds.setAttr(faceControlsOffsetControl + '.tz', 0.25)
 
-        faceProxyJointControlsGroup = cmds.group(n =SERigNaming.sFaceProxyJointControlsGroup, em = 1)
+        # Create facial proxy joint control group.
+        faceProxyJointControlsGroup = cmds.group(n = SERigNaming.sFaceProxyJointControlsGroup, em = 1)
         cmds.delete(cmds.pointConstraint(facialAttachPoint, faceProxyJointControlsGroup, mo = 0))
         cmds.parent(faceProxyJointControlsGroup, self.ControlsGrp)
         cmds.parentConstraint(facialAttachPoint, faceProxyJointControlsGroup, mo = 1)
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, faceProxyJointControlsGroup, SERigNaming.sFaceProxyControlGroupAttr, SERigNaming.sFaceProxyControlGroupOwnerAttr)
+
+        # Create facial proxy joint control rivet group.
+        faceProxyJointControlRivetsGroup = cmds.group(n = SERigNaming.sFaceProxyJointControlRivetsGroup, em = 1)
+        cmds.delete(cmds.pointConstraint(facialAttachPoint, faceProxyJointControlRivetsGroup, mo = 0))
+        cmds.parent(faceProxyJointControlRivetsGroup, self.RigPartsGrp)
+        SERigObjectTypeHelper.linkRigObjects(self.TopGrp, faceProxyJointControlRivetsGroup, SERigNaming.sFaceProxyControlRivetGroupAttr, SERigNaming.sFaceProxyControlRivetGroupOwnerAttr)
 
         # Get input facial guide joints.
         jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
@@ -1666,3 +1673,5 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
 
         controlIndex += 1
 #-----------------------------------------------------------------------------
+def createFacialProxyControlRivetConstraint(surfaceGeometry, rigCharacterGroup):
+    pass
