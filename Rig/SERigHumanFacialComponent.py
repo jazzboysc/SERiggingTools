@@ -9,6 +9,7 @@ from ..Utils import SEStringHelper
 from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
+from ..Utils import SEConstraintHelper
 
 facialControlsTable = {}
 facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)]       = 'Brow_L_001_Ctrl'
@@ -1668,7 +1669,14 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
                                 overrideControlColor = True,
                                 controlColor = (0.0, 0.0, 0.2)
                                 )
-        proxyJointControl.InsertNewGroup(tempName + '_Rivet' + SERigNaming.sDriverGroup)                        
+        rivetDrvGroup = proxyJointControl.InsertNewGroup(tempName + '_Rivet' + SERigNaming.sDriverGroup)
+        if rivetDrvGroup:
+            SERigObjectTypeHelper.linkRigObjects(proxyJointControl.ControlGroup, rivetDrvGroup, SERigNaming.sFaceProxyControlRivetDriverGroupAttr, 
+                SERigNaming.sFaceProxyControlRivetDriverGroupOwnerAttr)
+        else:
+            cmds.error('Failed linking rivet drive group for ' + proxyJointControl.ControlGroup)
+
+        # Additional driver group reserved for animator.
         proxyJointControl.InsertNewGroup(tempName + SERigNaming.sDriverGroup)
         cmds.parentConstraint(proxyJointControl.ControlObject, proxyJnt, mo = 0)
 
@@ -1679,5 +1687,24 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
 def createFacialProxyControlRivetConstraints(surfaceGeometry, rigCharacterGroup):
     CharacterFacialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGroup)
     rivetsGroup = SERigObjectTypeHelper.getFaceProxyControlRivetsGroup(CharacterFacialComponent)
-    print rivetsGroup
+    
+    # Possibly delete old rivets first.
+    oldRivets = cmds.listRelatives(rivetsGroup, c = True)
+    if oldRivets:
+        for oldRivet in oldRivets:
+            cmds.delete(oldRivet)
+
+    # Create rivet constraints for face proxy joint controls.
+    proxyJointControlsGroup = SERigObjectTypeHelper.getFaceProxyJointControlsGroup(CharacterFacialComponent)
+    proxyGroupChildren = cmds.listRelatives(proxyJointControlsGroup, c = True, type = 'transform')
+    for child in proxyGroupChildren:
+        if SERigObjectTypeHelper.isRigControlGroup(child):
+            rivetDriveGroup = SERigObjectTypeHelper.getFaceProxyControlRivetDriverGroup(child)
+            if rivetDriveGroup:
+                rc = SEConstraintHelper.createRivetConstraint(surfaceGeometry, rivetDriveGroup)
+                if rc:
+                    cmds.parent(rc, rivetsGroup)
+                else:
+                    cmds.warning('Failed creating rivet constraint for ' + child)
+
 #-----------------------------------------------------------------------------

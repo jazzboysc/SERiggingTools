@@ -426,6 +426,18 @@ def getFaceProxyControlRivetsGroup(facialComponentGroup):
         cmds.warning('Cannot find facial component group: ' + facialComponentGroup)
         return None
 
+def getFaceProxyControlRivetDriverGroup(FaceProxyControlGroup):
+    if cmds.objExists(FaceProxyControlGroup):
+        try:
+            res = cmds.listConnections(FaceProxyControlGroup + '.' + SERigNaming.sFaceProxyControlRivetDriverGroupAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find face proxy control group : ' + FaceProxyControlGroup + ' rivet driver group')
+            return None
+    else:
+        cmds.warning('Cannot find face proxy control group: ' + FaceProxyControlGroup)
+        return None
+
 def getCharacterComponentRigPartsGroup(characterComponentGroup):
     if cmds.objExists(characterComponentGroup):
         try:

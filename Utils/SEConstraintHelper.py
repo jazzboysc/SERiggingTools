@@ -28,7 +28,7 @@ def createRivetConstraint(surfaceGeometry, rivetObject):
         cmds.parentConstraint(follicleTrans, rivetObject, mo = True)
         cmds.delete(closest)
 
-        res = follicle
+        res = follicleTrans
 
     else:
         cmds.warning('Failed creating rivet constraint for:' + surfaceGeometry + ' and ' + rivetObject)
