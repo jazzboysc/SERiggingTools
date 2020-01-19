@@ -1094,7 +1094,10 @@ class RigHumanFacialSystem(RigComponent):
         # Create facial proxy joint control rivet group.
         faceProxyJointControlRivetsGroup = cmds.group(n = SERigNaming.sFaceProxyJointControlRivetsGroup, em = 1)
         cmds.delete(cmds.pointConstraint(facialAttachPoint, faceProxyJointControlRivetsGroup, mo = 0))
-        cmds.parent(faceProxyJointControlRivetsGroup, self.RigPartsGrp)
+        cmds.parent(faceProxyJointControlRivetsGroup, self.RigPartsFixedGrp)
+        cmds.makeIdentity(faceProxyJointControlRivetsGroup, apply = True, t = 1, r = 1, s = 1)
+        cmds.setAttr(faceProxyJointControlRivetsGroup + '.it', 0)
+        cmds.hide(faceProxyJointControlRivetsGroup)
         SERigObjectTypeHelper.linkRigObjects(self.TopGrp, faceProxyJointControlRivetsGroup, SERigNaming.sFaceProxyControlRivetGroupAttr, SERigNaming.sFaceProxyControlRivetGroupOwnerAttr)
 
         # Get input facial guide joints.
