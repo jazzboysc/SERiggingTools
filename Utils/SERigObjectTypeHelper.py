@@ -555,3 +555,16 @@ def getDefaultPerspectiveCamera():
             return camera
 
     return None
+
+def hideTransObjectChannels(transObject, hideChannels = []):
+    singleAttributeList = []
+    for hc in hideChannels:
+        if hc in ['t', 'r', 's']:
+            for axis in ['x', 'y', 'z']:
+                attr = hc + axis
+                singleAttributeList.append(attr)
+        else:
+            singleAttributeList.append(hc)
+
+    for attr in singleAttributeList:
+        cmds.setAttr(transObject + '.' + attr, cb = 0, k = 0)

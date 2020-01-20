@@ -1694,6 +1694,7 @@ def createFacialProxyControlRivetConstraints(surfaceGeometry, rigCharacterGroup)
     # Possibly delete old rivets first.
     oldRivets = cmds.listRelatives(rivetsGroup, c = True)
     if oldRivets:
+        cmds.warning('Deleting old face proxy control rivets.')
         for oldRivet in oldRivets:
             cmds.delete(oldRivet)
 
@@ -1704,10 +1705,11 @@ def createFacialProxyControlRivetConstraints(surfaceGeometry, rigCharacterGroup)
         if SERigObjectTypeHelper.isRigControlGroup(child):
             rivetDriveGroup = SERigObjectTypeHelper.getFaceProxyControlRivetDriverGroup(child)
             if rivetDriveGroup:
-                rc = SEConstraintHelper.createRivetConstraint(surfaceGeometry, rivetDriveGroup)
+                rc = SEConstraintHelper.createRivetConstraint(surfaceGeometry, rivetDriveGroup, hideChannels = ['t', 'r', 's'])
                 if rc:
                     cmds.parent(rc, rivetsGroup)
                 else:
                     cmds.warning('Failed creating rivet constraint for ' + child)
 
+    print('Face proxy control rivets created, parenting them to facial rivets group.')
 #-----------------------------------------------------------------------------

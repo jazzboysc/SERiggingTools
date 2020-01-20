@@ -1,6 +1,8 @@
 import maya.cmds as cmds
 
-def createRivetConstraint(surfaceGeometry, rivetObject):
+from . import SERigObjectTypeHelper
+
+def createRivetConstraint(surfaceGeometry, rivetObject, hideChannels = []):
     res = None
 
     if cmds.objExists(surfaceGeometry) and cmds.objExists(rivetObject):
@@ -28,6 +30,9 @@ def createRivetConstraint(surfaceGeometry, rivetObject):
         
         cmds.parentConstraint(follicleTrans, rivetObject, mo = True)
         cmds.delete(closest)
+
+        # Hide follicle channels.
+        SERigObjectTypeHelper.hideTransObjectChannels(follicleTrans, hideChannels)
 
         res = follicleTrans
 
