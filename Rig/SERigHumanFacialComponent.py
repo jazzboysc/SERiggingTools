@@ -64,7 +64,7 @@ def getFacialControlObjectTranslateRemappingNode(facialControlObject, suffix, ch
         cmds.warning('Facial control translate remapping node not found.')
         return None
 #-----------------------------------------------------------------------------
-def createFacialControlObjectTranslateRemapping(facialControlObject, suffix, channel, input0 = 0, output0 = 0, input1 = 1, output1 = 1):
+def createFacialControlObjectTranslateRemapping(facialControlObject, suffix, channel, input0 = 0, output0 = 0, input1 = 1, output1 = 1, nodeType = 'animCurveUU'):
     remappingNode = None
 
     if cmds.objExists(facialControlObject):
@@ -73,7 +73,7 @@ def createFacialControlObjectTranslateRemapping(facialControlObject, suffix, cha
             cmds.warning('Facial control translate remapping node already created.')
             return nodeName
 
-        remappingNode = cmds.createNode('animCurveUU', n = nodeName)
+        remappingNode = cmds.createNode(nodeType, n = nodeName)
         cmds.setKeyframe(remappingNode, float = input0, value = output0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(remappingNode, float = input1, value = output1, itt = 'linear', ott = 'linear')
         cmds.keyTangent(remappingNode, weightedTangents = False)
@@ -938,6 +938,17 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
 
     tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_JawForward)
     cmds.connectAttr(unitConversionNode + '.output', tempBufferInput)
+
+    # TODO:
+    # Hard coded control drive group name for now (AU28D,AU28U).
+    onFaceJawControlDriveGroup = 'IK_OnFace_Jaw_DrvGrp'
+    multiplyNode = cmds.createNode('multiplyDivide', n = 'AU28_DU_Multiply')
+    tempBufferOutput_28D = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_D)
+    tempBufferOutput_28U = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_U)
+    cmds.connectAttr(tempBufferOutput_28D, multiplyNode + '.input1X')
+    cmds.connectAttr(tempBufferOutput_28U, multiplyNode + '.input2X')
+    jawDrvRemappingNodeAU28 = createFacialControlObjectTranslateRemapping(multiplyNode, '', 'outputX', 0, 0, 1, -0.3, nodeType = 'animCurveUL')
+    cmds.connectAttr(jawDrvRemappingNodeAU28 + '.output', onFaceJawControlDriveGroup + '.ty')
 
     # AU 26 Fix, LipClose Fix.
     jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
