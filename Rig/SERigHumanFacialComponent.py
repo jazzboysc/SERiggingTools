@@ -1669,7 +1669,7 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
     controlIndex = 0
     for proxyJnt in proxyJnts:
         tempName = 'FaceProxy_' + str(controlIndex)
-        proxyJointControl = SERigControl.RigCircleControl(
+        proxyJointControl = SERigControl.RigSphereControl(
                                 rigSide = SERigEnum.eRigSide.RS_Unknown,
                                 rigType = SERigEnum.eRigType.RT_OnFaceProxy,
                                 rigFacing = SERigEnum.eRigFacing.RF_Z,

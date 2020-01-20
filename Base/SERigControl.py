@@ -319,6 +319,96 @@ class RigCircleControl(RigControl):
         cmds.select(cl = 1)
 
 #-----------------------------------------------------------------------------
+# Rig Sphere Control Class
+# Sun Che
+#-----------------------------------------------------------------------------
+class RigSphereControl(RigControl):
+    def __init__(
+                 self,
+                 rigSide = SERigEnum.eRigSide.RS_Unknown,
+                 rigType = SERigEnum.eRigType.RT_Unknown,
+                 rigFacing = SERigEnum.eRigFacing.RF_X,
+                 rigControlIndex = 0,
+                 prefix = 'new', 
+                 scale = 1.0, 
+                 matchBoundingBoxScale = False,
+                 translateTo = '', 
+                 rotateTo = '', 
+                 parent = '',
+                 lockChannels = ['s', 'v'],
+                 flipScaleX = False,
+                 flipScaleY = False,
+                 flipScaleZ = False,
+                 preRotateX = 0.0,
+                 preRotateY = 0.0,
+                 preRotateZ = 0.0,
+                 overrideControlColor = False, 
+                 controlColor = (0.0, 0.0, 0.0),
+                 fitToSurroundingMeshes = False,
+                 surroundingMeshes = [],
+                 postFitScale = 1.0,
+                 overrideFitRayDirection = False, 
+                 fitRayDirection = (0, 1, 0)
+                 ):
+
+        RigControl.__init__(self, rigSide, rigType, rigFacing, rigControlIndex, prefix, 
+                            scale, matchBoundingBoxScale, translateTo, rotateTo, parent, lockChannels,
+                            flipScaleX, flipScaleY, flipScaleZ, overrideControlColor = overrideControlColor, controlColor = controlColor,
+                            fitToSurroundingMeshes = fitToSurroundingMeshes, surroundingMeshes = surroundingMeshes, postFitScale = postFitScale,
+                            overrideFitRayDirection = overrideFitRayDirection, fitRayDirection = fitRayDirection)
+
+    def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, 
+                            preRotateX, preRotateY, preRotateZ, overrideControlColor, controlColor, 
+                            fitToSurroundingMeshes, surroundingMeshes, postFitScale, translateTo, rotateTo, overrideFitRayDirection, fitRayDirection):
+
+        circleNormal = [1, 0, 0]
+        ctrlObj1 = cmds.circle(n = prefix + SERigNaming.sControl, ch = False, normal = circleNormal, radius = scale)[0]
+        circleNormal = [0, 1, 0]
+        ctrlObj2 = cmds.circle(ch = False, normal = circleNormal, radius = scale)[0]
+        ctrlObj2Shape = cmds.listRelatives(ctrlObj2, c = 1, s = 1)[0]
+        circleNormal = [0, 0, 1]
+        ctrlObj3 = cmds.circle(ch = False, normal = circleNormal, radius = scale)[0]
+        ctrlObj3Shape = cmds.listRelatives(ctrlObj3, c = 1, s = 1)[0]
+        cmds.parent(ctrlObj2Shape, ctrlObj3Shape, ctrlObj1, s = 1, r = 1)
+        cmds.delete(ctrlObj2, ctrlObj3)
+
+        if fitToSurroundingMeshes and surroundingMeshes and len(surroundingMeshes) > 0:
+            fitSize = self._getFitSize(surroundingMeshes, translateTo, rotateTo, overrideFitRayDirection, fitRayDirection)
+            # Debug info.
+            #print(prefix + ':fitSize:' + str(fitSize))
+
+            if fitSize:
+                shapeBB = cmds.exactWorldBoundingBox(ctrlObj1)
+
+                shapeSizeY = (shapeBB[4] - shapeBB[1]) * 0.5
+                fitScale = fitSize / shapeSizeY * postFitScale
+
+                cmds.select(ctrlObj1)
+                cmds.scale(fitScale, fitScale, fitScale, xyz = 1, relative = 1)
+                cmds.makeIdentity(apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+        # Set control color.
+        ctrlShapes = cmds.listRelatives(ctrlObj1, s = 1)
+
+        for ctrlShape in ctrlShapes:
+            if overrideControlColor:
+                setControlRGBColor(ctrlShape, controlColor)
+            else:
+                cmds.setAttr(ctrlShape + '.ove', 1)
+
+                if rigSide == SERigEnum.eRigSide.RS_Left:
+                    cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Blue)
+                elif rigSide == SERigEnum.eRigSide.RS_Right:
+                    cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Red)
+                elif rigSide == SERigEnum.eRigSide.RS_Center:
+                    cmds.setAttr(ctrlShape + '.ovc', SERigEnum.eRigColor.RC_Yellow)
+                else:
+                    # TODO:
+                    pass
+
+        return ctrlObj1
+
+#-----------------------------------------------------------------------------
 # Rig Cube Control Class
 # Sun Che
 #-----------------------------------------------------------------------------
