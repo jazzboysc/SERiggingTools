@@ -2,7 +2,7 @@ import maya.cmds as cmds
 
 from . import SERigObjectTypeHelper
 
-def createRivetConstraint(surfaceGeometry, rivetObject, hideChannels = []):
+def createRivetConstraint(surfaceGeometry, rivetObject, createParentConstraint = False, maintainOffset = True, hideChannels = []):
     res = None
 
     if cmds.objExists(surfaceGeometry) and cmds.objExists(rivetObject):
@@ -28,7 +28,11 @@ def createRivetConstraint(surfaceGeometry, rivetObject, hideChannels = []):
         cmds.setAttr(follicle + '.parameterU', u)
         cmds.setAttr(follicle + '.parameterV', v)
         
-        cmds.parentConstraint(follicleTrans, rivetObject, mo = True)
+        if createParentConstraint:
+            cmds.parentConstraint(follicleTrans, rivetObject, mo = maintainOffset)
+        else:
+            cmds.pointConstraint(follicleTrans, rivetObject, mo = maintainOffset)
+
         cmds.delete(closest)
 
         # Hide follicle channels.
