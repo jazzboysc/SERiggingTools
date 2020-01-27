@@ -5,3 +5,4 @@ import SEMathHelper
 import SERigObjectTypeHelper
 import SEBakeAnimationHelper
 import SEConstraintHelper
+import SEDeformerHelper
