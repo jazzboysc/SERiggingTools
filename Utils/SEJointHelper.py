@@ -188,7 +188,7 @@ def adjustIKTwist(ikHandle,
         cmds.error('Twisting IK value failed for: %s' % startJoint)
 
 #-----------------------------------------------------------------------------
-def getFacialJoints():
+def getFacialBuilderJoints():
     facialJnts = ['L_Eye',                 # 0
                   'R_Eye',                 # 1
                   'C_UpperTeeth',          # 2 
@@ -472,8 +472,11 @@ def getBodyDeformationJoints(includeBreast = False, includeNeckMuscle = False, i
         cmds.warning('Deformation group not found.')
         return None
 #-----------------------------------------------------------------------------
-def getFacialBaseJoints():
+def getFacialBaseJointsFromSelectedRigCharacterGroup():
     characterGroup = getSelectedRigCharacterGroup()
+    getFacialBaseJoints(characterGroup)
+#-----------------------------------------------------------------------------
+def getFacialBaseJoints(characterGroup):
     if characterGroup == None:
         cmds.warning('Character group not found.')
         return None

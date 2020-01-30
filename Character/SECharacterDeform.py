@@ -149,7 +149,8 @@ class RigBipedCharacterDeform():
               createNeckMuscleSlaveJoints = False,
               leftNeckMuscleMasterJnts = [],
               rightNeckMuscleMasterJnts = [],
-              facialJnts = [],
+              facialBuilderJnts = [],
+              facialGeneratedDeformJnts = [],
               rootJnt = ''
               ):
 
@@ -243,7 +244,8 @@ class RigBipedCharacterDeform():
         SEJointHelper.jointAddTag(neckSlaveJnts[-1][0], SERigNaming.sJointTagFacialRoot)
 
         # Create facial base joints and parent them to the neck slave.
-        facialSlaveJnts = self.createSlaveJointsHelperNoHierarchy(facialJnts)
+        facialJntsToBeSlaved = facialBuilderJnts + facialGeneratedDeformJnts
+        facialSlaveJnts = self.createSlaveJointsHelperNoHierarchy(facialJntsToBeSlaved)
 
         for facialSlaveJoint in facialSlaveJnts:
             cmds.parent(facialSlaveJoint[0], neckSlaveJnts[-1][0])

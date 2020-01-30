@@ -996,6 +996,8 @@ class RigHumanFacialSystem(RigComponent):
         self.OnFaceFkControlGroup = None
         self.DataBuffer = None
 
+        self.GeneratedFacialBaseJoints = []
+
     def _createChinBulgeIKSystem(self, jawEndJoint, throatJoint):
         if cmds.objExists(jawEndJoint) and cmds.objExists(throatJoint):
 
@@ -1600,9 +1602,12 @@ class RigHumanFacialSystem(RigComponent):
             cmds.setAttr(facialBaseJnt + '.type', 18)
             cmds.setAttr(facialBaseJnt + '.otherType', SERigNaming.sJointTagFacialBase, type = 'string')
 
+        self.GeneratedFacialBaseJoints.append(lowerLipBlendJoint)
+        self.GeneratedFacialBaseJoints.append(upperLipBlendJoint)
+
         # Create FACS face controls logic.
-        facialJoints = SEJointHelper.getFacialJoints()
-        createFACS_FacialControlLogic(self.DataBuffer, facialJoints)
+        facialBuilderJoints = SEJointHelper.getFacialBuilderJoints()
+        createFACS_FacialControlLogic(self.DataBuffer, facialBuilderJoints)
 
         # Create controls visibility expression.
         mainControl = SERigNaming.sMainControlPrefix + SERigNaming.sControl

@@ -197,7 +197,7 @@ class RigBipedCharacter():
 
         neckJnts = SEJointHelper.getBuilderNeckJoints()
 
-        facialJnts = SEJointHelper.getFacialJoints()
+        facialBuilderJnts = SEJointHelper.getFacialBuilderJoints()
 
         # Create rig components.
         self._createRigComponents( 
@@ -232,7 +232,7 @@ class RigBipedCharacter():
                                 neckMuscleSplineJointCount,
                                 createNeckCircleFkControl,
                                 createFacialSystem,
-                                facialJnts,
+                                facialBuilderJnts,
                                 surroundingMeshes
                                 )
 
@@ -262,6 +262,9 @@ class RigBipedCharacter():
                 rightNeckMuscleMasterJnts = rightNeckMuscleDrivenJnts[1:-1]
                 rightNeckMuscleMasterJnts.insert(0, rightNeckMuscleDriverJnts[0])
                 rightNeckMuscleMasterJnts.append(rightNeckMuscleDriverJnts[1])
+
+            # Get generated facial deform joints.
+            facialGeneratedDeformJnts = self.FacialSystem.GeneratedFacialBaseJoints
 
             # Build deformation system.
             self.RigDeform.build(
@@ -294,7 +297,8 @@ class RigBipedCharacter():
                                 createNeckMuscleSplineSystem,
                                 leftNeckMuscleMasterJnts,
                                 rightNeckMuscleMasterJnts,
-                                facialJnts,
+                                facialBuilderJnts,
+                                facialGeneratedDeformJnts,
                                 rootJnt
                                 )
 
@@ -342,7 +346,7 @@ class RigBipedCharacter():
                             neckMuscleSplineJointCount,
                             createNeckCircleFkControl,
                             createFacialSystem,
-                            facialJnts,
+                            facialBuilderJnts,
                             surroundingMeshes
                             ):
 
@@ -523,7 +527,7 @@ class RigBipedCharacter():
                                                                           rigSide = SERigEnum.eRigSide.RS_Center, 
                                                                           rigType = SERigEnum.eRigType.RT_FacialComponent)
             facialSystem.build(
-                facialJoints = facialJnts,
+                facialJoints = facialBuilderJnts,
                 jawEndJoint = 'C_JawEnd',
                 throatJoint = 'C_Throat',
                 rootJoint = '',
