@@ -263,8 +263,10 @@ class RigBipedCharacter():
                 rightNeckMuscleMasterJnts.insert(0, rightNeckMuscleDriverJnts[0])
                 rightNeckMuscleMasterJnts.append(rightNeckMuscleDriverJnts[1])
 
-            # Get generated facial deform joints.
-            facialGeneratedDeformJnts = self.FacialSystem.GeneratedFacialBaseJoints
+            # Possibly get generated facial deform joints.
+            facialGeneratedDeformJnts = []
+            if self.FacialSystem and self.FacialSystem.GeneratedFacialBaseJoints:
+                facialGeneratedDeformJnts = self.FacialSystem.GeneratedFacialBaseJoints
 
             # Build deformation system.
             self.RigDeform.build(
