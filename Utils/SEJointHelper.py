@@ -432,6 +432,17 @@ def isBodyDeformationJoint(jnt, includeBreast = False, includeNeckMuscle = False
 def isFacialBaseJoint(jnt):
     return jointHasTag(jnt, SERigNaming.sJointTagFacialBase)
 #-----------------------------------------------------------------------------
+def isSlaveFacialBaseJoint(slaveJnt):
+    try:
+        oc = cmds.listRelatives(slaveJnt, ad = 1, type = 'orientConstraint')[0]
+    except:
+        return False
+
+    masterJnt = cmds.listConnections(oc + '.target', s = 1)[0]
+    res = isFacialBaseJoint(masterJnt)
+
+    return res
+#-----------------------------------------------------------------------------
 def getSelectedRigCharacterGroup():
     # Get selected rig character.
     selected = cmds.ls(sl = True)
@@ -472,10 +483,6 @@ def getBodyDeformationJoints(includeBreast = False, includeNeckMuscle = False, i
         cmds.warning('Deformation group not found.')
         return None
 #-----------------------------------------------------------------------------
-def getFacialBaseJointsFromSelectedRigCharacterGroup():
-    characterGroup = getSelectedRigCharacterGroup()
-    getFacialBaseJoints(characterGroup)
-#-----------------------------------------------------------------------------
 def getFacialBaseJoints(characterGroup):
     if characterGroup == None:
         cmds.warning('Character group not found.')
@@ -495,7 +502,11 @@ def getFacialBaseJoints(characterGroup):
 
     else:
         cmds.warning('Master joints group not found.')
-        return None        
+        return None
+#-----------------------------------------------------------------------------
+def getFacialBaseJointsFromSelectedRigCharacterGroup():
+    characterGroup = getSelectedRigCharacterGroup()
+    return getFacialBaseJoints(characterGroup)
 #-----------------------------------------------------------------------------
 def getSlaveFacialRootJoint(characterGroup):
     slaveJointsGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
@@ -507,6 +518,23 @@ def getSlaveFacialRootJoint(characterGroup):
 
     cmds.warning('Slave joints group not found.')
     return None
+#-----------------------------------------------------------------------------
+def getSlaveFacialBaseJoints(characterGroup):
+    res = []
+    slaveJointsGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
+    if slaveJointsGrp:
+        slaveJoints = cmds.listRelatives(slaveJointsGrp, type = 'joint', ad = True)
+        for slaveJoint in slaveJoints:
+            if isSlaveFacialBaseJoint(slaveJoint):
+                res.append(slaveJoint)
+    else:
+        cmds.warning('Slave joints group not found.')
+
+    return res
+#-----------------------------------------------------------------------------
+def getSlaveFacialBaseJointsFromSelectedRigCharacterGroup():
+    characterGroup = getSelectedRigCharacterGroup()
+    return getSlaveFacialBaseJoints(characterGroup)
 #-----------------------------------------------------------------------------
 def getEyeBlockingSphereRadius(blockingSphere):
     shapeBB = cmds.exactWorldBoundingBox(blockingSphere)
