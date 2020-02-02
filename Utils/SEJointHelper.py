@@ -401,7 +401,8 @@ def jointHasTag(jnt, tag):
         
     return False
 #-----------------------------------------------------------------------------
-def isBodyDeformationJoint(jnt, includeBreast = False, includeNeckMuscle = False, includeLimeEnd = False, includeChestEnd = False):
+def isBodyDeformationJoint(jnt, includeBreast = False, includeNeckMuscle = False, includeLimeEnd = False, includeChestEnd = False, 
+    includeFacialSlave = False, includeFacialProxy = False):
     res = True
 
     jntTag = cmds.getAttr(jnt + '.otherType')
@@ -426,6 +427,12 @@ def isBodyDeformationJoint(jnt, includeBreast = False, includeNeckMuscle = False
 
     elif jntTag == SERigNaming.sJointTagSlaveNeckMuscle and includeNeckMuscle == False:
         res = False
+
+    elif jointHasTag(jnt, SERigNaming.sJointTagFacialSlave) and includeFacialSlave == False:
+        res = False
+
+    elif jointHasTag(jnt, SERigNaming.sJointTagFacialProxy) and includeFacialProxy == False:
+        res = False       
 
     return res
 #-----------------------------------------------------------------------------
@@ -578,7 +585,7 @@ def getMeshVertices(mesh):
     fnMesh.getPoints(vertices, om.MSpace.kObject)
     return vertices
 #-----------------------------------------------------------------------------
-def createFacialSkinProxyJoints(cageMesh, facialMesh):
+def createFacialSkinProxyJoints(cageMesh, facialMesh, proxyJntMaximumInfluences = 4):
     if not cmds.objExists(cageMesh) or not cmds.objExists(facialMesh):
         cmds.error('Cage mesh or facial mesh does not exist.')
         return
@@ -620,10 +627,11 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh):
     cmds.makeIdentity(proxyJnts, apply = True)
 
     # Create a one-to-one influence relationship between cage mesh vertices and skin proxy joints. 
-    cageMeshSC = cmds.skinCluster(proxyJnts, cageMesh, toSelectedBones = True, skinMethod = 0, normalizeWeights = 2, maximumInfluences = 1)[0]
+    cageMeshSC = cmds.skinCluster(proxyJnts, cageMesh, toSelectedBones = True, skinMethod = 0, normalizeWeights = 1, obeyMaxInfluences = 1, maximumInfluences = 1)[0]
 
     # Bind skin proxy joints to facial mesh.
-    facialMeshSC = cmds.skinCluster(proxyJnts, facialMesh, toSelectedBones = True, skinMethod = 0, normalizeWeights = 2, maximumInfluences = 4)[0]
+    facialMeshSC = cmds.skinCluster(proxyJnts, facialMesh, toSelectedBones = True, skinMethod = 0, normalizeWeights = 1, obeyMaxInfluences = 1, 
+        maximumInfluences = proxyJntMaximumInfluences)[0]
 
     # Query mesh current uv set.
     cageMeshCurUVSet = cmds.polyUVSet(cageMesh, query = True, currentUVSet = True)[0]

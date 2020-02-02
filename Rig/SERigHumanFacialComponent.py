@@ -1617,7 +1617,11 @@ class RigHumanFacialSystem(RigComponent):
         cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
 
 #-----------------------------------------------------------------------------
-def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, controlScale = 0.2):
+def createFacialSkinProxyJointsAndControlsFromSelection(proxyJntMaximumInfluences = 4, deleteCageMesh = True, controlScale = 0.2):
+    if proxyJntMaximumInfluences <= 0:
+        cmds.error('Proxy joint maximum influences must be greater than zero.')
+        return
+
     selected = cmds.ls(sl = True)
     if len(selected) != 2:
         cmds.error('Please select cage mesh and facial mesh.')
@@ -1646,7 +1650,7 @@ def createFacialSkinProxyJointsAndControlsFromSelection(deleteCageMesh = True, c
     cmds.setAttr(cageMesh + '.sy', 1.0)
     cmds.setAttr(cageMesh + '.sz', 1.0)
 
-    proxyJnts = SEJointHelper.createFacialSkinProxyJoints(cageMesh, facialMesh)
+    proxyJnts = SEJointHelper.createFacialSkinProxyJoints(cageMesh, facialMesh, proxyJntMaximumInfluences)
 
     if deleteCageMesh:
         cmds.delete(cageMesh)
