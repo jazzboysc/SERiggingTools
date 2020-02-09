@@ -5,20 +5,21 @@ from maya.api.OpenMaya import MVector, MMatrix, MPoint
 from math import sqrt
 from ..Base import SERigNaming
 
+#-----------------------------------------------------------------------------
 def getWorldPosition(object):
     res = cmds.xform(object, q = True, t = True, ws = True)
     return res
-
+#-----------------------------------------------------------------------------
 def setWorldPosition(object, wPos):
     cmds.xform(object, t = wPos, ws = True)
-
+#-----------------------------------------------------------------------------
 def getWorldRotation(object):
     res = cmds.xform(object, q = True, ro = True, ws = True)
     return res
-
+#-----------------------------------------------------------------------------
 def setWorldRotation(object, wRot):
     cmds.xform(object, ro = wRot, ws = True)
-
+#-----------------------------------------------------------------------------
 def getDistance3(a, b):
     dx = a[0] - b[0]
     dy = a[1] - b[1]
@@ -26,7 +27,7 @@ def getDistance3(a, b):
 
     res = sqrt(dx*dx + dy*dy + dz*dz)
     return res
-
+#-----------------------------------------------------------------------------
 def getDistanceBetweenObjects(object1, object2):
     d = -1.0
     if cmds.objExists(object1) and cmds.objExists(object2):
@@ -35,13 +36,12 @@ def getDistanceBetweenObjects(object1, object2):
         d = getDistance3(pos1, pos2)
 
     return d
-
+#-----------------------------------------------------------------------------
 def movePivotTo(object, target):
 
     targetPos = cmds.xform(target, q = True, t = True, ws = True)
     cmds.move(targetPos[0], targetPos[1], targetPos[2], object + '.scalePivot',  object + '.rotatePivot', rpr = 1)
-
-
+#-----------------------------------------------------------------------------
 def rayIntersect(mesh, point, direction):
     hitPoints = None
     try:
@@ -85,11 +85,19 @@ def rayIntersect(mesh, point, direction):
         pass
 
     return hitPoints
-
+#-----------------------------------------------------------------------------
 def getWorldTransform(object):
     return MMatrix(cmds.xform(object, q = True, matrix = True, ws = True))
-    
+#-----------------------------------------------------------------------------
 def getLocalVecToWorldSpace(object, vec = MVector.kXaxisVector):
     matrix = getWorldTransform(object)
     vec = (vec * matrix).normal()
     return vec
+#-----------------------------------------------------------------------------
+def createLinearRemappingNode(nodeType = 'animCurveUU', nodeName = 'newAnimCurve', input0 = 0, output0 = 0, input1 = 1, output1 = 1):
+    remappingNode = cmds.createNode(nodeType, n = nodeName)
+    cmds.setKeyframe(remappingNode, float = input0, value = output0, itt = 'linear', ott = 'linear')
+    cmds.setKeyframe(remappingNode, float = input1, value = output1, itt = 'linear', ott = 'linear')
+    cmds.keyTangent(remappingNode, weightedTangents = False)
+    return remappingNode
+#-----------------------------------------------------------------------------

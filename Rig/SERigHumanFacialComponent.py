@@ -73,11 +73,7 @@ def createFacialControlObjectTranslateRemapping(facialControlObject, suffix, cha
             cmds.warning('Facial control translate remapping node already created.')
             return nodeName
 
-        remappingNode = cmds.createNode(nodeType, n = nodeName)
-        cmds.setKeyframe(remappingNode, float = input0, value = output0, itt = 'linear', ott = 'linear')
-        cmds.setKeyframe(remappingNode, float = input1, value = output1, itt = 'linear', ott = 'linear')
-        cmds.keyTangent(remappingNode, weightedTangents = False)
-
+        remappingNode = SEMathHelper.createLinearRemappingNode(nodeType, nodeName, input0, output0, input1, output1)
         cmds.connectAttr(facialControlObject + '.' + channel, remappingNode + '.input', f = 1)
 
     else:
