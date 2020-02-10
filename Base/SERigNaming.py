@@ -150,6 +150,14 @@ sAU_Eye_R_LookUp_Attr     = 'Eye_R_LookUp'
 sAU_Eye_R_LookDown_Attr   = 'Eye_R_LookDown'
 sAU_10_OL_Attr            = 'AU10OL'
 sAU_10_OR_Attr            = 'AU10OR'
+sAU_Eye_L_LookLeft_Blink_Attr  = 'Eye_L_LookLeft_Blink'
+sAU_Eye_L_LookRight_Blink_Attr = 'Eye_L_LookRight_Blink'
+sAU_Eye_L_LookUp_Blink_Attr    = 'Eye_L_LookUp_Blink'
+sAU_Eye_L_LookDown_Blink_Attr  = 'Eye_L_LookDown_Blink'
+sAU_Eye_R_LookLeft_Blink_Attr  = 'Eye_R_LookLeft_Blink'
+sAU_Eye_R_LookRight_Blink_Attr = 'Eye_R_LookRight_Blink'
+sAU_Eye_R_LookUp_Blink_Attr    = 'Eye_R_LookUp_Blink'
+sAU_Eye_R_LookDown_Blink_Attr  = 'Eye_R_LookDown_Blink'
 
 auAttrList = [
                 sAU_01_L_Attr,
@@ -223,7 +231,15 @@ auAttrList = [
                 sAU_Eye_R_LookUp_Attr,
                 sAU_Eye_R_LookDown_Attr,
                 sAU_10_OL_Attr,
-                sAU_10_OR_Attr
+                sAU_10_OR_Attr,
+                sAU_Eye_L_LookLeft_Blink_Attr,
+                sAU_Eye_L_LookRight_Blink_Attr,
+                sAU_Eye_L_LookUp_Blink_Attr,
+                sAU_Eye_L_LookDown_Blink_Attr,
+                sAU_Eye_R_LookLeft_Blink_Attr,
+                sAU_Eye_R_LookRight_Blink_Attr,
+                sAU_Eye_R_LookUp_Blink_Attr,
+                sAU_Eye_R_LookDown_Blink_Attr
                 ]
 
 sWM01_browsRaiseInner_R_Attr = 'WM01_browsRaiseInner_R'

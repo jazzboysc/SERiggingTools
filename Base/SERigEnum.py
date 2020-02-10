@@ -201,7 +201,15 @@ eRigFacialActionUnitType = SE_RigEnum(
     AU_Eye_R_LookUp     = 68,
     AU_Eye_R_LookDown   = 69,
     AU_10_OL            = 70,
-    AU_10_OR            = 71
+    AU_10_OR            = 71,
+    AU_Eye_L_LookLeft_Blink  = 72,
+    AU_Eye_L_LookRight_Blink = 73,
+    AU_Eye_L_LookUp_Blink    = 74,
+    AU_Eye_L_LookDown_Blink  = 75,
+    AU_Eye_R_LookLeft_Blink  = 76,
+    AU_Eye_R_LookRight_Blink = 77,
+    AU_Eye_R_LookUp_Blink    = 78,
+    AU_Eye_R_LookDown_Blink  = 79
     )
 
 eRigFacialControlType = SE_RigEnum(

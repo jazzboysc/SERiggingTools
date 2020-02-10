@@ -962,6 +962,88 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(tempBufferLipCloseOutput, mulNode + '.input2X')
     cmds.connectAttr(mulNode + '.outputX', tempBufferAU26CloseFixInput)
 
+    AU_Eye_R_LookLeft_Blink  = 76,
+    AU_Eye_R_LookRight_Blink = 77,
+    AU_Eye_R_LookUp_Blink    = 78,
+    AU_Eye_R_LookDown_Blink  = 79
+
+    # Eye movement and blink fix.
+    tempBufferLeftEyeLookLeftBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft_Blink)
+    tempBufferLeftEyeLookRightBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight_Blink)
+    tempBufferLeftEyeLookUpBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp_Blink)
+    tempBufferLeftEyeLookDownBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown_Blink)
+    tempBufferRightEyeLookLeftBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft_Blink)
+    tempBufferRightEyeLookRightBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight_Blink)
+    tempBufferRightEyeLookUpBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp_Blink)
+    tempBufferRightEyeLookDownBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown_Blink)
+
+    tempBufferLeftEyeLookLeft = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft)
+    tempBufferLeftEyeLookRight = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight)
+    tempBufferLeftEyeLookUp = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp)
+    tempBufferLeftEyeLookDown = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown)
+    tempBufferRightEyeLookLeft = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft)
+    tempBufferRightEyeLookRight = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight)
+    tempBufferRightEyeLookUp = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp)
+    tempBufferRightEyeLookDown = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown)
+
+    tempBufferLeftEyeBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
+    tempBufferRightEyeBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
+
+    multiplyNode1 = cmds.createNode('multiplyDivide')
+    cmds.setAttr(multiplyNode1 + '.operation', 1)
+
+    multiplyNode2 = cmds.createNode('multiplyDivide')
+    cmds.setAttr(multiplyNode2 + '.operation', 1)
+
+    multiplyNode3 = cmds.createNode('multiplyDivide')
+    cmds.setAttr(multiplyNode3 + '.operation', 1)
+
+    cmds.connectAttr(tempBufferLeftEyeLookLeft, multiplyNode1 + '.input1X', f = 1)
+    cmds.connectAttr(tempBufferLeftEyeLookRight, multiplyNode1 + '.input1Y', f = 1)
+    cmds.connectAttr(tempBufferLeftEyeLookUp, multiplyNode1 + '.input1Z', f = 1)
+    cmds.connectAttr(tempBufferLeftEyeBlink, multiplyNode1 + '.input2X', f = 1)
+    cmds.connectAttr(tempBufferLeftEyeBlink, multiplyNode1 + '.input2Y', f = 1)
+    cmds.connectAttr(tempBufferLeftEyeBlink, multiplyNode1 + '.input2Z', f = 1)
+
+    cmds.connectAttr(tempBufferLeftEyeLookDown, multiplyNode2 + '.input1X', f = 1)
+    cmds.connectAttr(tempBufferRightEyeLookLeft, multiplyNode2 + '.input1Y', f = 1)
+    cmds.connectAttr(tempBufferRightEyeLookRight, multiplyNode2 + '.input1Z', f = 1)
+    cmds.connectAttr(tempBufferLeftEyeBlink, multiplyNode2 + '.input2X', f = 1)
+    cmds.connectAttr(tempBufferRightEyeBlink, multiplyNode2 + '.input2Y', f = 1)
+    cmds.connectAttr(tempBufferRightEyeBlink, multiplyNode2 + '.input2Z', f = 1)
+
+    cmds.connectAttr(tempBufferRightEyeLookUp, multiplyNode3 + '.input1X', f = 1)
+    cmds.connectAttr(tempBufferRightEyeLookDown, multiplyNode3 + '.input1Y', f = 1)
+    cmds.connectAttr(tempBufferRightEyeBlink, multiplyNode3 + '.input2X', f = 1)
+    cmds.connectAttr(tempBufferRightEyeBlink, multiplyNode3 + '.input2Y', f = 1)
+
+    remappingLeftEyeLookLeftBlink = SEMathHelper.createLinearRemappingNode(input1 = 0.7)
+    remappingLeftEyeLookRightBlink = SEMathHelper.createLinearRemappingNode(input1 = 0.7)
+    remappingLeftEyeLookUpBlink = SEMathHelper.createLinearRemappingNode(input1 = 0.7)
+    remappingLeftEyeLookDownBlink = SEMathHelper.createLinearRemappingNode(input1 = 0.7)
+    remappingRightEyeLookLeftBlink = SEMathHelper.createLinearRemappingNode(input1 = 0.7)
+    remappingRightEyeLookRightBlink = SEMathHelper.createLinearRemappingNode(input1 = 0.7)
+    remappingRightEyeLookUpBlink = SEMathHelper.createLinearRemappingNode(input1 = 0.7)
+    remappingRightEyeLookDownBlink = SEMathHelper.createLinearRemappingNode(input1 = 0.7)
+
+    cmds.connectAttr(multiplyNode1 + '.outputX', remappingLeftEyeLookLeftBlink + '.input', f = 1)
+    cmds.connectAttr(multiplyNode1 + '.outputY', remappingLeftEyeLookRightBlink + '.input', f = 1)
+    cmds.connectAttr(multiplyNode1 + '.outputZ', remappingLeftEyeLookUpBlink + '.input', f = 1)
+    cmds.connectAttr(multiplyNode2 + '.outputX', remappingLeftEyeLookDownBlink + '.input', f = 1)
+    cmds.connectAttr(multiplyNode2 + '.outputY', remappingRightEyeLookLeftBlink + '.input', f = 1)
+    cmds.connectAttr(multiplyNode2 + '.outputZ', remappingRightEyeLookRightBlink + '.input', f = 1)
+    cmds.connectAttr(multiplyNode3 + '.outputX', remappingRightEyeLookUpBlink + '.input', f = 1)
+    cmds.connectAttr(multiplyNode3 + '.outputY', remappingRightEyeLookDownBlink + '.input', f = 1)
+
+    cmds.connectAttr(remappingLeftEyeLookLeftBlink + '.output', tempBufferLeftEyeLookLeftBlink, f = 1)
+    cmds.connectAttr(remappingLeftEyeLookRightBlink + '.output', tempBufferLeftEyeLookRightBlink, f = 1)
+    cmds.connectAttr(remappingLeftEyeLookUpBlink + '.output', tempBufferLeftEyeLookUpBlink, f = 1)
+    cmds.connectAttr(remappingLeftEyeLookDownBlink + '.output', tempBufferLeftEyeLookDownBlink, f = 1)
+    cmds.connectAttr(remappingRightEyeLookLeftBlink + '.output', tempBufferRightEyeLookLeftBlink, f = 1)
+    cmds.connectAttr(remappingRightEyeLookRightBlink + '.output', tempBufferRightEyeLookRightBlink, f = 1)
+    cmds.connectAttr(remappingRightEyeLookUpBlink + '.output', tempBufferRightEyeLookUpBlink, f = 1)
+    cmds.connectAttr(remappingRightEyeLookDownBlink + '.output', tempBufferRightEyeLookDownBlink, f = 1)
+
 
 #-----------------------------------------------------------------------------
 # Rig Human Facial System Class
