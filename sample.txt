@@ -125,3 +125,5 @@ cmds.setKeyframe('animCurveUA22', float = 0.0, value = 0.0, itt = 'linear', ott 
 cmds.setKeyframe('animCurveUA22', float = 1.0, value = 8.0, itt = 'linear', ott = 'linear')
 
 cmds.keyTangent('animCurveUA14', weightedTangents = False)
+
+optionVar -iv "editorConnectionScanLimit" 10000000;
