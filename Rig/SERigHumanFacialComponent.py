@@ -1779,7 +1779,10 @@ def createFacialSkinProxyJointsAndControlsFromSelection(proxyJntMaximumInfluence
 
         # Additional driver group reserved for animator.
         proxyJointControl.InsertNewGroup(tempName + SERigNaming.sDriverGroup)
+
+        # Create constraints for the proxy joint.
         cmds.parentConstraint(proxyJointControl.ControlObject, proxyJnt, mo = 0)
+        cmds.scaleConstraint(proxyJointControl.ControlObject, proxyJnt, mo = 0)
 
         controlIndex += 1
 
