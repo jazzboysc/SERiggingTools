@@ -30,5 +30,10 @@ def createMirrorShapeAlongLocalAxis(sculptShape, baseShape, localAxis = 'x', new
     res = cmds.duplicate(baseWrapped, name = newShape)[0]
     cmds.delete(baseWrapped, baseWrapper)
 
+    # Delete junk shape orig data.
+    junkName = res + 'ShapeOrig'
+    if cmds.objExists(junkName):
+        cmds.delete(junkName)
+
     return res
 #-----------------------------------------------------------------------------
