@@ -91,5 +91,32 @@ def findSymmetricalBlendshape(inputShape, pattern_R = 'R', pattern_r = 'r', patt
         cmds.warning('Blendshape that matches symmetrical pattern not found for input shape: ' + inputShape)
         return None 
 #-----------------------------------------------------------------------------
-
-    
+def updateSymmetricalBlendshape(cleanBaseMesh, pattern_R = 'R', pattern_r = 'r', pattern_L = 'L', pattern_l = 'l'):
+    selected = cmds.ls(sl = 1)
+    if len(selected) != 1:
+        cmds.warning('Please select one blendshape mesh.')
+        return
+    selected = selected[0]
+        
+    symmetricalBS = findSymmetricalBlendshape(selected, pattern_R, pattern_r, pattern_L, pattern_l)[0]
+    if symmetricalBS:
+        connectedBlendshapeNodeAttr = cmds.listConnections(symmetricalBS + '.worldMesh[0]', p = 1)[0]
+        
+        selectedClean = cmds.duplicate(selected, rr = True)[0]
+        newMirrorShape = createMirrorShapeAlongLocalAxis(selectedClean, cleanBaseMesh, newShape = symmetricalBS)
+        cmds.showHidden(newMirrorShape)
+        
+        cmds.disconnectAttr(symmetricalBS + '.worldMesh[0]', connectedBlendshapeNodeAttr)
+        cmds.connectAttr(newMirrorShape + '.worldMesh[0]', connectedBlendshapeNodeAttr)
+        
+        tx = cmds.getAttr(symmetricalBS + '.tx')
+        ty = cmds.getAttr(symmetricalBS + '.ty')
+        tz = cmds.getAttr(symmetricalBS + '.tz')
+        cmds.setAttr(newMirrorShape + '.tx', tx)
+        cmds.setAttr(newMirrorShape + '.ty', ty)
+        cmds.setAttr(newMirrorShape + '.tz', tz)
+        
+        cmds.delete(symmetricalBS)
+        cmds.delete(selectedClean)
+        cmds.rename(newMirrorShape, symmetricalBS)
+#-----------------------------------------------------------------------------
