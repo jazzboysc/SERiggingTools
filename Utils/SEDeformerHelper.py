@@ -1,6 +1,8 @@
 import maya.cmds as cmds
 import maya.mel as mel
 
+from . import SEStringHelper
+
 #-----------------------------------------------------------------------------
 def createMirrorShapeAlongLocalAxis(sculptShape, baseShape, localAxis = 'x', newShape = ''):
     baseWrapped = cmds.duplicate(baseShape)[0]
@@ -37,3 +39,57 @@ def createMirrorShapeAlongLocalAxis(sculptShape, baseShape, localAxis = 'x', new
 
     return res
 #-----------------------------------------------------------------------------
+def findSymmetricalBlendshape(inputShape, pattern_R = 'R', pattern_r = 'r', pattern_L = 'L', pattern_l = 'l'):
+    if not cmds.objExists(inputShape):
+        cmds.warning('Input shape does not exist: ' + inputShape)
+        return None
+
+    shapeName = SEStringHelper.SE_RemoveSuffix(inputShape)
+    suffix = SEStringHelper.getSuffix(inputShape)
+    if suffix == None:
+        cmds.warning('Suffix not found for input shape: ' + inputShape)
+        return None
+
+    if suffix == pattern_R or suffix == pattern_r:
+        # Try to find left side shape and suffix pattern.
+        shapeName_L = shapeName + '_' + pattern_L
+        shapeName_l = shapeName + '_' + pattern_l
+
+        symmetricalBS = None
+        symmetricalPattern = None
+        if cmds.objExists(shapeName_L):
+            symmetricalBS = shapeName_L
+            symmetricalPattern = pattern_L
+        elif cmds.objExists(shapeName_l):
+            symmetricalBS = shapeName_l
+            symmetricalPattern = pattern_l
+        else:
+            cmds.warning('Symmetrical blend shape does not exist for input shape: ' + inputShape)
+
+        return [symmetricalBS, symmetricalPattern]
+
+    elif suffix == pattern_L or suffix == pattern_l:
+        # Try to find right side shape and suffix pattern.
+        shapeName_R = shapeName + '_' + pattern_R
+        shapeName_r = shapeName + '_' + pattern_r
+
+        symmetricalBS = None
+        symmetricalPattern = None
+        if cmds.objExists(shapeName_R):
+            symmetricalBS = shapeName_R
+            symmetricalPattern = pattern_R
+        elif cmds.objExists(shapeName_l):
+            symmetricalBS = shapeName_r
+            symmetricalPattern = pattern_r
+        else:
+            cmds.warning('Symmetrical blend shape does not exist for input shape: ' + inputShape)
+
+        return [symmetricalBS, symmetricalPattern]
+    
+    else:
+        # Blendshape that matches symmetrical pattern not found.
+        cmds.warning('Blendshape that matches symmetrical pattern not found for input shape: ' + inputShape)
+        return None 
+#-----------------------------------------------------------------------------
+
+    

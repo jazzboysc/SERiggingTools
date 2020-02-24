@@ -1,3 +1,4 @@
+#-----------------------------------------------------------------------------
 def SE_RemoveSuffix(str):
     edits = str.split('_')
     
@@ -8,7 +9,15 @@ def SE_RemoveSuffix(str):
     strNoSuffix = str[:-len(suffix)]
 
     return strNoSuffix
+#-----------------------------------------------------------------------------
+def getSuffix(str):
+    edits = str.split('_')
+    
+    if len(edits) < 2:
+        return None
 
+    return edits[-1]
+#-----------------------------------------------------------------------------
 def SE_RemovePrefix(str):
     edits = str.split('_')
     
@@ -19,3 +28,4 @@ def SE_RemovePrefix(str):
     strNoPrefix = str[len(prefix):]
 
     return strNoPrefix
+#-----------------------------------------------------------------------------
