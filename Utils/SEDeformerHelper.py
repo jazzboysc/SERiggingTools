@@ -96,6 +96,15 @@ def findConnectedBaseShape(inputShape):
     res = cmds.listConnections(bsNode + '.outputGeometry[0]')[0]
     return res
 #-----------------------------------------------------------------------------
+def getBlendshapTargetIndexByName(blsNode, targetName):
+    attr = blsNode + '.w[{}]'
+    weightCount = cmds.blendShape(blsNode, q = True, wc = True)
+    for index in xrange(weightCount):
+        if cmds.aliasAttr(attr.format(index), q = True) == targetName:
+            return index
+
+    return -1
+#-----------------------------------------------------------------------------
 def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_R = 'R', pattern_r = 'r', pattern_L = 'L', pattern_l = 'l'):
     selected = cmds.ls(sl = 1)
     if len(selected) != 1:
