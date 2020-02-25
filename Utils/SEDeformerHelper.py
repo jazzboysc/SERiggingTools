@@ -66,7 +66,7 @@ def findSymmetricalBlendshape(inputShape, pattern_R = 'R', pattern_r = 'r', patt
         else:
             cmds.warning('Symmetrical blend shape does not exist for input shape: ' + inputShape)
 
-        return [symmetricalBS, symmetricalPattern]
+        return [symmetricalBS, symmetricalPattern, shapeName_L]
 
     elif suffix == pattern_L or suffix == pattern_l:
         # Try to find right side shape and suffix pattern.
@@ -84,22 +84,33 @@ def findSymmetricalBlendshape(inputShape, pattern_R = 'R', pattern_r = 'r', patt
         else:
             cmds.warning('Symmetrical blend shape does not exist for input shape: ' + inputShape)
 
-        return [symmetricalBS, symmetricalPattern]
+        return [symmetricalBS, symmetricalPattern, shapeName_R]
     
     else:
         # Blendshape that matches symmetrical pattern not found.
         cmds.warning('Blendshape that matches symmetrical pattern not found for input shape: ' + inputShape)
         return None 
 #-----------------------------------------------------------------------------
-def updateSymmetricalBlendshape(cleanBaseMesh, pattern_R = 'R', pattern_r = 'r', pattern_L = 'L', pattern_l = 'l'):
+def findConnectedBaseShape(inputShape):
+    bsNode = cmds.listConnections(inputShape + '.worldMesh[0]')[0]
+    res = cmds.listConnections(bsNode + '.outputGeometry[0]')[0]
+    return res
+#-----------------------------------------------------------------------------
+def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_R = 'R', pattern_r = 'r', pattern_L = 'L', pattern_l = 'l'):
     selected = cmds.ls(sl = 1)
     if len(selected) != 1:
         cmds.warning('Please select one blendshape mesh.')
         return
     selected = selected[0]
         
-    symmetricalBS = findSymmetricalBlendshape(selected, pattern_R, pattern_r, pattern_L, pattern_l)[0]
+    findRes = findSymmetricalBlendshape(selected, pattern_R, pattern_r, pattern_L, pattern_l)
+    if findRes == None:
+        cmds.warning('Unable to update symmetrical blendshape.')
+        return
+    symmetricalBS = findRes[0]
+
     if symmetricalBS:
+        # Symmetrical blendshape exists, update shape.
         connectedBlendshapeNodeAttr = cmds.listConnections(symmetricalBS + '.worldMesh[0]', p = 1)[0]
         
         selectedClean = cmds.duplicate(selected, rr = True)[0]
@@ -119,4 +130,19 @@ def updateSymmetricalBlendshape(cleanBaseMesh, pattern_R = 'R', pattern_r = 'r',
         cmds.delete(symmetricalBS)
         cmds.delete(selectedClean)
         cmds.rename(newMirrorShape, symmetricalBS)
+    else:
+        # Symmetrical blendshape does not exist, possibly create a new shape.
+        if createIfNotFound:
+            print('Creating new symmetrical blendshape for: ' + selected)
+            
+            selectedClean = cmds.duplicate(selected, rr = True)[0]
+            newMirrorShape = createMirrorShapeAlongLocalAxis(selectedClean, cleanBaseMesh, newShape = findRes[2])
+            cmds.showHidden(newMirrorShape)
+
+            cmds.delete(selectedClean)
+
+            baseShape = findConnectedBaseShape(selected)
+
+        else:
+            print('No new symmetrical blendshape created for: ' + selected)
 #-----------------------------------------------------------------------------
