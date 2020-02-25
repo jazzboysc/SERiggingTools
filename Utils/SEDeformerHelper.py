@@ -91,8 +91,12 @@ def findSymmetricalBlendshape(inputShape, pattern_R = 'R', pattern_r = 'r', patt
         cmds.warning('Blendshape that matches symmetrical pattern not found for input shape: ' + inputShape)
         return None 
 #-----------------------------------------------------------------------------
-def findConnectedBaseShape(inputShape):
-    bsNode = cmds.listConnections(inputShape + '.worldMesh[0]')[0]
+def getConnectedBlendshapeNode(inputShape):
+    blsNode = cmds.listConnections(inputShape + '.worldMesh[0]')[0]
+    return blsNode
+#-----------------------------------------------------------------------------
+def getConnectedBaseShape(inputShape):
+    bsNode = getConnectedBlendshapeNode(inputShape)
     res = cmds.listConnections(bsNode + '.outputGeometry[0]')[0]
     return res
 #-----------------------------------------------------------------------------
@@ -144,13 +148,18 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
         if createIfNotFound:
             print('Creating new symmetrical blendshape for: ' + selected)
             
+            # Create new mirror shape.
             selectedClean = cmds.duplicate(selected, rr = True)[0]
             newMirrorShape = createMirrorShapeAlongLocalAxis(selectedClean, cleanBaseMesh, newShape = findRes[2])
             cmds.showHidden(newMirrorShape)
-
             cmds.delete(selectedClean)
 
-            baseShape = findConnectedBaseShape(selected)
+            baseShape = getConnectedBaseShape(selected)
+            blsNode = getConnectedBlendshapeNode(selected)
+
+            # Add new mirror shape to the blendshape node.
+            newTargetIndex = cmds.blendShape(blsNode, q = True, wc = True) + 1
+            cmds.blendShape(baseShape, e = True, t = (baseShape, newTargetIndex, newMirrorShape, 1.0))
 
         else:
             print('No new symmetrical blendshape created for: ' + selected)
