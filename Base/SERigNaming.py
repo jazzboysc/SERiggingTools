@@ -41,6 +41,8 @@ sLeftLegComponentAttr   = 'LeftLegComponent'
 sSpineComponentAttr     = 'SpineComponent'
 sFACS_DataBufferAttr    = 'FACS_DataBuffer'
 
+sOwnerSuffix                               = 'Owner'
+sControlObject                             = 'ControlObject'
 sRigComponentPrefix                        = 'Prefix'
 sDeformationGroupAttr                      = 'DeformationGroup'
 sDeformationGroupOwnerAttr                 = 'DeformationGroupOwner'

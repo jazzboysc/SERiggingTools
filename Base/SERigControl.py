@@ -62,7 +62,7 @@ class RigControl():
             cmds.parent(ctrlObj, ctrlGrp)
 
             # Link to control group.
-            SERigObjectTypeHelper.linkRigObjects(ctrlGrp, ctrlObj, 'ControlObject')
+            SERigObjectTypeHelper.linkRigObjects(ctrlGrp, ctrlObj, SERigNaming.sControlObject)
 
             # Translate control group to target translation object.
             if cmds.objExists(translateTo):

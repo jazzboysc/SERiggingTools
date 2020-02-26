@@ -2,61 +2,72 @@ import maya.cmds as cmds
 import pymel.core as pm
 from ..Base import SERigNaming
 
+#-----------------------------------------------------------------------------
 def loadPlugin(plugin):
     loaded = cmds.pluginInfo(plugin, q = True, loaded = True)
     if not loaded:
         cmds.loadPlugin(plugin)
-
+#-----------------------------------------------------------------------------
 def isPluginLoaded(plugin):
     loaded = cmds.pluginInfo(plugin, q = True, loaded = True)
     return loaded
-
+#-----------------------------------------------------------------------------
 def createRigObjectTypeAttr(rigObjectTopGroup, rigObjectTypeNodeStr):
     rigObjectTypeNode = cmds.createNode(rigObjectTypeNodeStr)
     cmds.addAttr(rigObjectTopGroup, ln = 'RigObjectType', at = 'message')
     cmds.connectAttr(rigObjectTypeNode + '.message', rigObjectTopGroup + '.RigObjectType')
-
+#-----------------------------------------------------------------------------
 def linkRigObjects(ownerObject, linkedObject, linkAttrStr, linkedAttrStr = ''):
     if ownerObject and linkedObject and linkAttrStr != '':
         cmds.addAttr(ownerObject, ln = linkAttrStr, at = 'message')
 
         if linkedAttrStr == '':
-            linkedAttrStr = linkAttrStr + 'Owner'
+            linkedAttrStr = linkAttrStr + SERigNaming.sOwnerSuffix
         cmds.addAttr(linkedObject, ln = linkedAttrStr, at = 'message')
 
         cmds.connectAttr(ownerObject + '.' + linkAttrStr, linkedObject + '.' + linkedAttrStr)
     else:
         cmds.error('Cannot create link attribute.') 
-
-
+#-----------------------------------------------------------------------------
 def getRigType(rigObject):
     if cmds.objExists(rigObject):
         rt = cmds.getAttr(rigObject + '.RigType')
         return rt
     else:
         return 'RT_Unknown'
-        
+#-----------------------------------------------------------------------------
 def getRigSide(rigObject):
     if cmds.objExists(rigObject):
         rs = cmds.getAttr(rigObject + '.RigSide')
         return rs
     else:
         return 'RS_Unknown'
-        
+#-----------------------------------------------------------------------------
 def getRigControlIndex(rigControl):
     if cmds.objExists(rigControl):
         index = cmds.getAttr(rigControl + '.RigControlIndex')
         return int(index)
     else:
         return -1
-        
+#-----------------------------------------------------------------------------
 def getRigCharacterName(rigCharacter):
     if cmds.objExists(rigCharacter):
         name = cmds.getAttr(rigCharacter + '.characterName')
         return name
     else:
         return None            
+#-----------------------------------------------------------------------------
+def getControlObjectOwner(rigControlObject):
+    if cmds.objExists(rigControlObject):
+        controlObjectOwner = cmds.listConnections(rigControlObject + '.' + SERigNaming.sControlObject + SERigNaming.sOwnerSuffix)
+        if controlObjectOwner:
+            return controlObjectOwner[0]
+        else:
+            return None
 
+    else:
+        return None
+#-----------------------------------------------------------------------------
 # Return the actual rig control of current rig control group.
 def getRigControlObjectFromGroup(rigControl):
     if cmds.objExists(rigControl):
@@ -67,7 +78,7 @@ def getRigControlObjectFromGroup(rigControl):
             return None
     else:
         return None 
-
+#-----------------------------------------------------------------------------
 # Return the owner rig component group of current rig control group.
 def getControlOwner(rigControl):
     if cmds.objExists(rigControl):
@@ -79,7 +90,7 @@ def getControlOwner(rigControl):
 
     else:
         return None
-
+#-----------------------------------------------------------------------------
 def getGlobalControlOwner(rigControl):
     if cmds.objExists(rigControl):
         ControlOwner = cmds.listConnections(rigControl + '.GlobalControlOwner')
@@ -90,7 +101,7 @@ def getGlobalControlOwner(rigControl):
 
     else:
         return None
-
+#-----------------------------------------------------------------------------
 def getComponentOwner(rigComponent):
     if cmds.objExists(rigComponent):
         ComponentOwner = cmds.listConnections(rigComponent + '.ComponentOwner')
@@ -101,7 +112,7 @@ def getComponentOwner(rigComponent):
 
     else:
         return None
-
+#-----------------------------------------------------------------------------
 def getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex):
     links = cmds.ls(type = 'RigControlType')
     for link in links:
@@ -127,7 +138,7 @@ def getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex):
                         return controlObject
     
     return None
-
+#-----------------------------------------------------------------------------
 def getRigGlobalControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex):
     links = cmds.ls(type = 'RigControlType')
     for link in links:
@@ -147,7 +158,7 @@ def getRigGlobalControlObject(characterName, rigSideStr, rigTypeStr, rigControlI
                         return controlObject
     
     return None
-
+#-----------------------------------------------------------------------------
 def listRigCharacters(includeNamespace = False):
     characterNames = []
     links = cmds.ls(type = 'RigCharacterType')
@@ -158,7 +169,7 @@ def listRigCharacters(includeNamespace = False):
             characterNames.append(characterName)
 
     return characterNames
-
+#-----------------------------------------------------------------------------
 def listRigCharacterGroups():
     characterGroups = []
     links = cmds.ls(type = 'RigCharacterType')
@@ -168,7 +179,7 @@ def listRigCharacterGroups():
             characterGroups.append(character[0])
 
     return characterGroups
-
+#-----------------------------------------------------------------------------
 def listRigCharacterControls(characterName):
     characterControls = [{}, {}]
     links = cmds.ls(type = 'RigControlType')
@@ -204,7 +215,7 @@ def listRigCharacterControls(characterName):
                 characterControls[1][curKey] = control
 
     return characterControls
-
+#-----------------------------------------------------------------------------
 def genRigCharacterData(characterName):
     characterControls = [{}, {}]
     links = cmds.ls(type = 'RigControlType')
@@ -240,7 +251,7 @@ def genRigCharacterData(characterName):
                 characterControls[1][curKey] = getRigCtrlTransByCtrlName(control)
 
     return characterControls
-
+#-----------------------------------------------------------------------------
 def getRigCtrlTransByCtrlName(control):
     if cmds.objExists(control):
         translateX = cmds.getAttr(control +'.translateX')
@@ -253,7 +264,7 @@ def getRigCtrlTransByCtrlName(control):
         return (translateX, translateY, translateZ, rotateX, rotateY, rotateZ)      
     else:
         return None
-
+#-----------------------------------------------------------------------------
 def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex):
     '''
     @param characterName: str, input a character name
@@ -265,7 +276,7 @@ def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlInde
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex)
     if control == None: return None
     return getRigCtrlTransByCtrlName(control)
-
+#-----------------------------------------------------------------------------
 def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
                              translateX, translateY, translateZ):
     '''
@@ -284,7 +295,7 @@ def setRigControlTranslation(characterName, rigSideStr, rigTypeStr, rigControlIn
         setOneRigTrans(control, translateX, translateY, translateZ)
     else:
         pass
-
+#-----------------------------------------------------------------------------
 def setRigControlRotation(characterName, rigSideStr, rigTypeStr, rigControlIndex, 
                              rotateX, rotateY, rotateZ):
     '''
@@ -303,7 +314,7 @@ def setRigControlRotation(characterName, rigSideStr, rigTypeStr, rigControlIndex
         setOneRigRot(control, rotateX, rotateY, rotateZ)
     else:
         pass
-
+#-----------------------------------------------------------------------------
 def setRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex, translateX, translateY, translateZ, rotateX, rotateY, rotateZ):
     '''
     @param characterName: str, input a character name
@@ -319,7 +330,7 @@ def setRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlInde
     '''
     control = getRigControlObject(characterName, rigSideStr, rigTypeStr, rigControlIndex) 
     setOneRigRotAndTrans(control,translateX, translateY, translateZ, rotateX, rotateY, rotateZ)  
-
+#-----------------------------------------------------------------------------
 def setOneRigRotAndTrans(control, translateX, translateY, translateZ, rotateX, rotateY, rotateZ):
     if control == None: return
     if cmds.objExists(control):
@@ -327,7 +338,7 @@ def setOneRigRotAndTrans(control, translateX, translateY, translateZ, rotateX, r
         setOneRigTrans(control, translateX, translateY, translateZ)
     else:
         pass
-
+#-----------------------------------------------------------------------------
 def setOneRigRot(control, rotateX, rotateY, rotateZ):
     try:
         cmds.setAttr(control + '.rotateX', rotateX)
@@ -336,7 +347,7 @@ def setOneRigRot(control, rotateX, rotateY, rotateZ):
     except:
         if 0:
             cmds.warning('Rotation channel is locked on control: ' + control)
-
+#-----------------------------------------------------------------------------
 def setOneRigTrans(control, translateX, translateY, translateZ):
     try:
         cmds.setAttr(control + '.translateX', translateX)
@@ -345,7 +356,7 @@ def setOneRigTrans(control, translateX, translateY, translateZ):
     except:
         if 0:
             cmds.warning('Translation channel is locked on control: ' + control)
-
+#-----------------------------------------------------------------------------
 def hideCharacterIKFKByName(characterName , bIsHide , attrName):
     print characterName , bIsHide
     if characterName == None: return
@@ -353,7 +364,7 @@ def hideCharacterIKFKByName(characterName , bIsHide , attrName):
     print mainCtrl  
     if mainCtrl:
         cmds.setAttr(mainCtrl + '.'+ attrName, bIsHide)
-
+#-----------------------------------------------------------------------------
 def getCharacterDeformationGroup(characterGroup):
     if cmds.objExists(characterGroup):
         try:
@@ -365,7 +376,7 @@ def getCharacterDeformationGroup(characterGroup):
     else:
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
-
+#-----------------------------------------------------------------------------
 def getCharacterMasterJointsGroup(characterGroup):
     if cmds.objExists(characterGroup):
         try:
@@ -377,7 +388,7 @@ def getCharacterMasterJointsGroup(characterGroup):
     else:
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
-
+#-----------------------------------------------------------------------------
 def getCharacterModelGroup(characterGroup):
     if cmds.objExists(characterGroup):
         try:
@@ -389,7 +400,7 @@ def getCharacterModelGroup(characterGroup):
     else:
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
-
+#-----------------------------------------------------------------------------
 def getCharacterFacialComponentGroup(characterGroup):
     if cmds.objExists(characterGroup):
         try:
@@ -401,7 +412,7 @@ def getCharacterFacialComponentGroup(characterGroup):
     else:
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
-
+#-----------------------------------------------------------------------------
 def getFaceProxyJointControlsGroup(facialComponentGroup):
     if cmds.objExists(facialComponentGroup):
         try:
@@ -413,7 +424,7 @@ def getFaceProxyJointControlsGroup(facialComponentGroup):
     else:
         cmds.warning('Cannot find facial component group: ' + facialComponentGroup)
         return None
-
+#-----------------------------------------------------------------------------
 def getFaceProxyControlRivetsGroup(facialComponentGroup):
     if cmds.objExists(facialComponentGroup):
         try:
@@ -425,7 +436,7 @@ def getFaceProxyControlRivetsGroup(facialComponentGroup):
     else:
         cmds.warning('Cannot find facial component group: ' + facialComponentGroup)
         return None
-
+#-----------------------------------------------------------------------------
 def getFaceProxyControlRivetDriverGroup(FaceProxyControlGroup):
     if cmds.objExists(FaceProxyControlGroup):
         try:
@@ -437,7 +448,7 @@ def getFaceProxyControlRivetDriverGroup(FaceProxyControlGroup):
     else:
         cmds.warning('Cannot find face proxy control group: ' + FaceProxyControlGroup)
         return None
-
+#-----------------------------------------------------------------------------
 def getCharacterComponentRigPartsGroup(characterComponentGroup):
     if cmds.objExists(characterComponentGroup):
         try:
@@ -449,7 +460,7 @@ def getCharacterComponentRigPartsGroup(characterComponentGroup):
     else:
         cmds.warning('Cannot find character component: ' + characterComponentGroup)
         return None
-
+#-----------------------------------------------------------------------------
 def getCharacterComponentPrefix(characterComponentGroup):
     if cmds.objExists(characterComponentGroup):
         try:
@@ -461,8 +472,7 @@ def getCharacterComponentPrefix(characterComponentGroup):
     else:
         cmds.warning('Cannot find character component: ' + characterComponentGroup)
         return None
-
-    
+#-----------------------------------------------------------------------------
 def isRigCharacterGroup(inputObject):
     if cmds.objExists(inputObject):
         try:
@@ -478,7 +488,7 @@ def isRigCharacterGroup(inputObject):
     else:
         # Object doesn't exist.
         return False
-
+#-----------------------------------------------------------------------------
 def isRigControlGroup(inputObject):
     if cmds.objExists(inputObject):
         try:
@@ -494,7 +504,7 @@ def isRigControlGroup(inputObject):
     else:
         # Object doesn't exist.
         return False
-
+#-----------------------------------------------------------------------------
 def findRelatedRigCharacterGroup(inputObject):
     if not cmds.objExists(inputObject):
         return None
@@ -508,7 +518,7 @@ def findRelatedRigCharacterGroup(inputObject):
         curParent = cmds.listRelatives(curParent, p = True)
     
     return None
-
+#-----------------------------------------------------------------------------
 def getSpecificObjectsUnderNamespace(type = '', namespace = ''):
     res = []
 
@@ -523,7 +533,7 @@ def getSpecificObjectsUnderNamespace(type = '', namespace = ''):
 
     cmds.select(cl = True)
     return res
-
+#-----------------------------------------------------------------------------
 def getDefaultCameras():
     # Get all cameras first.
     cameras = cmds.ls(type = ('camera'), l = True)
@@ -532,7 +542,7 @@ def getDefaultCameras():
     startupCameras = [camera for camera in cameras if cmds.camera(cmds.listRelatives(camera, parent = True)[0], startupCamera = True, q = True)]
 
     return startupCameras
-
+#-----------------------------------------------------------------------------
 def getNonDefaultCameras():
     # Get all cameras first.
     cameras = cmds.ls(type = ('camera'), l = True)
@@ -546,7 +556,7 @@ def getNonDefaultCameras():
     nonStartupCamerasTransforms = map(lambda x: cmds.listRelatives(x, parent = True)[0], nonStartupCameras)
 
     return [nonStartupCameras, nonStartupCamerasTransforms]
-
+#-----------------------------------------------------------------------------
 def getDefaultPerspectiveCamera():
     startupCameras = getDefaultCameras()
     for camera in startupCameras:
@@ -555,7 +565,7 @@ def getDefaultPerspectiveCamera():
             return camera
 
     return None
-
+#-----------------------------------------------------------------------------
 def hideTransObjectChannels(transObject, hideChannels = []):
     singleAttributeList = []
     for hc in hideChannels:
@@ -568,3 +578,4 @@ def hideTransObjectChannels(transObject, hideChannels = []):
 
     for attr in singleAttributeList:
         cmds.setAttr(transObject + '.' + attr, cb = 0, k = 0)
+#-----------------------------------------------------------------------------

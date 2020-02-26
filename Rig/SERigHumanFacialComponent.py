@@ -1814,3 +1814,44 @@ def createFacialProxyControlRivetConstraints(surfaceGeometry, rigCharacterGroup)
 
     print('Face proxy control rivets created, parenting them to facial rivets group.')
 #-----------------------------------------------------------------------------
+def _removeFaceProxyControlInfluence(faceProxyControl):
+
+    # Find influenced proxy joint.
+    pc = cmds.listConnections(faceProxyControl, d = True, type = 'parentConstraint')[0]
+    proxyJnt = cmds.listConnections(pc, d = True, type = 'joint')[0]
+
+    # Find control group.
+    controlGrp = SERigObjectTypeHelper.getControlObjectOwner(faceProxyControl)
+
+    # Find control rivet drive group.
+    rivetDrvGrp = SERigObjectTypeHelper.getFaceProxyControlRivetDriverGroup(controlGrp)
+
+    # Find rivet driver.
+    pc = cmds.listConnections(rivetDrvGrp, s = True, type = 'pointConstraint')[0]
+    follicleTrans = cmds.listConnections(pc + '.target', s = True)[0]
+
+    # Find skin cluster and skinned geometry.
+    skinCluster = cmds.listConnections(proxyJnt, d = True, type = 'skinCluster')[0]
+    skinnedShape = cmds.listConnections(skinCluster + '.outputGeometry', d = True)[0]
+
+    # Remove joint's influence.
+    cmds.select(cl = True)
+    cmds.select(proxyJnt)
+    cmds.select(skinnedShape, add = True)
+    cmds.skinCluster(skinCluster, e = True, ri = proxyJnt)
+    cmds.select(cl = True)
+
+    # Cleanup stuff.
+    cmds.delete(controlGrp)
+    cmds.delete(follicleTrans)
+    cmds.delete(proxyJnt)
+#-----------------------------------------------------------------------------
+def removeFaceProxyControlInfluence():
+    faceProxyControls = cmds.ls(sl = True)
+    if len(faceProxyControls) < 1:
+        cmds.warning('Please select at least one face proxy control.')
+        return
+    
+    for faceProxyControl in faceProxyControls:
+        _removeFaceProxyControlInfluence(faceProxyControl)
+#-----------------------------------------------------------------------------
