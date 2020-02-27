@@ -57,6 +57,7 @@ sFaceProxyControlRivetGroupOwnerAttr       = 'FaceProxyControlRivetGroupOwner'
 sFaceProxyControlRivetDriverGroupAttr      = 'FaceRivetDrvGroup'
 sFaceProxyControlRivetDriverGroupOwnerAttr = 'FaceRivetDrvGroupOwner'
 
+sFaceControlUIAttr      = 'FaceControlUI'
 sControlsGroupAttr      = 'ControlsGroup'
 sJointsGroupAttr        = 'JointsGroup'
 sRigPartsGroupAttr      = 'RigPartsGroup'

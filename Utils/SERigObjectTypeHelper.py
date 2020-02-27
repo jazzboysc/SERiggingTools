@@ -401,6 +401,19 @@ def getCharacterModelGroup(characterGroup):
         cmds.warning('Cannot find character group: ' + characterGroup)
         return None
 #-----------------------------------------------------------------------------
+def getCharacterFacialControlUIGroup(characterGroup):
+    facialComponent = getCharacterFacialComponentGroup(characterGroup)
+    if facialComponent:
+        controlsGrp = getCharacterComponentControlsGroup(facialComponent)
+
+        if controlsGrp:
+            try:
+                res = cmds.listConnections(controlsGrp + '.' + SERigNaming.sFaceControlUIAttr)[0]
+                return res
+            except:
+                cmds.warning('Cannot find character : ' + characterGroup + ' face control UI')
+                return None
+#-----------------------------------------------------------------------------
 def getCharacterFacialComponentGroup(characterGroup):
     if cmds.objExists(characterGroup):
         try:
@@ -447,6 +460,18 @@ def getFaceProxyControlRivetDriverGroup(FaceProxyControlGroup):
             return None
     else:
         cmds.warning('Cannot find face proxy control group: ' + FaceProxyControlGroup)
+        return None
+#-----------------------------------------------------------------------------
+def getCharacterComponentControlsGroup(characterComponentGroup):
+    if cmds.objExists(characterComponentGroup):
+        try:
+            res = cmds.listConnections(characterComponentGroup + '.' + SERigNaming.sControlsGroupAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find character component: ' + characterComponentGroup + ' controls group')
+            return None
+    else:
+        cmds.warning('Cannot find character component: ' + characterComponentGroup)
         return None
 #-----------------------------------------------------------------------------
 def getCharacterComponentRigPartsGroup(characterComponentGroup):

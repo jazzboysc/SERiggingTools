@@ -140,6 +140,7 @@ def getFacialActionUnitAttrName(bufferObject, actionUnitType):
 
     return res
 #-----------------------------------------------------------------------------
+# Used ONLY for building facial rig.
 def getFaceControlsUIGroup():
     # TODO:
     # Hard coded for now.
@@ -149,6 +150,7 @@ def getFaceControlsUIGroup():
         cmds.warning('Face controls UI group does not exist.')
         return None
 #-----------------------------------------------------------------------------
+# Used ONLY for building facial rig.
 def getFaceControlsOffsetControl():
     # TODO:
     # Hard coded for now.
@@ -1169,6 +1171,8 @@ class RigHumanFacialSystem(RigComponent):
         cmds.parent(faceControlsUIGroup, self.ControlsGrp)
         cmds.parentConstraint(facialAttachPoint, faceControlsUIGroup, mo = 1)
 
+        SERigObjectTypeHelper.linkRigObjects(self.ControlsGrp, faceControlsUIGroup, SERigNaming.sFaceControlUIAttr)
+
         faceControlsOffsetControl = getFaceControlsOffsetControl()
         if faceControlsOffsetControl:
             cmds.setAttr(faceControlsOffsetControl + '.tx', 0.0)
@@ -1854,4 +1858,47 @@ def removeFaceProxyControlInfluence():
     
     for faceProxyControl in faceProxyControls:
         _removeFaceProxyControlInfluence(faceProxyControl)
+#-----------------------------------------------------------------------------
+def resetFaceControls():
+    selected = cmds.ls(sl = True)
+    if len(selected) == 1:
+        selected = selected[0]
+    else:
+        cmds.warning('Please select a character rig group.')
+        return
+        
+    if not SERigObjectTypeHelper.isRigCharacterGroup(selected):
+        cmds.warning('Please select a character rig group.')
+        return        
+
+    faceControlUIGroup = SERigObjectTypeHelper.getCharacterFacialControlUIGroup(selected)
+    faceOffsetControl = 'FaceControls_Offset_Ctrl'
+    
+    nurbsCurves = cmds.listRelatives(faceControlUIGroup, ad = True, type = 'nurbsCurve')
+
+    # Only collect unique face control names.
+    controls = set()
+    for nurbsCurve in nurbsCurves:
+        res = cmds.listRelatives(nurbsCurve, p = True)[0]
+        controls.add(res)
+
+    # Don't reset face offset control.
+    controls.remove(faceOffsetControl)
+
+    # Reset face controls.
+    for control in controls:
+        try:
+            cmds.setAttr(control + '.tx', 0)
+        except:
+            pass
+            
+        try:
+            cmds.setAttr(control + '.ty', 0)
+        except:
+            pass
+            
+        try:
+            cmds.setAttr(control + '.tz', 0)
+        except:
+            pass
 #-----------------------------------------------------------------------------
