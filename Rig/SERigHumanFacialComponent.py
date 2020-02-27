@@ -1866,12 +1866,15 @@ def resetFaceControls():
     else:
         cmds.warning('Please select a character rig group.')
         return
-        
-    if not SERigObjectTypeHelper.isRigCharacterGroup(selected):
-        cmds.warning('Please select a character rig group.')
-        return        
 
-    faceControlUIGroup = SERigObjectTypeHelper.getCharacterFacialControlUIGroup(selected)
+    _resetFaceControls(selected)
+#-----------------------------------------------------------------------------
+def _resetFaceControls(characterGroup):
+    if not SERigObjectTypeHelper.isRigCharacterGroup(characterGroup):
+        cmds.warning('Selected object is not a character rig group.')
+        return
+
+    faceControlUIGroup = SERigObjectTypeHelper.getCharacterFacialControlUIGroup(characterGroup)
     faceOffsetControl = 'FaceControls_Offset_Ctrl'
     
     nurbsCurves = cmds.listRelatives(faceControlUIGroup, ad = True, type = 'nurbsCurve')
@@ -1883,10 +1886,15 @@ def resetFaceControls():
         controls.add(res)
 
     # Don't reset face offset control.
-    controls.remove(faceOffsetControl)
+    for control in controls:
+        if control.find(faceOffsetControl) != -1:
+            controls.remove(control)
+            break
 
     # Reset face controls.
     for control in controls:
+        print('Resetting face control: ' + control)
+        
         try:
             cmds.setAttr(control + '.tx', 0)
         except:
