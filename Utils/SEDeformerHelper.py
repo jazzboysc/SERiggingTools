@@ -92,7 +92,10 @@ def findSymmetricalBlendshape(inputShape, pattern_R = 'R', pattern_r = 'r', patt
         return None 
 #-----------------------------------------------------------------------------
 def getConnectedBlendshapeNode(inputShape):
-    blsNode = cmds.listConnections(inputShape + '.worldMesh[0]')[0]
+    blsNode = cmds.listConnections(inputShape + '.worldMesh[0]')
+    if blsNode:
+        blsNode = blsNode[0]
+
     return blsNode
 #-----------------------------------------------------------------------------
 def getConnectedBaseShape(inputShape):
@@ -109,6 +112,16 @@ def getBlendshapTargetIndexByName(blsNode, targetName):
 
     return -1
 #-----------------------------------------------------------------------------
+def getConnectedShapeInverter(inputShape):
+    shapeInverterNode = cmds.listConnections(inputShape + '.outMesh')
+    if shapeInverterNode:
+        shapeInverterNode = shapeInverterNode[0]
+        nodeType = cmds.nodeType(shapeInverterNode)
+        if nodeType == 'cvShapeInverter':
+            return shapeInverterNode
+    
+    return None
+#-----------------------------------------------------------------------------
 def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_R = 'R', pattern_r = 'r', pattern_L = 'L', pattern_l = 'l'):
     selected = cmds.ls(sl = 1)
     if len(selected) != 1:
@@ -123,16 +136,24 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
     symmetricalBS = findRes[0]
 
     if symmetricalBS:
-        # Symmetrical blendshape exists, update shape.
-        connectedBlendshapeNodeAttr = cmds.listConnections(symmetricalBS + '.worldMesh[0]', p = 1)[0]
-        
+        # Symmetrical blendshape exists, update shape.        
         selectedClean = cmds.duplicate(selected, rr = True)[0]
         newMirrorShape = createMirrorShapeAlongLocalAxis(selectedClean, cleanBaseMesh, newShape = symmetricalBS)
         cmds.showHidden(newMirrorShape)
         
-        cmds.disconnectAttr(symmetricalBS + '.worldMesh[0]', connectedBlendshapeNodeAttr)
-        cmds.connectAttr(newMirrorShape + '.worldMesh[0]', connectedBlendshapeNodeAttr)
-        
+        # If symmetrical shape is connected to a blendshape node, then update the connection.
+        connectedBlendshapeNodeAttr = cmds.listConnections(symmetricalBS + '.worldMesh[0]', plugs = 1)
+        if connectedBlendshapeNodeAttr:
+            connectedBlendshapeNodeAttr = connectedBlendshapeNodeAttr[0]
+            cmds.disconnectAttr(symmetricalBS + '.worldMesh[0]', connectedBlendshapeNodeAttr)
+            cmds.connectAttr(newMirrorShape + '.worldMesh[0]', connectedBlendshapeNodeAttr)
+
+        # If symmetrical shape is connected to a shape inverter node, then update the connection.
+        shapeInverterNode = getConnectedShapeInverter(symmetricalBS)
+        if shapeInverterNode:
+            cmds.disconnectAttr(symmetricalBS + '.outMesh', shapeInverterNode + '.correctiveMesh')
+            cmds.connectAttr(newMirrorShape + '.outMesh', shapeInverterNode + '.correctiveMesh')
+
         tx = cmds.getAttr(symmetricalBS + '.tx')
         ty = cmds.getAttr(symmetricalBS + '.ty')
         tz = cmds.getAttr(symmetricalBS + '.tz')
@@ -157,9 +178,10 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
             baseShape = getConnectedBaseShape(selected)
             blsNode = getConnectedBlendshapeNode(selected)
 
-            # Add new mirror shape to the blendshape node.
-            newTargetIndex = cmds.blendShape(blsNode, q = True, wc = True) + 1
-            cmds.blendShape(baseShape, e = True, t = (baseShape, newTargetIndex, newMirrorShape, 1.0))
+            # Possibly add new mirror shape to the blendshape node.
+            if blsNode:
+                newTargetIndex = cmds.blendShape(blsNode, q = True, wc = True) + 1
+                cmds.blendShape(baseShape, e = True, t = (baseShape, newTargetIndex, newMirrorShape, 1.0))
 
         else:
             print('No new symmetrical blendshape created for: ' + selected)
