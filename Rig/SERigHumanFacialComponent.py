@@ -446,6 +446,7 @@ def createFACS_DataBuffer(facialComponentGroup):
     for attr in SERigNaming.auAttrList:
         cmds.addAttr(dataBufferGroup, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
         cmds.setAttr(dataBufferGroup + '.' + attr, cb = 1)
+        cmds.setAttr(dataBufferGroup + '.' + attr, keyable = True)
 
     SERigObjectTypeHelper.linkRigObjects(facialComponentGroup, dataBufferGroup, SERigNaming.sFACS_DataBufferAttr)
 
