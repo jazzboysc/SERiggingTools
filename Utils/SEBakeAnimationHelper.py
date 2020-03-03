@@ -5,8 +5,10 @@ from . import SERigObjectTypeHelper
 from . import SEJointHelper
 from ..Base import SERigNaming
 
+#-----------------------------------------------------------------------------
 def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, timeRange = (0, 0), useTimeSliderRange = True, 
-                              importReference = True, reloadReference = False, clearRig = True):
+                              importReference = True, reloadReference = False, deleteRigAfterBaking = True, 
+                              sampleJointBy = 2, sampleBlendShapeBy = 4):
     # Get selected rig character and its namespace.
     selected = cmds.ls(sl = True)
     if selected:
@@ -59,7 +61,7 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
     if deformationGrp and bakeSlaveJoints:
         slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
         
-        cmds.bakeResults(slaveJoints, simulation = True, t = newTimeRange, sampleBy = 1,
+        cmds.bakeResults(slaveJoints, simulation = True, t = newTimeRange, sampleBy = sampleJointBy,
                          oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True,
                          sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
                          bakeOnOverrideLayer = False, minimizeRotation = True, controlPoints = False, shape = True)
@@ -68,20 +70,23 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
     if bakeBlendshapes:
         blendShapes = SERigObjectTypeHelper.getSpecificObjectsUnderNamespace(type = 'blendShape', namespace = curNS)
         
+        toBeBaked = []
         for bs in blendShapes:
-            weightAttrNames = cmds.listAttr(bs + '.weight', m = True)
+            temp = bs + '.weight'
+            toBeBaked.append(temp)
 
-            cmds.bakeResults(bs, at = weightAttrNames, simulation = True, t = newTimeRange, sampleBy = 1, 
-                             oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True, 
-                             sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
-                             bakeOnOverrideLayer = False, minimizeRotation = True)
+        cmds.bakeResults(toBeBaked, t = newTimeRange, sampleBy = sampleBlendShapeBy)
 
-        #cmds.bakeResults(blendShapes, simulation = True, t = newTimeRange, sampleBy = 1, 
-        #                 oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True,
-        #                 sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
-        #                 bakeOnOverrideLayer = False, minimizeRotation = True)
+        #for bs in blendShapes:
+        #    weightAttrNames = cmds.listAttr(bs + '.weight', m = True)
+        #
+        #    cmds.bakeResults(bs, at = weightAttrNames, simulation = True, t = newTimeRange, sampleBy = 1, 
+        #                     oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True, 
+        #                     sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
+        #                     bakeOnOverrideLayer = False, minimizeRotation = True)
+        #    print('Blendshape node baked: ' + bs)
 
-    if deformationGrp and importReference and clearRig:
+    if deformationGrp and importReference and deleteRigAfterBaking:
         slaveRoot = SEJointHelper.getFirstChildJoint(deformationGrp)
         if slaveRoot:
             cmds.parent(slaveRoot, w = True)
@@ -96,3 +101,4 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
             else:
                 cmds.warning('Model root not found for:' + modelGrp)
             cmds.delete(characterGroup)
+#-----------------------------------------------------------------------------
