@@ -646,3 +646,31 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh, proxyJntMaximumInfluences 
 
     return proxyJnts
 #-----------------------------------------------------------------------------
+def isLeafJoint(joint):
+    children = cmds.listRelatives(joint, c = True)
+    if children == None:
+        return True
+    else:
+        return False
+#-----------------------------------------------------------------------------
+def isSkinnedJoint(joint):
+    skinClusters = cmds.listConnections(joint, type = 'skinCluster')
+    if skinClusters != None:
+        return True
+    else:
+        return False
+#-----------------------------------------------------------------------------
+def removeUnskinnedSlaveLeafJoints(slaveJoints, excludeTags = []):
+    for slaveJoint in slaveJoints:        
+        if isLeafJoint(slaveJoint) and not isSkinnedJoint(slaveJoint):
+
+            removeFlag = True
+            for tag in excludeTags:
+                if jointHasTag(slaveJoint, tag):
+                    removeFlag = False
+                    break
+            
+            if removeFlag:
+                print('Remove slave leaf joint: ' + slaveJoint)
+                cmds.delete(slaveJoint)
+#-----------------------------------------------------------------------------

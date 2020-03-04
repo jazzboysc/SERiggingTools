@@ -8,7 +8,8 @@ from ..Base import SERigNaming
 #-----------------------------------------------------------------------------
 def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, timeRange = (0, 0), useTimeSliderRange = True, 
                               importReference = True, reloadReference = False, deleteRigAfterBaking = True, 
-                              sampleJointBy = 2, sampleBlendShapeBy = 4, cleanupBindPose = True):
+                              sampleJointBy = 2, sampleBlendShapeBy = 4, cleanupUnskinnedSlaveLeafJoints = True, excludeTags = [],
+                              cleanupBindPose = True):
     # Get selected rig character and its namespace.
     selected = cmds.ls(sl = True)
     if selected:
@@ -111,21 +112,26 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
             print('Remove character rig: ' + characterGroup)
             cmds.delete(characterGroup)
 
+    if cleanupUnskinnedSlaveLeafJoints:
+        SEJointHelper.removeUnskinnedSlaveLeafJoints(slaveJoints, excludeTags)
+
     if cleanupBindPose:
         cleanupBindPoseForSlaveJoints(slaveJoints, slaveRoot)
 #-----------------------------------------------------------------------------
 def cleanupBindPoseForSlaveJoints(slaveJoints = [], slaveRoot = None):
     bindPoseNodes = set()
     for slaveJoint in slaveJoints:
-        curBindPoseNodes = cmds.listConnections(slaveJoint, t = 'dagPose')
+        if cmds.objExists(slaveJoint):
+            curBindPoseNodes = cmds.listConnections(slaveJoint, t = 'dagPose')
 
-        if curBindPoseNodes:
-            for curBindPoseNode in curBindPoseNodes:
-                bindPoseNodes.add(curBindPoseNode)
+            if curBindPoseNodes:
+                for curBindPoseNode in curBindPoseNodes:
+                    bindPoseNodes.add(curBindPoseNode)
 
     for bindPoseNode in bindPoseNodes:
-        print('Remove old bind pose node: ' + bindPoseNode)
-        cmds.delete(bindPoseNode)
+        if cmds.objExists(bindPoseNode):
+            print('Remove old bind pose node: ' + bindPoseNode)
+            cmds.delete(bindPoseNode)
 
     if slaveRoot:
         res = cmds.dagPose(slaveRoot, save = True, name = 'bindPose')
