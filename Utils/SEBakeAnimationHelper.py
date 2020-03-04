@@ -117,8 +117,33 @@ def cleanupBindPoseForSlaveJoints(slaveJoints = [], slaveRoot = None):
                 bindPoseNodes.add(curBindPoseNode)
 
     for bindPoseNode in bindPoseNodes:
+        print('Removing old bind pose node: ' + bindPoseNode)
         cmds.delete(bindPoseNode)
 
     if slaveRoot:
-        cmds.dagPose(slaveRoot, save = True, name = 'bindPose')
+        res = cmds.dagPose(slaveRoot, save = True, name = 'bindPose')
+        print('New bind pose node created: ' + res)
+#-----------------------------------------------------------------------------
+def _cleanupBindPoseForCharacter(characterGroup):
+    if not SERigObjectTypeHelper.isRigCharacterGroup(characterGroup):
+        cmds.warning('Please select a character rig group.')
+        return
+
+    deformationGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
+    slaveJoints = []
+    slaveRoot = None
+    if deformationGrp:
+        slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
+        slaveRoot = SEJointHelper.getFirstChildJoint(deformationGrp)
+        cleanupBindPoseForSlaveJoints(slaveJoints, slaveRoot)
+#-----------------------------------------------------------------------------
+def cleanupBindPoseForCharacter():
+    selected = cmds.ls(sl = True)
+    if len(selected) == 1:
+        selected = selected[0]
+    else:
+        cmds.warning('Please select a character rig group.')
+        return
+
+    _cleanupBindPoseForCharacter(selected)
 #-----------------------------------------------------------------------------
