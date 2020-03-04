@@ -8,7 +8,7 @@ from ..Base import SERigNaming
 #-----------------------------------------------------------------------------
 def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, timeRange = (0, 0), useTimeSliderRange = True, 
                               importReference = True, reloadReference = False, deleteRigAfterBaking = True, 
-                              sampleJointBy = 2, sampleBlendShapeBy = 4):
+                              sampleJointBy = 2, sampleBlendShapeBy = 4, cleanupBindPose = True):
     # Get selected rig character and its namespace.
     selected = cmds.ls(sl = True)
     if selected:
@@ -58,6 +58,7 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
 
     # Possibly bake slave joints' animation.
     deformationGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
+    slaveJoints = []
     if deformationGrp and bakeSlaveJoints:
         slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
         
@@ -86,6 +87,7 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
         #                     bakeOnOverrideLayer = False, minimizeRotation = True)
         #    print('Blendshape node baked: ' + bs)
 
+    slaveRoot = None
     if deformationGrp and importReference and deleteRigAfterBaking:
         slaveRoot = SEJointHelper.getFirstChildJoint(deformationGrp)
         if slaveRoot:
@@ -101,4 +103,22 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
             else:
                 cmds.warning('Model root not found for:' + modelGrp)
             cmds.delete(characterGroup)
+
+    if cleanupBindPose:
+        cleanupBindPoseForSlaveJoints(slaveJoints, slaveRoot)
+#-----------------------------------------------------------------------------
+def cleanupBindPoseForSlaveJoints(slaveJoints = [], slaveRoot = None):
+    bindPoseNodes = set()
+    for slaveJoint in slaveJoints:
+        curBindPoseNodes = cmds.listConnections(slaveJoint, t = 'dagPose')
+
+        if curBindPoseNodes:
+            for curBindPoseNode in curBindPoseNodes:
+                bindPoseNodes.add(curBindPoseNode)
+
+    for bindPoseNode in bindPoseNodes:
+        cmds.delete(bindPoseNode)
+
+    if slaveRoot:
+        cmds.dagPose(slaveRoot, save = True, name = 'bindPose')
 #-----------------------------------------------------------------------------
