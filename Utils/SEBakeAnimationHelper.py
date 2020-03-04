@@ -39,6 +39,7 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
             rnNamespace = rnNamespace[1:] + ':'
             if rnNamespace == curNS:
                 cmds.file(ref, loadReferenceDepth = 'asPrefs', loadReference = curRN)
+                print('Reload rig reference: ' + curRN)
     
     # Possibly import reference.
     if importReference:
@@ -48,6 +49,7 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
             rnNamespace = rnNamespace[1:] + ':'
             if rnNamespace == curNS:
                 cmds.file(importReference = True, referenceNode = curRN)
+                print('Import rig reference: ' + curRN)
 
 
     newTimeRange = timeRange
@@ -55,6 +57,7 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
         minTime = cmds.playbackOptions(q = True, minTime = True)
         maxTime = cmds.playbackOptions(q = True, maxTime = True)
         newTimeRange = (minTime, maxTime)
+    print('Baked time range: ' + str(minTime) + ',' + str(maxTime))
 
     # Possibly bake slave joints' animation.
     deformationGrp = SERigObjectTypeHelper.getCharacterDeformationGroup(characterGroup)
@@ -62,6 +65,7 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
     if deformationGrp and bakeSlaveJoints:
         slaveJoints = cmds.listRelatives(deformationGrp, type = 'joint', ad = True)
         
+        print('Slave joints animation baked.')
         cmds.bakeResults(slaveJoints, simulation = True, t = newTimeRange, sampleBy = sampleJointBy,
                          oversamplingRate = 1, disableImplicitControl = True, preserveOutsideKeys = True,
                          sparseAnimCurveBake = False, removeBakedAttributeFromLayer = False, removeBakedAnimFromLayer = False,
@@ -76,6 +80,7 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
             temp = bs + '.weight'
             toBeBaked.append(temp)
 
+        print('Blendshape nodes animation baked.')
         cmds.bakeResults(toBeBaked, t = newTimeRange, sampleBy = sampleBlendShapeBy)
 
         #for bs in blendShapes:
@@ -102,6 +107,8 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
                 cmds.parent(modelRootGrp, w = True)
             else:
                 cmds.warning('Model root not found for:' + modelGrp)
+
+            print('Remove character rig: ' + characterGroup)
             cmds.delete(characterGroup)
 
     if cleanupBindPose:
@@ -117,7 +124,7 @@ def cleanupBindPoseForSlaveJoints(slaveJoints = [], slaveRoot = None):
                 bindPoseNodes.add(curBindPoseNode)
 
     for bindPoseNode in bindPoseNodes:
-        print('Removing old bind pose node: ' + bindPoseNode)
+        print('Remove old bind pose node: ' + bindPoseNode)
         cmds.delete(bindPoseNode)
 
     if slaveRoot:
