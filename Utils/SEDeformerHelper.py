@@ -123,12 +123,26 @@ def getConnectedShapeInverter(inputShape):
     return None
 #-----------------------------------------------------------------------------
 def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_R = 'R', pattern_r = 'r', pattern_L = 'L', pattern_l = 'l'):
+    """Update symmetrical blendshape mesh for current selected mesh.
+
+    @param[in] cleanBaseMesh A clean base mesh which has no inputs or outputs.
+    @param[in] createIfNotFound Whether or not create a new mesh if symmetrical mesh is not found.
+    @param[in] pattern_R Right side suffix pattern for the mesh name.
+    @param[in] pattern_r Right side suffix pattern for the mesh name.
+    @param[in] pattern_L Left side suffix pattern for the mesh name.
+    @param[in] pattern_l Left side suffix pattern for the mesh name.
+    @return Nothing.
+    """
+
     selected = cmds.ls(sl = 1)
     if len(selected) != 1:
         cmds.warning('Please select one blendshape mesh.')
         return
     selected = selected[0]
-        
+    parentGrp = cmds.listRelatives(selected, p = True)
+    if parentGrp:
+        parentGrp = parentGrp[0]
+
     findRes = findSymmetricalBlendshape(selected, pattern_R, pattern_r, pattern_L, pattern_l)
     if findRes == None:
         cmds.warning('Unable to update symmetrical blendshape.')
@@ -164,6 +178,9 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
         cmds.delete(symmetricalBS)
         cmds.delete(selectedClean)
         cmds.rename(newMirrorShape, symmetricalBS)
+
+        if parentGrp:
+            cmds.parent(symmetricalBS, parentGrp)
     else:
         # Symmetrical blendshape does not exist, possibly create a new shape.
         if createIfNotFound:
@@ -174,6 +191,9 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
             newMirrorShape = createMirrorShapeAlongLocalAxis(selectedClean, cleanBaseMesh, newShape = findRes[2])
             cmds.showHidden(newMirrorShape)
             cmds.delete(selectedClean)
+
+            if parentGrp:
+                cmds.parent(newMirrorShape, parentGrp)
 
             baseShape = getConnectedBaseShape(selected)
             blsNode = getConnectedBlendshapeNode(selected)
