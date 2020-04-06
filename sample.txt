@@ -127,3 +127,113 @@ cmds.setKeyframe('animCurveUA22', float = 1.0, value = 8.0, itt = 'linear', ott 
 cmds.keyTangent('animCurveUA14', weightedTangents = False)
 
 optionVar -iv "editorConnectionScanLimit" 10000000;
+
+
+
+
+
+
+
+
+
+
+
+CreateRigUI.openMayaWindow()
+
+ControlRigUI.openControlRigWindow()
+res = cmds.listRelatives('pSphere1', p = 1)
+
+RigHumanFacialComponent.resetFaceControls()
+RigHumanFacialComponent.resetFaceProxyControls()
+RigHumanFacialComponent.resetAllFaceControls()
+
+BakeAnimationHelper.bakeRigCharacterAnimation(deleteRigAfterBaking = True, sampleJointBy = 4, sampleBlendShapeBy = 8, 
+    cleanupUnskinnedSlaveLeafJoints = False)
+
+res = cmds.ls(sl=1)
+l = len(res)
+
+RigHumanFacialComponent.removeFaceProxyControlInfluence()
+DeformerHelper.updateSymmetricalBlendshape('baseClean')
+
+
+jnts = ['joint1', 'joint2', 'joint3', 'joint4']
+mesh = 'pSphere1'
+cmds.skinCluster(jnts, mesh, toSelectedBones = True, skinMethod = 0, normalizeWeights = 1, obeyMaxInfluences = 1, maximumInfluences = 4)
+
+jnts = JointHelper.getFacialBaseJointsFromSelectedRigCharacterGroup()
+cmds.select(jnts)
+
+jnts = JointHelper.getBodyDeformationJoints()
+cmds.select(jnts)
+res = len(jnts)
+
+jnts = JointHelper.getSlaveFacialBaseJointsFromSelectedRigCharacterGroup()
+cmds.select(jnts)
+
+JointHelper.selectSkinJointsFromSelectedSkinObject()
+res = cmds.ls(sl=1, type = 'joint')
+cmds.select(res)
+l = len(res)
+
+res = DeformerHelper.createMirrorShapeAlongLocalAxis('bs1_R', 'base', newShape = 'bs1_L')
+
+MathHelper.createLinearRemappingNode()
+
+
+comp = RigObjectTypeHelper.getCharacterFacialComponentGroup('Female01_RigGrp')
+res = RigObjectTypeHelper.getCharacterComponentRigPartsGroup(comp)
+prefix = RigObjectTypeHelper.getCharacterComponentPrefix(comp)
+buffer = RigHumanFacialComponent.getFACS_DataBuffer(comp)
+
+
+
+def setControlRGBColor(control, color = (1.0, 1.0, 1.0)):
+    
+    rgb = ("R","G","B")
+    cmds.setAttr(control + ".overrideEnabled",1)
+    cmds.setAttr(control + ".overrideRGBColors",1)
+
+    for channel, color in zip(rgb, color):    
+        cmds.setAttr(control + ".overrideColor%s" %channel, color)
+
+t = cmds.nodeType('BW_blendShape1_Lips_Push_Up')
+res = cmds.ls(type = 'nurbsCurve')
+cmds.select(res)
+for s in res:
+    setControlRGBColor(s, (0.4, 0.9, 0.9))
+
+res = RigHumanFacialComponent.getFacialControlObject(RigEnum.eRigFacialControlType.RFCT_UpperLid, RigEnum.eRigSide.RS_Right, 0)
+
+cmds.connectAttr('animCurveTU1.output', 'blendWeighted22.input[0]')
+cmds.createNode('clamp')
+cmds.setAttr('clamp15.maxR', 0.5)
+cmds.setAttr('clamp15.maxG', 0.5)
+
+
+RigHumanFacialComponent.createFacialSkinProxyJointsAndControlsFromSelection(4, False, 0.2)
+
+RigHumanFacialComponent.createFacialProxyControlRivetConstraints('FacialBaseTri', 'Female01_RigGrp')
+
+
+
+
+JointHelper.jointAddTag('L_EyelidUpperEnd', 'EngineBone')
+JointHelper.jointAddTag('L_EyelidUpperEnd', 'test1')
+JointHelper.jointAddTag('L_EyelidUpperEnd', 'test2')
+JointHelper.jointRemoveTag('L_EyelidUpperEnd', 'EngineBone')
+JointHelper.jointRemoveTag('L_EyelidUpperEnd', 'test1')
+JointHelper.jointRemoveTag('L_EyelidUpperEnd', 'test2')
+JointHelper.jointRemoveTag('L_EyelidUpperEnd', 'FacialBase')
+
+res = JointHelper.jointHasTag('L_EyelidUpperEnd', 'test3')
+
+
+    
+res = findRelatedSkinCluster('FaceCage_V84')
+
+res = RigObjectTypeHelper.findRelatedRigCharacterGroup('FaceCage_V84')
+
+res = RigObjectTypeHelper.isRigControlGroup('FaceProxyControlGrp_parentConstraint1')
+
+res = JointHelper.getSlaveFacialRootJoint('Female01_RigGrp')
