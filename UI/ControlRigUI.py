@@ -14,7 +14,7 @@ import functools
 import cPickle
 
 from ..Character import SECharacter
-
+from ..Base import SERigNaming
 from ..Utils import SERigObjectTypeHelper as RigObjectHelper
 from ..Rig import SERigBipedLimbComponent
 
@@ -285,9 +285,6 @@ def getCurrentSelecterName(uiWindow):
         return name
     return name
 
-
-
-
     # def selectControl(CurrWidget):
     #     data = ButtonToControl[CurrWidget]
     #     name = getCurrentSelecterName(uiWindow)
@@ -343,13 +340,13 @@ def setIKFKShow(uiWindow):
     def modifyValue(SliderValue):
         return SliderValue / 10.0
     def setLeftLegIKFK(SliderValue):
-        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , 'leftLegIKFKSwitch')
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , SERigNaming.sLeftLegIKFKSwitch)
     def setLeftArmIKFK(SliderValue):
-        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , 'leftArmIKFKSwitch')
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , SERigNaming.sLeftArmIKFKSwitch)
     def setRightLegIKFK(SliderValue):
-        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , 'rightLegIKFKSwitch')
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , SERigNaming.sRightLegIKFKSwitch)
     def setRightArmIKFK(SliderValue):
-        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , 'rightArmIKFKSwitch')
+        RigObjectHelper.hideCharacterIKFKByName(uiWindow.characterSelector.currentText() , modifyValue(SliderValue) , SERigNaming.sRightArmIKFKSwitch)
     uiWindow.IKFKLLeg.valueChanged.connect(setLeftLegIKFK)        
     uiWindow.IKFKLHand.valueChanged.connect(setLeftArmIKFK)
     uiWindow.IKFKRLeg.valueChanged.connect(setRightLegIKFK)
