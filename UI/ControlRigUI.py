@@ -267,15 +267,15 @@ def setControlToButtonMap(uiWindow):
     uiWindow.FK_R_Finger_02_Ctrl:[(u'RS_Right', u'RT_IndexFK', 2),(u'RS_Right', u'RT_MiddleFK', 2),(u'RS_Right', u'RT_RingFK', 2),(u'RS_Right', u'RT_PinkyFK', 2)],
     uiWindow.FK_R_Finger_03_Ctrl:[(u'RS_Right', u'RT_IndexFK', 3),(u'RS_Right', u'RT_MiddleFK', 3),(u'RS_Right', u'RT_RingFK', 3),(u'RS_Right', u'RT_PinkyFK', 3)],
 
-    uiWindow.FK_R_FourFinger_Ctrl:[(u'RS_Right', u'RT_IndexFK', 0),(u'RS_Right', u'RT_MiddleFK', 0),(u'RS_Right', u'RT_RingFK', 0),(u'RS_Right', u'RT_PinkyFK', 0),
-    (u'RS_Right', u'RT_IndexFK', 1),(u'RS_Right', u'RT_MiddleFK', 1),(u'RS_Right', u'RT_RingFK', 1),(u'RS_Right', u'RT_PinkyFK', 1),
-    (u'RS_Right', u'RT_IndexFK', 2),(u'RS_Right', u'RT_MiddleFK', 2),(u'RS_Right', u'RT_RingFK', 2),(u'RS_Right', u'RT_PinkyFK', 2),
-    (u'RS_Right', u'RT_IndexFK', 3),(u'RS_Right', u'RT_MiddleFK', 3),(u'RS_Right', u'RT_RingFK', 3),(u'RS_Right', u'RT_PinkyFK', 3)],
+    uiWindow.FK_R_FourFinger_Ctrl:[#(u'RS_Right', u'RT_IndexFK', 0),(u'RS_Right', u'RT_MiddleFK', 0),(u'RS_Right', u'RT_RingFK', 0),(u'RS_Right', u'RT_PinkyFK', 0),
+                                   (u'RS_Right', u'RT_IndexFK', 1),(u'RS_Right', u'RT_MiddleFK', 1),(u'RS_Right', u'RT_RingFK', 1),(u'RS_Right', u'RT_PinkyFK', 1),
+                                   (u'RS_Right', u'RT_IndexFK', 2),(u'RS_Right', u'RT_MiddleFK', 2),(u'RS_Right', u'RT_RingFK', 2),(u'RS_Right', u'RT_PinkyFK', 2),
+                                   (u'RS_Right', u'RT_IndexFK', 3),(u'RS_Right', u'RT_MiddleFK', 3),(u'RS_Right', u'RT_RingFK', 3),(u'RS_Right', u'RT_PinkyFK', 3)],
 
-    uiWindow.FK_L_FourFinger_Ctrl:[(u'RS_Left', u'RT_IndexFK', 0),(u'RS_Left', u'RT_MiddleFK', 0),(u'RS_Left', u'RT_RingFK', 0),(u'RS_Left', u'RT_PinkyFK', 0),
-    (u'RS_Left', u'RT_IndexFK', 1),(u'RS_Left', u'RT_MiddleFK', 1),(u'RS_Left', u'RT_RingFK', 1),(u'RS_Left', u'RT_PinkyFK', 1),
-    (u'RS_Left', u'RT_IndexFK', 2),(u'RS_Left', u'RT_MiddleFK', 2),(u'RS_Left', u'RT_RingFK', 2),(u'RS_Left', u'RT_PinkyFK', 2),
-    (u'RS_Left', u'RT_IndexFK', 3),(u'RS_Left', u'RT_MiddleFK', 3),(u'RS_Left', u'RT_RingFK', 3),(u'RS_Left', u'RT_PinkyFK', 3)],
+    uiWindow.FK_L_FourFinger_Ctrl:[#(u'RS_Left', u'RT_IndexFK', 0),(u'RS_Left', u'RT_MiddleFK', 0),(u'RS_Left', u'RT_RingFK', 0),(u'RS_Left', u'RT_PinkyFK', 0),
+                                   (u'RS_Left', u'RT_IndexFK', 1),(u'RS_Left', u'RT_MiddleFK', 1),(u'RS_Left', u'RT_RingFK', 1),(u'RS_Left', u'RT_PinkyFK', 1),
+                                   (u'RS_Left', u'RT_IndexFK', 2),(u'RS_Left', u'RT_MiddleFK', 2),(u'RS_Left', u'RT_RingFK', 2),(u'RS_Left', u'RT_PinkyFK', 2),
+                                   (u'RS_Left', u'RT_IndexFK', 3),(u'RS_Left', u'RT_MiddleFK', 3),(u'RS_Left', u'RT_RingFK', 3),(u'RS_Left', u'RT_PinkyFK', 3)],
     }
 
 def getCurrentSelecterName(uiWindow):
