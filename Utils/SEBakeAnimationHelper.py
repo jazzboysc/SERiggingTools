@@ -81,8 +81,9 @@ def bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, ti
             temp = bs + '.weight'
             toBeBaked.append(temp)
 
-        print('Blendshape nodes animation baked.')
-        cmds.bakeResults(toBeBaked, t = newTimeRange, sampleBy = sampleBlendShapeBy)
+        if len(toBeBaked) > 0:
+            print('Blendshape nodes animation baked.')
+            cmds.bakeResults(toBeBaked, t = newTimeRange, sampleBy = sampleBlendShapeBy)
 
         #for bs in blendShapes:
         #    weightAttrNames = cmds.listAttr(bs + '.weight', m = True)
