@@ -541,7 +541,10 @@ def getSlaveFacialBaseJoints(characterGroup):
 #-----------------------------------------------------------------------------
 def getSlaveFacialBaseJointsFromSelectedRigCharacterGroup():
     characterGroup = getSelectedRigCharacterGroup()
-    return getSlaveFacialBaseJoints(characterGroup)
+    if characterGroup:
+        return getSlaveFacialBaseJoints(characterGroup)
+    else:
+        return None
 #-----------------------------------------------------------------------------
 def getEyeBlockingSphereRadius(blockingSphere):
     shapeBB = cmds.exactWorldBoundingBox(blockingSphere)
