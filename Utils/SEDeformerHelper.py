@@ -34,7 +34,13 @@ def getMeshVertexPosition(vtxName):
 
     return vtxPos
 #-----------------------------------------------------------------------------
-def matchSourceBlendshapesToTarget(source, target):
+def batchRemovePrefix():
+    selected = cmds.ls(sl=1)
+    for i in selected:
+        newName = SEStringHelper.SE_RemovePrefix(i)
+        cmds.rename(i, newName)
+#-----------------------------------------------------------------------------
+def _matchSourceBlendshapesToTarget(source, target):
     if not cmds.objExists(source) or not cmds.objExists(target):
         return
 
@@ -48,6 +54,11 @@ def matchSourceBlendshapesToTarget(source, target):
     cmds.setAttr(source + '.tx', 0)
     cmds.setAttr(source + '.ty', 0)
     cmds.setAttr(source + '.tz', 0)
+
+    # Temporally disable target deformation otherwise we cannot match the source and target correctly.
+    for node in cmds.listHistory(target):
+        if cmds.nodeType(node) == 'skinCluster' or cmds.nodeType(node) == 'blendShape':
+            cmds.setAttr(node + '.envelope', 0.0)
 
     sourcePos = getMeshVertexPosition(source + '.vtx[0]')
     targetPos = getMeshVertexPosition(target + '.vtx[0]')
@@ -70,6 +81,17 @@ def matchSourceBlendshapesToTarget(source, target):
     # Recreate blendshape node.
     cmds.blendShape(sourceInputTargets, source)
 
+    # Restore target deformation.
+    for node in cmds.listHistory(target):
+        if cmds.nodeType(node) == 'skinCluster' or cmds.nodeType(node) == 'blendShape':
+            cmds.setAttr(node + '.envelope', 1.0)
+#-----------------------------------------------------------------------------
+def matchSourceBlendshapesToTarget():
+    selected = cmds.ls(sl = 1)
+    source = selected[0]
+    target = selected[1]
+
+    _matchSourceBlendshapesToTarget(source, target)
 #-----------------------------------------------------------------------------
 def createMirrorShapeAlongLocalAxis(sculptShape, baseShape, localAxis = 'x', newShape = ''):
     baseWrapped = cmds.duplicate(baseShape)[0]
