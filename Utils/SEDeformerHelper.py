@@ -1,7 +1,74 @@
 import maya.cmds as cmds
 import maya.mel as mel
+import maya.OpenMaya as om
+import re
 
 from . import SEStringHelper
+
+#-----------------------------------------------------------------------------
+def getMeshVertexPosition(vtxName):
+    # Get vertex number and object having that vertex
+    testVtx = re.search('(?<=\[)(?P<vtxNum>[\d]+)(?=\])', str(vtxName))
+    if testVtx:
+        vtxNum = int(testVtx.group('vtxNum'))
+        vtxObj = vtxName.split('.')[0]
+    else:
+        return
+
+    # Get Api MDagPath for object
+    activList = om.MSelectionList()
+    activList.add(vtxObj)
+    pathDg = om.MDagPath()
+    activList.getDagPath(0, pathDg)
+
+    # Iterate over all the mesh vertices and get position of required vtx
+    mItVtx = om.MItMeshVertex(pathDg)
+    vtxPos = []
+    while not mItVtx.isDone():
+        if mItVtx.index() == vtxNum:
+            point = om.MPoint()
+            point = mItVtx.position(om.MSpace.kWorld)
+            vtxPos = [round(point.x, 5), round(point.y, 5), round(point.z, 5)]
+            break
+        mItVtx.next()
+
+    return vtxPos
+#-----------------------------------------------------------------------------
+def matchSourceBlendshapesToTarget(source, target):
+    if not cmds.objExists(source) or not cmds.objExists(target):
+        return
+
+    sourceInputTargets = []
+    bs = getConnectedInputBlendshapeNode(source)
+    if bs:
+        sourceInputTargets = cmds.listConnections(bs + '.inputTarget')
+    cmds.delete(source, ch = 1)
+
+    # Reset source transformation.
+    cmds.setAttr(source + '.tx', 0)
+    cmds.setAttr(source + '.ty', 0)
+    cmds.setAttr(source + '.tz', 0)
+
+    sourcePos = getMeshVertexPosition(source + '.vtx[0]')
+    targetPos = getMeshVertexPosition(target + '.vtx[0]')
+    dx = targetPos[0] - sourcePos[0]
+    dy = targetPos[1] - sourcePos[1]
+    dz = targetPos[2] - sourcePos[2]
+
+    cmds.setAttr(source + '.tx', dx)
+    cmds.setAttr(source + '.ty', dy)
+    cmds.setAttr(source + '.tz', dz)
+    cmds.makeIdentity(source, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+    # Update all the source input targets to match our target mesh and freeze them.
+    for sourceInputTarget in sourceInputTargets:
+        cmds.setAttr(sourceInputTarget + '.tx', dx)
+        cmds.setAttr(sourceInputTarget + '.ty', dy)
+        cmds.setAttr(sourceInputTarget + '.tz', dz)
+        cmds.makeIdentity(sourceInputTarget, apply = True, t = 1, r = 1, s = 1, n = 0,  pn = 1)
+
+    # Recreate blendshape node.
+    cmds.blendShape(sourceInputTargets, source)
 
 #-----------------------------------------------------------------------------
 def createMirrorShapeAlongLocalAxis(sculptShape, baseShape, localAxis = 'x', newShape = ''):
@@ -91,15 +158,26 @@ def findSymmetricalBlendshape(inputShape, pattern_R = 'R', pattern_r = 'r', patt
         cmds.warning('Blendshape that matches symmetrical pattern not found for input shape: ' + inputShape)
         return None 
 #-----------------------------------------------------------------------------
-def getConnectedBlendshapeNode(inputShape):
+def getConnectedOutputBlendshapeNode(inputShape):
+    # TODO:
+    # Return the first connection that is blendshape.
     blsNode = cmds.listConnections(inputShape + '.worldMesh[0]')
     if blsNode:
         blsNode = blsNode[0]
 
     return blsNode
 #-----------------------------------------------------------------------------
+def getConnectedInputBlendshapeNode(inputShape):
+    # TODO:
+    # Return the first connection that is blendshape.
+    blsNode = cmds.listConnections(inputShape + '.inMesh')
+    if blsNode:
+        blsNode = blsNode[0]
+
+    return blsNode
+#-----------------------------------------------------------------------------
 def getConnectedBaseShape(inputShape):
-    bsNode = getConnectedBlendshapeNode(inputShape)
+    bsNode = getConnectedOutputBlendshapeNode(inputShape)
     res = cmds.listConnections(bsNode + '.outputGeometry[0]')[0]
     return res
 #-----------------------------------------------------------------------------
@@ -196,7 +274,7 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
                 cmds.parent(newMirrorShape, parentGrp)
 
             baseShape = getConnectedBaseShape(selected)
-            blsNode = getConnectedBlendshapeNode(selected)
+            blsNode = getConnectedOutputBlendshapeNode(selected)
 
             # Possibly add new mirror shape to the blendshape node.
             if blsNode:

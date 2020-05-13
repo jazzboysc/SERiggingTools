@@ -2,6 +2,7 @@ import maya.cmds as cmds
 
 from . import SERigObjectTypeHelper
 
+#-----------------------------------------------------------------------------
 def createRivetConstraint(surfaceGeometry, rivetObject, createParentConstraint = False, maintainOffset = True, hideChannels = []):
     res = None
 
@@ -44,3 +45,4 @@ def createRivetConstraint(surfaceGeometry, rivetObject, createParentConstraint =
         cmds.warning('Failed creating rivet constraint for:' + surfaceGeometry + ' and ' + rivetObject)
 
     return res
+    #-----------------------------------------------------------------------------
