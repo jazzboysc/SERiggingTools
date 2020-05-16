@@ -46,7 +46,6 @@ facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSi
 facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Right, 0)]           = 'Chin_R_001_Ctrl'
 facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_Chin, SERigEnum.eRigSide.RS_Right, 1)]           = 'Chin_R_002_Ctrl'
 
-
 #-----------------------------------------------------------------------------
 def getFacialControlObject(facialControlType, rigSide, controlIndex):
     controlObject = None 

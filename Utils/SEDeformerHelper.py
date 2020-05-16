@@ -4,9 +4,6 @@ import maya.OpenMaya as om
 import re
 
 from . import SEStringHelper
-from ..Base import SERigNaming
-from ..Base import SERigEnum
-from ..Rig import SERigHumanFacialComponent
 
 #-----------------------------------------------------------------------------
 def getMeshVertexPosition(vtxName):
@@ -38,7 +35,7 @@ def getMeshVertexPosition(vtxName):
     return vtxPos
 #-----------------------------------------------------------------------------
 def batchRemovePrefix():
-    selected = cmds.ls(sl = 1)
+    selected = cmds.ls(sl=1)
     for i in selected:
         newName = SEStringHelper.SE_RemovePrefix(i)
         cmds.rename(i, newName)
@@ -95,21 +92,6 @@ def matchSourceBlendshapesToTarget():
     target = selected[1]
 
     _matchSourceBlendshapesToTarget(source, target)
-#-----------------------------------------------------------------------------
-def connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, connectionMap = None):
-    if connectionMap == None:
-        connectionMap = SERigNaming.dataBufferAUsToBlendshapeAUsTable
-
-    for auType in SERigEnum.facialActionUnitTypeList:
-        src = SERigHumanFacialComponent.getFacialActionUnitAttrName(facsDataBuffer, auType)
-        key = SERigNaming.auAttrList[auType]
-        value = connectionMap[key]
-        dst = getBlendshapTargetNameByMatchName(auBlendshapeNode, value, True)
-
-        #print src,dst
-        #print key,value
-        if src and dst:
-            cmds.connectAttr(src, dst, f = 1)
 #-----------------------------------------------------------------------------
 def createMirrorShapeAlongLocalAxis(sculptShape, baseShape, localAxis = 'x', newShape = ''):
     baseWrapped = cmds.duplicate(baseShape)[0]
@@ -221,47 +203,14 @@ def getConnectedBaseShape(inputShape):
     res = cmds.listConnections(bsNode + '.outputGeometry[0]')[0]
     return res
 #-----------------------------------------------------------------------------
-def getBlendshapTargetIndexByName(blsNode, targetName, matchExactly = True, tokenSeparator = '_'):
+def getBlendshapTargetIndexByName(blsNode, targetName):
     attr = blsNode + '.w[{}]'
     weightCount = cmds.blendShape(blsNode, q = True, wc = True)
     for index in xrange(weightCount):
-        aliasName = cmds.aliasAttr(attr.format(index), q = True)
-        if matchExactly:
-            if aliasName == targetName:
-                return index
-        else:
-            match = True
-            aliasNameTokens = aliasName.split(tokenSeparator)
-
-            for aliasNameToken in aliasNameTokens:
-                if targetName.find(aliasNameToken) == -1:
-                    match = False
-                    break
-            if match:
-                return index
+        if cmds.aliasAttr(attr.format(index), q = True) == targetName:
+            return index
 
     return -1
-#-----------------------------------------------------------------------------
-def getBlendshapTargetNameByMatchName(blsNode, matchName, matchExactly = True, tokenSeparator = '_'):
-    attr = blsNode + '.w[{}]'
-    weightCount = cmds.blendShape(blsNode, q = True, wc = True)
-    for index in xrange(weightCount):
-        aliasName = cmds.aliasAttr(attr.format(index), q = True)
-        if matchExactly:
-            if aliasName == matchName:
-                return blsNode + '.' + aliasName
-        else:
-            match = True
-            aliasNameTokens = aliasName.split(tokenSeparator)
-
-            for aliasNameToken in aliasNameTokens:
-                if matchName.find(aliasNameToken) == -1:
-                    match = False
-                    break
-            if match:
-                return blsNode + '.' + aliasName
-
-    return None
 #-----------------------------------------------------------------------------
 def getConnectedShapeInverter(inputShape):
     shapeInverterNode = cmds.listConnections(inputShape + '.outMesh')
