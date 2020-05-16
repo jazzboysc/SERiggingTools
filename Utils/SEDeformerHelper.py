@@ -5,6 +5,7 @@ import re
 
 from . import SEStringHelper
 from . import SEFacsHelper
+from . import SERigObjectTypeHelper
 from ..Base import SERigNaming
 from ..Base import SERigEnum
 
@@ -208,7 +209,23 @@ def batchRemovePrefix():
         newName = SEStringHelper.SE_RemovePrefix(i)
         cmds.rename(i, newName)
 #-----------------------------------------------------------------------------
-def connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, connectionMap = None):
+def connectFACSDataBufferToAUBlendshape(connectionMap = None):
+    selected = cmds.ls(sl = 1)
+    if len(selected) != 2:
+        cmds.warning('Please select AUBase mesh and FacialBase mesh.')
+        return
+        
+    source = selected[0] 
+    target = selected[1]
+
+    auBlendshapeNode = getConnectedInputBlendshapeNode(source)
+    rigCharacterGroup = SERigObjectTypeHelper.findRelatedRigCharacterGroup(target)
+    facialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGroup)
+    facsDataBuffer = SEFacsHelper.getFACS_DataBuffer(facialComponent)
+
+    _connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, connectionMap)
+#-----------------------------------------------------------------------------
+def _connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, connectionMap = None):
     if connectionMap == None:
         connectionMap = dataBufferAUsToBlendshapeAUsTable
 

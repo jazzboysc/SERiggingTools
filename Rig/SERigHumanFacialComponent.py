@@ -444,18 +444,6 @@ def createFACS_DataBuffer(facialComponentGroup):
 
     return dataBufferGroup
 #-----------------------------------------------------------------------------
-def getFACS_DataBuffer(facialComponentGroup):
-    if cmds.objExists(facialComponentGroup):
-        try:
-            res = cmds.listConnections(facialComponentGroup + '.' + SERigNaming.sFACS_DataBufferAttr)[0]
-            return res
-        except:
-            cmds.warning('Cannot find facial component: ' + facialComponentGroup + ' FACS data buffer')
-            return None
-    else:
-        cmds.warning('Cannot find facial component: ' + facialComponentGroup)
-        return None
-#-----------------------------------------------------------------------------
 def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     # Inner brows controls (tx, ty).
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
