@@ -10,6 +10,7 @@ from ..Utils import SEMathHelper
 from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
 from ..Utils import SEConstraintHelper
+from ..Utils import SEFacsHelper
 
 facialControlsTable = {}
 facialControlsTable[(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)]       = 'Brow_L_001_Ctrl'
@@ -131,15 +132,6 @@ def createFacialWrinkleMapAttributes():
         cmds.setAttr(facialObject + '.' + attr, cb = 1)
 
 #-----------------------------------------------------------------------------
-def getFacialActionUnitAttrName(bufferObject, actionUnitType):
-    res = None
-    if cmds.objExists(bufferObject):
-        res = bufferObject + '.' + SERigNaming.auAttrList[actionUnitType]
-    else:
-        cmds.warning('Buffer object does not exist: ' + bufferObject)
-
-    return res
-#-----------------------------------------------------------------------------
 # Used ONLY for building facial rig.
 def getFaceControlsUIGroup():
     # TODO:
@@ -173,14 +165,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
        cmds.objExists(leftEyelidLowerJoint) and cmds.objExists(rightEyelidLowerJoint):
 
         # Upper eyelid AU05.
-        au05LAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_L)
+        au05LAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_L)
         animCurveAu05L = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu05L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu05L, float = 1.0, value = 8.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAu05L, weightedTangents = False)
         cmds.connectAttr(au05LAttr, animCurveAu05L + '.input')
 
-        au05RAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_R)
+        au05RAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_R)
         animCurveAu05R = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu05R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu05R, float = 1.0, value = 8.0, itt = 'linear', ott = 'linear')
@@ -188,14 +180,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(au05RAttr, animCurveAu05R + '.input')
 
         # Upper eyelid AU06.
-        au06LAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
+        au06LAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
         animCurveAu06L = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu06L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu06L, float = 1.0, value = -7.23, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAu06L, weightedTangents = False)
         cmds.connectAttr(au06LAttr, animCurveAu06L + '.input')
 
-        au06RAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
+        au06RAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
         animCurveAu06R = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu06R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu06R, float = 1.0, value = -7.23, itt = 'linear', ott = 'linear')
@@ -203,14 +195,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(au06RAttr, animCurveAu06R + '.input')
 
         # Upper eyelid blink.
-        blinkLAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
+        blinkLAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
         animCurveAuBlinkL = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAuBlinkL, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAuBlinkL, float = 1.0, value = -27.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAuBlinkL, weightedTangents = False)
         cmds.connectAttr(blinkLAttr, animCurveAuBlinkL + '.input')
 
-        blinkRAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
+        blinkRAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
         animCurveAuBlinkR = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAuBlinkR, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAuBlinkR, float = 1.0, value = -27.0, itt = 'linear', ott = 'linear')
@@ -248,14 +240,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
 
 
         # lower eyelid AU06.
-        au06LAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
+        au06LAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
         animCurveAu06L = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu06L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu06L, float = 1.0, value = 15.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAu06L, weightedTangents = False)
         cmds.connectAttr(au06LAttr, animCurveAu06L + '.input')
 
-        au06RAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
+        au06RAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
         animCurveAu06R = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu06R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu06R, float = 1.0, value = 15.0, itt = 'linear', ott = 'linear')
@@ -263,14 +255,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(au06RAttr, animCurveAu06R + '.input')
 
         # lower eyelid AU07.
-        au07LAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_L)
+        au07LAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_L)
         animCurveAu07L = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu07L, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu07L, float = 1.0, value = 12.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAu07L, weightedTangents = False)
         cmds.connectAttr(au07LAttr, animCurveAu07L + '.input')
 
-        au07RAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_R)
+        au07RAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_R)
         animCurveAu07R = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAu07R, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAu07R, float = 1.0, value = 12.0, itt = 'linear', ott = 'linear')
@@ -278,14 +270,14 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(au07RAttr, animCurveAu07R + '.input')
 
         # lower eyelid blink.
-        blinkLAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
+        blinkLAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
         animCurveAuBlinkL = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAuBlinkL, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAuBlinkL, float = 1.0, value = 2.0, itt = 'linear', ott = 'linear')
         cmds.keyTangent(animCurveAuBlinkL, weightedTangents = False)
         cmds.connectAttr(blinkLAttr, animCurveAuBlinkL + '.input')
 
-        blinkRAttr = getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
+        blinkRAttr = SEFacsHelper.getFacialActionUnitAttrName(auDataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
         animCurveAuBlinkR = cmds.createNode('animCurveUA')
         cmds.setKeyframe(animCurveAuBlinkR, float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
         cmds.setKeyframe(animCurveAuBlinkR, float = 1.0, value = 2.0, itt = 'linear', ott = 'linear')
@@ -403,15 +395,15 @@ def createEyeballRotationTrackingLogic(eyeBlockingSphere, eyeEndIkJoint, rigSide
             tempBufferInputU = None
             tempBufferInputD = None
             if rigSide == SERigEnum.eRigSide.RS_Left:
-                tempBufferInputL = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft)
-                tempBufferInputR = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight)
-                tempBufferInputU = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp)
-                tempBufferInputD = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown)
+                tempBufferInputL = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft)
+                tempBufferInputR = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight)
+                tempBufferInputU = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp)
+                tempBufferInputD = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown)
             else:
-                tempBufferInputL = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft)
-                tempBufferInputR = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight)
-                tempBufferInputU = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp)
-                tempBufferInputD = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown)
+                tempBufferInputL = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft)
+                tempBufferInputR = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight)
+                tempBufferInputU = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp)
+                tempBufferInputD = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown)
                         
             cmds.connectAttr(locatorEyeEnd + '.L', tempBufferInputL)
             cmds.connectAttr(locatorEyeEnd + '.R', tempBufferInputR)
@@ -469,34 +461,34 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftInnerBrowControlObj:
         remappingNode = createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, '_remapping', 'tx', -1, 1, 0, 0)
-        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_04_L)
+        tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_04_L)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
         remappingNode = createFacialControlObjectTranslateRemapping(leftInnerBrowControlObj, '_remapping', 'ty', 1, 1, 0, 0)
-        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_01_L)
+        tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_01_L)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     rightInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Right, 0)
     if rightInnerBrowControlObj:
         remappingNode = createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, '_remapping', 'tx', -1, 1, 0, 0)
-        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_04_R)
+        tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_04_R)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
         remappingNode = createFacialControlObjectTranslateRemapping(rightInnerBrowControlObj, '_remapping', 'ty', 1, 1, 0, 0)
-        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_01_R)
+        tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_01_R)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     # Outer brows controls (ty).
     leftOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Left, 0)
     if leftOuterBrowControlObj:
         remappingNode = createFacialControlObjectTranslateRemapping(leftOuterBrowControlObj, '_remapping', 'ty')
-        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_02_L)
+        tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_02_L)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     rightOuterBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterBrow, SERigEnum.eRigSide.RS_Right, 0)
     if rightOuterBrowControlObj:
         remappingNode = createFacialControlObjectTranslateRemapping(rightOuterBrowControlObj, '_remapping', 'ty')
-        tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_02_R)
+        tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_02_R)
         cmds.connectAttr(remappingNode + '.output', tempBufferInput)
 
     # Upper eyelid controls (ty).
@@ -517,10 +509,10 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(unitConversionNodeL + '.output', clampNode + '.inputR')
     cmds.connectAttr(unitConversionNodeR + '.output', clampNode + '.inputG')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
     clampNode = cmds.createNode('clamp')
@@ -530,19 +522,19 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(leftUpperEyelidControlObj + '.ty', clampNode + '.inputR')
     cmds.connectAttr(rightUpperEyelidControlObj + '.ty', clampNode + '.inputG')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_L)
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_05_R)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
     # Lower eyelid controls (ty).
     leftLowerEyelidControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_LowerLid, SERigEnum.eRigSide.RS_Left, 0)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_L)
     cmds.connectAttr(leftLowerEyelidControlObj + '.ty', tempBufferInput)
 
     rightLowerEyelidControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_LowerLid, SERigEnum.eRigSide.RS_Right, 0)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_07_R)
     cmds.connectAttr(rightLowerEyelidControlObj + '.ty', tempBufferInput)
 
     # Eye corner controls (tx).
@@ -551,7 +543,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
     cmds.connectAttr(leftOuterEyeCornerControlObj + '.tx', unitConversionNodeL + '.input')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_L)
     cmds.connectAttr(unitConversionNodeL + '.output', tempBufferInput)
 
     rightOuterEyeCornerControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_OuterEyeCorner, SERigEnum.eRigSide.RS_Right, 0)
@@ -559,38 +551,38 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
     cmds.connectAttr(rightOuterEyeCornerControlObj + '.tx', unitConversionNodeR + '.input')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_06_R)
     cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
 
     # Nosewing controls (tx, ty).
     leftNosewingControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Nosewing, SERigEnum.eRigSide.RS_Left, 0)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_09_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_09_L)
     cmds.connectAttr(leftNosewingControlObj + '.ty', tempBufferInput)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_11_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_11_L)
     cmds.connectAttr(leftNosewingControlObj + '.tx', tempBufferInput)
 
     rightNosewingControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Nosewing, SERigEnum.eRigSide.RS_Right, 0)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_09_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_09_R)
     cmds.connectAttr(rightNosewingControlObj + '.ty', tempBufferInput)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_11_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_11_R)
     cmds.connectAttr(rightNosewingControlObj + '.tx', tempBufferInput)
 
     # Muzzle controls (ty).
     leftMuzzleControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Muzzle, SERigEnum.eRigSide.RS_Left, 0)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_L)
     cmds.connectAttr(leftMuzzleControlObj + '.ty', tempBufferInput)
 
     rightMuzzleControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Muzzle, SERigEnum.eRigSide.RS_Right, 0)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_R)
     cmds.connectAttr(rightMuzzleControlObj + '.ty', tempBufferInput)
 
     # Lip and mouth controls.
     leftUpperlipControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Left, 0)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_OL)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_OL)
     cmds.connectAttr(leftUpperlipControlObj + '.ty', tempBufferInput)
 
     rightUpperlipControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_UpperLip, SERigEnum.eRigSide.RS_Right, 0)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_OR)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_10_OR)
     cmds.connectAttr(rightUpperlipControlObj + '.ty', tempBufferInput)
 
     # AU 22,23 U (tz).
@@ -610,7 +602,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_23_U)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_23_U)
     cmds.connectAttr(au23UBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -618,7 +610,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(centerUpperlipControlRemappingNodeAU22U + '.output', au22UBlend + '.input[0]', f = 1)
     cmds.connectAttr(mouthControlRemappingNodeAU22U + '.output', au22UBlend + '.input[1]', f = 1)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_22_U)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_22_U)
     cmds.connectAttr(au22UBlend + '.output', clampNode + '.inputG')
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
@@ -637,7 +629,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_17_U)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_17_U)
     cmds.connectAttr(au17UBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -645,7 +637,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(centerUpperlipControlRemappingNodeAU28U + '.output', au28UBlend + '.input[0]', f = 1)
     cmds.connectAttr(mouthControlRemappingNodeAU28U + '.output', au28UBlend + '.input[1]', f = 1)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_U)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_U)
     cmds.connectAttr(au28UBlend + '.output', clampNode + '.inputG')
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
@@ -665,7 +657,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_23_D)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_23_D)
     cmds.connectAttr(au23DBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -673,7 +665,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(centerLowerlipControlRemappingNodeAU22D + '.output', au22DBlend + '.input[0]', f = 1)
     cmds.connectAttr(mouthControlRemappingNodeAU22D + '.output', au22DBlend + '.input[1]', f = 1)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_22_D)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_22_D)
     cmds.connectAttr(au22DBlend + '.output', clampNode + '.inputG')
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
@@ -692,7 +684,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_17_D)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_17_D)
     cmds.connectAttr(au17DBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -700,7 +692,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(centerLowerlipControlRemappingNodeAU28D + '.output', au28DBlend + '.input[0]', f = 1)
     cmds.connectAttr(mouthControlRemappingNodeAU28D + '.output', au28DBlend + '.input[1]', f = 1)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_D)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_D)
     cmds.connectAttr(au28DBlend + '.output', clampNode + '.inputG')
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
@@ -720,7 +712,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_L)
     cmds.connectAttr(au12LBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -732,7 +724,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_18_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_18_R)
     cmds.connectAttr(au18RBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -752,7 +744,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_R)
     cmds.connectAttr(au12RBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -764,7 +756,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_18_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_18_L)
     cmds.connectAttr(au18LBlend + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -777,7 +769,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
     cmds.connectAttr(leftMouthCornerControl01Obj + '.ty', unitConversionNodeL + '.input')
     
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_15_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_15_L)
     cmds.connectAttr(unitConversionNodeL + '.output', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
@@ -785,7 +777,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
     cmds.connectAttr(rightMouthCornerControl01Obj + '.ty', unitConversionNodeR + '.input')
     
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_15_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_15_R)
     cmds.connectAttr(unitConversionNodeR + '.output', clampNode + '.inputG')
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
@@ -794,19 +786,19 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(clampNode + '.maxR', 1.0)
     cmds.setAttr(clampNode + '.maxG', 1.0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_14_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_14_L)
     cmds.connectAttr(leftMouthCornerControl01Obj + '.tx', clampNode + '.inputR')
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_14_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_14_R)
     cmds.connectAttr(rightMouthCornerControl01Obj + '.tx', clampNode + '.inputG')
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
     # AU 13 (ty).
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_13_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_13_L)
     cmds.connectAttr(leftMouthCornerControl02Obj + '.ty', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_13_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_13_R)
     cmds.connectAttr(rightMouthCornerControl02Obj + '.ty', tempBufferInput)
 
     # AU 12 OL, OR (ty).
@@ -814,24 +806,24 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     unitConversionNodeL = cmds.createNode('unitConversion')
     cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
     cmds.connectAttr(leftLowerLipControl01Obj + '.ty', unitConversionNodeL + '.input')
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_OL)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_OL)
     cmds.connectAttr(unitConversionNodeL + '.output', tempBufferInput)
 
     rightLowerLipControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_LowerLip, SERigEnum.eRigSide.RS_Right, 0)
     unitConversionNodeR = cmds.createNode('unitConversion')
     cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
     cmds.connectAttr(rightLowerLipControl01Obj + '.ty', unitConversionNodeR + '.input')
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_OR)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_12_OR)
     cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
 
     # Cheek controls (tx).
     leftCheekControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Cheek, SERigEnum.eRigSide.RS_Left, 0)
     rightCheekControl01Obj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_Cheek, SERigEnum.eRigSide.RS_Right, 0)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Puff_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Puff_L)
     cmds.connectAttr(leftCheekControl01Obj + '.tx', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Puff_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Puff_R)
     cmds.connectAttr(rightCheekControl01Obj + '.tx', tempBufferInput)
 
     unitConversionNodeL = cmds.createNode('unitConversion')
@@ -849,10 +841,10 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(unitConversionNodeL + '.output', clampNode + '.inputR')
     cmds.connectAttr(unitConversionNodeR + '.output', clampNode + '.inputG')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Shrink_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Shrink_L)
     cmds.connectAttr(clampNode + '.outputR', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Shrink_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Shrink_R)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
     # Chin center control (ty).
@@ -872,10 +864,10 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(chinCenterControlObj + '.ty', unitConversionNode + '.input')
     cmds.connectAttr(unitConversionNode + '.output', clampNode + '.inputG')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_25_D)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_25_D)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_25_U)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_25_U)
     cmds.connectAttr(clampNode + '.outputG', tempBufferInput)
 
     # Chin controls (ty).
@@ -888,34 +880,34 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
     cmds.connectAttr(leftChinControl01Obj + '.ty', unitConversionNodeL + '.input')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_16_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_16_L)
     cmds.connectAttr(unitConversionNodeL + '.output', tempBufferInput)
 
     unitConversionNodeR = cmds.createNode('unitConversion')
     cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
     cmds.connectAttr(rightChinControl01Obj + '.ty', unitConversionNodeR + '.input')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_16_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_16_R)
     cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
 
     unitConversionNodeL = cmds.createNode('unitConversion')
     cmds.setAttr(unitConversionNodeL + '.conversionFactor', -1.0)
     cmds.connectAttr(leftChinControl02Obj + '.ty', unitConversionNodeL + '.input')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_L)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_L)
     cmds.connectAttr(unitConversionNodeL + '.output', tempBufferInput)
 
     unitConversionNodeR = cmds.createNode('unitConversion')
     cmds.setAttr(unitConversionNodeR + '.conversionFactor', -1.0)
     cmds.connectAttr(rightChinControl02Obj + '.ty', unitConversionNodeR + '.input')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_R)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_R)
     cmds.connectAttr(unitConversionNodeR + '.output', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_NL)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_NL)
     cmds.connectAttr(leftChinControl02Obj + '.tx', tempBufferInput)
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_NR)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_20_NR)
     cmds.connectAttr(rightChinControl02Obj + '.tx', tempBufferInput)
 
     # Jaw control (tx, ty, tz).
@@ -928,7 +920,7 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.connectAttr(jawControlObj + '.ty', onFaceJawControlObj + '.ty')
     cmds.connectAttr(jawControlObj + '.tz', onFaceJawControlObj + '.tz')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_24)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_24)
     jawControlRemappingNodeAU24 = createFacialControlObjectTranslateRemapping(onFaceJawControlObj, '_AU24', 'ty', 0.05, 0, 0.25, 1)
     cmds.connectAttr(jawControlRemappingNodeAU24 + '.output', tempBufferInput)
 
@@ -936,15 +928,15 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     cmds.setAttr(unitConversionNode + '.conversionFactor', 0.1)
     cmds.connectAttr(onFaceJawControlObj + '.jawForward', unitConversionNode + '.input')
 
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_JawForward)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_JawForward)
     cmds.connectAttr(unitConversionNode + '.output', tempBufferInput)
 
     # TODO:
     # Hard coded control drive group name for now (AU28D,AU28U).
     onFaceJawControlDriveGroup = 'IK_OnFace_Jaw_DrvGrp'
     multiplyNode = cmds.createNode('multiplyDivide', n = 'AU28_DU_Multiply')
-    tempBufferOutput_28D = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_D)
-    tempBufferOutput_28U = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_U)
+    tempBufferOutput_28D = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_D)
+    tempBufferOutput_28U = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_28_U)
     cmds.connectAttr(tempBufferOutput_28D, multiplyNode + '.input1X')
     cmds.connectAttr(tempBufferOutput_28U, multiplyNode + '.input2X')
     jawDrvRemappingNodeAU28 = createFacialControlObjectTranslateRemapping(multiplyNode, '', 'outputX', 0, 0, 1, -0.3, nodeType = 'animCurveUL')
@@ -953,12 +945,12 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     # AU 26 Fix, LipClose Fix.
     jawJoint = SEJointHelper.getFacialJawJoint(facialJoints)
     jawJointRemappingNodeAU26Fix = SEJointHelper.createJointRotationRemapping(jawJoint, 'AU26_Fix', 'rz', 0, 0, -22, 1)
-    tempBufferInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_26_Fix)
+    tempBufferInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_26_Fix)
     cmds.connectAttr(jawJointRemappingNodeAU26Fix + '.output', tempBufferInput)
 
     tempBufferAU26FixOutput = tempBufferInput
-    tempBufferLipCloseOutput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_LipClose)
-    tempBufferAU26CloseFixInput = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_26_CloseFix)
+    tempBufferLipCloseOutput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_LipClose)
+    tempBufferAU26CloseFixInput = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_26_CloseFix)
 
     mulNode = cmds.createNode('multiplyDivide')
     cmds.setAttr(mulNode + '.operation', 1)
@@ -972,26 +964,26 @@ def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     AU_Eye_R_LookDown_Blink  = 79
 
     # Eye movement and blink fix.
-    tempBufferLeftEyeLookLeftBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft_Blink)
-    tempBufferLeftEyeLookRightBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight_Blink)
-    tempBufferLeftEyeLookUpBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp_Blink)
-    tempBufferLeftEyeLookDownBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown_Blink)
-    tempBufferRightEyeLookLeftBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft_Blink)
-    tempBufferRightEyeLookRightBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight_Blink)
-    tempBufferRightEyeLookUpBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp_Blink)
-    tempBufferRightEyeLookDownBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown_Blink)
+    tempBufferLeftEyeLookLeftBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft_Blink)
+    tempBufferLeftEyeLookRightBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight_Blink)
+    tempBufferLeftEyeLookUpBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp_Blink)
+    tempBufferLeftEyeLookDownBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown_Blink)
+    tempBufferRightEyeLookLeftBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft_Blink)
+    tempBufferRightEyeLookRightBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight_Blink)
+    tempBufferRightEyeLookUpBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp_Blink)
+    tempBufferRightEyeLookDownBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown_Blink)
 
-    tempBufferLeftEyeLookLeft = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft)
-    tempBufferLeftEyeLookRight = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight)
-    tempBufferLeftEyeLookUp = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp)
-    tempBufferLeftEyeLookDown = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown)
-    tempBufferRightEyeLookLeft = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft)
-    tempBufferRightEyeLookRight = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight)
-    tempBufferRightEyeLookUp = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp)
-    tempBufferRightEyeLookDown = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown)
+    tempBufferLeftEyeLookLeft = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookLeft)
+    tempBufferLeftEyeLookRight = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookRight)
+    tempBufferLeftEyeLookUp = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookUp)
+    tempBufferLeftEyeLookDown = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_L_LookDown)
+    tempBufferRightEyeLookLeft = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookLeft)
+    tempBufferRightEyeLookRight = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookRight)
+    tempBufferRightEyeLookUp = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookUp)
+    tempBufferRightEyeLookDown = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Eye_R_LookDown)
 
-    tempBufferLeftEyeBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
-    tempBufferRightEyeBlink = getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
+    tempBufferLeftEyeBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_L)
+    tempBufferRightEyeBlink = SEFacsHelper.getFacialActionUnitAttrName(inFACS_DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_Blink_R)
 
     multiplyNode1 = cmds.createNode('multiplyDivide')
     cmds.setAttr(multiplyNode1 + '.operation', 1)
@@ -1490,7 +1482,7 @@ class RigHumanFacialSystem(RigComponent):
         cmds.transformLimits(onFaceLipCloseControl.ControlObject, ty = (0.0, 1.0), ety = (True, True))
 
         # For now, connect the control's ty to the data buffer attribute directly.
-        dataBufferLipCloseAttr = getFacialActionUnitAttrName(self.DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_LipClose)
+        dataBufferLipCloseAttr = SEFacsHelper.getFacialActionUnitAttrName(self.DataBuffer, SERigEnum.eRigFacialActionUnitType.AU_LipClose)
         cmds.connectAttr(onFaceLipCloseControl.ControlObject + '.ty', dataBufferLipCloseAttr)
 
         # Create IK eye joints.

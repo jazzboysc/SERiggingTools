@@ -6,3 +6,4 @@ import SERigObjectTypeHelper
 import SEBakeAnimationHelper
 import SEConstraintHelper
 import SEDeformerHelper
+import SEFacsHelper
