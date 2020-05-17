@@ -9,6 +9,31 @@ from . import SERigObjectTypeHelper
 from ..Base import SERigNaming
 from ..Base import SERigEnum
 
+#-----------------------------------------------------------------------------
+# 1 Import AUBase and AUs frome AUs.ma maya scene file.
+
+# 2 Check AUs naming, possibly remove namespace or prefix.
+# Batch removing AUs prefix, first select AUBase and all the AUs, then run this tool:
+# DeformerHelper.batchRemovePrefix()
+
+# 3 Match the imported AUBase and AUs to our current character's face,
+# first select AUBase and FacialBase, then run this tool:
+# DeformerHelper.matchSourceBlendshapesToTarget()
+
+# 4 Connetc AUBase to our rig's facial control system. Select AUBase mesh and FacialBase mesh, then run this tool:
+# DeformerHelper.connectFACSDataBufferToAUBlendshape()
+
+# 5 Add a blendshape target for our FacialBase mesh. Select AUBase and FacialBase mesh, then run maya command: Deform->BlendShape->Add->Specify node
+
+# 6 Add a blendshape target for our FacialBaseTri mesh. Select FacialBase and FacialBaseTri, then run maya command: Deform-BlendShape->Create node
+
+# 7 Create facial skin proxy joints and controls. First select our cage guide mesh(eg. FaceCage_V99) and our head LOD1 mesh, then run this tool:
+# RigHumanFacialComponent.createFacialSkinProxyJointsAndControlsFromSelection(4, False, 0.2)
+
+# 8 Create drivers for facial skin proxy controls.
+# RigHumanFacialComponent.createFacialProxyControlRivetConstraints('FacialBaseTri', 'Kimono_Girl_RigGrp')
+#-----------------------------------------------------------------------------
+
 facialActionUnitTypeList = [
     SERigEnum.eRigFacialActionUnitType.AU_01_L,
     SERigEnum.eRigFacialActionUnitType.AU_01_R,
