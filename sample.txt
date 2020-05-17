@@ -1,5 +1,6 @@
-MAYA_PLUG_IN_PATH = E:\Work\SERiggingTools\Plugins
-PYTHONPATH = E:\Work
+MAYA_PLUG_IN_PATH = D:\Work\SERiggingTools\Plugins
+MAYA_PLUG_IN_PATH += D:\Work\cvshapeinverter\plug-ins
+PYTHONPATH = D:\Work
 
 
 import SERiggingTools.Base.SERigBase                as RigBase
@@ -13,6 +14,8 @@ import SERiggingTools.Utils.SEMathHelper            as MathHelper
 import SERiggingTools.Utils.SERigObjectTypeHelper   as RigObjectTypeHelper
 import SERiggingTools.Utils.SEBakeAnimationHelper   as BakeAnimationHelper
 import SERiggingTools.Utils.SEConstraintHelper      as ConstraintHelper
+import SERiggingTools.Utils.SEDeformerHelper        as DeformerHelper
+import SERiggingTools.Utils.SEFacsHelper            as FacsHelper
 import SERiggingTools.Character.SECharacter         as RigCharacter
 import SERiggingTools.Character.SECharacterDeform   as RigCharacterDeform 
 import SERiggingTools.ThirdParty.bSkinSaver         as RigSkinSaver
@@ -37,6 +40,8 @@ reload(JointHelper)
 reload(StringHelper)
 reload(MathHelper)
 reload(ConstraintHelper)
+reload(DeformerHelper)
+reload(FacsHelper)
 reload(RigObjectTypeHelper)
 reload(BakeAnimationHelper)
 reload(RigCharacter)
@@ -52,90 +57,33 @@ reload(PoseBrowseUI)
 reload(ScreenShot)
 reload(SavePose)
 
-CreateRigUI.openMayaWindow()
+# 1 Import AUBase and AUs frome AUs.ma maya scene file.
 
-ControlRigUI.openControlRigWindow()
+# 2 Check AUs naming, possibly remove namespace or prefix.
+# Batch removing AUs prefix, first select AUBase and all the AUs, then run this tool:
+DeformerHelper.batchRemovePrefix()
 
-mainProjectPath = 'E:/Work/SERiggingTools/Assets'
+# 3 Match the imported AUBase and AUs to our current character's face,
+# first select AUBase and FacialBase, then run this tool:
+DeformerHelper.matchSourceBlendshapesToTarget()
 
-character = RigCharacter.RigBipedCharacter(characterName = 'Elisa')
-character.build(  
-                   mainProjectPath = mainProjectPath, 
-                   upperBodyUpperLimbKnobCount = 2, 
-                   upperBodyLowerLimbKnobCount = 2, 
-                   lowerBodyUpperLimbKnobCount = 2, 
-                   lowerBodyLowerLimbKnobCount = 1, 
-                   mainCtrlOffset = 30
-                   )
+# 4 Connetc AUBase to our rig's facial control system. Select AUBase mesh and FacialBase mesh, then run this tool:
+DeformerHelper.connectFACSDataBufferToAUBlendshape()
 
+# 5 Add a blendshape target for our FacialBase mesh. Select AUBase and FacialBase mesh, then run maya command: Deform->BlendShape->Add->Specify node
 
-characters = cmds.ls(type = 'RigCharacterType')
-for c in characters:
-    res = cmds.listConnections(c + '.message')
-    print res
+# 6 Add a blendshape target for our FacialBaseTri mesh. Select FacialBase and FacialBaseTri, then run maya command: Deform-BlendShape->Create node
 
+# 7 Create facial skin proxy joints and controls. First select our cage guide mesh(eg. FaceCage_V99) and our head LOD1 mesh, then run this tool:
+RigHumanFacialComponent.createFacialSkinProxyJointsAndControlsFromSelection(4, False, 0.2)
 
+# 8 Create drivers for facial skin proxy controls.
+RigHumanFacialComponent.createFacialProxyControlRivetConstraints('FacialBaseTri', 'Kimono_Girl_RigGrp')
 
-RigBipedLimbComponent.RigHumanLimb.syncIKToFK('L_Arm_RigComponentsGrp')
-RigBipedLimbComponent.RigHumanLimb.syncFKToIK('L_Arm_RigComponentsGrp')
+# 9 Remove some proxy controls and joints to fit the facial joint budget (75 joints per material)
+RigHumanFacialComponent.removeFaceProxyControlInfluence()
 
-RigBipedLimbComponent.RigHumanLimb.syncIKToFK('R_Arm_RigComponentsGrp')
-RigBipedLimbComponent.RigHumanLimb.syncFKToIK('R_Arm_RigComponentsGrp')
-
-RigBipedLimbComponent.RigHumanLimb.syncIKToFK('L_Leg_RigComponentsGrp')
-RigBipedLimbComponent.RigHumanLimb.syncFKToIK('L_Leg_RigComponentsGrp')
-
-RigBipedLimbComponent.RigHumanLimb.syncIKToFK('R_Leg_RigComponentsGrp')
-RigBipedLimbComponent.RigHumanLimb.syncFKToIK('R_Leg_RigComponentsGrp')
-
-
-cmds.select(cmds.ls(sl = 1, type = 'joint'))
-
-
-RigObjectTypeHelper.listRigCharacters()
-RigObjectTypeHelper.listRigCharacterGroups()
-
-
-
-wBakeAnimationHelper.bakeRigCharacterAnimation(bakeSlaveJoints = True, bakeBlendshapes = True, 
-                                              importReference = True, reloadReference = False)
-
-
-c = JointHelper.getFirstChildGroup('null1')
-
-RigObjectTypeHelper.linkRigObjects('Danli_RigGrp', 'ModelGrp', 'ModelGroup', 'ModelGroupOwner')
-
-unknownPlugins = cmds.unknownPlugin(q = True, l = True)
-for p in unknownPlugins:
-    cmds.unknownPlugin(p, r = True)
-
-res = cmds.namespace(query = True, isRootNamespace = ":")
-res = cmds.namespaceInfo(currentNamespace = True)
-cmds.namespace(set = ':DanLi01')
-nt = cmds.nodeType('blendWeighted1')
-res = cmds.ls(type = 'cMuscleSpline')
-res = cmds.ls(type = 'cMuscleSplineDeformer')
-res = cmds.ls(type = 'cMuscleObject')
-res = cmds.ls(type = 'cMuscleSystem')        
-cmds.select('cMuscleSplineNeck_LShape')
-        
-
-
-cmds.setKeyframe('animCurveUA22', float = 0.0, value = 0.0, itt = 'linear', ott = 'linear')
-cmds.setKeyframe('animCurveUA22', float = 1.0, value = 8.0, itt = 'linear', ott = 'linear')
-
-cmds.keyTangent('animCurveUA14', weightedTangents = False)
-
-optionVar -iv "editorConnectionScanLimit" 10000000;
-
-
-
-
-
-
-
-
-
+# 10 Add slave neck 1, slave head, slave jaw offset joints to the skincluster.
 
 
 CreateRigUI.openMayaWindow()
@@ -147,19 +95,18 @@ RigHumanFacialComponent.resetFaceControls()
 RigHumanFacialComponent.resetFaceProxyControls()
 RigHumanFacialComponent.resetAllFaceControls()
 
+
+
+
 BakeAnimationHelper.bakeRigCharacterAnimation(deleteRigAfterBaking = True, sampleJointBy = 4, sampleBlendShapeBy = 8, 
     cleanupUnskinnedSlaveLeafJoints = False)
 
 res = cmds.ls(sl=1)
 l = len(res)
 
-RigHumanFacialComponent.removeFaceProxyControlInfluence()
+
 DeformerHelper.updateSymmetricalBlendshape('baseClean')
 
-
-jnts = ['joint1', 'joint2', 'joint3', 'joint4']
-mesh = 'pSphere1'
-cmds.skinCluster(jnts, mesh, toSelectedBones = True, skinMethod = 0, normalizeWeights = 1, obeyMaxInfluences = 1, maximumInfluences = 4)
 
 jnts = JointHelper.getFacialBaseJointsFromSelectedRigCharacterGroup()
 cmds.select(jnts)
@@ -186,48 +133,7 @@ res = RigObjectTypeHelper.getCharacterComponentRigPartsGroup(comp)
 prefix = RigObjectTypeHelper.getCharacterComponentPrefix(comp)
 buffer = RigHumanFacialComponent.getFACS_DataBuffer(comp)
 
-
-
-def setControlRGBColor(control, color = (1.0, 1.0, 1.0)):
-    
-    rgb = ("R","G","B")
-    cmds.setAttr(control + ".overrideEnabled",1)
-    cmds.setAttr(control + ".overrideRGBColors",1)
-
-    for channel, color in zip(rgb, color):    
-        cmds.setAttr(control + ".overrideColor%s" %channel, color)
-
-t = cmds.nodeType('BW_blendShape1_Lips_Push_Up')
-res = cmds.ls(type = 'nurbsCurve')
-cmds.select(res)
-for s in res:
-    setControlRGBColor(s, (0.4, 0.9, 0.9))
-
 res = RigHumanFacialComponent.getFacialControlObject(RigEnum.eRigFacialControlType.RFCT_UpperLid, RigEnum.eRigSide.RS_Right, 0)
-
-cmds.connectAttr('animCurveTU1.output', 'blendWeighted22.input[0]')
-cmds.createNode('clamp')
-cmds.setAttr('clamp15.maxR', 0.5)
-cmds.setAttr('clamp15.maxG', 0.5)
-
-
-RigHumanFacialComponent.createFacialSkinProxyJointsAndControlsFromSelection(4, False, 0.2)
-
-RigHumanFacialComponent.createFacialProxyControlRivetConstraints('FacialBaseTri', 'Female01_RigGrp')
-
-
-
-
-JointHelper.jointAddTag('L_EyelidUpperEnd', 'EngineBone')
-JointHelper.jointAddTag('L_EyelidUpperEnd', 'test1')
-JointHelper.jointAddTag('L_EyelidUpperEnd', 'test2')
-JointHelper.jointRemoveTag('L_EyelidUpperEnd', 'EngineBone')
-JointHelper.jointRemoveTag('L_EyelidUpperEnd', 'test1')
-JointHelper.jointRemoveTag('L_EyelidUpperEnd', 'test2')
-JointHelper.jointRemoveTag('L_EyelidUpperEnd', 'FacialBase')
-
-res = JointHelper.jointHasTag('L_EyelidUpperEnd', 'test3')
-
 
     
 res = findRelatedSkinCluster('FaceCage_V84')

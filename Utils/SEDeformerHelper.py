@@ -32,6 +32,11 @@ from ..Base import SERigEnum
 
 # 8 Create drivers for facial skin proxy controls.
 # RigHumanFacialComponent.createFacialProxyControlRivetConstraints('FacialBaseTri', 'Kimono_Girl_RigGrp')
+
+# 9 Remove some proxy controls and joints to fit the facial joint budget (75 joints per material)
+#RigHumanFacialComponent.removeFaceProxyControlInfluence()
+
+# 10 Add slave neck 1, slave head, slave jaw offset joints to the skincluster.
 #-----------------------------------------------------------------------------
 
 facialActionUnitTypeList = [
