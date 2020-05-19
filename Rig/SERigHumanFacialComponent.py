@@ -476,6 +476,10 @@ def appendFACS_Au_MultiFix(inFACS_DataBuffer, inputAU1, inputAU2):
     else:
         cmds.warning('AU multiply fix already exists: ' + newAttr)
 #-----------------------------------------------------------------------------
+# appendFACS_Au_MultiFix('C_Face_FACS_DataBufferGrp', SERigNaming.sAU_12_L_Attr, SERigNaming.sAU_18_R_Attr)
+# appendFACS_Au_MultiFix('C_Face_FACS_DataBufferGrp', SERigNaming.sAU_12_R_Attr, SERigNaming.sAU_18_L_Attr)
+# appendFACS_Au_MultiFix('C_Face_FACS_DataBufferGrp', SERigNaming.sAU_10_OR_Attr, SERigNaming.sAU_10_OL_Attr)
+#-----------------------------------------------------------------------------
 def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     # Inner brows controls (tx, ty).
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
