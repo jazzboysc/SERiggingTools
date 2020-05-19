@@ -557,7 +557,12 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
             cmds.delete(selectedClean)
 
             if parentGrp:
-                cmds.parent(newMirrorShape, parentGrp)
+                newMirrorShapeParentGrp = cmds.listRelatives(newMirrorShape, p = True)
+                if newMirrorShapeParentGrp:
+                    newMirrorShapeParentGrp = newMirrorShapeParentGrp[0]
+
+                if parentGrp != newMirrorShapeParentGrp:
+                    cmds.parent(newMirrorShape, parentGrp)
 
             baseShape = getConnectedBaseShape(selected)
             blsNode = getConnectedOutputBlendshapeNode(selected)
