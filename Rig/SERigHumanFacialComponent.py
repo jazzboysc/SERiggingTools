@@ -444,6 +444,38 @@ def createFACS_DataBuffer(facialComponentGroup):
 
     return dataBufferGroup
 #-----------------------------------------------------------------------------
+def appendFACS_Au_MultiFix(inFACS_DataBuffer, inputAU1, inputAU2):
+    if not cmds.objExists(inFACS_DataBuffer):
+        cmds.warning('FACS data buffer does not exist: ' + inFACS_DataBuffer)
+        return
+
+    exists = cmds.attributeQuery(inputAU1, node = inFACS_DataBuffer, exists = True)
+    if not exists:
+        cmds.warning('Input AU does not exist: ' + inputAU1)
+        return
+        
+    exists = cmds.attributeQuery(inputAU2, node = inFACS_DataBuffer, exists = True)
+    if not exists:
+        cmds.warning('Input AU does not exist: ' + inputAU2)
+        return
+    
+    newAttr = inputAU1 + '_' + inputAU2 + '_Multi_Fix'
+    exists = cmds.attributeQuery(newAttr, node = inFACS_DataBuffer, exists = True)
+    if not exists:
+        # Create AU multiply fix attribute.
+        cmds.addAttr(inFACS_DataBuffer, ln = newAttr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.setAttr(inFACS_DataBuffer + '.' + newAttr, cb = 1)
+        cmds.setAttr(inFACS_DataBuffer + '.' + newAttr, keyable = True)
+        
+        # Create multiply node.
+        mulNode = cmds.createNode('multiplyDivide')
+        cmds.setAttr(mulNode + '.operation', 1)
+        cmds.connectAttr(inFACS_DataBuffer + '.' + inputAU1, mulNode + '.input1X', f = 1)
+        cmds.connectAttr(inFACS_DataBuffer + '.' + inputAU2, mulNode + '.input2X', f = 1)
+        cmds.connectAttr(mulNode + '.outputX', inFACS_DataBuffer + '.' + newAttr, f = 1)
+    else:
+        cmds.warning('AU multiply fix already exists: ' + newAttr)
+#-----------------------------------------------------------------------------
 def createFACS_FacialControlLogic(inFACS_DataBuffer, facialJoints):
     # Inner brows controls (tx, ty).
     leftInnerBrowControlObj = getFacialControlObject(SERigEnum.eRigFacialControlType.RFCT_InnerBrow, SERigEnum.eRigSide.RS_Left, 0)
