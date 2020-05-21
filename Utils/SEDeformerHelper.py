@@ -544,7 +544,12 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
         cmds.rename(newMirrorShape, symmetricalBS)
 
         if parentGrp:
-            cmds.parent(symmetricalBS, parentGrp)
+            symmetricalBSParentGrp = cmds.listRelatives(symmetricalBS, p = True)
+            if symmetricalBSParentGrp:
+                symmetricalBSParentGrp = symmetricalBSParentGrp[0]
+
+            if parentGrp != symmetricalBSParentGrp:
+                cmds.parent(symmetricalBS, parentGrp)
     else:
         # Symmetrical blendshape does not exist, possibly create a new shape.
         if createIfNotFound:
