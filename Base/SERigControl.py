@@ -123,6 +123,8 @@ class RigControl():
         # Create control type node.
         SERigObjectTypeHelper.createRigObjectTypeAttr(self.ControlGroup, 'RigControlType')
 
+        cmds.refresh()
+
     def _createControlShape(self, rigSide, rigType, rigFacing, prefix, scale, matchBoundingBoxScale, overrideControlColor, controlColor, 
                             fitToSurroundingMeshes, surroundingMeshes, postFitScale, translateTo, rotateTo, overrideFitRayDirection, fitRayDirection):
         return None
