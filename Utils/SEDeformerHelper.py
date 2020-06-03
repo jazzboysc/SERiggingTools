@@ -695,6 +695,10 @@ def setSkinClusterWeights(shapeName, weights, infIdsToIndices = None):
                 cmds.setAttr(wlAttr + wAttr, infValue)
 #-----------------------------------------------------------------------------
 def ExportSkinClusterWeights(fileFolderPath, shapeName):
+    sc = SEJointHelper.findRelatedSkinCluster(shapeName)
+    if sc == None:
+        return
+
     fileName = fileFolderPath + '/' + shapeName + '.sew'
     f = open(fileName, 'w')
     f.close()
@@ -707,7 +711,13 @@ def batchExportSkinClusterWeights():
     fileResult = cmds.fileDialog2(fm = 3)
     if fileResult != None:
         modelGroup = SERigObjectTypeHelper.getCharacterModelGroup(rigCharacterGroup)
-        print modelGroup
-        #ExportSkinClusterWeights(fileResult[0])
+        if modelGroup:
+            cmds.select(modelGroup)
+            shapeNames = cmds.filterExpand(sm = [12])
+            cmds.select(rigCharacterGroup)
+
+            for shapeName in shapeNames:
+                ExportSkinClusterWeights(fileResult[0], shapeName)
+                
         
 #-----------------------------------------------------------------------------
