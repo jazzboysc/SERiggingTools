@@ -7,6 +7,7 @@ import re
 from . import SEStringHelper
 from . import SEFacsHelper
 from . import SERigObjectTypeHelper
+from . import SEJointHelper
 from ..Base import SERigNaming
 from ..Base import SERigEnum
 
@@ -584,10 +585,14 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
 # Skin weights functions based on Tyler Thornock's tutorial:
 # https://www.charactersetup.com/tutorial_skinWeights.html
 #-----------------------------------------------------------------------------
-def getSkinClusterWeights(shapeName, clusterName):
+def getSkinClusterWeights(shapeName):
     # Return joints' DAG partial path names and vertices' skin weights.
     # The weights are stored in dictionary, the key is the vertex Id, the value is another dictionary whose key is the joint id and 
     # value is the weight for that joint    
+    clusterName = SEJointHelper.findRelatedSkinCluster(shapeName)
+    if clusterName == None:
+        cmds.warning('Skincluster not found for: ' + shapeName)        
+        return None
 
     # Get the MFnSkinCluster for clusterName
     selList = om.MSelectionList()
@@ -601,12 +606,18 @@ def getSkinClusterWeights(shapeName, clusterName):
     skinFn.influenceObjects(infDags)
 
     # Create a dictionary whose key is the MPlug indice id and whose value is the influence list id
+    # Notice that the MPlug indice id MAY or MAY NOT equal to the influence list id, 
+    # due to the fact that some influences may have been removed by the rigger(ex. There were 80 joints, 5 were removed from the skincluster), 
+    # which lead to incontinuous MPlug indices. 
     infIndicesToIds = {}
+    infIdsToIndices = {}
     infPartialPathNames = []
     for i in range(infDags.length()):
         infPartialPathName = infDags[i].partialPathName()
         infIndex = int(skinFn.indexForInfluenceObject(infDags[i]))
+
         infIndicesToIds[infIndex] = i
+        infIdsToIndices[i] = infIndex
         infPartialPathNames.append(infPartialPathName)
 
     # Get the MPlug for the weightList and weights attributes
@@ -634,6 +645,7 @@ def getSkinClusterWeights(shapeName, clusterName):
             
             # Add this influence and its weight to this verts weights
             try:
+                # Get continuous influence ID.
                 infId = infIndicesToIds[infIndex]
                 vertexWeights[infId] = infPlug.asDouble()
             except KeyError:
@@ -642,5 +654,43 @@ def getSkinClusterWeights(shapeName, clusterName):
                 
         weights[vertexId] = vertexWeights
 
-    return infPartialPathNames, weights
+    return [infPartialPathNames, weights, infIndicesToIds, infIdsToIndices]
+#-----------------------------------------------------------------------------
+def setSkinClusterWeights(shapeName, weights, infIdsToIndices = None):
+    clusterName = SEJointHelper.findRelatedSkinCluster(shapeName)
+    if clusterName == None:
+        cmds.warning('Skincluster not found for: ' + shapeName)
+        return
+
+    infJoints = cmds.skinCluster(clusterName, q = 1, inf = 1)
+
+    # Unlock influences used by skincluster
+    for inf in infJoints:
+        cmds.setAttr('%s.liw' % inf, 0)
+
+    # Normalize needs turned off for the prune to work
+    skinNorm = cmds.getAttr('%s.normalizeWeights' % clusterName)
+    if skinNorm != 0:
+        cmds.setAttr('%s.normalizeWeights' % clusterName, 0)
+    cmds.skinPercent(clusterName, shapeName, nrm = False, prw = 100)
+
+    # Restore normalize setting
+    if skinNorm != 0:
+        cmds.setAttr('%s.normalizeWeights' % clusterName, skinNorm)
+
+    if infIdsToIndices:
+        for vertId, weightData in weights.items():
+            wlAttr = '%s.weightList[%s]' % (clusterName, vertId)
+
+            for infId, infValue in weightData.items():
+                infIndex = infIdsToIndices[infId]
+                wAttr = '.weights[%s]' % infIndex
+                cmds.setAttr(wlAttr + wAttr, infValue)
+    else:
+         for vertId, weightData in weights.items():
+            wlAttr = '%s.weightList[%s]' % (clusterName, vertId)
+
+            for infId, infValue in weightData.items():
+                wAttr = '.weights[%s]' % infId
+                cmds.setAttr(wlAttr + wAttr, infValue)
 #-----------------------------------------------------------------------------
