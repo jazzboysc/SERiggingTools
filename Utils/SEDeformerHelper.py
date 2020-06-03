@@ -1,6 +1,7 @@
 import maya.cmds as cmds
 import maya.mel as mel
 import maya.OpenMaya as om
+import maya.OpenMayaAnim as oma
 import re
 
 from . import SEStringHelper
@@ -579,4 +580,67 @@ def updateSymmetricalBlendshape(cleanBaseMesh, createIfNotFound = True, pattern_
 
         else:
             print('No new symmetrical blendshape created for: ' + selected)
+#-----------------------------------------------------------------------------
+# Skin weights functions based on Tyler Thornock's tutorial:
+# https://www.charactersetup.com/tutorial_skinWeights.html
+#-----------------------------------------------------------------------------
+def getSkinClusterWeights(shapeName, clusterName):
+    # Return joints' DAG partial path names and vertices' skin weights.
+    # The weights are stored in dictionary, the key is the vertex Id, the value is another dictionary whose key is the joint id and 
+    # value is the weight for that joint    
+
+    # Get the MFnSkinCluster for clusterName
+    selList = om.MSelectionList()
+    selList.add(clusterName)
+    clusterNode = om.MObject()
+    selList.getDependNode(0, clusterNode)
+    skinFn = oma.MFnSkinCluster(clusterNode)
+
+    # Get the MDagPath for all influence
+    infDags = om.MDagPathArray()
+    skinFn.influenceObjects(infDags)
+
+    # Create a dictionary whose key is the MPlug indice id and whose value is the influence list id
+    infIndicesToIds = {}
+    infPartialPathNames = []
+    for i in range(infDags.length()):
+        infPartialPathName = infDags[i].partialPathName()
+        infIndex = int(skinFn.indexForInfluenceObject(infDags[i]))
+        infIndicesToIds[infIndex] = i
+        infPartialPathNames.append(infPartialPathName)
+
+    # Get the MPlug for the weightList and weights attributes
+    weightListPlug = skinFn.findPlug('weightList')
+    weightsPlug = skinFn.findPlug('weights')
+    wlAttr = weightListPlug.attribute()
+    wAttr = weightsPlug.attribute()
+    vertexInfIndices = om.MIntArray()
+
+    weights = {}
+    for vertexId in range(weightListPlug.numElements()):
+        vertexWeights = {}
+
+        # Tell the weights attribute which vertex id it represents
+        weightsPlug.selectAncestorLogicalIndex(vertexId, wlAttr)
+        
+        # Get the indices of all non-zero weights for this vertex
+        weightsPlug.getExistingArrayAttributeIndices(vertexInfIndices)
+
+        # Create a copy of the current weightsPlug
+        infPlug = om.MPlug(weightsPlug)
+        for infIndex in vertexInfIndices:
+            # Tell the infPlug it represents the current influence id
+            infPlug.selectAncestorLogicalIndex(infIndex, wAttr)
+            
+            # Add this influence and its weight to this verts weights
+            try:
+                infId = infIndicesToIds[infIndex]
+                vertexWeights[infId] = infPlug.asDouble()
+            except KeyError:
+                # Assumes a removed influence
+                pass
+                
+        weights[vertexId] = vertexWeights
+
+    return infPartialPathNames, weights
 #-----------------------------------------------------------------------------
