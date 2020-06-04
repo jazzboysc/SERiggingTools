@@ -695,7 +695,7 @@ def setSkinClusterWeights(shapeName, weights, infIdsToIndices = None):
                 wAttr = '.weights[%s]' % infId
                 cmds.setAttr(wlAttr + wAttr, infValue)
 #-----------------------------------------------------------------------------
-def ExportSkinClusterWeights(fileFolderPath, shapeName):
+def exportSkinClusterWeights(fileFolderPath, shapeName, maximumInfluences = 4):
     sc = SEJointHelper.findRelatedSkinCluster(shapeName)
     if sc == None:
         return
@@ -703,38 +703,37 @@ def ExportSkinClusterWeights(fileFolderPath, shapeName):
     scWeights = getSkinClusterWeights(shapeName)
     infJoints = scWeights[0]
     weights = scWeights[1]
-    saveData = [infJoints, weights]
+    saveData = [maximumInfluences, infJoints, weights]
 
     fileName = fileFolderPath + '/' + shapeName + '.sew'
-    f = open(fileName, 'w')
-    cPickle.dump(saveData, f)
-    f.close()
+    try:
+        f = open(fileName, 'wb')
+        cPickle.dump(saveData, f)
+        f.close()
+    except:
+        cmds.warning('Failed exporting skin weights for: ' + shapeName)
+#-----------------------------------------------------------------------------
+def importSkinClusterWeights(fileFolderPath, shapeName):
+    sc = SEJointHelper.findRelatedSkinCluster(shapeName)
 
     loadData = []
-    f = open(fileName, 'r')
-    loadData = cPickle.load(f)
-    f.close()
-#-----------------------------------------------------------------------------
-def ImportSkinClusterWeights(fileFolderPath, shapeName):
-    sc = SEJointHelper.findRelatedSkinCluster(shapeName)
-    if sc == None:
-        # Unskinned mesh, no need to import.
+    fileName = fileFolderPath + '/' + shapeName + '.sew'
+    try:
+        f = open(fileName, 'rb')
+        loadData = cPickle.load(f)
+        f.close()
+    except:
+        cmds.warning('Skipped importing skin weights for: ' + shapeName)
         return
 
-    loadData = []
-    fileName = fileFolderPath + '/' + shapeName + '.sew'
-    f = open(fileName, 'r')
-    loadData = cPickle.load(f)
-    f.close()
-
-    infJoints = loadData[0]
-    weights = loadData[1]
+    maxInfluences = loadData[0]
+    infJoints = loadData[1]
+    weights = loadData[2]
 
     if sc != None:
         cmds.skinCluster(shapeName, e = True, ub = True)
 
-    newSC = cmds.skinCluster(infJoints, shapeName, toSelectedBones = True, skinMethod = 0, normalizeWeights = 1, obeyMaxInfluences = 1, maximumInfluences = 4)[0]
-
+    newSC = cmds.skinCluster(infJoints, shapeName, toSelectedBones = True, skinMethod = 0, normalizeWeights = 1, obeyMaxInfluences = 1, maximumInfluences = maxInfluences)[0]
     setSkinClusterWeights(shapeName, weights)
 #-----------------------------------------------------------------------------
 def batchExportSkinClusterWeights():
@@ -751,12 +750,11 @@ def batchExportSkinClusterWeights():
             cmds.select(rigCharacterGroup)
 
             for shapeName in shapeNames:
-                ExportSkinClusterWeights(fileResult[0], shapeName)
+                exportSkinClusterWeights(fileResult[0], shapeName)
 
             print('Batching export skincluster weighhts finished for: ' + rigCharacterGroup)
         else:
             cmds.warning('Model group not found. Batching export skincluster weighhts failed for:' + rigCharacterGroup)
-
 #-----------------------------------------------------------------------------
 def batchImportSkinClusterWeights():
     rigCharacterGroup = SEJointHelper.getSelectedRigCharacterGroup()
@@ -772,10 +770,9 @@ def batchImportSkinClusterWeights():
             cmds.select(rigCharacterGroup)
 
             for shapeName in shapeNames:
-                ImportSkinClusterWeights(fileResult[0], shapeName)
+                importSkinClusterWeights(fileResult[0], shapeName)
 
             print('Batching import skincluster weighhts finished for: ' + rigCharacterGroup)
         else:
             cmds.warning('Model group not found. Batching import skincluster weighhts failed for:' + rigCharacterGroup)
-
 #-----------------------------------------------------------------------------
