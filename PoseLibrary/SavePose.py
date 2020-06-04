@@ -21,7 +21,7 @@ def openPoseLibraryFile():
     return PoseLibrary
 
 def getDataByName(PoseName):
-    try: f = open( PoseDataParh + PoseName + ".pose" , "r");
+    try: f = open( PoseDataParh + PoseName + ".pose" , "r")
     except:
         cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseDataParh + PoseName + ".pose" )
         return
@@ -33,9 +33,9 @@ def getDataByName(PoseName):
 
 def saveDataToFile(PoseData):
     try:
-        f = open( PoseRootPath + "\\PoseFile\\" + PoseData["poseName"]+".pose" , "w");
+        f = open( PoseRootPath + "\\PoseFile\\" + PoseData["poseName"]+".pose" , "w")
     except :
         cmds.confirmDialog(title = "Save Pose", icon = "critical", message = "Unable to open" + PoseRootPath + "\\PoseFile\\" + PoseData["poseName"]+".txt" )
         raise 
     cPickle.dump(PoseData, f)
-    f.close();
+    f.close()

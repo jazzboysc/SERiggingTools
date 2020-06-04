@@ -3,6 +3,7 @@ import maya.mel as mel
 import maya.OpenMaya as om
 import maya.OpenMayaAnim as oma
 import re
+import cPickle
 
 from . import SEStringHelper
 from . import SEFacsHelper
@@ -699,9 +700,42 @@ def ExportSkinClusterWeights(fileFolderPath, shapeName):
     if sc == None:
         return
 
+    scWeights = getSkinClusterWeights(shapeName)
+    infJoints = scWeights[0]
+    weights = scWeights[1]
+    saveData = [infJoints, weights]
+
     fileName = fileFolderPath + '/' + shapeName + '.sew'
     f = open(fileName, 'w')
+    cPickle.dump(saveData, f)
     f.close()
+
+    loadData = []
+    f = open(fileName, 'r')
+    loadData = cPickle.load(f)
+    f.close()
+#-----------------------------------------------------------------------------
+def ImportSkinClusterWeights(fileFolderPath, shapeName):
+    sc = SEJointHelper.findRelatedSkinCluster(shapeName)
+    if sc == None:
+        # Unskinned mesh, no need to import.
+        return
+
+    loadData = []
+    fileName = fileFolderPath + '/' + shapeName + '.sew'
+    f = open(fileName, 'r')
+    loadData = cPickle.load(f)
+    f.close()
+
+    infJoints = loadData[0]
+    weights = loadData[1]
+
+    if sc != None:
+        cmds.skinCluster(shapeName, e = True, ub = True)
+
+    newSC = cmds.skinCluster(infJoints, shapeName, toSelectedBones = True, skinMethod = 0, normalizeWeights = 1, obeyMaxInfluences = 1, maximumInfluences = 4)[0]
+
+    setSkinClusterWeights(shapeName, weights)
 #-----------------------------------------------------------------------------
 def batchExportSkinClusterWeights():
     rigCharacterGroup = SEJointHelper.getSelectedRigCharacterGroup()
@@ -718,6 +752,30 @@ def batchExportSkinClusterWeights():
 
             for shapeName in shapeNames:
                 ExportSkinClusterWeights(fileResult[0], shapeName)
-                
-        
+
+            print('Batching export skincluster weighhts finished for: ' + rigCharacterGroup)
+        else:
+            cmds.warning('Model group not found. Batching export skincluster weighhts failed for:' + rigCharacterGroup)
+
+#-----------------------------------------------------------------------------
+def batchImportSkinClusterWeights():
+    rigCharacterGroup = SEJointHelper.getSelectedRigCharacterGroup()
+    if rigCharacterGroup == None:
+        return
+
+    fileResult = cmds.fileDialog2(fm = 3)
+    if fileResult != None:
+        modelGroup = SERigObjectTypeHelper.getCharacterModelGroup(rigCharacterGroup)
+        if modelGroup:
+            cmds.select(modelGroup)
+            shapeNames = cmds.filterExpand(sm = [12])
+            cmds.select(rigCharacterGroup)
+
+            for shapeName in shapeNames:
+                ImportSkinClusterWeights(fileResult[0], shapeName)
+
+            print('Batching import skincluster weighhts finished for: ' + rigCharacterGroup)
+        else:
+            cmds.warning('Model group not found. Batching import skincluster weighhts failed for:' + rigCharacterGroup)
+
 #-----------------------------------------------------------------------------
