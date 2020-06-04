@@ -723,7 +723,7 @@ def importSkinClusterWeights(fileFolderPath, shapeName):
         loadData = cPickle.load(f)
         f.close()
     except:
-        cmds.warning('Skipped importing skin weights for: ' + shapeName)
+        print('Skipped importing skin weights for: ' + shapeName)
         return
 
     maxInfluences = loadData[0]
@@ -777,7 +777,7 @@ def batchImportSkinClusterWeights():
                 importSkinClusterWeights(fileResult[0], shapeName)
                 cmds.progressWindow(edit = True, progress = curProgress, status = ('Importing skincluster weights for: %s' % shapeName))
                 curProgress += 1
-                
+
             cmds.progressWindow(endProgress = True)
             print('Batching import skincluster weighhts finished for: ' + rigCharacterGroup)
         else:
