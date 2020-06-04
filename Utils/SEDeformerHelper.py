@@ -769,9 +769,16 @@ def batchImportSkinClusterWeights():
             shapeNames = cmds.filterExpand(sm = [12])
             cmds.select(rigCharacterGroup)
 
+            totalProgress = len(shapeNames)
+            curProgress = 0
+            cmds.progressWindow(title = 'Batching import skincluster weights', progress = 0,max = totalProgress, status = 'Importing skincluster weights for: ', isInterruptable = True)
+
             for shapeName in shapeNames:
                 importSkinClusterWeights(fileResult[0], shapeName)
-
+                cmds.progressWindow(edit = True, progress = curProgress, status = ('Importing skincluster weights for: %s' % shapeName))
+                curProgress += 1
+                
+            cmds.progressWindow(endProgress = True)
             print('Batching import skincluster weighhts finished for: ' + rigCharacterGroup)
         else:
             cmds.warning('Model group not found. Batching import skincluster weighhts failed for:' + rigCharacterGroup)
