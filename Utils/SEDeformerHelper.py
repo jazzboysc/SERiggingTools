@@ -783,3 +783,28 @@ def batchImportSkinClusterWeights():
         else:
             cmds.warning('Model group not found. Batching import skincluster weighhts failed for:' + rigCharacterGroup)
 #-----------------------------------------------------------------------------
+def exportRigCustomData():
+    rigCharacterGroup = SEJointHelper.getSelectedRigCharacterGroup()
+    if rigCharacterGroup == None:
+        return
+
+    _exportRigCustomData(rigCharacterGroup)
+#-----------------------------------------------------------------------------
+def _exportRigCustomData(rigCharacterGroup):
+
+    # Get face proxy control names.
+    proxyJointControls = []
+    facialComponentGroup = SERigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGroup)
+    if facialComponentGroup:
+        faceProxyJointControlsGroup = SERigObjectTypeHelper.getFaceProxyJointControlsGroup(facialComponentGroup)
+
+        if faceProxyJointControlsGroup:
+            proxyGroupChildren = cmds.listRelatives(faceProxyJointControlsGroup, c = True, type = 'transform')
+            for child in proxyGroupChildren:
+                if SERigObjectTypeHelper.isRigControlGroup(child):
+                    proxyJointControl = SERigObjectTypeHelper.getRigControlObjectFromGroup(child)
+                    if proxyJointControl:
+                        proxyJointControls.append(proxyJointControl)
+            print(proxyJointControls)
+
+#-----------------------------------------------------------------------------
