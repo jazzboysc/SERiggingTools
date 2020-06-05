@@ -609,7 +609,11 @@ def createFacialSkinProxyJoints(cageMesh, facialMesh, proxyJntMaximumInfluences 
         cmds.warning('Facial mesh already skinned, removing old skin cluster and deleting old influence joints.')
         jnts = cmds.skinCluster(facialMeshSC, q = 1, inf = 1)
         cmds.skinCluster(facialMesh, e = True, ub = True)
-        cmds.delete(jnts)
+        
+        # Only delete face proxy joints.
+        for jnt in jnts:
+            if jointHasTag(jnt, SERigNaming.sJointTagFacialProxy):
+                cmds.delete(jnt)
 
     vertices = getMeshVertices(cageMesh)
     proxyJnts = []

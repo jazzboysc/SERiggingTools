@@ -788,23 +788,51 @@ def exportRigCustomData():
     if rigCharacterGroup == None:
         return
 
-    _exportRigCustomData(rigCharacterGroup)
+    fileResult = cmds.fileDialog2(fm = 3)
+    if fileResult != None:        
+        _exportRigCustomData(rigCharacterGroup, fileResult[0])
 #-----------------------------------------------------------------------------
-def _exportRigCustomData(rigCharacterGroup):
-
+def _exportRigCustomData(rigCharacterGroup, fileFolderPath):
+    rigCustomData = {}
+    
     # Get face proxy control names.
-    proxyJointControls = []
-    facialComponentGroup = SERigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGroup)
-    if facialComponentGroup:
-        faceProxyJointControlsGroup = SERigObjectTypeHelper.getFaceProxyJointControlsGroup(facialComponentGroup)
+    proxyJointControls = SERigObjectTypeHelper.getFaceProxyJointControls(rigCharacterGroup)
+    rigCustomData['ProxyJointControls'] = proxyJointControls
 
-        if faceProxyJointControlsGroup:
-            proxyGroupChildren = cmds.listRelatives(faceProxyJointControlsGroup, c = True, type = 'transform')
-            for child in proxyGroupChildren:
-                if SERigObjectTypeHelper.isRigControlGroup(child):
-                    proxyJointControl = SERigObjectTypeHelper.getRigControlObjectFromGroup(child)
-                    if proxyJointControl:
-                        proxyJointControls.append(proxyJointControl)
-            print(proxyJointControls)
+    fileName = fileFolderPath + '/' + rigCharacterGroup + '.serig'
+    try:
+        f = open(fileName, 'wb')
+        cPickle.dump(rigCustomData, f)
+        f.close()
+    except:
+        cmds.warning('Failed exporting rig custom data for: ' + rigCharacterGroup)
 
+#-----------------------------------------------------------------------------
+def importRigCustomData():
+    rigCharacterGroup = SEJointHelper.getSelectedRigCharacterGroup()
+    if rigCharacterGroup == None:
+        return
+
+    fileResult = cmds.fileDialog2(fm = 3)
+    if fileResult != None:        
+        _importRigCustomData(rigCharacterGroup, fileResult[0])
+#-----------------------------------------------------------------------------
+def _importRigCustomData(rigCharacterGroup, fileFolderPath):
+    rigCustomData = {}
+
+    fileName = fileFolderPath + '/' + rigCharacterGroup + '.serig'
+    try:
+        f = open(fileName, 'rb')
+        rigCustomData = cPickle.load(f)
+        f.close()
+    except:
+        cmds.warning('Failed importing rig custom data for: ' + rigCharacterGroup)
+        return
+
+    curProxyJointControls = SERigObjectTypeHelper.getFaceProxyJointControls(rigCharacterGroup)
+
+    # Remove redundant proxy controls.
+    for curProxyJointControl in curProxyJointControls:
+        if not curProxyJointControl in rigCustomData['ProxyJointControls']:
+            print curProxyJointControl
 #-----------------------------------------------------------------------------

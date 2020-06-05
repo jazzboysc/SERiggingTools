@@ -604,3 +604,20 @@ def hideTransObjectChannels(transObject, hideChannels = []):
     for attr in singleAttributeList:
         cmds.setAttr(transObject + '.' + attr, cb = 0, k = 0)
 #-----------------------------------------------------------------------------
+def getFaceProxyJointControls(rigCharacterGroup):
+    proxyJointControls = []
+    
+    facialComponentGroup = getCharacterFacialComponentGroup(rigCharacterGroup)
+    if facialComponentGroup:
+        faceProxyJointControlsGroup = getFaceProxyJointControlsGroup(facialComponentGroup)
+
+        if faceProxyJointControlsGroup:
+            proxyGroupChildren = cmds.listRelatives(faceProxyJointControlsGroup, c = True, type = 'transform')
+            for child in proxyGroupChildren:
+                if isRigControlGroup(child):
+                    proxyJointControl = getRigControlObjectFromGroup(child)
+                    if proxyJointControl:
+                        proxyJointControls.append(proxyJointControl)
+    
+    return proxyJointControls
+#-----------------------------------------------------------------------------
