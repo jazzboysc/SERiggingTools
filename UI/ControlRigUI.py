@@ -61,7 +61,7 @@ def setSelectorCallBack(uiWindow):
     uiWindow.characterSelector.currentIndexChanged.connect(selecterChangeCallback) 
 
 def refreshCharacterInSelector(uiWindow):
-    CharacterArray = getCurrentHaveCharacter();
+    CharacterArray = getCurrentHaveCharacter()
     uiWindow.characterSelector.addItem("None")
     for x in range(len(CharacterArray)):
         uiWindow.characterSelector.addItem(CharacterArray[x])

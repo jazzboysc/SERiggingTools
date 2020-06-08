@@ -201,18 +201,24 @@ def listRigCharacterControls(characterName):
                 curKey = (rigSide, rigType, rigControlIndex)
                 characterControls[0][curKey] = control
         except:
-            # Gloabl controls do not have component owner.
-            rigGroup = cmds.listConnections(controlGroup + '.GlobalControlOwner')[0]
-            curCharacterName = cmds.getAttr(rigGroup + '.characterName')
-            
-            if characterName == curCharacterName:
-                control = cmds.listConnections(controlGroup + '.ControlObject')[0]
-                rigSide = getRigSide(controlGroup)
-                rigType = getRigType(controlGroup)
-                rigControlIndex = getRigControlIndex(controlGroup)
+            try:
+                # Gloabl controls do not have component owner.
+                rigGroup = cmds.listConnections(controlGroup + '.GlobalControlOwner')[0]
+                curCharacterName = cmds.getAttr(rigGroup + '.characterName')
+                
+                if characterName == curCharacterName:
+                    control = cmds.listConnections(controlGroup + '.ControlObject')[0]
+                    rigSide = getRigSide(controlGroup)
+                    rigType = getRigType(controlGroup)
+                    rigControlIndex = getRigControlIndex(controlGroup)
 
-                curKey = (rigSide, rigType, rigControlIndex)
-                characterControls[1][curKey] = control
+                    curKey = (rigSide, rigType, rigControlIndex)
+                    characterControls[1][curKey] = control
+            except:
+                # TODO:
+                # Face proxy controls.
+                #print(controlGroup)
+                pass
 
     return characterControls
 #-----------------------------------------------------------------------------
