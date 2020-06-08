@@ -154,8 +154,52 @@ def getFaceControlsOffsetControl():
         return None
 #-----------------------------------------------------------------------------
 
+#-----------------------------------------------------------------------------
+def getLeftEyeLidUpperAnimCurves():
+    facialBuilderJoints = SEJointHelper.getFacialBuilderJoints()
+    leftEyelidUpperJoint = SEJointHelper.getFacialLeftEyelidUpperJoint(facialBuilderJoints)
 
+    unitConversionNode = cmds.listConnections(leftEyelidUpperJoint + '.rotateZ', s = True, d = False)[0]
+    blendWeightNode = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
 
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[0]', s = True, d = False)[0]
+    au05LAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[1]', s = True, d = False)[0]
+    au06LAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[2]', s = True, d = False)[0]
+    blinkLAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[3]', s = True, d = False)[0]
+    eyeBaseLAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    res = [au05LAnimCurve, au06LAnimCurve, blinkLAnimCurve, eyeBaseLAnimCurve]
+
+    return res
+#-----------------------------------------------------------------------------
+def getRightEyeLidUpperAnimCurves():
+    facialBuilderJoints = SEJointHelper.getFacialBuilderJoints()
+    rightEyelidUpperJoint = SEJointHelper.getFacialRightEyelidUpperJoint(facialBuilderJoints)
+
+    unitConversionNode = cmds.listConnections(rightEyelidUpperJoint + '.rotateZ', s = True, d = False)[0]
+    blendWeightNode = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[0]', s = True, d = False)[0]
+    au05RAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[1]', s = True, d = False)[0]
+    au06RAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[2]', s = True, d = False)[0]
+    blinkRAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[3]', s = True, d = False)[0]
+    eyeBaseRAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    res = [au05RAnimCurve, au06RAnimCurve, blinkRAnimCurve, eyeBaseRAnimCurve]
+
+    return res
 #-----------------------------------------------------------------------------
 def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyelidUpperJoint, rightEyelidUpperJoint, 
                             leftEyelidLowerJoint, rightEyelidLowerJoint):
@@ -223,6 +267,7 @@ def createEyelidMotionLogic(auDataBuffer, leftEyeJoint, rightEyeJoint, leftEyeli
         cmds.connectAttr(rightEyeJoint + '.rotateZ', animCurveEyeBaseR + '.input', f = 1)
 
         # Blend all drivers together using blend weighted nodes for upper eyelid joints.
+        # Inputs order must be:  1 AU05 2 AU06 3 AU Blink 4 EyeBase.
         leftUpperEyelidBlend = cmds.createNode('blendWeighted')
         cmds.connectAttr(animCurveAu05L + '.output', leftUpperEyelidBlend + '.input[0]', f = 1)
         cmds.connectAttr(animCurveAu06L + '.output', leftUpperEyelidBlend + '.input[1]', f = 1)
