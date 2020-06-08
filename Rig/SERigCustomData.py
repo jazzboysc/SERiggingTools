@@ -25,6 +25,39 @@ def _exportRigCustomData(rigCharacterGroup, fileFolderPath):
     proxyJointControls = SERigObjectTypeHelper.getFaceProxyJointControls(rigCharacterGroup)
     rigCustomData['ProxyJointControls'] = proxyJointControls
 
+    # Get eyelid animation curves.
+    leftEyeLidUpperAnimCurves = SERigHumanFacialComponent.getLeftEyeLidUpperAnimCurves(rigCharacterGroup)
+    rigCustomData['leftEyeLidUpperAnimCurves'] = []
+
+    for animCurve in leftEyeLidUpperAnimCurves:
+        keyframeCount = cmds.keyframe(animCurve, q = True, keyframeCount = True)
+        driverKeys = cmds.keyframe(animCurve, q = True, floatChange = True)
+        drivenKeys = cmds.keyframe(animCurve, q = True, valueChange = True)
+
+        keyFrames = []
+        for i in range(keyframeCount):
+            keyFrames.append((driverKeys[i], drivenKeys[i]))
+
+        rigCustomData['leftEyeLidUpperAnimCurves'].append(keyFrames)
+
+    rightEyeLidUpperAnimCurves = SERigHumanFacialComponent.getRightEyeLidUpperAnimCurves(rigCharacterGroup)
+    rigCustomData['rightEyeLidUpperAnimCurves'] = []
+
+    for animCurve in rightEyeLidUpperAnimCurves:
+        keyframeCount = cmds.keyframe(animCurve, q = True, keyframeCount = True)
+        driverKeys = cmds.keyframe(animCurve, q = True, floatChange = True)
+        drivenKeys = cmds.keyframe(animCurve, q = True, valueChange = True)
+
+        keyFrames = []
+        for i in range(keyframeCount):
+            keyFrames.append((driverKeys[i], drivenKeys[i]))
+
+        rigCustomData['rightEyeLidUpperAnimCurves'].append(keyFrames)
+
+
+    for key in rigCustomData:
+        print key, rigCustomData[key]
+
     fileName = fileFolderPath + '/' + rigCharacterGroup + '.serig'
     try:
         f = open(fileName, 'wb')

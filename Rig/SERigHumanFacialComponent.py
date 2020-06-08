@@ -155,7 +155,10 @@ def getFaceControlsOffsetControl():
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
-def getLeftEyeLidUpperAnimCurves():
+def getLeftEyeLidUpperAnimCurves(rigCharacterGroup):
+    # TODO:
+    # Check if the joint belongs to the rig character.
+
     facialBuilderJoints = SEJointHelper.getFacialBuilderJoints()
     leftEyelidUpperJoint = SEJointHelper.getFacialLeftEyelidUpperJoint(facialBuilderJoints)
 
@@ -178,7 +181,10 @@ def getLeftEyeLidUpperAnimCurves():
 
     return res
 #-----------------------------------------------------------------------------
-def getRightEyeLidUpperAnimCurves():
+def getRightEyeLidUpperAnimCurves(rigCharacterGroup):
+    # TODO:
+    # Check if the joint belongs to the rig character.
+
     facialBuilderJoints = SEJointHelper.getFacialBuilderJoints()
     rightEyelidUpperJoint = SEJointHelper.getFacialRightEyelidUpperJoint(facialBuilderJoints)
 
