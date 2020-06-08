@@ -155,6 +155,52 @@ def getFaceControlsOffsetControl():
 #-----------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------
+def getLeftEyeLidLowerAnimCurves(rigCharacterGroup):
+    # TODO:
+    # Check if the joint belongs to the rig character.
+
+    facialBuilderJoints = SEJointHelper.getFacialBuilderJoints()
+    leftEyelidLowerJoint = SEJointHelper.getFacialLeftEyelidLowerJoint(facialBuilderJoints)
+
+    unitConversionNode = cmds.listConnections(leftEyelidLowerJoint + '.rotateZ', s = True, d = False)[0]
+    blendWeightNode = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[0]', s = True, d = False)[0]
+    au06LAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[1]', s = True, d = False)[0]
+    au07LAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[2]', s = True, d = False)[0]
+    blinkLAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    res = [au06LAnimCurve, au07LAnimCurve, blinkLAnimCurve]
+
+    return res
+#-----------------------------------------------------------------------------
+def getRightEyeLidLowerAnimCurves(rigCharacterGroup):
+    # TODO:
+    # Check if the joint belongs to the rig character.
+
+    facialBuilderJoints = SEJointHelper.getFacialBuilderJoints()
+    rightEyelidLowerJoint = SEJointHelper.getFacialRightEyelidLowerJoint(facialBuilderJoints)
+
+    unitConversionNode = cmds.listConnections(rightEyelidLowerJoint + '.rotateZ', s = True, d = False)[0]
+    blendWeightNode = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[0]', s = True, d = False)[0]
+    au06RAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[1]', s = True, d = False)[0]
+    au07RAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    unitConversionNode = cmds.listConnections(blendWeightNode + '.input[2]', s = True, d = False)[0]
+    blinkRAnimCurve = cmds.listConnections(unitConversionNode + '.input', s = True, d = False)[0]
+
+    res = [au06RAnimCurve, au07RAnimCurve, blinkRAnimCurve]
+
+    return res
+#-----------------------------------------------------------------------------
 def getLeftEyeLidUpperAnimCurves(rigCharacterGroup):
     # TODO:
     # Check if the joint belongs to the rig character.
