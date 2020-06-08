@@ -82,7 +82,7 @@ def rayIntersect(mesh, point, direction):
         om.MGlobal.clearSelectionList()
 
     except:
-        pass
+        cmds.warning('Ray Intersection exception: ' + mesh)
 
     return hitPoints
 #-----------------------------------------------------------------------------
