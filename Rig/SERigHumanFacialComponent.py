@@ -1813,6 +1813,15 @@ class RigHumanFacialSystem(RigComponent):
         controlsVisES = self.ControlsGrp + '.visibility = ' + tempExpressionTail
         cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
 
+        # Create face proxy joint controls group visibility switch.
+        createFaceProxyJointControlsGroupVisibilitySwitch(faceControlsOffsetControl, faceProxyJointControlsGroup)
+#-----------------------------------------------------------------------------
+def createFaceProxyJointControlsGroupVisibilitySwitch(controlObject, faceProxyJointControlsGroup):
+    if cmds.objExists(controlObject) and cmds.objExists(faceProxyJointControlsGroup):
+        at = 'ProxyControlsVisibility'
+        cmds.addAttr(controlObject, ln = at, at = 'enum', enumName = 'off:on', k = 1, dv = 1)
+        cmds.setAttr(controlObject + '.' + at, cb = 1)
+        cmds.connectAttr(controlObject + '.' + at, faceProxyJointControlsGroup + '.v')
 #-----------------------------------------------------------------------------
 def createFacialSkinProxyJointsAndControlsFromSelection(proxyJntMaximumInfluences = 4, deleteCageMesh = True, controlScale = 0.2):
     if proxyJntMaximumInfluences <= 0:
