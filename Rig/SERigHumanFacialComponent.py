@@ -1983,21 +1983,7 @@ def removeFaceProxyControlInfluence():
     for faceProxyControl in faceProxyControls:
         _removeFaceProxyControlInfluence(faceProxyControl)
 #-----------------------------------------------------------------------------
-def resetFaceControls():
-    selected = cmds.ls(sl = True)
-    if len(selected) == 1:
-        selected = selected[0]
-    else:
-        cmds.warning('Please select a character rig group.')
-        return
-
-    _resetFaceControls(selected)
-#-----------------------------------------------------------------------------
-def _resetFaceControls(characterGroup):
-    if not SERigObjectTypeHelper.isRigCharacterGroup(characterGroup):
-        cmds.warning('Selected object is not a character rig group.')
-        return
-
+def getFaceControls(characterGroup):
     faceControlUIGroup = SERigObjectTypeHelper.getCharacterFacialControlUIGroup(characterGroup)
     faceOffsetControl = faceControlsOffsetCtrlName
     
@@ -2013,7 +1999,47 @@ def _resetFaceControls(characterGroup):
     for control in controls:
         if control.find(faceOffsetControl) != -1:
             controls.remove(control)
-            break
+            break    
+    
+    return controls
+#-----------------------------------------------------------------------------
+def getFaceProxyControls(characterGroup):
+    facialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(characterGroup)
+    if not facialComponent:
+        cmds.warning('Facial component not found.')
+        return
+
+    faceProxyControlsGroup = SERigObjectTypeHelper.getFaceProxyJointControlsGroup(facialComponent)
+    if not faceProxyControlsGroup:
+        cmds.warning('Facial proxy controls group not found.')
+        return
+
+    nurbsCurves = cmds.listRelatives(faceProxyControlsGroup, ad = True, type = 'nurbsCurve')
+
+    # Only collect unique face proxy control names.
+    controls = set()
+    for nurbsCurve in nurbsCurves:
+        res = cmds.listRelatives(nurbsCurve, p = True)[0]
+        controls.add(res)
+
+    return controls
+#-----------------------------------------------------------------------------
+def resetFaceControls():
+    selected = cmds.ls(sl = True)
+    if len(selected) == 1:
+        selected = selected[0]
+    else:
+        cmds.warning('Please select a character rig group.')
+        return
+
+    _resetFaceControls(selected)
+#-----------------------------------------------------------------------------
+def _resetFaceControls(characterGroup):
+    if not SERigObjectTypeHelper.isRigCharacterGroup(characterGroup):
+        cmds.warning('Selected object is not a character rig group.')
+        return
+
+    controls = getFaceControls(characterGroup)
 
     # Reset face controls.
     for control in controls:
@@ -2039,23 +2065,7 @@ def _resetFaceProxyControls(characterGroup):
         cmds.warning('Selected object is not a character rig group.')
         return
     
-    facialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(characterGroup)
-    if not facialComponent:
-        cmds.warning('Facial component not found.')
-        return
-
-    faceProxyControlsGroup = SERigObjectTypeHelper.getFaceProxyJointControlsGroup(facialComponent)
-    if not faceProxyControlsGroup:
-        cmds.warning('Facial proxy controls group not found.')
-        return
-
-    nurbsCurves = cmds.listRelatives(faceProxyControlsGroup, ad = True, type = 'nurbsCurve')
-
-    # Only collect unique face proxy control names.
-    controls = set()
-    for nurbsCurve in nurbsCurves:
-        res = cmds.listRelatives(nurbsCurve, p = True)[0]
-        controls.add(res)
+    controls = getFaceProxyControls(characterGroup)
     
     # Reset face proxy controls.
     for control in controls:
