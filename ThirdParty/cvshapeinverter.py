@@ -42,6 +42,7 @@ will be inverted through the deformer.
 import maya.cmds as cmds
 import maya.OpenMaya as OpenMaya
 import math
+import cPickle
 
 from ..Utils import SERigObjectTypeHelper
 from ..Rig import SERigHumanFacialComponent
@@ -79,13 +80,6 @@ def invert(base = None, corrective = None, name = None):
     y_points = OpenMaya.MPointArray(orig_points)
     z_points = OpenMaya.MPointArray(orig_points)
 
-    # Figure out which rig facial controls are involved in the deformation of this base mesh.
-    rigCharacterGroup = SERigObjectTypeHelper.findRelatedRigCharacterGroup(base)
-    modifiedFaceControls = SERigHumanFacialComponent.getTransModifiedFaceControls(rigCharacterGroup)
-    modifiedFaceProxyControls = SERigHumanFacialComponent.getTransModifiedFaceProxyControls(rigCharacterGroup)
-
-    print modifiedFaceControls, modifiedFaceProxyControls
-
     cmds.undoInfo(openChunk = True)
     for i in range(point_count):
         x_points[i].x += 1.0
@@ -117,6 +111,33 @@ def invert(base = None, corrective = None, name = None):
             cmds.setAttr('%s.%s%s' % (inverted_shapes, attr, x), lock = False)
     cmds.setAttr('%s.visibility' % inverted_shapes, 1)
     deformer = cmds.deformer(inverted_shapes, type = 'cvShapeInverter')[0]
+
+    # Figure out which rig facial controls are involved in the deformation of this base mesh.
+    rigCharacterGroup = SERigObjectTypeHelper.findRelatedRigCharacterGroup(base)
+    modifiedFaceControls = SERigHumanFacialComponent.getTransModifiedFaceControls(rigCharacterGroup)
+    modifiedFaceProxyControls = SERigHumanFacialComponent.getTransModifiedFaceProxyControls(rigCharacterGroup)
+
+    # Cache all control transformation changes involved in the deformation. 
+    controlTransTable = {}
+    for control in modifiedFaceControls:
+        trans = SERigObjectTypeHelper.getRigCtrlTransByCtrlName(control)
+        controlTransTable[control] = trans
+
+    for control in modifiedFaceProxyControls:
+        trans = SERigObjectTypeHelper.getRigCtrlTransByCtrlName(control)
+        controlTransTable[control] = trans
+
+    encodedControlTransTable = cPickle.dumps(controlTransTable)
+
+    # Cache control trans table to the deformer node.
+    at = 'controlTransTable'
+    cmds.addAttr(deformer, ln = at, dataType = 'string')
+    cmds.setAttr(deformer + '.' + at, encodedControlTransTable, type = 'string', l = 1)
+
+    # Debug.
+    #res = str(cmds.getAttr(deformer + '.' + at))
+    #table = cPickle.loads(res)
+    #print(table)
 
     # Calculate the inversion matrices
     deformer_mobj = get_mobject(deformer)
