@@ -82,10 +82,21 @@ def _exportRigCustomData(rigCharacterGroup, fileFolderPath):
 
         rigCustomData['rightEyeLidLowerAnimCurves'].append(keyFrames)
 
+    # Get shape inverters for corrective blendshapes.
+    rigCustomData['meshCBSs'] = {}
+
+    shapeInverters = cmds.ls(type = 'cvShapeInverter')
+    at = 'controlTransTable'
+    for shapeInverter in shapeInverters:
+        correctiveMesh = cmds.listConnections(shapeInverter + '.correctiveMesh', s = True)[0]
+        
+        tempStr = str(cmds.getAttr(shapeInverter + '.' + at))
+        curControlTransTable = cPickle.loads(tempStr)
+        rigCustomData['meshCBSs'][correctiveMesh] = curControlTransTable
+
     # Debug output.
     for key in rigCustomData:
-        print('Exporting: ')
-        print(key + ': ')
+        print('Exporting ' + key + ': ')
         print(rigCustomData[key])
 
     # Rig custom data serialization.
