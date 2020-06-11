@@ -2003,6 +2003,26 @@ def getFaceControls(characterGroup):
     
     return controls
 #-----------------------------------------------------------------------------
+def getTransModifiedFaceControls(characterGroup):
+    controls = getFaceControls(characterGroup)
+    transModifiedControls = []
+
+    for control in controls:
+        if SERigObjectTypeHelper.isRigControlTransModified(control):
+            transModifiedControls.append(control)
+
+    return transModifiedControls
+#-----------------------------------------------------------------------------
+def getTransModifiedFaceProxyControls(characterGroup):
+    controls = getFaceProxyControls(characterGroup)
+    transModifiedFaceProxyControls = []
+
+    for control in controls:
+        if SERigObjectTypeHelper.isRigControlTransModified(control):
+            transModifiedFaceProxyControls.append(control)
+
+    return transModifiedFaceProxyControls
+#-----------------------------------------------------------------------------
 def getFaceProxyControls(characterGroup):
     facialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(characterGroup)
     if not facialComponent:

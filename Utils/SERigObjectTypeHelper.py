@@ -1,5 +1,7 @@
 import maya.cmds as cmds
 import pymel.core as pm
+import math
+
 from ..Base import SERigNaming
 
 #-----------------------------------------------------------------------------
@@ -270,6 +272,18 @@ def getRigCtrlTransByCtrlName(control):
         return (translateX, translateY, translateZ, rotateX, rotateY, rotateZ)      
     else:
         return None
+#-----------------------------------------------------------------------------
+def isRigControlTransModified(control):
+    trans = getRigCtrlTransByCtrlName(control)
+
+    if trans == None:
+        return False
+
+    for transChannel in trans:
+        if math.fabs(transChannel) > 0.00001:
+            return True
+
+    return False
 #-----------------------------------------------------------------------------
 def getRigControlTransform(characterName, rigSideStr, rigTypeStr, rigControlIndex):
     '''

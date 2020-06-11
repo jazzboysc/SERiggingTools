@@ -43,8 +43,11 @@ import maya.cmds as cmds
 import maya.OpenMaya as OpenMaya
 import math
 
+from ..Utils import SERigObjectTypeHelper
+from ..Rig import SERigHumanFacialComponent
+
 #-----------------------------------------------------------------------------
-def invert(base=None, corrective=None, name=None):
+def invert(base = None, corrective = None, name = None):
     """Inverts a shape through the deformation chain.
 
     @param[in] base Deformed base mesh.
@@ -52,11 +55,11 @@ def invert(base=None, corrective=None, name=None):
     @param[in] name Name of the generated inverted shape.
     @return The name of the inverted shape.
     """
-    cmds.loadPlugin('cvshapeinverter_plugin.py', qt=True)
+    cmds.loadPlugin('cvshapeinverter_plugin.py', qt = True)
     if not base or not corrective:
-        sel = cmds.ls(sl=True)
+        sel = cmds.ls(sl = True)
         if not sel or len(sel) != 2:
-            cmds.undoInfo(closeChunk=True)
+            cmds.undoInfo(closeChunk = True)
             raise RuntimeError, 'Select base then corrective'
         base, corrective = sel
 
@@ -68,7 +71,7 @@ def invert(base=None, corrective=None, name=None):
     corrective_points = get_points(corrective)
 
     # Get the intermediate mesh
-    orig_mesh = get_shape(base, intermediate=True)
+    orig_mesh = get_shape(base, intermediate = True)
 
     # Get the component offset axes
     orig_points = get_points(orig_mesh)
@@ -76,11 +79,19 @@ def invert(base=None, corrective=None, name=None):
     y_points = OpenMaya.MPointArray(orig_points)
     z_points = OpenMaya.MPointArray(orig_points)
 
-    cmds.undoInfo(openChunk=True)
+    # Figure out which rig facial controls are involved in the deformation of this base mesh.
+    rigCharacterGroup = SERigObjectTypeHelper.findRelatedRigCharacterGroup(base)
+    modifiedFaceControls = SERigHumanFacialComponent.getTransModifiedFaceControls(rigCharacterGroup)
+    modifiedFaceProxyControls = SERigHumanFacialComponent.getTransModifiedFaceProxyControls(rigCharacterGroup)
+
+    print modifiedFaceControls, modifiedFaceProxyControls
+
+    cmds.undoInfo(openChunk = True)
     for i in range(point_count):
         x_points[i].x += 1.0
         y_points[i].y += 1.0
         z_points[i].z += 1.0
+
     set_points(orig_mesh, x_points)
     x_points = get_points(base)
     set_points(orig_mesh, y_points)
@@ -93,9 +104,9 @@ def invert(base=None, corrective=None, name=None):
     if not name:
         name = '%s_inverted' % corrective
 
-    inverted_shapes = cmds.duplicate(base, name=name)[0]
+    inverted_shapes = cmds.duplicate(base, name = name)[0]
     # Delete the unnessary shapes
-    shapes = cmds.listRelatives(inverted_shapes, children=True, shapes=True, path=True)
+    shapes = cmds.listRelatives(inverted_shapes, children = True, shapes = True, path = True)
     for s in shapes:
         if cmds.getAttr('%s.intermediateObject' % s):
             cmds.delete(s)
@@ -103,9 +114,9 @@ def invert(base=None, corrective=None, name=None):
     # Unlock the transformation attrs
     for attr in 'trs':
         for x in 'xyz':
-            cmds.setAttr('%s.%s%s' % (inverted_shapes, attr, x), lock=False)
+            cmds.setAttr('%s.%s%s' % (inverted_shapes, attr, x), lock = False)
     cmds.setAttr('%s.visibility' % inverted_shapes, 1)
-    deformer = cmds.deformer(inverted_shapes, type='cvShapeInverter')[0]
+    deformer = cmds.deformer(inverted_shapes, type = 'cvShapeInverter')[0]
 
     # Calculate the inversion matrices
     deformer_mobj = get_mobject(deformer)
@@ -132,7 +143,7 @@ def invert(base=None, corrective=None, name=None):
 
     cmds.connectAttr('%s.outMesh' % get_shape(corrective), '%s.correctiveMesh' % deformer)
 
-    cmds.undoInfo(closeChunk=True)
+    cmds.undoInfo(closeChunk = True)
     return inverted_shapes
 
 #-----------------------------------------------------------------------------
