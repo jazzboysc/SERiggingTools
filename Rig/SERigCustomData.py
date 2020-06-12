@@ -6,6 +6,7 @@ import cPickle
 from ..Base import SERigNaming
 from ..Utils import SEJointHelper
 from ..Utils import SERigObjectTypeHelper
+from ..ThirdParty import cvshapeinverter
 from . import SERigHumanFacialComponent
 
 #-----------------------------------------------------------------------------
@@ -118,7 +119,7 @@ def importRigCustomData():
     if fileResult != None:        
         _importRigCustomData(rigCharacterGroup, fileResult[0])
 #-----------------------------------------------------------------------------
-def _importRigCustomData(rigCharacterGroup, fileFolderPath):
+def _importRigCustomData(rigCharacterGroup, fileFolderPath, removeRedundantProxyControls = True, restoreEyelidAnimationCurves = True, restoreShapeInverters = True):
     rigCustomData = {}
 
     # Rig custom data deserialization.
@@ -133,41 +134,83 @@ def _importRigCustomData(rigCharacterGroup, fileFolderPath):
 
     # Debug output.
     for key in rigCustomData:
-        print('Importing: ')
-        print(key + ': ')
+        print('Importing ' + key + ': ')
         print(rigCustomData[key])
 
     # Remove redundant proxy controls.
-    curProxyJointControls = SERigObjectTypeHelper.getFaceProxyJointControls(rigCharacterGroup)
+    if removeRedundantProxyControls:
+        curProxyJointControls = SERigObjectTypeHelper.getFaceProxyJointControls(rigCharacterGroup)
 
-    for curProxyJointControl in curProxyJointControls:
-        if not curProxyJointControl in rigCustomData['ProxyJointControls']:
-            SERigHumanFacialComponent._removeFaceProxyControlInfluence(curProxyJointControl)
-            print('Redundant proxy control deleted: ' + curProxyJointControl)
+        for curProxyJointControl in curProxyJointControls:
+            if not curProxyJointControl in rigCustomData['ProxyJointControls']:
+                SERigHumanFacialComponent._removeFaceProxyControlInfluence(curProxyJointControl)
+                print('Redundant proxy control deleted: ' + curProxyJointControl)
 
     # Restore eyelid animation curves.
-    leftEyeLidUpperAnimCurves = SERigHumanFacialComponent.getLeftEyeLidUpperAnimCurves(rigCharacterGroup)
-    for i, animCurve in enumerate(leftEyeLidUpperAnimCurves):
-        keyValueList = rigCustomData['leftEyeLidUpperAnimCurves'][i]
-        for keyValue in keyValueList:
-            cmds.setKeyframe(animCurve, float = keyValue[0], value = keyValue[1], itt = 'linear', ott = 'linear')
+    if restoreEyelidAnimationCurves:
+        leftEyeLidUpperAnimCurves = SERigHumanFacialComponent.getLeftEyeLidUpperAnimCurves(rigCharacterGroup)
+        for i, animCurve in enumerate(leftEyeLidUpperAnimCurves):
+            keyValueList = rigCustomData['leftEyeLidUpperAnimCurves'][i]
+            for keyValue in keyValueList:
+                cmds.setKeyframe(animCurve, float = keyValue[0], value = keyValue[1], itt = 'linear', ott = 'linear')
 
-    leftEyeLidLowerAnimCurves = SERigHumanFacialComponent.getLeftEyeLidLowerAnimCurves(rigCharacterGroup)
-    for i, animCurve in enumerate(leftEyeLidLowerAnimCurves):
-        keyValueList = rigCustomData['leftEyeLidLowerAnimCurves'][i]
-        for keyValue in keyValueList:
-            cmds.setKeyframe(animCurve, float = keyValue[0], value = keyValue[1], itt = 'linear', ott = 'linear')
+        leftEyeLidLowerAnimCurves = SERigHumanFacialComponent.getLeftEyeLidLowerAnimCurves(rigCharacterGroup)
+        for i, animCurve in enumerate(leftEyeLidLowerAnimCurves):
+            keyValueList = rigCustomData['leftEyeLidLowerAnimCurves'][i]
+            for keyValue in keyValueList:
+                cmds.setKeyframe(animCurve, float = keyValue[0], value = keyValue[1], itt = 'linear', ott = 'linear')
 
-    rightEyeLidUpperAnimCurves = SERigHumanFacialComponent.getRightEyeLidUpperAnimCurves(rigCharacterGroup)
-    for i, animCurve in enumerate(rightEyeLidUpperAnimCurves):
-        keyValueList = rigCustomData['rightEyeLidUpperAnimCurves'][i]
-        for keyValue in keyValueList:
-            cmds.setKeyframe(animCurve, float = keyValue[0], value = keyValue[1], itt = 'linear', ott = 'linear')
+        rightEyeLidUpperAnimCurves = SERigHumanFacialComponent.getRightEyeLidUpperAnimCurves(rigCharacterGroup)
+        for i, animCurve in enumerate(rightEyeLidUpperAnimCurves):
+            keyValueList = rigCustomData['rightEyeLidUpperAnimCurves'][i]
+            for keyValue in keyValueList:
+                cmds.setKeyframe(animCurve, float = keyValue[0], value = keyValue[1], itt = 'linear', ott = 'linear')
 
-    rightEyeLidLowerAnimCurves = SERigHumanFacialComponent.getRightEyeLidLowerAnimCurves(rigCharacterGroup)
-    for i, animCurve in enumerate(rightEyeLidLowerAnimCurves):
-        keyValueList = rigCustomData['rightEyeLidLowerAnimCurves'][i]
-        for keyValue in keyValueList:
-            cmds.setKeyframe(animCurve, float = keyValue[0], value = keyValue[1], itt = 'linear', ott = 'linear')
+        rightEyeLidLowerAnimCurves = SERigHumanFacialComponent.getRightEyeLidLowerAnimCurves(rigCharacterGroup)
+        for i, animCurve in enumerate(rightEyeLidLowerAnimCurves):
+            keyValueList = rigCustomData['rightEyeLidLowerAnimCurves'][i]
+            for keyValue in keyValueList:
+                cmds.setKeyframe(animCurve, float = keyValue[0], value = keyValue[1], itt = 'linear', ott = 'linear')
 
+    # Restore shape inverters.
+    if restoreShapeInverters:
+        for meshCBS in rigCustomData['meshCBSs']:
+            shapeInverter = cmds.listConnections(meshCBS + '.outMesh', d = True)
+            if shapeInverter == None:
+
+                SERigHumanFacialComponent._resetFaceControls(rigCharacterGroup)
+                SERigHumanFacialComponent._resetFaceProxyControls(rigCharacterGroup)
+
+                # Pose the rig for base deformation.
+                for transModifiedControl in rigCustomData['meshCBSs'][meshCBS]:
+                    trans = rigCustomData['meshCBSs'][meshCBS][transModifiedControl]
+
+                    if cmds.objExists(transModifiedControl):
+                        forceSetAttr(transModifiedControl + '.tx', trans[0])
+                        forceSetAttr(transModifiedControl + '.ty', trans[1])
+                        forceSetAttr(transModifiedControl + '.tz', trans[2])
+                        forceSetAttr(transModifiedControl + '.rx', trans[3])
+                        forceSetAttr(transModifiedControl + '.ry', trans[4])
+                        forceSetAttr(transModifiedControl + '.rz', trans[5])
+
+                    else:
+                        cmds.warning('Control Object does not exist: ' + transModifiedControl)
+
+                # Create shape inverter.
+                #cvshapeinverter.invert()
+
+                cmds.refresh()
+
+            else:
+                cmds.warning('Shape inverter already exists for: ' + meshCBS)
+
+        SERigHumanFacialComponent._resetFaceControls(rigCharacterGroup)
+        SERigHumanFacialComponent._resetFaceProxyControls(rigCharacterGroup)
+
+#-----------------------------------------------------------------------------
+def forceSetAttr(objAttr, value):
+    try:
+        cmds.setAttr(objAttr, value)
+    except:
+        pass
 #-----------------------------------------------------------------------------
