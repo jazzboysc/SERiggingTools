@@ -48,6 +48,31 @@ from ..Utils import SERigObjectTypeHelper
 from ..Rig import SERigHumanFacialComponent
 
 #-----------------------------------------------------------------------------
+def getShapeInverterDeformedMesh(shapeInverter):
+    res = None
+    if cmds.objExists(shapeInverter):
+
+        invertedShape = cmds.listConnections(shapeInverter + '.outputGeometry[0]',  d = True)
+        if invertedShape:
+            invertedShape = invertedShape[0]
+            bsNode = cmds.listConnections(invertedShape + '.worldMesh[0]',  d = True)
+
+            if bsNode:
+                bsNode = bsNode[0]
+                
+                skinCluster = cmds.listConnections(bsNode + '.outputGeometry[0]',  d = True)
+                if skinCluster:
+                    skinCluster = skinCluster[0]
+
+                    deformedMesh = cmds.listConnections(skinCluster + '.outputGeometry[0]',  d = True)
+                    if deformedMesh:
+                        res = deformedMesh[0]
+
+    else:
+        return None
+
+    return res
+#-----------------------------------------------------------------------------
 def invert(base = None, corrective = None, name = None):
     """Inverts a shape through the deformation chain.
 

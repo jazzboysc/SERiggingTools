@@ -89,11 +89,18 @@ def _exportRigCustomData(rigCharacterGroup, fileFolderPath):
     shapeInverters = cmds.ls(type = 'cvShapeInverter')
     at = 'controlTransTable'
     for shapeInverter in shapeInverters:
+
+        # Get corrective mesh.
         correctiveMesh = cmds.listConnections(shapeInverter + '.correctiveMesh', s = True)[0]
         
+        # Get control transformation table.
         tempStr = str(cmds.getAttr(shapeInverter + '.' + at))
         curControlTransTable = cPickle.loads(tempStr)
-        rigCustomData['meshCBSs'][correctiveMesh] = curControlTransTable
+
+        # Possibly get deformed mesh.
+        deformedMesh = cvshapeinverter.getShapeInverterDeformedMesh(shapeInverter)
+
+        rigCustomData['meshCBSs'][correctiveMesh] = (curControlTransTable, deformedMesh)
 
     # Debug output.
     for key in rigCustomData:
@@ -181,9 +188,12 @@ def _importRigCustomData(rigCharacterGroup, fileFolderPath, removeRedundantProxy
                 SERigHumanFacialComponent._resetFaceControls(rigCharacterGroup)
                 SERigHumanFacialComponent._resetFaceProxyControls(rigCharacterGroup)
 
+                controlTransTable = rigCustomData['meshCBSs'][meshCBS][0]
+                deformedMesh = rigCustomData['meshCBSs'][meshCBS][1]
+
                 # Pose the rig for base deformation.
-                for transModifiedControl in rigCustomData['meshCBSs'][meshCBS]:
-                    trans = rigCustomData['meshCBSs'][meshCBS][transModifiedControl]
+                for transModifiedControl in controlTransTable:
+                    trans = controlTransTable[transModifiedControl]
 
                     if cmds.objExists(transModifiedControl):
                         forceSetAttr(transModifiedControl + '.tx', trans[0])
@@ -197,7 +207,10 @@ def _importRigCustomData(rigCharacterGroup, fileFolderPath, removeRedundantProxy
                         cmds.warning('Control Object does not exist: ' + transModifiedControl)
 
                 # Create shape inverter.
-                #cvshapeinverter.invert()
+                if cmds.objExists(deformedMesh) and cmds.objExists(meshCBS):
+                    cvshapeinverter.invert(deformedMesh, meshCBS)
+                else:
+                    cmds.warning('Cannot restore shape inverter for: ' + deformedMesh + ' and ' + meshCBS)
 
                 cmds.refresh()
 
