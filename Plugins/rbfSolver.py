@@ -2,7 +2,7 @@
 import math
 from maya import OpenMaya, OpenMayaMPx
 
-
+#-----------------------------------------------------------------------------
 class MatrixNN( object ):
 	'''
 	row list form matrices
@@ -190,59 +190,60 @@ class MatrixNN( object ):
 			x[i] = sum_ / LU[Pids[i]][i]
 		
 		return x
-
+#-----------------------------------------------------------------------------
 class RbfSolver(OpenMayaMPx.MPxNode):
 	
 	kPluginNodeName	= "rbfSolver"
-	kPluginNodeId		= OpenMaya.MTypeId(0x0B8D357)
+	kPluginNodeId = OpenMaya.MTypeId(0x0B8D357)
 
 	epsilon	= 10e-15
 	
-	def euclidian_distance( dim, vec1, vec2 ):
-		
-		subVector	= [ vec1[n]-vec2[n]	for n in xrange(dim) ]
-		powi_sum	= sum( pow( abs(subVector[i]), dim ) for i in xrange(dim)  )
-		return pow( powi_sum, 1.0/dim )
+	def euclidian_distance(dim, vec1, vec2):
+		subVector = [vec1[n]-vec2[n] for n in range(dim)]
+		powi_sum = sum(pow(abs(subVector[i]), dim) for i in range(dim))
+
+		return pow(powi_sum, 1.0/dim)
 	
-	def angular_distance(  dim, vec1, vec2 ):
+	def angular_distance(dim, vec1, vec2):
 		'''les vectors doivent etre normalisés  et de dimension 3 maximum'''
 		
-		dot	= sum( vec1[n]*vec2[n]	for n in xrange(dim)    )
-		if dot>1.0:	dot=1.0
-		elif dot<-1.0:	dot=-1.0
-		
-		angle_rad	= math.acos(dot)
+		dot	= sum(vec1[n]*vec2[n] for n in range(dim))
+		if dot > 1.0:
+			dot = 1.0
+		elif dot < -1.0:
+			dot = -1.0
+
+		angle_rad = math.acos(dot)
 		
 		return angle_rad
 	
 	# for an angular distance the dimensionN cannot exceed 3 and the vectors must be 
 	# normalized Whatever the function, fScale is multiplied by the distance.
-	distance_fonctions	= (	euclidian_distance,
-						angular_distance,  )
-	
-	def set_range( self, x, x0, x1, y0, y1 ) :
-		y   = 1.0*(  y0 + (x-x0)*(y1-y0)/(x1-x0)  )
+	distance_functions = (euclidian_distance, angular_distance)
+
+	def set_range(self, x, x0, x1, y0, y1):
+		y = 1.0*(y0 + (x-x0)*(y1-y0)/(x1-x0))
 		return y
-	
-	def linear_RBF( d ):
+
+	def linear_RBF(d):
 		return d
 		
-	def gaussian_RBF( d ):
-		return math.exp( - d*d )
+	def gaussian_RBF(d):
+		return math.exp(-d*d)
+
+	def multiquadric(d):
+		return math.sqrt(1.0 + d*d)
 		
-	def multiquadric( d ):
-		return math.sqrt( 1.0+d*d  )
+	def inverseQuadratic_RBF(d):
+		return 1.0 / (1.0 + d*d)
 		
-	def inverseQuadratic_RBF( d ):
-		return 1.0/(1.0+d*d )
+	def inverseMultiquadratic_RBF(d):
+		return 1.0 / math.sqrt((1.0 + d*d))
 		
-	def inverseMultiquadratic_RBF( d  ):
-		return 1.0/math.sqrt(  (1.0+d*d )  )
+	def cubic_RBF(d):
+		return d*d*d + 1.0
 		
-	def cubic_RBF( d ):
-		return d*d*d +1.0
-		
-	def thinPlate_RBF( d ):
+	def thinPlate_RBF(d):
 		# not defined at 0 so use an epsilon
 		if d < RbfSolver.epsilon:
 			d = RbfSolver.epsilon
@@ -251,7 +252,7 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 	# function +  variationId
 	# variationId = 0	--->  decreasing on  ]0,+infini[
 	# variationId = 1	--->  growing on ]0,+infini[
-	rbf_fonctions = (linear_RBF,
+	rbf_functions = (linear_RBF,
 					gaussian_RBF,
 					multiquadric,
 					inverseQuadratic_RBF,
@@ -260,14 +261,14 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 					thinPlate_RBF)
 	
 	@classmethod
-	def nodeCreator( cls ):
-		return OpenMayaMPx.asMPxPtr( cls() )
-	
+	def nodeCreator(cls):
+		return OpenMayaMPx.asMPxPtr(cls())
+
 	@classmethod
-	def nodeInitializer( cls ):
+	def nodeInitializer(cls):
 		numAttr	= OpenMaya.MFnNumericAttribute()
-		compAttr	= OpenMaya.MFnCompoundAttribute()
-		enumAttr	= OpenMaya.MFnEnumAttribute()
+		compAttr = OpenMaya.MFnCompoundAttribute()
+		enumAttr = OpenMaya.MFnEnumAttribute()
 		
 		cls.NDimension		= numAttr.create( "NDimension","nd",OpenMaya.MFnNumericData.kInt, 1 )
 		numAttr.setMin(1)
@@ -496,9 +497,9 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		# RBF function ?
 		normalize = data.inputValue( self.normalize ).asBool()
 		distance_id = data.inputValue( self.distanceMode ).asInt()
-		self.distance_fonction = self.distance_fonctions[distance_id]
+		self.distance_fonction = self.distance_functions[distance_id]
 		rbf_id = data.inputValue(self.rbfMode).asInt()
-		self.rbf_fonction = self.rbf_fonctions[rbf_id]
+		self.rbf_fonction = self.rbf_functions[rbf_id]
 	
 		# matrixMM to solve systems AX = Y
 		# factorize la and solve la for each m
@@ -632,19 +633,20 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		
 		output_Handle.setAllClean()
 		data.setClean(plug)
-	
+#-----------------------------------------------------------------------------
 def initializePlugin(mobject):
 	mplugin = OpenMayaMPx.MFnPlugin(mobject, "Hans Godard -- zapan669@hotmail.com", "1.0", "Any")
 	try:
-		mplugin.registerNode( RbfSolver.kPluginNodeName, RbfSolver.kPluginNodeId, RbfSolver.nodeCreator, RbfSolver.nodeInitializer )
+		mplugin.registerNode(RbfSolver.kPluginNodeName, RbfSolver.kPluginNodeId, RbfSolver.nodeCreator, RbfSolver.nodeInitializer)
 	except:
-		OpenMaya.MGlobal.displayError( "Failed to register node: %s\n" % RbfSolver.kPluginNodeName )
+		OpenMaya.MGlobal.displayError("Failed to register node: %s\n" % RbfSolver.kPluginNodeName)
 		raise
-
+#-----------------------------------------------------------------------------
 def uninitializePlugin(mobject):
 	mplugin = OpenMayaMPx.MFnPlugin(mobject)
 	try:
-		mplugin.deregisterNode( RbfSolver.kPluginNodeId )
+		mplugin.deregisterNode(RbfSolver.kPluginNodeId)
 	except:
-		OpenMaya.MGlobal.displayError( "Failed to unregister node: %s\n" % RbfSolver.kPluginNodeName )
+		OpenMaya.MGlobal.displayError("Failed to unregister node: %s\n" % RbfSolver.kPluginNodeName)
 		raise
+#-----------------------------------------------------------------------------
