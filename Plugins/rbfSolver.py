@@ -1,4 +1,3 @@
-# coding: utf-8
 import math
 from maya import OpenMaya, OpenMayaMPx
 
@@ -109,8 +108,8 @@ class MatrixNN( object ):
 	def inverse(self, A):
 		'''returns the inverse of a square matrix'''
 		d=self.determinant(A)
-		if d==0:
-			return 'The Matrix is ​​not invertible'
+		if d == 0:
+			return 'The matrix is not invertable'
 		else:
 			B=self.multCoef(self.comat(A),1./d)
 			inv=self.transpos(B)
@@ -248,10 +247,7 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		if d < RbfSolver.epsilon:
 			d = RbfSolver.epsilon
 		return  d*d*math.log(d)
-	
-	# function +  variationId
-	# variationId = 0	--->  decreasing on  ]0,+infini[
-	# variationId = 1	--->  growing on ]0,+infini[
+
 	rbf_functions = (linear_RBF,
 					gaussian_RBF,
 					multiquadric,
@@ -270,110 +266,82 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		compAttr = OpenMaya.MFnCompoundAttribute()
 		enumAttr = OpenMaya.MFnEnumAttribute()
 		
-		cls.NDimension		= numAttr.create( "NDimension","nd",OpenMaya.MFnNumericData.kInt, 1 )
+		cls.NDimension = numAttr.create('NDimension', 'nd', OpenMaya.MFnNumericData.kInt, 1)
 		numAttr.setMin(1)
-		cls.MDimension	= numAttr.create( "MDimension","md",OpenMaya.MFnNumericData.kInt, 1 )
+
+		cls.MDimension = numAttr.create('MDimension', 'md', OpenMaya.MFnNumericData.kInt, 1)
 		numAttr.setMin(1)
+	
+		cls.distanceMode = enumAttr.create('distanceMode', 'dist', 0)
+		enumAttr.addField('Euclidian', 0)
+		enumAttr.addField('Angular', 1)
 		
-		cls.distanceMode	= enumAttr.create( "distanceMode","dist",  0 )
-		enumAttr.addField( "Euclidian" , 0 )
-		enumAttr.addField( "Angular" , 1 )
-		
-		cls.rbfMode	= enumAttr.create( "rbfMode","rbf",  1)
-		enumAttr.addField( "Linear" , 0 )
-		enumAttr.addField( "Gaussian" , 1 )
-		enumAttr.addField( "Multiquadratic" , 2 )
-		enumAttr.addField( "Inverse Quadratic" , 3 )
-		enumAttr.addField( "Inverse Multiquadratic" , 4 )
-		enumAttr.addField( "Cubic" , 5 )
-		#enumAttr.addField( "Thin Plate " , 6 )
-		
+		cls.rbfMode	= enumAttr.create('rbfMode', 'rbf', 1)
+		enumAttr.addField('Linear', 0)
+		enumAttr.addField('Gaussian' , 1)
+		enumAttr.addField('Multiquadratic', 2)
+		enumAttr.addField('Inverse Quadratic', 3)
+		enumAttr.addField('Inverse Multiquadratic', 4)
+		enumAttr.addField('Cubic', 5)
+	
 		# Scale is multiplied by distance
-		cls.scale = numAttr.create( "scale","sc",OpenMaya.MFnNumericData.kFloat, 1.0 )
+		cls.scale = numAttr.create('scale', 'sc', OpenMaya.MFnNumericData.kFloat, 1.0)
 		numAttr.setMin(cls.epsilon)
 		
-		cls.normalize	= numAttr.create( "normalize","nz", OpenMaya.MFnNumericData.kBoolean, True)
+		cls.normalize = numAttr.create('normalize', 'nz', OpenMaya.MFnNumericData.kBoolean, True)
 		
 		# force output in 0-1 range
-		cls.blendShapeMode  = numAttr.create("blendShapeMode", "bsm", OpenMaya.MFnNumericData.kBoolean, False)
+		cls.blendShapeMode = numAttr.create('blendShapeMode', 'bsm', OpenMaya.MFnNumericData.kBoolean, False)
 
-		cls.nInput	= numAttr.create( "nInput","ni",OpenMaya.MFnNumericData.kFloat, .0)
+		cls.nInput = numAttr.create('nInput', 'ni', OpenMaya.MFnNumericData.kFloat, 0.0)
 		numAttr.setKeyable(True)
 		numAttr.setArray(True)
 		
-		# poses
-		# N = inDim	 = dim( nInput )  = dim( keys )
-		# M = outDim = dim( mOutput ) = dim( values )
-		cls.state	= numAttr.create( "state","st",OpenMaya.MFnNumericData.kBoolean, True)
+		# Poses
+		cls.state = numAttr.create('state', 'st', OpenMaya.MFnNumericData.kBoolean, True)
 		#cls.weight	= numAttr.create( "weight","w",OpenMaya.MFnNumericData.kFloat, 1.0)
-		cls.nKey	= numAttr.create( "nKey","nk",OpenMaya.MFnNumericData.kFloat, .0)
+
+		cls.nKey = numAttr.create('nKey', 'nk', OpenMaya.MFnNumericData.kFloat, 0.0)
 		numAttr.setArray(True)
-		cls.mValue	= numAttr.create( "mValue","mv",OpenMaya.MFnNumericData.kFloat, .0)
+
+		cls.mValue = numAttr.create('mValue', 'mv', OpenMaya.MFnNumericData.kFloat, 0.0)
 		numAttr.setArray(True)
 		
-		cls.poses	= compAttr.create( "poses" , "ps")
-		compAttr.addChild( cls.state )
-		#compAttr.addChild( cls.weight )
-		compAttr.addChild( cls.nKey )
-		compAttr.addChild( cls.mValue )
+		cls.poses = compAttr.create('poses', 'ps')
+		compAttr.addChild(cls.state)
+		#compAttr.addChild(cls.weight)
+		compAttr.addChild(cls.nKey)
+		compAttr.addChild(cls.mValue)
 		compAttr.setArray(True)
 		
-		# out
-		cls.solved = numAttr.create( "solved", "sv", OpenMaya.MFnNumericData.kBoolean, True)
-		numAttr.setHidden( True )
+		# Output
+		cls.solved = numAttr.create('solved', 'sv', OpenMaya.MFnNumericData.kBoolean, True)
+		numAttr.setHidden(True)
 		
-		cls.mOutput	= numAttr.create( "mOutput","mo",OpenMaya.MFnNumericData.kFloat, .0)
-		numAttr.setWritable( False )
+		cls.mOutput	= numAttr.create('mOutput', 'mo', OpenMaya.MFnNumericData.kFloat, 0.0)
+		numAttr.setWritable(False)
 		numAttr.setArray(True)
-		numAttr.setUsesArrayDataBuilder( True)
+		numAttr.setUsesArrayDataBuilder(True)
 
-		# add 
-		for attr in (cls.NDimension,
-					cls.MDimension,
-					cls.scale,
-					cls.normalize,
-					cls.blendShapeMode,
-					cls.solved,
-					cls.nInput,
-					cls.distanceMode,
-					cls.poses,
-					cls.rbfMode,
-					cls.mOutput,  ):
-			cls.addAttribute( attr )
+		# Add Addributes
+		for attr in (cls.NDimension, cls.MDimension, cls.scale, cls.normalize, cls.blendShapeMode, cls.solved, cls.nInput, cls.distanceMode, cls.poses, cls.rbfMode, cls.mOutput):
+			cls.addAttribute(attr)
 
-		# everything EXCEPT nInput regenerates the system.
-		for attr in (cls.NDimension,
-					cls.MDimension,
-					cls.distanceMode,
-					cls.rbfMode,
-					cls.scale,
-					cls.normalize,
-					#cls.solved,
-					cls.poses,
-					):
-			cls.attributeAffects(  attr, cls.solved )
+		# Everything EXCEPT nInput regenerates the system.
+		for attr in (cls.NDimension, cls.MDimension, cls.distanceMode, cls.rbfMode, cls.scale, cls.normalize, cls.poses):
+			cls.attributeAffects(attr, cls.solved)
 
-		# all recalculate the outputs.
-		for attr in (cls.NDimension,
-					cls.MDimension,
-					cls.distanceMode,
-					cls.rbfMode,
-					cls.scale,
-					cls.normalize,
-					cls.blendShapeMode,
-					cls.solved,
-					cls.poses,
-					cls.nInput,	# 	<<<<<---------------
-					):
-			cls.attributeAffects( attr, cls.mOutput )
+		# All recalculate the outputs.
+		for attr in (cls.NDimension, cls.MDimension, cls.distanceMode, cls.rbfMode, cls.scale, cls.normalize, cls.blendShapeMode, cls.solved, cls.poses, cls.nInput):
+			cls.attributeAffects(attr, cls.mOutput)
 		
 		# AE reorder
 		cls.init_AETemplate()
 
 	@classmethod
-	def init_AETemplate( cls  ):
+	def init_AETemplate(cls):
 		AE_cmd = '''
-		global proc AE[nodeType]Template( string $nodeName )
+		global proc AE[nodeType]Template(string $nodeName)
 		{
 		editorTemplate -beginScrollLayout;
 			editorTemplate -beginLayout "Main Attributes" -collapse 0;
@@ -393,8 +361,8 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 			editorTemplate -addExtraControls;
 		editorTemplate -endScrollLayout;
 		}
-		'''.replace("[nodeType]", cls.kPluginNodeName )
-		OpenMaya.MGlobal.executeCommand( AE_cmd )
+		'''.replace("[nodeType]", cls.kPluginNodeName)
+		OpenMaya.MGlobal.executeCommand(AE_cmd)
 	
 	def __init__(self):
 		OpenMayaMPx.MPxNode.__init__(self)
@@ -406,11 +374,9 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		self.fScale	= 1.0
 		
 		# info calculated in the rebuild_solver
-		self.distance_fonction	= None
-		self.rbf_fonction		= None
-		
-		self.poseUsed_ids	= []
-		
+		self.distance_function = None
+		self.rbf_function = None
+		self.poseUsed_ids = []
 		
 		# avoid the dicos for the framerate !!
 		# nVector per pose containing the key poses
@@ -497,9 +463,9 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		# RBF function ?
 		normalize = data.inputValue( self.normalize ).asBool()
 		distance_id = data.inputValue( self.distanceMode ).asInt()
-		self.distance_fonction = self.distance_functions[distance_id]
+		self.distance_function = self.distance_functions[distance_id]
 		rbf_id = data.inputValue(self.rbfMode).asInt()
-		self.rbf_fonction = self.rbf_functions[rbf_id]
+		self.rbf_function = self.rbf_functions[rbf_id]
 	
 		# matrixMM to solve systems AX = Y
 		# factorize la and solve la for each m
@@ -520,7 +486,7 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 					mat.rc[i][j] = 0.0
 				else:
 					# distance from each pose to each pose
-					distance = self.distance_fonction( self.N, self.nKeys[ i ], self.nKeys[ j ]  )
+					distance = self.distance_function( self.N, self.nKeys[ i ], self.nKeys[ j ]  )
 					
 					# stores the maximum distance between 2 exposures
 					# this will be used to standardize the system
@@ -545,7 +511,7 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 			for j in range(poseUsed_num) :
 				
 				# Euclidean or angular? Or other...
-				mat.rc[i][j] = self.rbf_fonction( mat.rc[i][j] * self.fScale )
+				mat.rc[i][j] = self.rbf_function( mat.rc[i][j] * self.fScale )
 			
 		# factorizeLU and save the ids of the swapped lines
 		LU, Pids = mat.factorize_LU()
@@ -603,8 +569,8 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 				# applique pose weight
 				# applique RBF
 				# applique coeff Xi
-				distance = self.distance_fonction( self.N, nInput, self.nKeys[ i ]  )
-				distance = self.rbf_fonction( distance * self.fScale  )
+				distance = self.distance_function( self.N, nInput, self.nKeys[ i ]  )
+				distance = self.rbf_function( distance * self.fScale  )
 				distance = self.mX[m][i] * distance
 				outputs[m]  +=  distance
 		
