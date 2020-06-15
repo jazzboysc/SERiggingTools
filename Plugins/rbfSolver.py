@@ -205,8 +205,8 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		return pow(powi_sum, 1.0/dim)
 	
 	def angular_distance(dim, vec1, vec2):
-		'''les vectors doivent etre normalisés  et de dimension 3 maximum'''
-		
+		'''vectors must be normalized and dimension 3 maximum'''
+
 		dot	= sum(vec1[n]*vec2[n] for n in range(dim))
 		if dot > 1.0:
 			dot = 1.0
