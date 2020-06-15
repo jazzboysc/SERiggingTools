@@ -197,12 +197,12 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 	kPluginNodeId = OpenMaya.MTypeId(0x0B8D357)
 
 	epsilon	= 10e-15
-	
+
 	def euclidian_distance(dim, vec1, vec2):
 		subVector = [vec1[n]-vec2[n] for n in range(dim)]
-		powi_sum = sum(pow(abs(subVector[i]), dim) for i in range(dim))
+		powi_sum = sum(pow(subVector[i], 2) for i in range(dim))
 
-		return pow(powi_sum, 1.0/dim)
+		return pow(powi_sum, 0.5)
 	
 	def angular_distance(dim, vec1, vec2):
 		'''les vectors doivent etre normalisés  et de dimension 3 maximum'''
