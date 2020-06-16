@@ -388,8 +388,7 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		self.mX = []
 
 	def rebuild_solver(self, data):
-		'''recalculate the solver using matrixMM
-		no input or output in this code '''
+		'''recalculate the solver using matrixNN no input or output in this code '''
 		
 		self.N = data.inputValue(self.NDimension).asInt()
 		self.M = data.inputValue(self.MDimension).asInt()
@@ -473,10 +472,6 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		mat = MatrixNN()
 		mat.setDimension(poseUsed_num)
 		
-		#** for duplicate poses
-		# remove the [row-column] containing .0 outside the diagonal
-		toRemove = []
-		
 		for i in range(poseUsed_num):
 			for j in range(poseUsed_num):
 				
@@ -535,26 +530,25 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		if not plug == self.mOutput:
 			return
 		
-		if not data.isClean( self.solved ):
-			status	= self.rebuild_solver( data )
+		if not data.isClean(self.solved):
+			status = self.rebuild_solver(data)
 			
-			if not status :
+			if not status:
 				return
 	
 		# find the nVector nInput
-		nInput_H = data.inputArrayValue( self.nInput )
+		nInput_H = data.inputArrayValue(self.nInput)
 		nInput = []
 		
 		for n in range(self.N):
 			try :
-				nInput_H.jumpToElement( n )
-				input_	= nInput_H.inputValue().asFloat()
-				nInput.append( input_ )
+				nInput_H.jumpToElement(n)
+				input_ = nInput_H.inputValue().asFloat()
+				nInput.append(input_)
 			except :
 				nInput.append(0.0)
 		
-		# just apply Somme des Xi * || p-Di || for each m
-		output_Handle = data.outputArrayValue( self.mOutput )
+		output_Handle = data.outputArrayValue(self.mOutput)
 		poseUsed_num = len(self.poseUsed_ids)
 		outputs = [0.0] * self.M
 		
@@ -562,15 +556,14 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 			for i in range(poseUsed_num):
 				
 				# calculate distance
-				# applique pose weight
-				# applique RBF
-				# applique coeff Xi
-				distance = self.distance_function( self.N, nInput, self.nKeys[ i ]  )
-				distance = self.rbf_function( distance * self.fScale  )
+				# apply RBF
+				# apply coeff Xi
+				distance = self.distance_function(self.N, nInput, self.nKeys[i])
+				distance = self.rbf_function(distance * self.fScale)
 				distance = self.mX[m][i] * distance
 				outputs[m]  +=  distance
 		
-		blendShapeMode  = data.inputValue(self.blendShapeMode).asBool()
+		blendShapeMode = data.inputValue(self.blendShapeMode).asBool()
 		if blendShapeMode == True :
 			
 			min = None 
@@ -580,17 +573,17 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 			
 			sum = 0.0
 			for m in range(self.M):
-				outputs[m] = self.set_range( outputs[m], min, 1.0, .0, 1.0 )
+				outputs[m] = self.set_range(outputs[m], min, 1.0, .0, 1.0)
 				sum += outputs[m]
 			
 			for m in range(self.M):
 				outputs[m] /= sum
 
 		for m in range(self.M):
-			try :
-				output_Handle.jumpToElement( m )
-				output_Handle.outputValue().setFloat( outputs[m] )
-			except :
+			try:
+				output_Handle.jumpToElement(m)
+				output_Handle.outputValue().setFloat(outputs[m])
+			except:
 				pass
 		
 		output_Handle.setAllClean()
