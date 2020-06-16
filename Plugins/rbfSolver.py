@@ -298,7 +298,7 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		numAttr.setArray(True)
 		
 		# Poses
-		cls.state = numAttr.create('state', 'st', OpenMaya.MFnNumericData.kBoolean, True)
+		cls.state = numAttr.create('enable', 'en', OpenMaya.MFnNumericData.kBoolean, True)
 		#cls.weight	= numAttr.create( "weight","w",OpenMaya.MFnNumericData.kFloat, 1.0)
 
 		cls.nKey = numAttr.create('nKey', 'nk', OpenMaya.MFnNumericData.kFloat, 0.0)
@@ -381,93 +381,92 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		# avoid the dicos for the framerate !!
 		# nVector per pose containing the key poses
 		# weight per pose
-		self.nKeys		= []
-		self.weights	= []
+		self.nKeys = []
+		self.weights = []
 		
 		# mVector containing solved coefficient
-		self.mX		= []
+		self.mX = []
 
 	def rebuild_solver(self, data):
 		'''recalculate the solver using matrixMM
 		no input or output in this code '''
 		
-		self.N	= data.inputValue( self.NDimension ).asInt()
-		self.M	= data.inputValue( self.MDimension ).asInt()
+		self.N = data.inputValue(self.NDimension).asInt()
+		self.M = data.inputValue(self.MDimension).asInt()
 		
-		poses_H	= data.inputArrayValue( self.poses )
+		poses_H	= data.inputArrayValue(self.poses)
 		pose_ids = OpenMaya.MIntArray()
-		OpenMaya.MPlug( self.thisMObject(), self.poses).getExistingArrayAttributeIndices( pose_ids )
-		
-		self.poseUsed_ids	= [] #   = pose_ids  used
+		OpenMaya.MPlug(self.thisMObject(), self.poses).getExistingArrayAttributeIndices(pose_ids)
+	
+		self.poseUsed_ids = []
 		
 		# find the necessary information to create the system
-		self.nKeys      = [] # listing (dim  poses_num) 	list ( dim N )
-		mValues         = [] # listing (dim  poses_num) 	list ( dim M )
-		self.weights    = [] # listing (dim  poses_num)  floats
+		self.nKeys   = []
+		mValues      = []
+		self.weights = []
 		
-		for i in pose_ids :
+		for i in pose_ids:
 			
-			poses_H.jumpToElement( i )
-			pose_H	= poses_H.inputValue()
+			poses_H.jumpToElement(i)
+			pose_H = poses_H.inputValue()
 			
-			state		= pose_H.child( self.state ).asBool()
-			#wgt		= pose_H.child( self.weight ).asFloat()
+			state = pose_H.child(self.state).asBool()
+			#wgt = pose_H.child(self.weight).asFloat()
 			
-			#if not (state and wgt>self.epsilon)  :
+			#if not (state and wgt>self.epsilon):
 			#	continue
-			if not state :
+			if not state:
 				continue
+
+			nKey_H = OpenMaya.MArrayDataHandle(pose_H.child(self.nKey))
+			nKey = []
+			mValue_H = OpenMaya.MArrayDataHandle(pose_H.child(self.mValue))
+			mValue = []
 			
-			nKey_H	    = OpenMaya.MArrayDataHandle( pose_H.child( self.nKey ) )
-			nKey		= []
-			mValue_H	= OpenMaya.MArrayDataHandle( pose_H.child( self.mValue ) )
-			mValue	    = []
-			
-			for n in xrange(self.N):
+			for n in range(self.N):
 				# try in case there is nothing connected ...
-				try :
-					nKey_H.jumpToElement( n )
-					key		= nKey_H.inputValue().asFloat()
-					nKey.append( key )
-				except :
-					nKey.append( .0 )
+				try:
+					nKey_H.jumpToElement(n)
+					key	= nKey_H.inputValue().asFloat()
+					nKey.append(key)
+				except:
+					nKey.append(0.0)
 			
 			# ignore the keys already present
-			if nKey in self.nKeys :
-				OpenMaya.MGlobal.displayWarning( 'key[%s] %s  can not be used more than once' %(i,nKey) )
+			if nKey in self.nKeys:
+				OpenMaya.MGlobal.displayWarning('key[%s] %s  can not be used more than once' %(i, nKey))
 				continue
 			
-			for m in xrange(self.M):
+			for m in range(self.M):
 				try:
-					mValue_H.jumpToElement( m )
-					value		= mValue_H.inputValue().asFloat()
-					mValue.append( value )
+					mValue_H.jumpToElement(m)
+					value = mValue_H.inputValue().asFloat()
+					mValue.append(value)
 				except: 
-					mValue.append( .0 )
+					mValue.append(0.0)
 			
-			self.nKeys.append( nKey )
-			mValues.append( mValue )
-			#self.weights.append( wgt )
+			self.nKeys.append(nKey)
+			mValues.append(mValue)
+			#self.weights.append(wgt)
 			
-			self.poseUsed_ids.append( i )
+			self.poseUsed_ids.append(i)
 		
-		# all the same keys
 		poseUsed_num = len(self.poseUsed_ids)
 		
-		if poseUsed_num in (0,1) :
-			OpenMaya.MGlobal.displayError( 'RbfSolver failed :  No Key,  or all the same' )
+		if poseUsed_num in (0, 1):
+			OpenMaya.MGlobal.displayError('RbfSolver failed: valid poses number is less than 2')
 			return False
 		
 		# for the continuation need to know the functions used:
 		# Distance function ?
 		# RBF function ?
-		normalize = data.inputValue( self.normalize ).asBool()
-		distance_id = data.inputValue( self.distanceMode ).asInt()
+		normalize = data.inputValue(self.normalize).asBool()
+		distance_id = data.inputValue(self.distanceMode).asInt()
 		self.distance_function = self.distance_functions[distance_id]
 		rbf_id = data.inputValue(self.rbfMode).asInt()
 		self.rbf_function = self.rbf_functions[rbf_id]
 	
-		# matrixMM to solve systems AX = Y
+		# matrixNN to solve systems AX = Y
 		# factorize la and solve la for each m
 		# store the X (m) in self.mX
 		distanceMax	= 0.0
