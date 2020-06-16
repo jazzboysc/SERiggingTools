@@ -121,26 +121,26 @@ class MatrixNN( object ):
 		TB = zip(*B)
 		return [ [ sum(ea*eb for ea,eb in zip(a,b))  for b in TB ] for a in A ]
 	
-	def factorize_LU( self ):
+	def factorize_LU(self):
 		'''decomposition A = LU L lower triangular matrix and U upper triangular
 		also return permutation ids'''
 		
 		# LU is an initially a copy of self
-		LU	= list( self.rc )
+		LU = list(self.rc)
 		
-		nRows, nCols	= self.dim, self.dim
-		if nRows <= 1 :
+		nRows, nCols = self.dim, self.dim
+		if nRows <= 1:
 			return None, None
 		
 		# Permutation Indices
-		Pids		= range(self.dim)
+		Pids = range(self.dim)
 		
 		# already find the biggest ones by line:
-		s	= [.0]*nRows
-		for i in range( nRows ):
+		s = [0.0] * nRows
+		for i in range(nRows):
 			smax = 0.0
-			for j in range( nRows ):
-				smax = max(smax, abs(LU[i][j]) )
+			for j in range(nRows):
+				smax = max(smax, abs(LU[i][j]))
 			s[i] = smax
 		
 		for k in range(nRows-1):
@@ -150,10 +150,10 @@ class MatrixNN( object ):
 			Pid = k
 			rmax = 0.0
 			
-			for i in range( k, nRows ):
+			for i in range(k, nRows):
 				
-				r	= abs(LU[Pids[i]][k] / s[Pids[i]])
-				if r > rmax :
+				r = abs(LU[Pids[i]][k] / s[Pids[i]])
+				if r > rmax:
 					rmax = r
 					j = i
 			# Row j has the largest scaled pivot, so "swap" that row with the current row (row k). 
@@ -477,41 +477,38 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		# remove the [row-column] containing .0 outside the diagonal
 		toRemove = []
 		
-		for i in range(poseUsed_num) :
-			for j in range(poseUsed_num) :
+		for i in range(poseUsed_num):
+			for j in range(poseUsed_num):
 				
-				if i == j :
-					# here the distance of a pose on itself
+				if i == j:
+					# Here the distance of a pose on itself
 					mat.rc[i][j] = 0.0
 				else:
-					# distance from each pose to each pose
-					distance = self.distance_function( self.N, self.nKeys[ i ], self.nKeys[ j ]  )
+					# Distance from each pose to each pose
+					distance = self.distance_function(self.N, self.nKeys[i], self.nKeys[j])
 					
-					# stores the maximum distance between 2 exposures
-					# this will be used to standardize the system
-					if distance > distanceMax :
+					# Stores the maximum distance between 2 poses, this will be used to standardize the system
+					if distance > distanceMax:
 						distanceMax = distance
 					
-					mat.rc[i][j]	= distance
+					mat.rc[i][j] = distance
 		
-		# use the scale for smoother more or less
-		# if you want the standardized system, you have to divide the scale by the distanceMax
-		fScale = data.inputValue( self.scale ).asFloat()
-		if fScale < self.epsilon :
+		# Use the scale for smoother more or less
+		# If you want the standardized system, you have to divide the scale by the distanceMax
+		fScale = data.inputValue(self.scale).asFloat()
+		if fScale < self.epsilon:
 			fScale = self.epsilon
 		
-		if normalize :
+		if normalize:
 			self.fScale	= fScale / distanceMax
-		else :
+		else:
 			self.fScale	= fScale
 		
 		# RBF each element
-		for i in range(poseUsed_num) :
-			for j in range(poseUsed_num) :
-				
-				# Euclidean or angular? Or other...
-				mat.rc[i][j] = self.rbf_function( mat.rc[i][j] * self.fScale )
-			
+		for i in range(poseUsed_num):
+			for j in range(poseUsed_num):
+				mat.rc[i][j] = self.rbf_function(mat.rc[i][j] * self.fScale)
+	
 		# factorizeLU and save the ids of the swapped lines
 		LU, Pids = mat.factorize_LU()
 
@@ -522,7 +519,7 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		
 		for m in range(self.M):
 			
-			Y = [mValues[ i ][ m ]  for i in range(poseUsed_num)]
+			Y = [mValues[i][m]  for i in range(poseUsed_num)]
 			X = mat.solve_LU(LU, Pids, Y)  # nVector coeff
 			self.mX.append(X)
 		
@@ -530,7 +527,7 @@ class RbfSolver(OpenMayaMPx.MPxNode):
 		solved_H = data.outputValue(self.solved)
 		solved_H.setClean()
 		
-		OpenMaya.MGlobal.displayInfo( "RbfSolver recomputed using poses :  %s" %self.poseUsed_ids )
+		OpenMaya.MGlobal.displayInfo("RbfSolver recomputed using poses:  %s" %self.poseUsed_ids)
 		return True
 	
 	def compute(self, plug, data):
