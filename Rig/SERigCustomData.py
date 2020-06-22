@@ -126,7 +126,7 @@ def importRigCustomData():
     if fileResult != None:        
         _importRigCustomData(rigCharacterGroup, fileResult[0])
 #-----------------------------------------------------------------------------
-def _importRigCustomData(rigCharacterGroup, fileFolderPath, removeRedundantProxyControls = True, restoreEyelidAnimationCurves = True, restoreShapeInverters = True):
+def _importRigCustomData(rigCharacterGroup, fileFolderPath, removeRedundantProxyControls = True, restoreEyelidAnimationCurves = True, restoreShapeInverters = False):
     rigCustomData = {}
 
     # Rig custom data deserialization.
