@@ -1449,3 +1449,65 @@ class RigHumanHand(RigComponent):
         controlsVisES += self.IKControlGroup + '.visibility = ' + tempExpressionTail
 
         cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
+
+#-----------------------------------------------------------------------------
+def createFKChainControls(fkJoints, attachPoint = '', chainPrefix = 'temp', fkControlScaleYZ = 1.0, fkControlTransparency = 1.0, createCircleFkControl = True):
+    preParent = attachPoint
+    curScaleYZ = fkControlScaleYZ
+    curFKJnt = None
+    nextFKJnt = None
+
+    for i in range(len(fkJoints) - 1):
+        curFKJnt = fkJoints[i]
+        nextFKJnt = fkJoints[i + 1]
+        curFKJntLoc = SEMathHelper.getWorldPosition(curFKJnt)
+        nextFKJntLoc = SEMathHelper.getWorldPosition(nextFKJnt)
+        distance = SEMathHelper.getDistance3(curFKJntLoc, nextFKJntLoc)
+
+        curFKControl = None
+        if createCircleFkControl:
+            curFKControl = SERigControl.RigCircleControl(
+                rigSide = SERigEnum.eRigSide.RS_Unknown,
+                rigType = SERigEnum.eRigType.RT_Unknown,
+                prefix = SERigNaming.sFKPrefix + chainPrefix + str(i), 
+                translateTo = curFKJnt,
+                rotateTo = curFKJnt,
+                scale = 4,
+                parent = preParent,
+                lockChannels = ['t', 's', 'v'],
+                fitToSurroundingMeshes = False,
+                surroundingMeshes = None,
+                postFitScale = 1.0,
+                overrideFitRayDirection = False, 
+                fitRayDirection = (0, 0, 1)
+                )
+
+        else:
+            curFKControl = SERigControl.RigCubeControl(
+                rigSide = SERigEnum.eRigSide.RS_Unknown,
+                rigType = SERigEnum.eRigType.RT_Unknown,
+                prefix = SERigNaming.sFKPrefix + chainPrefix + str(i), 
+                translateTo = curFKJnt,
+                rotateTo = curFKJnt,
+                scale = 4,
+                parent = preParent,
+                lockChannels = ['t', 's', 'v'],
+                cubeScaleX = distance,
+                cubeScaleY = curScaleYZ,
+                cubeScaleZ = curScaleYZ,
+                transparency = fkControlTransparency,
+                fitToSurroundingMeshes = False,
+                surroundingMeshes = None,
+                postFitScale = 1.0,
+                overrideFitRayDirection = False, 
+                fitRayDirection = (0, 0, 1)
+                )
+            
+        #SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKArmControl' + str(i), 'ControlOwner')
+
+        cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
+        cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
+
+        preParent = curFKControl.ControlObject
+        curScaleYZ *= 1.0
+#-----------------------------------------------------------------------------
