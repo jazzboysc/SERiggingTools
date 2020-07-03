@@ -1451,7 +1451,20 @@ class RigHumanHand(RigComponent):
         cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
 
 #-----------------------------------------------------------------------------
-def createFKChainControls(fkJoints, attachPoint = '', chainPrefix = 'temp', fkControlScaleYZ = 1.0, fkControlTransparency = 1.0, createCircleFkControl = True):
+def createFKChainControls(attachPoint = '', chainPrefix = '', scale = 2.0, fkControlScaleYZ = 1.0, fkControlTransparency = 1.0, createCircleFkControl = False, controlColor = (0.4, 0.9, 0.9)):
+    selected = cmds.ls(sl = True, type = 'joint')
+    if selected:
+        topJoint = selected[0]
+        _createFKChainControls(topJoint, attachPoint, chainPrefix, scale, fkControlScaleYZ, fkControlTransparency, createCircleFkControl, controlColor)
+
+#-----------------------------------------------------------------------------
+def _createFKChainControls(topJoint, attachPoint = '', chainPrefix = '', scale = 2.0, fkControlScaleYZ = 1.0, fkControlTransparency = 1.0, createCircleFkControl = False, controlColor = (0.4, 0.9, 0.9)):
+    fkJoints = SEJointHelper.listHierarchy(topJoint)
+
+    if chainPrefix == '':
+        chainPrefix = topJoint + '_'
+        chainPrefix = SEStringHelper.SE_RemovePrefix(chainPrefix)
+
     preParent = attachPoint
     curScaleYZ = fkControlScaleYZ
     curFKJnt = None
@@ -1472,14 +1485,15 @@ def createFKChainControls(fkJoints, attachPoint = '', chainPrefix = 'temp', fkCo
                 prefix = SERigNaming.sFKPrefix + chainPrefix + str(i), 
                 translateTo = curFKJnt,
                 rotateTo = curFKJnt,
-                scale = 4,
+                scale = scale,
                 parent = preParent,
                 lockChannels = ['t', 's', 'v'],
                 fitToSurroundingMeshes = False,
                 surroundingMeshes = None,
                 postFitScale = 1.0,
                 overrideFitRayDirection = False, 
-                fitRayDirection = (0, 0, 1)
+                overrideControlColor = True, 
+                controlColor = controlColor
                 )
 
         else:
@@ -1489,7 +1503,7 @@ def createFKChainControls(fkJoints, attachPoint = '', chainPrefix = 'temp', fkCo
                 prefix = SERigNaming.sFKPrefix + chainPrefix + str(i), 
                 translateTo = curFKJnt,
                 rotateTo = curFKJnt,
-                scale = 4,
+                scale = scale,
                 parent = preParent,
                 lockChannels = ['t', 's', 'v'],
                 cubeScaleX = distance,
@@ -1500,7 +1514,9 @@ def createFKChainControls(fkJoints, attachPoint = '', chainPrefix = 'temp', fkCo
                 surroundingMeshes = None,
                 postFitScale = 1.0,
                 overrideFitRayDirection = False, 
-                fitRayDirection = (0, 0, 1)
+                fitRayDirection = (0, 0, 1),
+                overrideControlColor = True, 
+                controlColor = controlColor
                 )
             
         #SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKArmControl' + str(i), 'ControlOwner')
