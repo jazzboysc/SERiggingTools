@@ -1518,8 +1518,9 @@ def _createFKChainControls(topJoint, attachPoint = '', chainPrefix = '', scale =
                 overrideControlColor = True, 
                 controlColor = controlColor
                 )
-            
-        #SERigObjectTypeHelper.linkRigObjects(self.TopGrp, curFKControl.ControlGroup, 'FKArmControl' + str(i), 'ControlOwner')
+
+        drvGrpName = curFKControl.Prefix + SERigNaming.sDriverGroup
+        curFKControl.InsertNewGroup(drvGrpName)
 
         cmds.orientConstraint(curFKControl.ControlObject, curFKJnt)
         cmds.pointConstraint(curFKControl.ControlObject, curFKJnt)
