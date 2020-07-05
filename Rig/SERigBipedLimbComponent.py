@@ -715,6 +715,32 @@ class RigHumanLeg(RigHumanLimb):
         self.LimbGuideCurveEnd = legPVLocator
         self.PVGuideCurve = self.createGuideCurve()
 
+        # Create foot ball rotation offset control attribute and control blending logic.
+        cmds.addAttr(footIKMainControl.ControlObject, ln = SERigNaming.sFootBallRotOffset, at = 'float', k = 1, dv = 0.0, 
+                     hasMinValue = True, min = -30.0, hasMaxValue = True, max = 30.0)
+        cmds.setAttr(footIKMainControl.ControlObject + '.' + SERigNaming.sFootBallRotOffset, cb = 1)
+        cmds.setAttr(footIKMainControl.ControlObject + '.' + SERigNaming.sFootBallRotOffset, k = 1)
+
+        ballJnt = legJoints[-2]
+        footIKMainControlBallRotOffsetAttr = footIKMainControl.ControlObject + '.' + SERigNaming.sFootBallRotOffset
+
+        ballJntInput = cmds.listConnections(ballJnt + '.rotate', s = True, type = 'unitConversion')[0]
+        cmds.disconnectAttr(ballJntInput + '.output', ballJnt + '.rotate')
+
+        plusNode = cmds.createNode('plusMinusAverage')
+        cmds.setAttr(plusNode + '.operation', 1)
+        cmds.connectAttr(ballJntInput + '.output', plusNode + '.input3D[0]')
+        cmds.connectAttr(plusNode + '.output3D', ballJnt + '.rotate', f = 1)
+
+        unitConversionNode = cmds.createNode('unitConversion')
+        cmds.setAttr(unitConversionNode + '.conversionFactor', 0.017)
+
+        cmds.connectAttr(footIKMainControlBallRotOffsetAttr, unitConversionNode + '.input')
+        cmds.connectAttr(unitConversionNode + '.output', plusNode + '.input3D[1].input3Dz')
+
+        ballJntInput = cmds.listConnections(ballJnt + '.rotate', s = True, type = 'unitConversion')[0]
+        cmds.setAttr(ballJntInput + '.conversionFactor', 1.0)
+
         # Add foot rotation attributes needed by the foot rotation expression.
         cmds.addAttr(footIKMainControl.ControlObject, ln = SERigNaming.sFootToeStartRotAngleAttr, at = 'float', k = 1, dv = 15.0, 
                      hasMinValue = True, min = 0.0, hasMaxValue = True, max = 60.0)
