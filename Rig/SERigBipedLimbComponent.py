@@ -1477,14 +1477,13 @@ class RigHumanHand(RigComponent):
         cmds.expression(n = controlsVisEN, s = controlsVisES, ae = 1)
 
 #-----------------------------------------------------------------------------
-def createFKChainControls(attachPoint = '', chainPrefix = '', scale = 2.0, fkControlScaleYZ = 1.0, fkControlTransparency = 1.0, createCircleFkControl = False, controlColor = (0.4, 0.9, 0.9)):
+def createFKChainControls(attachPoint = '', chainPrefix = '', scale = 4.0, fkControlScaleYZ = 1.0, fkControlTransparency = 1.0, createCircleFkControl = False, controlColor = (0.4, 0.9, 0.9)):
     selected = cmds.ls(sl = True, type = 'joint')
     if selected:
-        topJoint = selected[0]
-        _createFKChainControls(topJoint, attachPoint, chainPrefix, scale, fkControlScaleYZ, fkControlTransparency, createCircleFkControl, controlColor)
-
+        for topJoint in selected:
+            _createFKChainControls(topJoint, attachPoint, chainPrefix, scale, fkControlScaleYZ, fkControlTransparency, createCircleFkControl, controlColor)
 #-----------------------------------------------------------------------------
-def _createFKChainControls(topJoint, attachPoint = '', chainPrefix = '', scale = 2.0, fkControlScaleYZ = 1.0, fkControlTransparency = 1.0, createCircleFkControl = False, controlColor = (0.4, 0.9, 0.9)):
+def _createFKChainControls(topJoint, attachPoint = '', chainPrefix = '', scale = 4.0, fkControlScaleYZ = 1.0, fkControlTransparency = 1.0, createCircleFkControl = False, controlColor = (0.4, 0.9, 0.9)):
     fkJoints = SEJointHelper.listHierarchy(topJoint)
 
     if chainPrefix == '':
