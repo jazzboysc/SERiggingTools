@@ -668,6 +668,8 @@ def isSkinnedJoint(joint):
         return False
 #-----------------------------------------------------------------------------
 def removeUnskinnedSlaveLeafJoints(slaveJoints, excludeTags = []):
+    print('Removing unskinned slave leaf joints.')
+    
     for slaveJoint in slaveJoints:        
         if isLeafJoint(slaveJoint) and not isSkinnedJoint(slaveJoint):
 
