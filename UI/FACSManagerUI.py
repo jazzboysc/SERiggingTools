@@ -1543,6 +1543,8 @@ class CustomAUListItem(QtWidgets.QTreeWidgetItem):
         self.alias = alias
         self.weightNode = weightNode
         self.controlMode = controlMode
+        if alias == '' or alias == None:
+            self.alias = '*' + name
         self.initUIContent()
 
     def sliderChangeValue(self):
@@ -1672,7 +1674,7 @@ class DefaultConnectionMapItem(QtWidgets.QTreeWidgetItem):
         self.aliasName = aliasName
         self.defaultName = defaultName
         if aliasName == '' or aliasName == None:
-            self.aliasName = '*' + self.aliasName
+            self.aliasName = '*' + self.name
         self.initUIContent()
 
     def initUIContent(self):
