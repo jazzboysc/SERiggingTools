@@ -207,6 +207,88 @@ dataBufferAUsToBlendshapeAUsTable[SERigNaming.sAU_Eye_R_LookRight_Blink_Attr]   
 dataBufferAUsToBlendshapeAUsTable[SERigNaming.sAU_Eye_R_LookUp_Blink_Attr]      = 'AU_EyeLookUpBlink_R'
 dataBufferAUsToBlendshapeAUsTable[SERigNaming.sAU_Eye_R_LookDown_Blink_Attr]    = 'AU_EyeLookDownBlink_R'
 
+
+AUsAliasTable = {}
+AUsAliasTable[SERigNaming.sAU_01_L_Attr]         = 'Inner Brow Raise_L'
+AUsAliasTable[SERigNaming.sAU_01_R_Attr]         = 'Inner Brow Raise_L'
+AUsAliasTable[SERigNaming.sAU_02_L_Attr]         = 'Outer Brow Raiser_L'
+AUsAliasTable[SERigNaming.sAU_02_R_Attr]         = 'Outer Brow Raiser_R'
+AUsAliasTable[SERigNaming.sAU_04_L_Attr]         = 'Brow Lowerer_L'
+AUsAliasTable[SERigNaming.sAU_04_R_Attr]         = 'Brow Lowerer_R'
+AUsAliasTable[SERigNaming.sAU_05_L_Attr]         = 'Upper Lid Raiser_L'
+AUsAliasTable[SERigNaming.sAU_05_R_Attr]         = 'Upper Lid Raiser_R'
+AUsAliasTable[SERigNaming.sAU_06_L_Attr]         = 'Cheek Raiser_L'
+AUsAliasTable[SERigNaming.sAU_06_R_Attr]         = 'Cheek Raiser_R'
+AUsAliasTable[SERigNaming.sAU_07_L_Attr]         = 'Lid Tightener_L'
+AUsAliasTable[SERigNaming.sAU_07_R_Attr]         = 'Lid Tightener_R'
+AUsAliasTable[SERigNaming.sAU_09_L_Attr]         = 'Nose Wrinkler_L'
+AUsAliasTable[SERigNaming.sAU_09_R_Attr]         = 'Nose Wrinkler_R'
+AUsAliasTable[SERigNaming.sAU_10_L_Attr]         = 'Upper Lip Raiser_L'
+AUsAliasTable[SERigNaming.sAU_10_R_Attr]         = 'Upper Lip Raiser_R'
+AUsAliasTable[SERigNaming.sAU_11_L_Attr]         = 'Nasolabial Deepener_L'
+AUsAliasTable[SERigNaming.sAU_11_R_Attr]         = 'Nasolabial Deepener_R'
+AUsAliasTable[SERigNaming.sAU_12_L_Attr]         = 'Lip Corner Puller_L'
+AUsAliasTable[SERigNaming.sAU_12_R_Attr]         = 'Lip Corner Puller_R'
+AUsAliasTable[SERigNaming.sAU_12_OL_Attr]        = ''
+AUsAliasTable[SERigNaming.sAU_12_OR_Attr]        = ''
+AUsAliasTable[SERigNaming.sAU_12_Blink_L_Attr]   = ''
+AUsAliasTable[SERigNaming.sAU_12_Blink_R_Attr]   = ''
+AUsAliasTable[SERigNaming.sAU_13_L_Attr]         = 'Cheek Puffer_L'
+AUsAliasTable[SERigNaming.sAU_13_R_Attr]         = 'Cheek Puffer_R'
+AUsAliasTable[SERigNaming.sAU_14_L_Attr]         = 'Dimpler_L'
+AUsAliasTable[SERigNaming.sAU_14_R_Attr]         = 'Dimpler_R'
+AUsAliasTable[SERigNaming.sAU_15_L_Attr]         = 'Lip Corner Depressor_L'
+AUsAliasTable[SERigNaming.sAU_15_R_Attr]         = 'Lip Corner Depressor_R'
+AUsAliasTable[SERigNaming.sAU_16_L_Attr]         = 'Lower Lip Depressor_L'
+AUsAliasTable[SERigNaming.sAU_16_R_Attr]         = 'Lower Lip Depressor_R'
+AUsAliasTable[SERigNaming.sAU_17_D_Attr]         = 'Chin Raiser_D'
+AUsAliasTable[SERigNaming.sAU_17_U_Attr]         = 'Chin Raiser_U'
+AUsAliasTable[SERigNaming.sAU_18_L_Attr]         = 'Lip Pucker_L'
+AUsAliasTable[SERigNaming.sAU_18_R_Attr]         = 'Lip Pucker_R'
+AUsAliasTable[SERigNaming.sAU_20_L_Attr]         = 'Lip Stretcher_L'
+AUsAliasTable[SERigNaming.sAU_20_R_Attr]         = 'Lip Stretcher_R'
+AUsAliasTable[SERigNaming.sAU_20_NL_Attr]        = ''
+AUsAliasTable[SERigNaming.sAU_20_NR_Attr]        = ''
+AUsAliasTable[SERigNaming.sAU_22_D_Attr]         = ''
+AUsAliasTable[SERigNaming.sAU_22_U_Attr]         = ''
+AUsAliasTable[SERigNaming.sAU_23_D_Attr]         = 'Lip Tightener_D'
+AUsAliasTable[SERigNaming.sAU_23_U_Attr]         = 'Lip Tightener_U'
+AUsAliasTable[SERigNaming.sAU_24_Attr]           = 'Lip Pressor'
+AUsAliasTable[SERigNaming.sAU_25_D_Attr]         = 'Lips Part_D'
+AUsAliasTable[SERigNaming.sAU_25_U_Attr]         = 'Lips Part_U'
+AUsAliasTable[SERigNaming.sAU_26_Fix_Attr]       = 'Jaw drop_Fix'
+AUsAliasTable[SERigNaming.sAU_26_CloseFix_Attr]  = 'Jaw drop_CloseFix'
+AUsAliasTable[SERigNaming.sAU_28_D_Attr]         = ''
+AUsAliasTable[SERigNaming.sAU_28_U_Attr]         = ''
+AUsAliasTable[SERigNaming.sAU_Puff_L_Attr]       = 'Puff_L'
+AUsAliasTable[SERigNaming.sAU_Puff_R_Attr]       = 'Puff_R'
+AUsAliasTable[SERigNaming.sAU_Shrink_L_Attr]     = 'Shrink_L'
+AUsAliasTable[SERigNaming.sAU_Shrink_R_Attr]     = 'Shrink_R'
+AUsAliasTable[SERigNaming.sAU_Blink_L_Attr]      = 'Blink_L'
+AUsAliasTable[SERigNaming.sAU_Blink_R_Attr]      = 'Blink_R'
+AUsAliasTable[SERigNaming.sAU_Throat_Attr]       = 'Throat'
+AUsAliasTable[SERigNaming.sAU_JawForward_Attr]   = 'JawForward'
+AUsAliasTable[SERigNaming.sAU_LipClose_Attr]         = 'LipClose'
+AUsAliasTable[SERigNaming.sAU_LowLipCompress_Attr]   = 'LowLipCompress'
+AUsAliasTable[SERigNaming.sAU_UpLipCompress_Attr]    = 'UpLipCompress'
+AUsAliasTable[SERigNaming.sAU_Eye_L_LookLeft_Attr]   = 'Eye LookLeft_L'
+AUsAliasTable[SERigNaming.sAU_Eye_L_LookRight_Attr]  = 'Eye LookRight_L'
+AUsAliasTable[SERigNaming.sAU_Eye_L_LookUp_Attr]     = 'Eye LookUp_L'
+AUsAliasTable[SERigNaming.sAU_Eye_L_LookDown_Attr]   = 'Eye LookDown_L'
+AUsAliasTable[SERigNaming.sAU_Eye_R_LookLeft_Attr]   = 'Eye LookLeft_R'
+AUsAliasTable[SERigNaming.sAU_Eye_R_LookRight_Attr]  = 'Eye LookRight_R'
+AUsAliasTable[SERigNaming.sAU_Eye_R_LookUp_Attr]     = 'Eye LookUp_R'
+AUsAliasTable[SERigNaming.sAU_Eye_R_LookDown_Attr]   = 'Eye LookDown_R'
+AUsAliasTable[SERigNaming.sAU_10_OL_Attr]            = ''
+AUsAliasTable[SERigNaming.sAU_10_OR_Attr]            = ''
+AUsAliasTable[SERigNaming.sAU_Eye_L_LookLeft_Blink_Attr]    = 'Eye LookLeftBlink_L'
+AUsAliasTable[SERigNaming.sAU_Eye_L_LookRight_Blink_Attr]   = 'Eye LookRightBlink_L'
+AUsAliasTable[SERigNaming.sAU_Eye_L_LookUp_Blink_Attr]      = 'Eye LookUpBlink_L'
+AUsAliasTable[SERigNaming.sAU_Eye_L_LookDown_Blink_Attr]    = 'Eye LookDownBlink_L'
+AUsAliasTable[SERigNaming.sAU_Eye_R_LookLeft_Blink_Attr]    = 'Eye LookLeftBlink_R'
+AUsAliasTable[SERigNaming.sAU_Eye_R_LookRight_Blink_Attr]   = 'Eye LookRightBlink_R'
+AUsAliasTable[SERigNaming.sAU_Eye_R_LookUp_Blink_Attr]      = 'Eye LookUpBlink_R'
+AUsAliasTable[SERigNaming.sAU_Eye_R_LookDown_Blink_Attr]    = 'Eye LookDownBlink_R'
 #-----------------------------------------------------------------------------
 def getMeshVertexPosition(vtxName):
     # Get vertex number and object having that vertex
@@ -255,8 +337,11 @@ def connectFACSDataBufferToAUBlendshape(connectionMap = None):
     rigCharacterGroup = SERigObjectTypeHelper.findRelatedRigCharacterGroup(target)
     facialComponent = SERigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGroup)
     facsDataBuffer = SEFacsHelper.getFACS_DataBuffer(facialComponent)
+    auDataBuffer = SEFacsHelper.getFACS_AUBuffer(facialComponent)
+    controlModeSwitch = SEFacsHelper.getFACS_ControlMode(facialComponent)
 
-    _connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, connectionMap)
+    #_connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, connectionMap)
+    _connectFACSControlModeSwitchToAUBlendShape(facsDataBuffer, auDataBuffer, controlModeSwitch, auBlendshapeNode, connectionMap)
 #-----------------------------------------------------------------------------
 def _connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, connectionMap = None):
     if connectionMap == None:
@@ -271,6 +356,42 @@ def _connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, conne
 
         if src and dst:
             cmds.connectAttr(src, dst, f = 1)
+
+def _connectFACSControlModeSwitchToAUBlendShape(facsDataBuffer, faceAUBuffer, controlModeSwitch, auBlendshapeNode, connectionMap = None):
+    if connectionMap == None:
+        connectionMap = dataBufferAUsToBlendshapeAUsTable
+    
+    if controlModeSwitch == None:
+        cmds.warning('Fail to connect AU. Cannot find FACS Control Mode')
+        return
+
+    for auType in facialActionUnitTypeList:
+        key = SERigNaming.auAttrList[auType]
+        value = connectionMap[key]
+
+        srcCtrlData = SEFacsHelper.getFacialActionUnitAttrName(facsDataBuffer, auType)   
+        srcAUData =  SEFacsHelper.getFacialActionUnitAttrName(faceAUBuffer, auType)
+        dst = getBlendshapTargetNameByMatchName(auBlendshapeNode, value, True)
+
+        if srcCtrlData and srcAUData and dst:
+            condition = cmds.createNode('condition', n = key + '_Condition')
+            cmds.setAttr(condition + '.operation', 0)
+            cmds.connectAttr(srcAUData, condition + '.colorIfTrueR', f = 1)
+            cmds.connectAttr(srcCtrlData, condition + '.colorIfFalseR', f = 1)
+            cmds.connectAttr(controlModeSwitch + '.' + SERigNaming.sFACS_ControlModeAttr, condition + '.firstTerm', f = 1)
+
+            clampNode = cmds.createNode('clamp', n = key + '_Clamp')
+            cmds.setAttr( clampNode + '.max', 1, 1, 1)
+            cmds.setAttr( clampNode + '.min', 0, 0, 0)
+            cmds.connectAttr(condition + '.outColorR', clampNode + '.inputR', f = 1)
+            cmds.connectAttr(clampNode + '.outputR', dst, f = 1)
+    
+    if connectionMap == None:
+        cmds.setAttr(controlModeSwitch + '.' + SERigNaming.sFACS_IsUsingCustomMapAttr, False)
+    else:
+        cmds.setAttr(controlModeSwitch + '.' + SERigNaming.sFACS_IsUsingCustomMapAttr, True)
+    
+    SERigObjectTypeHelper.linkRigObjects(controlModeSwitch, auBlendshapeNode, SERigNaming.sFACS_AUConnectedAttr)    
 #-----------------------------------------------------------------------------
 def _matchSourceBlendshapesToTarget(source, target):
     if not cmds.objExists(source) or not cmds.objExists(target):
@@ -783,3 +904,27 @@ def batchImportSkinClusterWeights():
         else:
             cmds.warning('Model group not found. Batching import skincluster weighhts failed for:' + rigCharacterGroup)
 #-----------------------------------------------------------------------------
+def exportCustomConnectMap(fileNamePath, customMapTable):
+    saveData = customMapTable
+    fileName = fileNamePath + '.seccm'
+        
+    try:
+        f = open(fileName, 'wb')
+        cPickle.dump(saveData, f)
+        f.close()
+    except Exception as e:
+        print e
+        cmds.warning('Failed exporting custom connect map.')
+#-----------------------------------------------------------------------------
+def importCustomConnectMap(fileNamePath):
+    loadData = []
+    fileName = fileNamePath
+    try:
+        f = open(fileName, 'rb')
+        loadData = cPickle.load(f)
+        f.close()
+    except:
+        print('Skipped importing Custom Connect Map.')
+        return
+
+    return loadData

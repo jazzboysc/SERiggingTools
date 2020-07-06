@@ -16,6 +16,42 @@ def getFACS_DataBuffer(facialComponentGroup):
     else:
         cmds.warning('Cannot find facial component: ' + facialComponentGroup)
         return None
+
+def getFACS_AUBuffer(facialComponentGroup):
+    if cmds.objExists(facialComponentGroup):
+        try:
+            res = cmds.listConnections(facialComponentGroup + '.' + SERigNaming.sFACS_AUBufferAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find facial component: ' + facialComponentGroup + ' FACS AU buffer')
+            return None
+    else:
+        cmds.warning('Cannot find facial component: ' + facialComponentGroup)
+        return None
+
+def getFACS_ControlMode(facialComponentGroup):
+    if cmds.objExists(facialComponentGroup):
+        try:
+            res = cmds.listConnections(facialComponentGroup + '.' + SERigNaming.sFACS_ControlModeAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find facial component: ' + facialComponentGroup + ' FACS Control Mode')
+            return None
+    else:
+        cmds.warning('Cannot find facial component: ' + facialComponentGroup)
+        return None
+
+def getFACS_CustomConnectionMapBuffer(facialComponentGroup):
+    if cmds.objExists(facialComponentGroup):
+        try:
+            res = cmds.listConnections(facialComponentGroup + '.' + SERigNaming.sFACS_CustomConnectionMapAttr)[0]
+            return res
+        except:
+            cmds.warning('Cannot find facial component: ' + facialComponentGroup + ' Custom Connection Map Buffer')
+            return None
+    else:
+        cmds.warning('Cannot find facial component: ' + facialComponentGroup)
+        return None
 #-----------------------------------------------------------------------------
 def getFacialActionUnitAttrName(bufferObject, actionUnitType):
     res = None

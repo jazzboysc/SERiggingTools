@@ -540,6 +540,106 @@ def createFACS_DataBuffer(facialComponentGroup):
     SERigObjectTypeHelper.linkRigObjects(facialComponentGroup, dataBufferGroup, SERigNaming.sFACS_DataBufferAttr)
 
     return dataBufferGroup
+
+def createFACS_AUBuffer(facialComponentGroup):
+    prefix = SERigObjectTypeHelper.getCharacterComponentPrefix(facialComponentGroup)
+    rigPartsGroup = SERigObjectTypeHelper.getCharacterComponentRigPartsGroup(facialComponentGroup)
+
+    if prefix == None or rigPartsGroup == None:
+        cmds.error('Failed creating FACS AU buffer for: ' + facialComponentGroup)
+        return None
+
+    bufferName = prefix + '_FACS_AUBufferGrp'
+    if cmds.objExists(bufferName):
+        # TODO: 
+        # Delete the existing buffer?
+        cmds.warning('FACS data buffer already exists.')
+        return bufferName
+
+    # Create a new data buffer.
+    auBufferGroup = cmds.group(n = bufferName, em = 1, p = rigPartsGroup)
+
+    singleAttributeLockList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'v']
+    for attr in singleAttributeLockList:
+        cmds.setAttr(auBufferGroup + '.' + attr, l = 1, k = 0, cb = 0)
+
+    for attr in SERigNaming.auAttrList:
+        cmds.addAttr(auBufferGroup, ln = attr, at = 'float', k = 1, dv = 0.0, hasMinValue = True, min = 0.0, hasMaxValue = True, max = 1.0)
+        cmds.setAttr(auBufferGroup + '.' + attr, cb = 1)
+        cmds.setAttr(auBufferGroup + '.' + attr, keyable = True)
+
+    SERigObjectTypeHelper.linkRigObjects(facialComponentGroup, auBufferGroup, SERigNaming.sFACS_AUBufferAttr)
+
+    return auBufferGroup
+
+def createFACS_ControlModeSwitch(facialComponentGroup):
+    prefix = SERigObjectTypeHelper.getCharacterComponentPrefix(facialComponentGroup)
+    rigPartsGroup = SERigObjectTypeHelper.getCharacterComponentRigPartsGroup(facialComponentGroup)
+
+    if prefix == None or rigPartsGroup == None:
+        cmds.error('Failed creating FACS Control Mode Switch for: ' + facialComponentGroup)
+        return None
+
+    switchName = prefix + '_FACS_ControlModeSwitch'
+    if cmds.objExists(switchName):
+        # TODO: 
+        # Delete the existing buffer?
+        cmds.warning('FACS data buffer already exists.')
+        return switchName
+
+    # Create attributes.
+    ctrlSwitchGroup = cmds.group(n = switchName, em = 1, p = rigPartsGroup)
+
+    singleAttributeLockList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'v']
+    for attr in singleAttributeLockList:
+        cmds.setAttr(ctrlSwitchGroup + '.' + attr, l = 1, k = 0, cb = 0)
+
+    
+    cmds.addAttr(ctrlSwitchGroup, ln = SERigNaming.sFACS_ControlModeAttr, at = 'enum', k = 1, dv = 1, enumName = "Slider:Controller")
+    cmds.setAttr(ctrlSwitchGroup + '.' + SERigNaming.sFACS_ControlModeAttr, cb = 1)
+
+    SERigObjectTypeHelper.linkRigObjects(facialComponentGroup, ctrlSwitchGroup, SERigNaming.sFACS_ControlModeAttr)
+
+    characterName = SERigObjectTypeHelper.listRigCharacters()[0]
+    mainCtrl = SERigObjectTypeHelper.getRigGlobalControlObject(characterName, u'RS_Center', u'RT_Global',0)
+    cmds.addAttr(mainCtrl, ln = SERigNaming.sFACS_ControlModeAttr, at = 'enum', enumName = 'Slider:Controller', k = 1, dv = 1)
+    cmds.setAttr(mainCtrl + '.' + SERigNaming.sFACS_ControlModeAttr, cb = 1)
+    cmds.connectAttr(mainCtrl + '.' + SERigNaming.sFACS_ControlModeAttr, ctrlSwitchGroup + '.' + SERigNaming.sFACS_ControlModeAttr)
+
+    cmds.addAttr(ctrlSwitchGroup, ln = SERigNaming.sFACS_IsUsingCustomMapAttr, at = 'bool', dv = 0)
+    cmds.setAttr(ctrlSwitchGroup + '.' + SERigNaming.sFACS_IsUsingCustomMapAttr, cb = 1)
+
+    return ctrlSwitchGroup
+
+def createCustomConnectionMapBuffer(facialComponentGroup):
+    prefix = SERigObjectTypeHelper.getCharacterComponentPrefix(facialComponentGroup)
+    rigPartsGroup = SERigObjectTypeHelper.getCharacterComponentRigPartsGroup(facialComponentGroup)
+
+    if prefix == None or rigPartsGroup == None:
+        cmds.error('Failed creating FACS Control Mode Switch for: ' + facialComponentGroup)
+        return None
+
+    connectionMapName = prefix + '_FACS_CustomConnectionMap'
+    if cmds.objExists(connectionMapName):
+        # TODO: 
+        # Delete the existing buffer?
+        cmds.warning('ConnectionMap buffer already exists.')
+        return connectionMapName
+
+    # Create a new data buffer.
+    connectionMapGrp = cmds.group(n = connectionMapName, em = 1, p = rigPartsGroup)
+
+    singleAttributeLockList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz', 'v']
+    for attr in singleAttributeLockList:
+        cmds.setAttr(connectionMapGrp + '.' + attr, l = 1, k = 0, cb = 0)
+
+    for attr in SERigNaming.auAttrList:
+        cmds.addAttr(connectionMapGrp, ln = attr, dt = 'string')
+        cmds.setAttr(connectionMapGrp + '.' + attr, cb = 1)
+
+    SERigObjectTypeHelper.linkRigObjects(facialComponentGroup, connectionMapGrp, SERigNaming.sFACS_CustomConnectionMapAttr)
+
+    return connectionMapGrp
 #-----------------------------------------------------------------------------
 def appendFACS_Au_MultiFix(inFACS_DataBuffer, inputAU1, inputAU2):
     if not cmds.objExists(inFACS_DataBuffer):
@@ -1357,6 +1457,9 @@ class RigHumanFacialSystem(RigComponent):
 
         # Create data buffer group.
         self.DataBuffer = createFACS_DataBuffer(self.TopGrp)
+        self.AUBuffer = createFACS_AUBuffer(self.TopGrp)
+        self.ControlMode = createFACS_ControlModeSwitch(self.TopGrp)
+        self.CustomConnectionMapBuffer = createCustomConnectionMapBuffer(self.TopGrp)
 
         # Create IK joints group.
         ikJointsGroup = cmds.group(n = self.Prefix + '_IK_JointsGrp', em = 1, p = self.JointsGrp)
