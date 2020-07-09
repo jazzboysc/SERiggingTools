@@ -358,8 +358,10 @@ def _connectFACSDataBufferToAUBlendshape(facsDataBuffer, auBlendshapeNode, conne
             cmds.connectAttr(src, dst, f = 1)
 
 def _connectFACSControlModeSwitchToAUBlendShape(facsDataBuffer, faceAUBuffer, controlModeSwitch, auBlendshapeNode, connectionMap = None):
+    useDefault = False
     if connectionMap == None:
         connectionMap = dataBufferAUsToBlendshapeAUsTable
+        useDefault = True
     
     if controlModeSwitch == None:
         cmds.warning('Fail to connect AU. Cannot find FACS Control Mode')
@@ -386,7 +388,7 @@ def _connectFACSControlModeSwitchToAUBlendShape(facsDataBuffer, faceAUBuffer, co
             cmds.connectAttr(condition + '.outColorR', clampNode + '.inputR', f = 1)
             cmds.connectAttr(clampNode + '.outputR', dst, f = 1)
     
-    if connectionMap == None:
+    if useDefault == True:
         cmds.setAttr(controlModeSwitch + '.' + SERigNaming.sFACS_IsUsingCustomMapAttr, False)
     else:
         cmds.setAttr(controlModeSwitch + '.' + SERigNaming.sFACS_IsUsingCustomMapAttr, True)
