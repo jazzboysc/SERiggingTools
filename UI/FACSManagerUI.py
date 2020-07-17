@@ -604,7 +604,8 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                     self.resizeUIWindowSize(600, 650) 
                     self.lockNamesCallback()  
             else:
-                self.confirmNamesAndSkipBuildCallback()            
+                if not self.isRigBuiltByThisTool():
+                    self.confirmNamesAndSkipBuildCallback()            
             
         
     def enableShowConnectMap(self):

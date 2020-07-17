@@ -826,7 +826,7 @@
                  <item>
                   <widget class="QLabel" name="label_14">
                    <property name="text">
-                    <string>MaxInfluenceJointsCount:</string>
+                    <string>Max Influence Joints Count:</string>
                    </property>
                   </widget>
                  </item>
