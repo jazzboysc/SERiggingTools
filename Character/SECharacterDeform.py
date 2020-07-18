@@ -24,31 +24,55 @@ class RigBipedCharacterDeform():
 
         self.RigBipedCharacter = rigBipedCharacter
 
-    def createUpperLimbSlaveJoints(self, upperLimbSlaveMasterJnts = [], lowerLimbTopJoint = ''):
+    def createUpperLimbSlaveJoints(self, upperLimbSlaveMasterJnts = [], lowerLimbTopJoint = '', parentTwistSlaveJntsToTop = True):
 
         slaveJnts = []
 
-        preParent = None
-        for masterJnt in upperLimbSlaveMasterJnts:
+        if not parentTwistSlaveJntsToTop:
+            preParent = None
+            for masterJnt in upperLimbSlaveMasterJnts:
 
-            cmds.select(cl = 1)
-            curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
-            cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
-            cmds.makeIdentity(curSlaveJoint, apply = True)
-        
-            pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
-            oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+                cmds.select(cl = 1)
+                curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+                cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+                cmds.makeIdentity(curSlaveJoint, apply = True)
+            
+                pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+                oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-            curSlaveJntsInfo = (curSlaveJoint, pc, oc)
-            slaveJnts.append(curSlaveJntsInfo)
+                curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+                slaveJnts.append(curSlaveJntsInfo)
 
-            if preParent:
-                cmds.parent(curSlaveJoint, preParent)
-            preParent = curSlaveJoint
+                if preParent:
+                    cmds.parent(curSlaveJoint, preParent)
+                preParent = curSlaveJoint
+
+        else:
+            topParent = None
+            i = 0
+            for masterJnt in upperLimbSlaveMasterJnts:
+
+                cmds.select(cl = 1)
+                curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+                cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+                cmds.makeIdentity(curSlaveJoint, apply = True)
+            
+                pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+                oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+
+                curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+                slaveJnts.append(curSlaveJntsInfo)
+
+                if topParent:
+                    cmds.parent(curSlaveJoint, topParent)
+
+                if i == 0:
+                    topParent = curSlaveJoint
+
+                i += 1
 
         if len(slaveJnts) > 1:
             cmds.delete(slaveJnts[-1][1])
-
             if cmds.objExists(lowerLimbTopJoint):
                 cmds.pointConstraint(lowerLimbTopJoint, slaveJnts[-1][0], mo = 0)
 
@@ -135,6 +159,7 @@ class RigBipedCharacterDeform():
               upperBodyLowerLimbJoints = [],
               lowerBodyUpperLimbJoints = [],
               lowerBodyLowerLimbJoints = [],
+              parentTwistSlaveJntsToTop = True,
               spineJnts = [],
               upperChestJnts = [],
               leftLegJnts = [],
@@ -182,13 +207,19 @@ class RigBipedCharacterDeform():
         # Create slave joints.
 
         # Create arm slaves.
-        leftUpperArmSlaveJnts = self.createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[0], upperBodyLowerLimbSlaveMasterJnts[0][0])
-        rightUpperArmSlaveJnts = self.createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[1], upperBodyLowerLimbSlaveMasterJnts[1][0])
+        leftUpperArmSlaveJnts = self.createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[0], upperBodyLowerLimbSlaveMasterJnts[0][0], 
+            parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
+        rightUpperArmSlaveJnts = self.createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[1], upperBodyLowerLimbSlaveMasterJnts[1][0], 
+            parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
         leftLowerArmSlaveJnts = self.createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[0])
         rightLowerArmSlaveJnts = self.createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[1])
 
-        cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[-1][0])
-        cmds.parent(rightLowerArmSlaveJnts[0][0], rightUpperArmSlaveJnts[-1][0])
+        if parentTwistSlaveJntsToTop:
+            cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[0][0])
+            cmds.parent(rightLowerArmSlaveJnts[0][0], rightUpperArmSlaveJnts[0][0])
+        else:
+            cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[-1][0])
+            cmds.parent(rightLowerArmSlaveJnts[0][0], rightUpperArmSlaveJnts[-1][0])
 
         # Create hand slaves and parent them to the arm slaves.
         leftHandSlaveJnts = []
@@ -212,18 +243,24 @@ class RigBipedCharacterDeform():
             cmds.setAttr(curFingerSlaveJnts[-1][0] + '.otherType', SERigNaming.sJointTagSlaveFingerEnd, type = 'string')
 
         # Create leg slaves.
-        leftUpperLegSlaveJnts = self.createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0])
-        rightUpperLegSlaveJnts = self.createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0])
+        leftUpperLegSlaveJnts = self.createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[0], lowerBodyLowerLimbSlaveMasterJnts[0][0], 
+            parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
+        rightUpperLegSlaveJnts = self.createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0], 
+            parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
         leftLowerLegSlaveJnts = self.createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[0])
         rightLowerLegSlaveJnts = self.createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[1])
 
-        # Parent leg slaves to spine.
-        cmds.parent(leftLowerLegSlaveJnts[0][0], leftUpperLegSlaveJnts[-1][0])
-        cmds.parent(rightLowerLegSlaveJnts[0][0], rightUpperLegSlaveJnts[-1][0])
+        if parentTwistSlaveJntsToTop:
+            cmds.parent(leftLowerLegSlaveJnts[0][0], leftUpperLegSlaveJnts[0][0])
+            cmds.parent(rightLowerLegSlaveJnts[0][0], rightUpperLegSlaveJnts[0][0])        
+        else:
+            cmds.parent(leftLowerLegSlaveJnts[0][0], leftUpperLegSlaveJnts[-1][0])
+            cmds.parent(rightLowerLegSlaveJnts[0][0], rightUpperLegSlaveJnts[-1][0])
 
         # Create spine slaves.
         spineSlaveJnts = self.createSlaveJointsHelper(spineJnts)
 
+        # Parent leg slaves to spine.
         cmds.parent(leftUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
         cmds.parent(rightUpperLegSlaveJnts[0][0], spineSlaveJnts[0][0])
 

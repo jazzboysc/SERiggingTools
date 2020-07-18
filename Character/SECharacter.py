@@ -285,6 +285,7 @@ class RigBipedCharacter():
                                 upperBodyLowerLimbJoints, 
                                 lowerBodyUpperLimbJoints, 
                                 lowerBodyLowerLimbJoints,
+                                True,
                                 spineJnts,
                                 upperChestJnts,
                                 leftLegJnts,
