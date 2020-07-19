@@ -49,7 +49,6 @@ class RigBipedCharacterDeform():
 
         else:
             topParent = None
-            i = 0
             for masterJnt in upperLimbSlaveMasterJnts:
 
                 cmds.select(cl = 1)
@@ -65,11 +64,8 @@ class RigBipedCharacterDeform():
 
                 if topParent:
                     cmds.parent(curSlaveJoint, topParent)
-
-                if i == 0:
+                else:
                     topParent = curSlaveJoint
-
-                i += 1
 
         if len(slaveJnts) > 1:
             cmds.delete(slaveJnts[-1][1])
@@ -78,7 +74,7 @@ class RigBipedCharacterDeform():
 
         return slaveJnts
 
-    def createSlaveJointsHelper(self, masterJnts = [], ignoreOrientConstraints = None, slaveJntsOrientToPreParent = False):
+    def createSlaveJointsHelper(self, masterJnts = [], ignoreOrientConstraints = None, slaveJntsOrientToPreParent = False, parentTwistSlaveJntsToTop = False):
         if ignoreOrientConstraints and (len(ignoreOrientConstraints) != len(masterJnts)):
             cmds.error('The lengths of masterJnts and ignoreOrientConstraints lists do not match. Cannot create slave joints.')
             return
@@ -91,30 +87,60 @@ class RigBipedCharacterDeform():
 
         slaveJnts = []
 
-        preParent = None
-        for masterJnt, ignoreOC in zip(masterJnts, ignoreOrientConstraints):
+        if not parentTwistSlaveJntsToTop:
+            preParent = None
+            for masterJnt, ignoreOC in zip(masterJnts, ignoreOrientConstraints):
 
-            if cmds.objExists(masterJnt):
-                cmds.select(cl = 1)
-                curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
-                cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
-                if preParent and slaveJntsOrientToPreParent:
-                    cmds.delete(cmds.orientConstraint(preParent, curSlaveJoint, mo = 0))
-                cmds.makeIdentity(curSlaveJoint, apply = True)
-        
-                pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
-                oc = None
-                if not ignoreOC:
-                    oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+                if cmds.objExists(masterJnt):
+                    cmds.select(cl = 1)
+                    curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+                    cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+                    if preParent and slaveJntsOrientToPreParent:
+                        cmds.delete(cmds.orientConstraint(preParent, curSlaveJoint, mo = 0))
+                    cmds.makeIdentity(curSlaveJoint, apply = True)
+            
+                    pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+                    oc = None
+                    if not ignoreOC:
+                        oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
 
-                curSlaveJntsInfo = (curSlaveJoint, pc, oc)
-                slaveJnts.append(curSlaveJntsInfo)
+                    curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+                    slaveJnts.append(curSlaveJntsInfo)
 
-                if preParent:
-                    cmds.parent(curSlaveJoint, preParent)
-                preParent = curSlaveJoint
-            else:
-                cmds.warning('Cannot find master joint:' + masterJnt)
+                    if preParent:
+                        cmds.parent(curSlaveJoint, preParent)
+                    preParent = curSlaveJoint
+                else:
+                    cmds.warning('Cannot find master joint:' + masterJnt)
+        else:
+            topParent = None
+            preParent = None
+            for masterJnt, ignoreOC in zip(masterJnts, ignoreOrientConstraints):
+
+                if cmds.objExists(masterJnt):
+                    cmds.select(cl = 1)
+                    curSlaveJoint = cmds.joint(n = SERigNaming.sSlavePrefix + masterJnt)
+                    cmds.delete(cmds.parentConstraint(masterJnt, curSlaveJoint, mo = 0))
+                    if preParent and slaveJntsOrientToPreParent:
+                        cmds.delete(cmds.orientConstraint(preParent, curSlaveJoint, mo = 0))
+                    cmds.makeIdentity(curSlaveJoint, apply = True)
+            
+                    pc = cmds.pointConstraint(masterJnt, curSlaveJoint, mo = 0)
+                    oc = None
+                    if not ignoreOC:
+                        oc = cmds.orientConstraint(masterJnt, curSlaveJoint, mo = 0)
+
+                    curSlaveJntsInfo = (curSlaveJoint, pc, oc)
+                    slaveJnts.append(curSlaveJntsInfo)
+
+                    if topParent:
+                        cmds.parent(curSlaveJoint, topParent)
+                    else:
+                        topParent = curSlaveJoint
+
+                    preParent = curSlaveJoint
+                else:
+                    cmds.warning('Cannot find master joint:' + masterJnt)
 
         return slaveJnts
 
@@ -211,8 +237,8 @@ class RigBipedCharacterDeform():
             parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
         rightUpperArmSlaveJnts = self.createUpperLimbSlaveJoints(upperBodyUpperLimbSlaveMasterJnts[1], upperBodyLowerLimbSlaveMasterJnts[1][0], 
             parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
-        leftLowerArmSlaveJnts = self.createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[0])
-        rightLowerArmSlaveJnts = self.createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[1])
+        leftLowerArmSlaveJnts = self.createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[0], parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
+        rightLowerArmSlaveJnts = self.createSlaveJointsHelper(upperBodyLowerLimbSlaveMasterJnts[1], parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
 
         if parentTwistSlaveJntsToTop:
             cmds.parent(leftLowerArmSlaveJnts[0][0], leftUpperArmSlaveJnts[0][0])
@@ -247,8 +273,8 @@ class RigBipedCharacterDeform():
             parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
         rightUpperLegSlaveJnts = self.createUpperLimbSlaveJoints(lowerBodyUpperLimbSlaveMasterJnts[1], lowerBodyLowerLimbSlaveMasterJnts[1][0], 
             parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
-        leftLowerLegSlaveJnts = self.createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[0])
-        rightLowerLegSlaveJnts = self.createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[1])
+        leftLowerLegSlaveJnts = self.createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[0], parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
+        rightLowerLegSlaveJnts = self.createSlaveJointsHelper(lowerBodyLowerLimbSlaveMasterJnts[1], parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop)
 
         if parentTwistSlaveJntsToTop:
             cmds.parent(leftLowerLegSlaveJnts[0][0], leftUpperLegSlaveJnts[0][0])

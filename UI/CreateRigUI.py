@@ -56,9 +56,6 @@ def getMayaWindow():
     ptr = mui.MQtUtil.mainWindow()
     return shiboken2.wrapInstance(long(ptr), QtWidgets.QWidget)
 
-#class BodyConfigTab(QtWidgets.QWidget):
-#    def __init__(self, parent = getMayaWindow()):
-
 class mainRigWindow(QtWidgets.QDialog):
     """docstring for mainWindow"""
     def __init__(self, parent = getMayaWindow()):
@@ -154,6 +151,7 @@ class mainRigWindow(QtWidgets.QDialog):
         createLimbCircleFkControl = self.circleFkLimbControlCheckBox.isChecked()
         createArmCircleIkControl = not self.cubeIkArmControlCheckBox.isChecked()
         createSpineCircleIkControl = not self.cubeIkSpineControlCheckBox.isChecked()
+        parentTwistSlaveJntsToTop = self.parentLimbTwistJntsToTopOptionCheckBox.isChecked()
 
         # Build character rig.
         character = SECharacter.RigBipedCharacter(characterName = characterName)
@@ -162,7 +160,8 @@ class mainRigWindow(QtWidgets.QDialog):
                         upperBodyUpperLimbKnobCount = upperBodyUpperLimbKnobCount, 
                         upperBodyLowerLimbKnobCount = upperBodyLowerLimbKnobCount, 
                         lowerBodyUpperLimbKnobCount = lowerBodyUpperLimbKnobCount, 
-                        lowerBodyLowerLimbKnobCount = lowerBodyLowerLimbKnobCount, 
+                        lowerBodyLowerLimbKnobCount = lowerBodyLowerLimbKnobCount,
+                        parentTwistSlaveJntsToTop = parentTwistSlaveJntsToTop,
                         mainCtrlOffset = mainCtrlOffset,
                         fkLegControlScaleYZ = fkLegControlScaleYZ,
                         fkLegControlScaleYZMultiplier = fkLegControlScaleYZMultiplier,
@@ -255,18 +254,27 @@ class mainRigWindow(QtWidgets.QDialog):
         lowerBodyLowerLayout.addSpacing(220)
         bodyConfigTabPageLayout.addLayout(lowerBodyLowerLayout)
 
-        spineOptionLayout = QtWidgets.QHBoxLayout()
-        spineOptionLayout.addWidget(QtWidgets.QLabel("Create Simple Spine:"))
+        spineAndLimbOptionLayout = QtWidgets.QHBoxLayout()
+
+        spineAndLimbOptionLayout.addWidget(QtWidgets.QLabel("Parent Limb Twist Joints To Top:"))
+        self.parentLimbTwistJntsToTopOptionCheckBox = QtWidgets.QCheckBox()
+        self.parentLimbTwistJntsToTopOptionCheckBox.setChecked(True)
+        spineAndLimbOptionLayout.addWidget(self.parentLimbTwistJntsToTopOptionCheckBox)
+        spineAndLimbOptionLayout.addSpacing(25)
+
+        spineAndLimbOptionLayout.addWidget(QtWidgets.QLabel("Create Simple Spine:"))
         self.fixedEndsSpineOptionCheckBox = QtWidgets.QCheckBox()
         self.fixedEndsSpineOptionCheckBox.setChecked(False)
-        spineOptionLayout.addWidget(self.fixedEndsSpineOptionCheckBox)
-        spineOptionLayout.addSpacing(25)
-        spineOptionLayout.addWidget(QtWidgets.QLabel("Create Spine FK System:"))
+        spineAndLimbOptionLayout.addWidget(self.fixedEndsSpineOptionCheckBox)
+        spineAndLimbOptionLayout.addSpacing(25)
+
+        spineAndLimbOptionLayout.addWidget(QtWidgets.QLabel("Create Spine FK System:"))
         self.createSpineFKSystemCheckBox = QtWidgets.QCheckBox()
         self.createSpineFKSystemCheckBox.setChecked(True)
-        spineOptionLayout.addWidget(self.createSpineFKSystemCheckBox)
-        spineOptionLayout.addSpacing(270)
-        bodyConfigTabPageLayout.addLayout(spineOptionLayout)
+        spineAndLimbOptionLayout.addWidget(self.createSpineFKSystemCheckBox)
+        spineAndLimbOptionLayout.addSpacing(270)
+
+        bodyConfigTabPageLayout.addLayout(spineAndLimbOptionLayout)
 
         mainBodyCtrlOffsetLayout = QtWidgets.QHBoxLayout()
         mainBodyCtrlOffsetLayout.addWidget(QtWidgets.QLabel("Main Control Offset :"))
