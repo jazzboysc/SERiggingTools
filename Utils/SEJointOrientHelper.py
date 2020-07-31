@@ -17,14 +17,12 @@ class FixJointMode():
         self.IKGroups = self.defaultIKGroups  
         self.primaryAxis = [1,0,0]
         self.secondaryAxis = [0,0,1]          #the axis which perpendicular to the IKPlane
-        self.secondaryAxisOrient = [0,0,1]    #the world direction that secondaryAxis will orient without IKPlane
+        self.secondaryAxisOrient = [-1,0,0]    #the world direction that secondaryAxis will orient without IKPlane
         self.debugMode = False
         self.displayAxis = []
         self.centerJoint = ["C_Pelvis","C_ChestBegin","C_Neck_0"]
         self.facialJoint = ["C_FacialRoot","C_Jaw","L_Eye"]
-        self.lockJoint = [u'L_Eye', u'L_EyelidUpper', u'L_EyelidUpperEnd', u'L_EyelidLower', u'L_EyelidLowerEnd',"L_Eye",u'C_Pelvis', u'C_Spine_0', u'C_Spine_1', u'C_Spine_2', u'C_Spine_3', 
-        u'C_ChestBegin', u'C_Neck_0', u'C_Neck_1', u'C_Head', u'C_FacialRoot',"C_LowerTeeth", "C_UpperLipEnd", "L_EyelidLowerEnd", "C_LowerLipEnd", "C_UpperLipBegin", 
-        "C_UpperTeeth", "C_LowerLipBegin", "C_JawEnd", "C_JawOffset", "L_EyelidUpper", "L_EyelidUpperEnd", "L_EyelidLower","C_Jaw"]
+        self.lockedAttrDict = {}
         self.ignoreJoint = ["L_Eye","Root","C_FacialRoot",""]
         self.defaultMirrorJnt = ["L_Eye","L_Clav","L_Breast","L_Hip"]
         self.defaultMirrorLocator = ["locator_L_Foot_Ext","locator_L_Foot_Int","locator_L_Foot_Base","locator_L_Foot_BaseSwive","locator_L_Foot_ToeSwive",
@@ -112,7 +110,7 @@ class FixJointMode():
                 else:
                     return
             else:
-                lockJnt = self.checkLock() 
+                self.setJntAttrLock(False) 
                 if inIK:
                     self.handleIKGroups(jnt,indexJnt)
                 else:
@@ -121,12 +119,14 @@ class FixJointMode():
                     #correct orient of activeJoint's parentJoint
                     inIK,indexParent = self.judgeIK(parentJnt)
                     p,j,c = self.getRelativeJoint(parentJnt)
+                    print inIK
                     if inIK and indexParent != indexJnt:
+                        print "sdadsa"
                         self.handleIKGroups(jnt,indexParent)
                     elif not inIK:
                         self.setJointOrient(p,j,c,self.secondaryAxisOrient)
                 self.keepFaceOrient(self.facialJoint)
-                self.revertLock(lockJnt)
+                self.setJntAttrLock(True)
             cmds.select(jnt)             
             self.jointJob = cmds.scriptJob(attributeChange = [jnt+".xformMatrix",self.fixJointOrient],runOnce = True)
     
@@ -179,7 +179,7 @@ class FixJointMode():
                 if jnt in self.IKGroups[index]:
                     inIK = True
                     return inIK,index
-        return inIK,0
+        return inIK,-1
     
     #handle the orient of all joint in given IKGroup    
     def handleIKGroups(self,jnt,index,onlyLocator = False):
@@ -201,7 +201,7 @@ class FixJointMode():
         c = cmds.xform(end,query = True,worldSpace = True,translation = True)
         ab = map(lambda x,y:x-y,b,a)
         ac = map(lambda x,y:x-y,c,a)
-        normal = [ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]]
+        normal = [ac[1]*ab[2]-ac[2]*ab[1],ac[2]*ab[0]-ac[0]*ab[2],ac[0]*ab[1]-ac[1]*ab[0]]
         length = math.sqrt(math.fsum(x**2 for x in normal))
         unitNormal = [normal[0]/length,normal[1]/length,normal[2]/length]
         if onlyLocator == False:
@@ -265,27 +265,13 @@ class FixJointMode():
                 for child in c:
                     cmds.parent(child,jnt)
     
-    #save joint`s channal locked situation and then unlock
-    def checkLock(self):
-        lockJnt = []
-        attr = [".rotateX",".rotateY",".rotateZ",".translateX",".translateY",".translateZ"]
-        for jnt in self.lockJoint:
-            if cmds.objExists(jnt):
-                lockAttr = []
-                for a in attr:    
-                    if cmds.getAttr(jnt+a,lock = True):
-                        lockAttr.append(a)
-                        cmds.setAttr(jnt+a,lock = False)
-                lockJnt.append(lockAttr)
-        return lockJnt
-    
-    #re-lock joint`s channal    
-    def revertLock(self,lockJnt):
-        if self.lockJoint!=[]:
-            for i in range(len(lockJnt)):
-                if lockJnt[i]!=[]:
-                    for attr in lockJnt[i]:
-                        cmds.setAttr(self.lockJoint[i]+attr,lock = True)       
+    #unlock or re-lock the channal of specific joints
+    def setJntAttrLock(self,bool):
+        for jnt,attr in self.lockedAttrDict.items():
+            for a in attr:
+                cmds.setAttr(jnt+a,lock = bool)
+        print "setLock"    
+      
                         
                
     def addIKGroups(self):

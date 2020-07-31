@@ -1,7 +1,6 @@
 #TODO:
 #Full pipeline
-#Face Joint
-#end Joint
+#doc order to select ik locator
 #python parent child
 import maya.cmds as cmds
 from ..Utils import SEJointOrientHelper as mode
@@ -88,19 +87,19 @@ class FixJointModeWindow(QtWidgets.QDialog):
         self.ui.help_Btn.clicked.connect(self.helpWindow)
         
         #set radio id     
-        self.ui.buttonGroup.setId(self.ui.radioButton_01,1)
-        self.ui.buttonGroup.setId(self.ui.radioButton_02,2)
-        self.ui.buttonGroup.setId(self.ui.radioButton_03,3)
-        self.ui.buttonGroup_2.setId(self.ui.radioButton_11,1)
-        self.ui.buttonGroup_2.setId(self.ui.radioButton_12,2)
-        self.ui.buttonGroup_2.setId(self.ui.radioButton_13,3)
-        self.ui.buttonGroup_3.setId(self.ui.radioButton_21,1)
-        self.ui.buttonGroup_3.setId(self.ui.radioButton_22,2)
-        self.ui.buttonGroup_3.setId(self.ui.radioButton_23,3)
-        self.ui.buttonGroup_4.setId(self.ui.radioButton_31,1)
-        self.ui.buttonGroup_4.setId(self.ui.radioButton_32,2)
-        self.ui.buttonGroup_4.setId(self.ui.radioButton_33,3)
-           
+        self.ui.buttonGroup.setId(self.ui.radioButton_01,0)
+        self.ui.buttonGroup.setId(self.ui.radioButton_02,1)
+        self.ui.buttonGroup.setId(self.ui.radioButton_03,2)
+        self.ui.buttonGroup_2.setId(self.ui.radioButton_11,0)
+        self.ui.buttonGroup_2.setId(self.ui.radioButton_12,1)
+        self.ui.buttonGroup_2.setId(self.ui.radioButton_13,2)
+        self.ui.buttonGroup_3.setId(self.ui.radioButton_21,0)
+        self.ui.buttonGroup_3.setId(self.ui.radioButton_22,1)
+        self.ui.buttonGroup_3.setId(self.ui.radioButton_23,2)
+        self.ui.buttonGroup_4.setId(self.ui.radioButton_31,0)
+        self.ui.buttonGroup_4.setId(self.ui.radioButton_32,1)
+        self.ui.buttonGroup_4.setId(self.ui.radioButton_33,2)
+        self.initialAxis()  
         mode.fjm.switchMode(True)
         
     def closeEvent(self, event):
@@ -148,6 +147,7 @@ class FixJointModeWindow(QtWidgets.QDialog):
         else: 
             cmds.file(filePath,i = True)
             self.ui.sktPath_LE.setText(filePath[0])
+            self.saveJntLockedAttr()
         
     def exportBrowser(self):
         exportPath = cmds.fileDialog2(fileMode = 0,fileFilter = "*.ma")
@@ -167,31 +167,15 @@ class FixJointModeWindow(QtWidgets.QDialog):
         
     def pAxisBG(self):
         id = self.ui.buttonGroup.checkedId()
-        if id ==1:
-            mode.fjm.primaryAxis = [self.ui.comboBox_1.currentIndex()*2-1,0,0]
-        elif id ==2:
-            mode.fjm.primaryAxis = [0,self.ui.comboBox_1.currentIndex()*2-1,0]
-        elif id ==3:
-            mode.fjm.primaryAxis = [0,0,self.ui.comboBox_1.currentIndex()*2-1]
-   
+        mode.fjm.primaryAxis[id] = self.ui.comboBox_1.currentIndex()*2-1
    
     def sAxisBG(self):
         id = self.ui.buttonGroup_2.checkedId()
-        if id ==1:
-            mode.fjm.secondaryAxis = [self.ui.comboBox_2.currentIndex()*2-1,0,0]
-        elif id ==2:
-            mode.fjm.secondaryAxis = [0,self.ui.comboBox_2.currentIndex()*2-1,0]
-        elif id ==3:
-            mode.fjm.secondaryAxis = [0,0,self.ui.comboBox_2.currentIndex()*2-1]
+        mode.fjm.secondaryAxis[id] = self.ui.comboBox_2.currentIndex()*2-1
                
     def sAxisOrientBG(self):
         id = self.ui.buttonGroup_3.checkedId()
-        if id ==1:
-            mode.fjm.secondaryAxisOrient = [self.ui.comboBox_3.currentIndex()*2-1,0,0]
-        elif id ==2:
-            mode.fjm.secondaryAxisOrient = [0,self.ui.comboBox_3.currentIndex()*2-1,0]
-        elif id ==3:
-            mode.fjm.secondaryAxisOrient = [0,0,self.ui.comboBox_3.currentIndex()*2-1]
+        mode.fjm.secondaryAxisOrient[id] = self.ui.comboBox_3.currentIndex()*2-1
             
     def addMirror(self):
         mode.fjm.addMirror()
@@ -207,13 +191,41 @@ class FixJointModeWindow(QtWidgets.QDialog):
         
     def mirror(self):
         id = self.ui.buttonGroup_4.checkedId()
-        if id ==1:
+        if id ==0:
             mode.fjm.mirror("xy")
-        elif id ==2:
+        elif id ==1:
             mode.fjm.mirror("yz")
-        elif id ==3:
+        elif id ==2:
             mode.fjm.mirror("xz")
+            
+    def initialAxis(self):
+        for i in range(len(mode.fjm.primaryAxis)):
+            if mode.fjm.primaryAxis[i] != 0:
+               self.ui.buttonGroup.button(i).setChecked(True)
+               self.ui.comboBox_1.setCurrentIndex(mode.fjm.secondaryAxis[i]*0.5+1)
+               break 
+        for i in range(len(mode.fjm.secondaryAxis)):
+            if mode.fjm.secondaryAxis[i] != 0:
+               self.ui.buttonGroup_2.button(i).setChecked(True)
+               self.ui.comboBox_2.setCurrentIndex(mode.fjm.secondaryAxis[i]*0.5+1)
+               break 
+        for i in range(len(mode.fjm.secondaryAxisOrient)):
+            if mode.fjm.secondaryAxisOrient[i] != 0:
+               self.ui.buttonGroup_3.button(i).setChecked(True)
+               self.ui.comboBox_3.setCurrentIndex(mode.fjm.secondaryAxis[i]*0.5+1)
+               break        
     
+    def saveJntLockedAttr(self):
+        jointList = cmds.ls(type = "joint")
+        attr = [".rotateX",".rotateY",".rotateZ",".translateX",".translateY",".translateZ"]
+        for jnt in jointList:
+            lockedAttr = []
+            for a in attr:    
+                if cmds.getAttr(jnt+a,lock = True):
+                    lockedAttr.append(a)
+            mode.fjm.lockedAttrDict[jnt] = lockedAttr
+        print mode.fjm.lockedAttrDict
+        
     def seRiggingTool(self):        
         CreateRigUI.openMayaWindow()
        
