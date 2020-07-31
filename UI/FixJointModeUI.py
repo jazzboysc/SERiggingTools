@@ -1,5 +1,7 @@
 #TODO:
 #Full pipeline
+#Face Joint
+#end Joint
 #python parent child
 import maya.cmds as cmds
 from ..Utils import SEJointOrientHelper as mode

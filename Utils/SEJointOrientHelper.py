@@ -23,11 +23,12 @@ class FixJointMode():
         self.centerJoint = ["C_Pelvis","C_ChestBegin","C_Neck_0"]
         self.facialJoint = ["C_FacialRoot","C_Jaw","L_Eye"]
         self.lockJoint = [u'L_Eye', u'L_EyelidUpper', u'L_EyelidUpperEnd', u'L_EyelidLower', u'L_EyelidLowerEnd',"L_Eye",u'C_Pelvis', u'C_Spine_0', u'C_Spine_1', u'C_Spine_2', u'C_Spine_3', 
-        u'C_ChestBegin', u'C_Neck_0', u'C_Neck_1', u'C_Head', u'C_FacialRoot']
-        self.ignoreJoint = ["L_Eye"]
+        u'C_ChestBegin', u'C_Neck_0', u'C_Neck_1', u'C_Head', u'C_FacialRoot',"C_LowerTeeth", "C_UpperLipEnd", "L_EyelidLowerEnd", "C_LowerLipEnd", "C_UpperLipBegin", 
+        "C_UpperTeeth", "C_LowerLipBegin", "C_JawEnd", "C_JawOffset", "L_EyelidUpper", "L_EyelidUpperEnd", "L_EyelidLower","C_Jaw"]
+        self.ignoreJoint = ["L_Eye","Root","C_FacialRoot",""]
         self.defaultMirrorJnt = ["L_Eye","L_Clav","L_Breast","L_Hip"]
         self.defaultMirrorLocator = ["locator_L_Foot_Ext","locator_L_Foot_Int","locator_L_Foot_Base","locator_L_Foot_BaseSwive","locator_L_Foot_ToeSwive",
-        "locator_L_ChestHeadBegin","locator_L_ChestHeadEnd","locator_L_LegPV","locator_L_ArmPV"]
+        "locator_L_ChestHeadBegin","locator_L_ChestHeadEnd","locator_L_LegPV","locator_L_ArmPV","L_Eye_BS"]
         self.mirrorJoints = self.defaultMirrorJnt
         self.mirrorLocator = self.defaultMirrorLocator
               
@@ -80,9 +81,9 @@ class FixJointMode():
                 cmds.aimConstraint("L_Middle_0", jnt, edit = True, remove = True)
                 for j in childList:
                     cmds.parent(j,jnt)
-            elif len(childList) == 0:          
+            elif len(childList) == 0:      
                 if parentJnt !="":
-                    cmds.parent(jnt,world = True)
+                    cmds.parent(jnt,world = True)              
                 primaryAxis = []
                 for i in self.primaryAxis:
                     primaryAxis.append(-i)
@@ -90,6 +91,7 @@ class FixJointMode():
                 cmds.aimConstraint(parentJnt, jnt, edit = True, remove = True)
                 if parentJnt !="":
                     cmds.parent(jnt, parentJnt) 
+                
             elif len(childList) >= 1:
                 for j in childList:
                     cmds.parent(j,world = True)
@@ -102,7 +104,6 @@ class FixJointMode():
     #call setJointOrient() according to joint type
     def fixJointOrient(self): 
         parentJnt,jnt,childJntList = self.getRelativeJoint()
-        print jnt 
         if jnt != "":
             inIK,indexJnt = self.judgeIK(jnt)
             if jnt.find("locator_") !=-1:
@@ -116,7 +117,7 @@ class FixJointMode():
                     self.handleIKGroups(jnt,indexJnt)
                 else:
                    self.setJointOrient(parentJnt,jnt,childJntList,self.secondaryAxisOrient)
-                if parentJnt !="Root" and parentJnt !="":
+                if parentJnt != "":
                     #correct orient of activeJoint's parentJoint
                     inIK,indexParent = self.judgeIK(parentJnt)
                     p,j,c = self.getRelativeJoint(parentJnt)
@@ -191,13 +192,12 @@ class FixJointMode():
         if locator.find("locator_") ==-1:
             end = self.IKGroups[index][-1]
             hasLocator = False
+            locator = ""
         if middle==head or middle==end or middle == locator:
             i = int(len(self.IKGroups[index])/2-1)
             middle = self.IKGroups[index][i]
-        print middle
         a = cmds.xform(head,query = True,worldSpace = True,translation = True)
         b = cmds.xform(middle,query = True,worldSpace = True,translation = True)
-        print b
         c = cmds.xform(end,query = True,worldSpace = True,translation = True)
         ab = map(lambda x,y:x-y,b,a)
         ac = map(lambda x,y:x-y,c,a)
@@ -245,24 +245,25 @@ class FixJointMode():
                         
     #keep Face joint Orient always in specific orient                    
     def keepFaceOrient(self,jntList):
-        if jntList != []:
-            for jnt in jntList:
-                if cmds.objExists(jnt):
-                    p,j,c = self.getRelativeJoint(jnt)
-                    for child in c:
-                        cmds.parent(child,world = True)              
+        for jnt in jntList:
+            if cmds.objExists(jnt):
+                p,j,c = self.getRelativeJoint(jnt)
+                for child in c:
+                    cmds.parent(child,world = True)              
+                if jnt == "L_Eye":
                     cmds.makeIdentity(jnt,apply = True,rotate = True)
                     jointOrientY = cmds.getAttr(jnt+".jointOrientY")
                     cmds.parent(jnt,world = True)
                     cmds.makeIdentity(jnt,apply = True,rotate = True,jointOrient = True)
-                    if jnt == "L_Eye":
-                        cmds.parent(jnt,p)
-                        cmds.setAttr(jnt+".jointOrientY",jointOrientY)
-                    else:
-                        cmds.setAttr(jnt+".jointOrientY",-90)
-                        cmds.parent(jnt,p)
-                    for child in c:
-                        cmds.parent(child,jnt)
+                    cmds.parent(jnt,p)
+                    cmds.setAttr(jnt+".jointOrientY",jointOrientY)
+                else:
+                    cmds.parent(jnt,world = True)
+                    cmds.makeIdentity(jnt,apply = True,rotate = True,jointOrient = True)
+                    cmds.setAttr(jnt+".jointOrientY",-90)
+                    cmds.parent(jnt,p)
+                for child in c:
+                    cmds.parent(child,jnt)
     
     #save joint`s channal locked situation and then unlock
     def checkLock(self):
@@ -343,7 +344,7 @@ class FixJointMode():
                 print jnt+" of self.mirrorJoints doesn`t exist in scence" 
         for locator in self.mirrorLocator:
             if cmds.objExists(locator):
-                copyName = locator.replace("_L_","_R_",1)
+                copyName = locator.replace("L_","R_",1)
                 cmds.duplicate(locator,name = copyName)
                 if MirrorPlane == "xy":
                     i = cmds.getAttr(copyName+".translateZ")
