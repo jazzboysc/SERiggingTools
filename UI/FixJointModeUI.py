@@ -167,14 +167,17 @@ class FixJointModeWindow(QtWidgets.QDialog):
         
     def pAxisBG(self):
         id = self.ui.buttonGroup.checkedId()
+        mode.fjm.primaryAxis = [0,0,0]
         mode.fjm.primaryAxis[id] = self.ui.comboBox_1.currentIndex()*2-1
    
     def sAxisBG(self):
         id = self.ui.buttonGroup_2.checkedId()
+        mode.fjm.secondaryAxis = [0,0,0]
         mode.fjm.secondaryAxis[id] = self.ui.comboBox_2.currentIndex()*2-1
                
     def sAxisOrientBG(self):
         id = self.ui.buttonGroup_3.checkedId()
+        mode.fjm.secondaryAxisOrient = [0,0,0]
         mode.fjm.secondaryAxisOrient[id] = self.ui.comboBox_3.currentIndex()*2-1
             
     def addMirror(self):
@@ -212,7 +215,7 @@ class FixJointModeWindow(QtWidgets.QDialog):
         for i in range(len(mode.fjm.secondaryAxisOrient)):
             if mode.fjm.secondaryAxisOrient[i] != 0:
                self.ui.buttonGroup_3.button(i).setChecked(True)
-               self.ui.comboBox_3.setCurrentIndex(mode.fjm.secondaryAxis[i]*0.5+1)
+               self.ui.comboBox_3.setCurrentIndex(mode.fjm.secondaryAxisOrient[i]*0.5+1)
                break        
     
     def saveJntLockedAttr(self):

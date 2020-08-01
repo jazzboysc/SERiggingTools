@@ -102,6 +102,9 @@ class FixJointMode():
     #call setJointOrient() according to joint type
     def fixJointOrient(self): 
         parentJnt,jnt,childJntList = self.getRelativeJoint()
+        print self.primaryAxis
+        print self.secondaryAxis
+        print self.secondaryAxisOrient
         if jnt != "":
             inIK,indexJnt = self.judgeIK(jnt)
             if jnt.find("locator_") !=-1:
@@ -121,7 +124,6 @@ class FixJointMode():
                     p,j,c = self.getRelativeJoint(parentJnt)
                     print inIK
                     if inIK and indexParent != indexJnt:
-                        print "sdadsa"
                         self.handleIKGroups(jnt,indexParent)
                     elif not inIK:
                         self.setJointOrient(p,j,c,self.secondaryAxisOrient)
@@ -270,7 +272,7 @@ class FixJointMode():
         for jnt,attr in self.lockedAttrDict.items():
             for a in attr:
                 cmds.setAttr(jnt+a,lock = bool)
-        print "setLock"    
+        print "setLock",bool    
       
                         
                
