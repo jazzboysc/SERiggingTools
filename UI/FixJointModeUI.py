@@ -3,6 +3,7 @@
 #doc order to select ik locator
 #python parent child
 #tip to close mode
+#tip to export with select
 import maya.cmds as cmds
 from ..Utils import SEJointOrientHelper as mode
 import os
@@ -164,7 +165,6 @@ class FixJointModeWindow(QtWidgets.QDialog):
     def exportBuilder(self):
         exportPath = self.ui.exportPath_LE.text()
         if exportPath !="":
-            mode.fjm.setJntAttrLock(False)
             cmds.file(exportPath,exportSelected = True,type = "mayaAscii")
             print "Export To "+exportPath
         else:
@@ -198,6 +198,7 @@ class FixJointModeWindow(QtWidgets.QDialog):
         mode.fjm.clearMirror()
         
     def mirror(self):
+        mode.fjm.setJntAttrLock(False)
         id = self.ui.buttonGroup_4.checkedId()
         if id ==0:
             mode.fjm.mirror("xy")
@@ -236,4 +237,4 @@ class FixJointModeWindow(QtWidgets.QDialog):
         
     def seRiggingTool(self):        
         CreateRigUI.openMayaWindow()
-       
+        
