@@ -101,9 +101,6 @@ class FixJointMode():
     #call setJointOrient() according to joint type
     def fixJointOrient(self): 
         parentJnt,jnt,childJntList = self.getRelativeJoint()
-        print self.primaryAxis
-        print self.secondaryAxis
-        print self.secondaryAxisOrient
         if jnt != "":
             inIK,indexJnt = self.judgeIK(jnt)
             if jnt.find("locator_") !=-1:
@@ -116,14 +113,13 @@ class FixJointMode():
                 if inIK:
                     self.handleIKGroups(jnt,indexJnt)
                 else:
-                   self.setJointOrient(parentJnt,jnt,childJntList,self.secondaryAxisOrient)
+                    self.setJointOrient(parentJnt,jnt,childJntList,self.secondaryAxisOrient)
                 if parentJnt != "":
                     #correct orient of activeJoint's parentJoint
                     inIK,indexParent = self.judgeIK(parentJnt)
                     p,j,c = self.getRelativeJoint(parentJnt)
-                    print inIK
                     if inIK and indexParent != indexJnt:
-                        self.handleIKGroups(jnt,indexParent)
+                        self.handleIKGroups(parentJnt,indexParent)
                     elif not inIK:
                         self.setJointOrient(p,j,c,self.secondaryAxisOrient)
                 self.keepFaceOrient(self.facialJoint)
@@ -225,11 +221,8 @@ class FixJointMode():
                     self.setJointOrient(p,j,c,normal)
         if hasLocator:
             locatorOldXform = cmds.xform(locator,query = True,worldSpace = True,translation = True)
-            print locatorOldXform
             bl = map(lambda x,y:x-y,locatorOldXform,b)
-            print bl
             oldLength = math.sqrt(math.fsum(x**2 for x in bl))
-            print oldLength
             acLength = math.sqrt(math.fsum(x**2 for x in ac))
             acUnit = [ac[0]/acLength,ac[1]/acLength,ac[2]/acLength]
             temp = map(lambda x,y:x*y,acUnit,ab)

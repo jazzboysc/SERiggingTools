@@ -2,8 +2,7 @@
 #Full pipeline
 #doc order to select ik locator
 #python parent child
-#export unlock rename
-#tooltip
+#tip to close mode
 import maya.cmds as cmds
 from ..Utils import SEJointOrientHelper as mode
 import os
