@@ -25,8 +25,7 @@ class FixJointMode():
         self.lockedAttrDict = {}
         self.ignoreJoint = ["L_Eye","Root","C_FacialRoot",""]
         self.defaultMirrorJnt = ["L_Eye","L_Clav","L_Breast","L_Hip"]
-        self.defaultMirrorLocator = ["locator_L_Foot_Ext","locator_L_Foot_Int","locator_L_Foot_Base","locator_L_Foot_BaseSwive","locator_L_Foot_ToeSwive",
-        "locator_L_ChestHeadBegin","locator_L_ChestHeadEnd","locator_L_LegPV","locator_L_ArmPV","L_Eye_BS"]
+        self.defaultMirrorLocator = ["locator_L_ChestHeadBegin","locator_L_ChestHeadEnd","locator_L_LegPV","locator_L_ArmPV","L_Eye_BS"]
         self.mirrorJoints = self.defaultMirrorJnt
         self.mirrorLocator = self.defaultMirrorLocator
               
@@ -323,11 +322,11 @@ class FixJointMode():
         for jnt in self.mirrorJoints:
             if cmds.objExists(jnt):
                 if MirrorPlane == "xy":
-                    cmds.mirrorJoint(jnt,mirrorBehavior = True,mirrorXY = True)
+                    cmds.mirrorJoint(jnt,mirrorBehavior = True,mirrorXY = True,searchReplace = ["L_","R_"])
                 elif MirrorPlane == "xz":
-                    cmds.mirrorJoint(jnt,mirrorBehavior = True,mirrorXZ = True)
+                    cmds.mirrorJoint(jnt,mirrorBehavior = True,mirrorXZ = True,searchReplace = ["L_","R_"])
                 elif MirrorPlane == "yz":
-                    cmds.mirrorJoint(jnt,mirrorBehavior = True,mirrorYZ = True)
+                    cmds.mirrorJoint(jnt,mirrorBehavior = True,mirrorYZ = True,searchReplace = ["L_","R_"])
             else:
                 print jnt+" of self.mirrorJoints doesn`t exist in scence" 
         for locator in self.mirrorLocator:

@@ -2,6 +2,8 @@
 #Full pipeline
 #doc order to select ik locator
 #python parent child
+#export unlock rename
+#tooltip
 import maya.cmds as cmds
 from ..Utils import SEJointOrientHelper as mode
 import os
@@ -154,12 +156,16 @@ class FixJointModeWindow(QtWidgets.QDialog):
         if exportPath is None:
             print "The export path is not indicated"
         else:
-            exportPath = exportPath[0].replace(".ma","_Builder.ma")
+            if exportPath[0].find("_Builder.ma") ==-1:
+                exportPath = exportPath[0].replace(".ma","_Builder.ma")
+            else:
+                exportPath = exportPath[0]
             self.ui.exportPath_LE.setText(exportPath)
         
     def exportBuilder(self):
         exportPath = self.ui.exportPath_LE.text()
         if exportPath !="":
+            mode.fjm.setJntAttrLock(False)
             cmds.file(exportPath,exportSelected = True,type = "mayaAscii")
             print "Export To "+exportPath
         else:

@@ -598,8 +598,11 @@
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
+                    <property name="acceptDrops">
+                     <bool>false</bool>
+                    </property>
                     <property name="toolTip">
-                     <string>Add the selected joints to IKgroups as a group </string>
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the selected joints to IKgroups as a group&lt;/p&gt;&lt;p&gt;Note:selected the joint by hierarchy order and last select locator&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="text">
                      <string>AddIKGroup</string>
@@ -910,9 +913,9 @@
  <resources/>
  <connections/>
  <buttongroups>
+  <buttongroup name="buttonGroup_3"/>
+  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup_4"/>
-  <buttongroup name="buttonGroup"/>
-  <buttongroup name="buttonGroup_3"/>
  </buttongroups>
 </ui>
