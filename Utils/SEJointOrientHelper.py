@@ -55,6 +55,7 @@ class FixJointMode():
         if self.activeJoint != "" and self.activeJoint != self.lastJoint:
             if self.jointJob != None:
                 cmds.scriptJob(kill = self.jointJob)
+                self.jointJob = None
             self.jointJob = cmds.scriptJob(attributeChange = [self.activeJoint+".xformMatrix",self.fixJointOrient],runOnce = True)#call fixJointOrient() when attribute of activeJoint changed
             self.lastJoint = self.activeJoint
      
@@ -132,7 +133,7 @@ class FixJointMode():
         if self.displayAxis !=[]:
             self.displayLocalAxis(self.displayAxis,False)
         if jnt == "":
-            jointList = cmds.ls(sl=True,type=["joint","transform"])
+            jointList = cmds.ls(sl=True,type="joint")
             if len(jointList) != 0:
                 self.activeJoint = jointList[0]
                 self.displayLocalAxis([self.activeJoint],True)
@@ -144,10 +145,15 @@ class FixJointMode():
                     parentJoint = ""
                 else:
                     parentJoint = parentJoint[0]
-                self.displayLocalAxis([parentJoint],True)
+                self.displayLocalAxis([parentJoint],True)               
                 return parentJoint,self.activeJoint,childJointList
             else:
-                return "","",""
+                locatorList = cmds.ls(sl=True,type="transform")
+                if len(locatorList) != 0 and locatorList[0].find("locator_")!=-1:
+                    self.activeJoint = locatorList[0]
+                    return "",locatorList[0],""
+                else:
+                    return "","",""
         else:   
             parentJoint = cmds.listRelatives(jnt,parent = True)
             if parentJoint == None:
@@ -221,7 +227,7 @@ class FixJointMode():
                     self.setJointOrient(p,j,c,normal)
         if hasLocator:
             locatorOldXform = cmds.xform(locator,query = True,worldSpace = True,translation = True)
-            bl = map(lambda x,y:x-y,locatorOldXform,b)
+            """bl = map(lambda x,y:x-y,locatorOldXform,b)
             oldLength = math.sqrt(math.fsum(x**2 for x in bl))
             acLength = math.sqrt(math.fsum(x**2 for x in ac))
             acUnit = [ac[0]/acLength,ac[1]/acLength,ac[2]/acLength]
@@ -232,7 +238,15 @@ class FixJointMode():
             eb = map(lambda x,y:x-y,b,e)
             ebLength = math.sqrt(math.fsum(x**2 for x in eb))
             ebUnit = [eb[0]/ebLength,eb[1]/ebLength,eb[2]/ebLength] 
-            locatorNewXform = map(lambda x,y:x+oldLength*y,b,ebUnit)
+            locatorNewXform = map(lambda x,y:x+oldLength*y,b,ebUnit)"""
+            bl = map(lambda x,y:x-y,locatorOldXform,b)
+            oldLength = math.sqrt(math.fsum(x**2 for x in bl))
+            acHalf = [ac[0]*0.5,ac[1]*0.5,ac[2]*0.5]
+            m = map(lambda x,y:x+y,a,acHalf)
+            mb = map(lambda x,y:x-y,b,m)
+            mbLength = math.sqrt(math.fsum(x**2 for x in mb))
+            mbUnit = [mb[0]/mbLength,mb[1]/mbLength,mb[2]/mbLength]
+            locatorNewXform = map(lambda x,y:x+oldLength*y,b,mbUnit)
             cmds.xform(locator,worldSpace = True,translation = locatorNewXform)          
         if self.debugMode:
             self.debugIKPlane(index)
