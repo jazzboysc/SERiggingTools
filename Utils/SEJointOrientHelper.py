@@ -239,12 +239,6 @@ class FixJointMode():
             ebLength = math.sqrt(math.fsum(x**2 for x in eb))
             ebUnit = [eb[0]/ebLength,eb[1]/ebLength,eb[2]/ebLength]
             locatorNewXform = map(lambda x,y:x+oldLength*y,b,ebUnit)
-            """acHalf = [ac[0]*0.5,ac[1]*0.5,ac[2]*0.5]
-            m = map(lambda x,y:x+y,a,acHalf)
-            mb = map(lambda x,y:x-y,b,m)
-            mbLength = math.sqrt(math.fsum(x**2 for x in mb))
-            mbUnit = [mb[0]/mbLength,mb[1]/mbLength,mb[2]/mbLength]
-            locatorNewXform = map(lambda x,y:x+oldLength*y,b,mbUnit)"""
             cmds.xform(locator,worldSpace = True,translation = locatorNewXform)          
         if self.debugMode:
             self.debugIKPlane(index)
