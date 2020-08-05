@@ -227,26 +227,24 @@ class FixJointMode():
                     self.setJointOrient(p,j,c,normal)
         if hasLocator:
             locatorOldXform = cmds.xform(locator,query = True,worldSpace = True,translation = True)
-            """bl = map(lambda x,y:x-y,locatorOldXform,b)
+            print locatorOldXform
+            bl = map(lambda x,y:x-y,locatorOldXform,b)
             oldLength = math.sqrt(math.fsum(x**2 for x in bl))
             acLength = math.sqrt(math.fsum(x**2 for x in ac))
-            acUnit = [ac[0]/acLength,ac[1]/acLength,ac[2]/acLength]
-            temp = map(lambda x,y:x*y,acUnit,ab)
-            aeLength = temp[0]+temp[1]+temp[2]
-            ae = [acUnit[0]*aeLength,acUnit[1]*aeLength,acUnit[2]*aeLength]
+            temp = map(lambda x,y:x*y,ac,ab)
+            aeLength = (temp[0]+temp[1]+temp[2])/acLength
+            ae = [ac[0]*aeLength/acLength,ac[1]*aeLength/acLength,ac[2]*aeLength/acLength]
             e = map(lambda x,y:x+y,a,ae)
             eb = map(lambda x,y:x-y,b,e)
             ebLength = math.sqrt(math.fsum(x**2 for x in eb))
-            ebUnit = [eb[0]/ebLength,eb[1]/ebLength,eb[2]/ebLength] 
-            locatorNewXform = map(lambda x,y:x+oldLength*y,b,ebUnit)"""
-            bl = map(lambda x,y:x-y,locatorOldXform,b)
-            oldLength = math.sqrt(math.fsum(x**2 for x in bl))
-            acHalf = [ac[0]*0.5,ac[1]*0.5,ac[2]*0.5]
+            ebUnit = [eb[0]/ebLength,eb[1]/ebLength,eb[2]/ebLength]
+            locatorNewXform = map(lambda x,y:x+oldLength*y,b,ebUnit)
+            """acHalf = [ac[0]*0.5,ac[1]*0.5,ac[2]*0.5]
             m = map(lambda x,y:x+y,a,acHalf)
             mb = map(lambda x,y:x-y,b,m)
             mbLength = math.sqrt(math.fsum(x**2 for x in mb))
             mbUnit = [mb[0]/mbLength,mb[1]/mbLength,mb[2]/mbLength]
-            locatorNewXform = map(lambda x,y:x+oldLength*y,b,mbUnit)
+            locatorNewXform = map(lambda x,y:x+oldLength*y,b,mbUnit)"""
             cmds.xform(locator,worldSpace = True,translation = locatorNewXform)          
         if self.debugMode:
             self.debugIKPlane(index)

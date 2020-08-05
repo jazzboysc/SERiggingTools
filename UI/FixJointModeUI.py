@@ -1,5 +1,4 @@
 #TODO:
-#locator wrong
 #doc order to select ik locator
 #python parent child
 #tip to close mode
