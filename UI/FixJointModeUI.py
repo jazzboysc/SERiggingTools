@@ -101,10 +101,10 @@ class FixJointModeWindow(QtWidgets.QDialog):
         self.ui.buttonGroup_4.setId(self.ui.radioButton_32,1)
         self.ui.buttonGroup_4.setId(self.ui.radioButton_33,2)
         self.initialAxis()  
-         orientHelperfjm.switchMode(True)
+        orientHelper.fjm.switchMode(True)
         
     def closeEvent(self, event):
-         orientHelperfjm.switchMode(False)
+        orientHelper.fjm.switchMode(False)
 
     def resizeEvent(self,event):
         self.ui.resize(self.size().expandedTo(self.minSize))
@@ -115,31 +115,31 @@ class FixJointModeWindow(QtWidgets.QDialog):
         
     def modeChanged(self):
         if self.ui.mode_Chk.isChecked():
-             orientHelperfjm.switchMode(True)
+            orientHelper.fjm.switchMode(True)
             self.ui.modeTip_Label.setText("""<html><head/><body><p align="justify"><span style=" color:#00ff00;">FixJointMode already switch on.
             </span></p><p align="justify"><span style=" color:#00ff00;">You can rotate and move the Joint</span></p></body></html>""")
         else:
-             orientHelperfjm.switchMode(False)
+            orientHelper.fjm.switchMode(False)
             self.ui.modeTip_Label.setText("""<html><head/><body><p align="justify"><span style=" color:#ff0000;">FixJointMode already switch off.
             </span></p><p align="justify"><span style=" color:#ff0000;">Don`t rotate and move any Joint </span></p></body></html>""")
 
     def debugMode(self):
         if self.ui.debug_Chk.isChecked():
-             orientHelperfjm.switchDebugPlane(True)        
+            orientHelper.fjm.switchDebugPlane(True)        
         else:
-             orientHelperfjm.switchDebugPlane(False)
+            orientHelper.fjm.switchDebugPlane(False)
     
     def addIK(self):
-         orientHelperfjm.addIKGroups()
+        orientHelper.fjm.addIKGroups()
 
     def showIK(self):
-         orientHelperfjm.displayIKGroups() 
+        orientHelper.fjm.displayIKGroups() 
         
     def defaultIK(self):
-         orientHelperfjm.defaultIKGroup()
+        orientHelper.fjm.defaultIKGroup()
         
     def clearIK(self):
-         orientHelperfjm.clearIKGroups()
+        orientHelper.fjm.clearIKGroups()
         
     def importBrowser(self):
         filePath = cmds.fileDialog2(fileMode = 1)
@@ -171,56 +171,56 @@ class FixJointModeWindow(QtWidgets.QDialog):
         
     def pAxisBG(self):
         id = self.ui.buttonGroup.checkedId()
-         orientHelperfjm.primaryAxis = [0,0,0]
-         orientHelperfjm.primaryAxis[id] = self.ui.comboBox_1.currentIndex()*2-1
+        orientHelper.fjm.primaryAxis = [0,0,0]
+        orientHelper.fjm.primaryAxis[id] = self.ui.comboBox_1.currentIndex()*2-1
    
     def sAxisBG(self):
         id = self.ui.buttonGroup_2.checkedId()
-         orientHelperfjm.secondaryAxis = [0,0,0]
-         orientHelperfjm.secondaryAxis[id] = self.ui.comboBox_2.currentIndex()*2-1
+        orientHelper.fjm.secondaryAxis = [0,0,0]
+        orientHelper.fjm.secondaryAxis[id] = self.ui.comboBox_2.currentIndex()*2-1
                
     def sAxisOrientBG(self):
         id = self.ui.buttonGroup_3.checkedId()
-         orientHelperfjm.secondaryAxisOrient = [0,0,0]
-         orientHelperfjm.secondaryAxisOrient[id] = self.ui.comboBox_3.currentIndex()*2-1
+        orientHelper.fjm.secondaryAxisOrient = [0,0,0]
+        orientHelper.fjm.secondaryAxisOrient[id] = self.ui.comboBox_3.currentIndex()*2-1
             
     def addMirror(self):
-         orientHelperfjm.addMirror()
+        orientHelper.fjm.addMirror()
 
     def showMirror(self):
-         orientHelperfjm.displayMirror() 
+        orientHelper.fjm.displayMirror() 
         
     def defaultMirror(self):
-         orientHelperfjm.defaultMirror()
+        orientHelper.fjm.defaultMirror()
         
     def clearMirror(self):
-         orientHelperfjm.clearMirror()
+        orientHelper.fjm.clearMirror()
         
     def mirror(self):
-         orientHelperfjm.setJntAttrLock(False)
+        orientHelper.fjm.setJntAttrLock(False)
         id = self.ui.buttonGroup_4.checkedId()
         if id ==0:
-             orientHelperfjm.mirror("xy")
+            orientHelper.fjm.mirror("xy")
         elif id ==1:
-             orientHelperfjm.mirror("yz")
+            orientHelper.fjm.mirror("yz")
         elif id ==2:
-             orientHelperfjm.mirror("xz")
+            orientHelper.fjm.mirror("xz")
             
     def initialAxis(self):
-        for i in range(len( orientHelperfjm.primaryAxis)):
-            if  orientHelperfjm.primaryAxis[i] != 0:
+        for i in range(len(orientHelper.fjm.primaryAxis)):
+            if orientHelper.fjm.primaryAxis[i] != 0:
                self.ui.buttonGroup.button(i).setChecked(True)
-               self.ui.comboBox_1.setCurrentIndex( orientHelperfjm.secondaryAxis[i]*0.5+1)
+               self.ui.comboBox_1.setCurrentIndex(orientHelper.fjm.secondaryAxis[i]*0.5+1)
                break 
-        for i in range(len( orientHelperfjm.secondaryAxis)):
-            if  orientHelperfjm.secondaryAxis[i] != 0:
+        for i in range(len(orientHelper.fjm.secondaryAxis)):
+            if orientHelper.fjm.secondaryAxis[i] != 0:
                self.ui.buttonGroup_2.button(i).setChecked(True)
-               self.ui.comboBox_2.setCurrentIndex( orientHelperfjm.secondaryAxis[i]*0.5+1)
+               self.ui.comboBox_2.setCurrentIndex(orientHelper.fjm.secondaryAxis[i]*0.5+1)
                break 
-        for i in range(len( orientHelperfjm.secondaryAxisOrient)):
-            if  orientHelperfjm.secondaryAxisOrient[i] != 0:
+        for i in range(len(orientHelper.fjm.secondaryAxisOrient)):
+            if orientHelper.fjm.secondaryAxisOrient[i] != 0:
                self.ui.buttonGroup_3.button(i).setChecked(True)
-               self.ui.comboBox_3.setCurrentIndex( orientHelperfjm.secondaryAxisOrient[i]*0.5+1)
+               self.ui.comboBox_3.setCurrentIndex(orientHelper.fjm.secondaryAxisOrient[i]*0.5+1)
                break        
     
     def saveJntLockedAttr(self):
@@ -231,8 +231,8 @@ class FixJointModeWindow(QtWidgets.QDialog):
             for a in attr:    
                 if cmds.getAttr(jnt+a,lock = True):
                     lockedAttr.append(a)
-             orientHelperfjm.lockedAttrDict[jnt] = lockedAttr
-        print  orientHelperfjm.lockedAttrDict
+            orientHelper.fjm.lockedAttrDict[jnt] = lockedAttr
+        print orientHelper.fjm.lockedAttrDict
         
     def seRiggingTool(self):        
         CreateRigUI.openMayaWindow()
