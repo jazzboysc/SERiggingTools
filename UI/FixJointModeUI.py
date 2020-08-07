@@ -57,8 +57,8 @@ class FixJointModeWindow(QtWidgets.QDialog):
         self.helpUi.picture_LB.setPixmap(QtGui.QPixmap(helpPicPath))
         
         #initial window
-        self.resize(677, 673)
-        self.minSize = QtCore.QSize(677, 673)
+        self.resize(500, 500)
+        self.minSize = QtCore.QSize(500, 500)
         self.setWindowTitle("Fix Joint Mode")
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)

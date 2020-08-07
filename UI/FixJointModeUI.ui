@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>677</width>
-    <height>673</height>
+    <width>467</width>
+    <height>507</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,7 +30,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="place_tab">
        <attribute name="title">
@@ -877,7 +877,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox_6">
           <property name="title">
-           <string>SERiggingTools</string>
+           <string>Create Character Rig</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_11">
            <item>
@@ -904,8 +904,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>677</width>
-     <height>30</height>
+     <width>467</width>
+     <height>23</height>
     </rect>
    </property>
   </widget>
