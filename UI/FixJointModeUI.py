@@ -171,7 +171,7 @@ class FixJointModeWindow(MayaQWidgetDockableMixin,QtWidgets.QDialog):
             end = exportPath.rfind("_Builder.ma")
             cmds.rename(exportPath[start+1:end]+"_BuilderGrp")
             cmds.file(exportPath,exportSelected = True,type = "mayaAscii")
-            print "Success!Export To "+exportPath
+            print "Export Success! Export to "+exportPath
         
     def pAxisBG(self):
         id = self.ui.buttonGroup.checkedId()

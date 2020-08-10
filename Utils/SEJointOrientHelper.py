@@ -307,6 +307,8 @@ class FixJointMode():
         material = cmds.ls(listConnected,materials = True)[0]
         cmds.setAttr(material+".ambientColor",0,1,0,0)
         cmds.setAttr(material+".transparency",0.7,0.7,0.7,0.7)
+        cmds.setAttr("DebugPlane.overrideEnabled",1)
+        cmds.setAttr("DebugPlane.overrideDisplayType",2)
    
     def mirror(self,MirrorPlane):
         for jnt in self.mirrorJoints:
