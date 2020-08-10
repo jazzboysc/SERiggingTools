@@ -10,6 +10,7 @@ import SERiggingTools.UI.CreateRigUI as CreateRigUI
 import UIConfig
 import maya.OpenMayaUI as MayaUi
 import shiboken2
+from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
 qtVersion = cmds.about(qtVersion =True)
 
@@ -37,7 +38,7 @@ def openFixJointModeWindow():
     fjmWindow = FixJointModeWindow()
     fjmWindow.show()
     
-class FixJointModeWindow(QtWidgets.QDialog):
+class FixJointModeWindow(MayaQWidgetDockableMixin,QtWidgets.QDialog):
     def  __init__(self, parent = getMayaWindow()):
         super(FixJointModeWindow, self).__init__()
         QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
@@ -57,8 +58,8 @@ class FixJointModeWindow(QtWidgets.QDialog):
         self.helpUi.picture_LB.setPixmap(QtGui.QPixmap(helpPicPath))
         
         #initial window
-        self.resize(500, 500)
-        self.minSize = QtCore.QSize(500, 500)
+        self.minSize = QtCore.QSize(467, 507)
+        self.setFixedSize(self.minSize)
         self.setWindowTitle("Fix Joint Mode")
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.ui.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
@@ -84,7 +85,7 @@ class FixJointModeWindow(QtWidgets.QDialog):
         self.ui.mirror_Btn.clicked.connect(self.mirror)
         self.ui.exportBrowse_Btn.clicked.connect(self.exportBrowser)
         self.ui.export_Btn.clicked.connect(self.exportBuilder)
-        self.ui.tool_Btn.clicked.connect(self.seRiggingTool)
+        self.ui.tool_Btn.clicked.connect(self.OpenCreateRigUI)
         self.ui.help_Btn.clicked.connect(self.helpWindow)
         
         #set radio id     
@@ -100,15 +101,12 @@ class FixJointModeWindow(QtWidgets.QDialog):
         self.ui.buttonGroup_4.setId(self.ui.radioButton_31,0)
         self.ui.buttonGroup_4.setId(self.ui.radioButton_32,1)
         self.ui.buttonGroup_4.setId(self.ui.radioButton_33,2)
+       
         self.initialAxis()  
         orientHelper.fjm.switchMode(True)
         
     def closeEvent(self, event):
         orientHelper.fjm.switchMode(False)
-
-    def resizeEvent(self,event):
-        self.ui.resize(self.size().expandedTo(self.minSize))
-        self.resize(self.size().expandedTo(self.minSize))
                
     def helpWindow(self):
         self.helpUi.show()
@@ -163,11 +161,17 @@ class FixJointModeWindow(QtWidgets.QDialog):
         
     def exportBuilder(self):
         exportPath = self.ui.exportPath_LE.text()
-        if exportPath !="":
-            cmds.file(exportPath,exportSelected = True,type = "mayaAscii")
-            print "Export To "+exportPath
-        else:
+        selected = cmds.ls(sl = True)
+        if exportPath == "":
             print "Export Fail, The export path is not indicated"
+        elif selected == []:
+            print "Export Fail, The group to be exported is not selected" 
+        else:
+            start = exportPath.rfind("/")
+            end = exportPath.rfind("_Builder.ma")
+            cmds.rename(exportPath[start+1:end]+"_BuilderGrp")
+            cmds.file(exportPath,exportSelected = True,type = "mayaAscii")
+            print "Success!Export To "+exportPath
         
     def pAxisBG(self):
         id = self.ui.buttonGroup.checkedId()
@@ -206,6 +210,7 @@ class FixJointModeWindow(QtWidgets.QDialog):
         elif id ==2:
             orientHelper.fjm.mirror("xz")
             
+    #Initial the Axis in advanced setting with default value        
     def initialAxis(self):
         for i in range(len(orientHelper.fjm.primaryAxis)):
             if orientHelper.fjm.primaryAxis[i] != 0:
@@ -223,6 +228,7 @@ class FixJointModeWindow(QtWidgets.QDialog):
                self.ui.comboBox_3.setCurrentIndex(orientHelper.fjm.secondaryAxisOrient[i]*0.5+1)
                break        
     
+    #Save the locked joint`s attribute when import a new template skeleton
     def saveJntLockedAttr(self):
         jointList = cmds.ls(type = "joint")
         attr = [".rotateX",".rotateY",".rotateZ",".translateX",".translateY",".translateZ"]
@@ -232,8 +238,9 @@ class FixJointModeWindow(QtWidgets.QDialog):
                 if cmds.getAttr(jnt+a,lock = True):
                     lockedAttr.append(a)
             orientHelper.fjm.lockedAttrDict[jnt] = lockedAttr
-        print orientHelper.fjm.lockedAttrDict
+        print "Locked Joint Attribute : ",orientHelper.fjm.lockedAttrDict
+   
         
-    def seRiggingTool(self):        
+    def OpenCreateRigUI(self):        
         CreateRigUI.openMayaWindow()
         

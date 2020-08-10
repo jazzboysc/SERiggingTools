@@ -1,7 +1,5 @@
-
 import maya.cmds as cmds
 import math
-cmds.scriptJob(killAll = True)
 
 class FixJointMode():
     
@@ -265,10 +263,7 @@ class FixJointMode():
     def setJntAttrLock(self,bool):
         for jnt,attr in self.lockedAttrDict.items():
             for a in attr:
-                cmds.setAttr(jnt+a,lock = bool)
-        print "setLock",bool    
-      
-                        
+                cmds.setAttr(jnt+a,lock = bool)                              
                
     def addIKGroups(self):
         selectJoints = cmds.ls(sl = True,type = ["joint","transform"],)
