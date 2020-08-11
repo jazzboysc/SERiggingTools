@@ -12,7 +12,6 @@ import SERiggingTools.Utils.SEConstraintHelper as ConstraintHelper
 import SERiggingTools.Utils.SEDeformerHelper as DeformerHelper
 import SERiggingTools.Utils.SEFacsHelper as FacsHelper
 import SERiggingTools.Utils.SEJointOrientHelper as JointOrientHelper
-reload(JointOrientHelper)
 import SERiggingTools.Character.SECharacter as RigCharacter
 import SERiggingTools.Character.SECharacterDeform as RigCharacterDeform 
 import SERiggingTools.ThirdParty.bSkinSaver as RigSkinSaver
@@ -23,7 +22,6 @@ import SERiggingTools.Rig.SERigHumanFacialComponent as RigHumanFacialComponent
 import SERiggingTools.UI.CreateRigUI as CreateRigUI
 import SERiggingTools.UI.ControlRigUI as ControlRigUI
 import SERiggingTools.UI.FixJointModeUI as FixJointModeUI
-reload(FixJointModeUI)
 import SERiggingTools.PoseLibrary.PoseBrowseUI as PoseBrowseUI
 import SERiggingTools.PoseLibrary.ScreenShot as ScreenShot
 import SERiggingTools.PoseLibrary.SavePose as SavePose

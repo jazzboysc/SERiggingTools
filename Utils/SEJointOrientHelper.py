@@ -370,13 +370,7 @@ class FixJointMode():
                 else:
                     self.mirrorLocator.append(jnt)
         print "mirrorJoints = ",self.mirrorJoints
-        print "mirrorLocators = ",self.mirrorLocator
-    
-           
+        print "mirrorLocators = ",self.mirrorLocator        
                   
 fjm = FixJointMode()
-#fjm.switchMode(True)
-#fjm.switchDebugPlane()
-#fjm.addIKGroups()
-#fjm.cleanIKGroups()
                  

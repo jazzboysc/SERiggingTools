@@ -1,8 +1,3 @@
-#TODO:
-#doc order to select ik locator
-#python parent child
-#tip to close  orientHelper
-#tip to export with select
 import maya.cmds as cmds
 from ..Utils import SEJointOrientHelper as orientHelper
 import os
