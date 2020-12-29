@@ -440,6 +440,26 @@ def _matchSourceBlendshapesToTarget(source, target):
     for node in cmds.listHistory(target):
         if cmds.nodeType(node) == 'skinCluster' or cmds.nodeType(node) == 'blendShape':
             cmds.setAttr(node + '.envelope', 1.0)
+    
+    # Match the positions of vertices of source to target
+    sourceVertsNum = cmds.polyEvaluate(source, v=True)
+    targetVertsNum = cmds.polyEvaluate(target, v=True)
+    pivotOffset = [0, 0, 0]
+    if (sourceVertsNum == targetVertsNum):
+        for i in range(sourceVertsNum):
+            resTar = getMeshVertexPosition(target + '.vtx[%s]'%i)
+            resSrc = getMeshVertexPosition(source + '.vtx[%s]'%i)
+            srcPT = [round(resSrc[0], 5), round(resSrc[1], 5), round(resSrc[2], 5)]
+            tarPT = [round(resTar[0], 5), round(resTar[1], 5), round(resTar[2], 5)]
+            pivotOffset[0] = pivotOffset[0] + tarPT[0] - srcPT[0]
+            pivotOffset[1] = pivotOffset[1] + tarPT[1] - srcPT[1]
+            pivotOffset[2] = pivotOffset[2] + tarPT[2] - srcPT[2]
+            cmds.xform(source + '.vtx[%s]'%i, t = tarPT , ws = True)  
+        sourcePiv = cmds.xform (source, piv=True, q=True, ws=True)
+        sourcePiv[0] = sourcePiv[0] + pivotOffset[0] / sourceVertsNum 
+        sourcePiv[1] = sourcePiv[1] + pivotOffset[1] / sourceVertsNum 
+        sourcePiv[2] = sourcePiv[2] + pivotOffset[2] / sourceVertsNum 
+        cmds.xform( source, ws=True, piv=(sourcePiv[0], sourcePiv[1], sourcePiv[2]) )
 #-----------------------------------------------------------------------------
 def matchSourceBlendshapesToTarget():
     selected = cmds.ls(sl = 1)

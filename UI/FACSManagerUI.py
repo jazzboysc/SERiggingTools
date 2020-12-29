@@ -670,7 +670,10 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         before = set(cmds.ls(type = 'transform'))
         multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;All Files (*.*)"
         fileNamePath = cmds.fileDialog2(fm = 1, fileFilter = multipleFilters)[0]
-        cmds.file(fileNamePath, i = True, namespace = fileNamePath[:-3])
+        #cmds.file(fileNamePath, i = True, namespace = fileNamePath[:-3])
+        namespace = 'facialTarget'
+        cmds.file(fileNamePath, i = True, namespace = namespace)
+        cmds.namespace(rm = namespace, mnp = True)
         after = set(cmds.ls(type = 'transform'))
         importedMeshes = after - before
 
@@ -703,7 +706,9 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         index = len(split) - 1
         fileName = split[index][:-3]
 
-        cmds.file(fileNamePath, i = True, type = fileType, ignoreVersion = True, ra = True, mergeNamespacesOnClash = False, namespace = fileName) #, options = 'v=0;p=17;f=0', pr = True, itr = "combine"
+        namespace = 'AUs'
+        cmds.file(fileNamePath, i = True, type = fileType, ignoreVersion = True, ra = True, mergeNamespacesOnClash = False, namespace = namespace) #, options = 'v=0;p=17;f=0', pr = True, itr = "combine"
+        cmds.namespace(rm = namespace, mnp = True)
         after = set(cmds.ls(type = 'transform'))
         importedMeshes = after - before
         cmds.select(clear = True)
@@ -733,7 +738,9 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         before = set(cmds.ls(type = 'transform'))
         multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;All Files (*.*)"
         fileNamePath = cmds.fileDialog2(fm = 1, fileFilter = multipleFilters)[0]
-        cmds.file(fileNamePath, i = True, namespace = fileNamePath[:-3])
+        namespace = 'facialBase'
+        cmds.file(fileNamePath, i = True, namespace = namespace)
+        cmds.namespace(rm = namespace, mnp = True)
         after = set(cmds.ls(type = 'transform'))
         importedMeshes = after - before
 
@@ -756,7 +763,10 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         before = set(cmds.ls(type = 'transform'))
         multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;All Files (*.*)"
         fileNamePath = cmds.fileDialog2(fm = 1, fileFilter = multipleFilters, startingDirectory = faceCageRootFile)[0]
-        cmds.file(fileNamePath, i = True, namespace = fileNamePath[:-3])
+        namespace = 'FaceCage'
+        #print namespace
+        cmds.file(fileNamePath, i = True, namespace = namespace)
+        cmds.namespace(rm = namespace, mnp = True)
         after = set(cmds.ls(type = 'transform'))
         importedMeshes = after - before
 
@@ -967,6 +977,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         cmds.makeIdentity(apply=True, t=1, r=1, s=1, n=0)
         cmds.select(clear = True)
 
+        # match source to target
         cmds.select(AUBaseName, r = True)
         cmds.select(FacialBaseName, add = True)
         DeformerHelper.matchSourceBlendshapesToTarget()
@@ -1061,7 +1072,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 faceWeightFilePath = faceWeightFootFile + faceWeightFileName
                 cmds.deformerWeights(faceWeightFileName, p = faceWeightFootFile, im = True, deformer = faceCluster)  
 
-            #Step 5: Trianlugate FacialBase To FacialBaseTri and add blendshape
+            #Step 5: Triangulate FacialBase To FacialBaseTri and add blendshape
             faceTriName = cmds.duplicate(facialBaseName, n = facialBaseName + "Tri")[0]
             cmds.polyTriangulate(faceTriName)
             cmds.select(facialBaseName, r = True)
