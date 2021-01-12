@@ -3,6 +3,8 @@ MAYA_PLUG_IN_PATH += D:\Work\cvshapeinverter\plug-ins
 PYTHONPATH = D:\Work
 
 
+Maya：
+
 import SERiggingTools.Base.SERigBase                as RigBase
 import SERiggingTools.Base.SERigControl             as RigControl
 import SERiggingTools.Base.SERigComponent           as RigComp
@@ -16,6 +18,9 @@ import SERiggingTools.Utils.SEBakeAnimationHelper   as BakeAnimationHelper
 import SERiggingTools.Utils.SEConstraintHelper      as ConstraintHelper
 import SERiggingTools.Utils.SEDeformerHelper        as DeformerHelper
 import SERiggingTools.Utils.SEFacsHelper            as FacsHelper
+import SERiggingTools.Utils.HIKHelper               as HIKHelper
+import SERiggingTools.Utils.MayaServer              as MayaServer
+import SERiggingTools.Utils.SocketServerMaya        as SocketServerMaya
 import SERiggingTools.Character.SECharacter         as RigCharacter
 import SERiggingTools.Character.SECharacterDeform   as RigCharacterDeform 
 import SERiggingTools.ThirdParty.bSkinSaver         as RigSkinSaver
@@ -27,6 +32,9 @@ import SERiggingTools.Rig.SERigHumanFacialComponent as RigHumanFacialComponent
 import SERiggingTools.Rig.SERigCustomData           as RigCustomData
 import SERiggingTools.UI.CreateRigUI                as CreateRigUI
 import SERiggingTools.UI.ControlRigUI               as ControlRigUI
+import SERiggingTools.UI.FACSManagerUI              as FACSManagerUI
+import SERiggingTools.UI.FixJointModeUI             as FixJointModeUI
+import SERiggingTools.UI.MayaToMoboUI               as MayaToMoboUI
 import SERiggingTools.PoseLibrary.PoseBrowseUI      as PoseBrowseUI
 import SERiggingTools.PoseLibrary.ScreenShot        as ScreenShot
 import SERiggingTools.PoseLibrary.SavePose          as SavePose
@@ -45,6 +53,9 @@ reload(MathHelper)
 reload(ConstraintHelper)
 reload(DeformerHelper)
 reload(FacsHelper)
+reload(HIKHelper)
+reload(MayaServer)
+reload(SocketServerMaya)
 reload(RigObjectTypeHelper)
 reload(BakeAnimationHelper)
 reload(RigCharacter)
@@ -59,8 +70,22 @@ reload(RigCustomData)
 reload(CreateRigUI)
 reload(ControlRigUI)
 reload(PoseBrowseUI)
+reload(FACSManagerUI)
+reload(FixJointModeUI)
+reload(MayaToMoboUI)
 reload(ScreenShot)
 reload(SavePose)
+
+
+FixJointModeUI.openFixJointModeWindow()
+
+CreateRigUI.openMayaWindow()
+
+ControlRigUI.openControlRigWindow()
+
+FACSManagerUI.openFACSManagerWindow()
+
+MayaToMoboUI.openSendToMoboWindow()
 
 
 
@@ -189,3 +214,26 @@ res = RigObjectTypeHelper.findRelatedRigCharacterGroup('FaceCage_V84')
 res = RigObjectTypeHelper.isRigControlGroup('FaceProxyControlGrp_parentConstraint1')
 
 res = JointHelper.getSlaveFacialRootJoint('Female01_RigGrp')
+
+
+
+
+
+
+
+
+Motion Builder：
+
+import sys
+sys.path.append('D:\Work')
+
+import SERiggingTools.MoboToMaya.MoboToMayaMenu.MoboToMayaMenu as MoboToMayaMenu
+MoboToMayaMenu.LoadMenu()
+
+
+
+
+
+
+
+
