@@ -6,7 +6,7 @@ import threading
 import cPickle
 import time
 
-from ..Utils import MySocketServer2020
+from ..Utils import SocketServerMaya
 from ..Utils import HIKHelper
 import UIConfig
 
@@ -20,7 +20,7 @@ from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
 # Global-----------------
 mayaHIKs = []
-sendToMoboCommand = MySocketServer2020.MayaMoboCommands() 
+sendToMoboCommand = SocketServerMaya.MayaMoboCommands() 
 
 
 # UI------------------------------------------------------------
@@ -51,7 +51,7 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.initializeUI()
         self.setButtonsCallBack()
 
-        self.sendToMoboCommand = MySocketServer2020.MayaMoboCommands()
+        self.sendToMoboCommand = SocketServerMaya.MayaMoboCommands()
 
     def initializeUI(self):
         charList = HIKHelper.characterDefinitionList()
