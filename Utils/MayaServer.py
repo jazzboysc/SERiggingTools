@@ -2,8 +2,10 @@ import socket
 import threading
 import cPickle
 import os
-from MySocketServer2020 import SocketServerMaya
-from MySocketServer2020 import MayaMoboCommands
+
+from SocketServerMaya import SocketServerMaya
+from SocketServerMaya import MayaMoboCommands
+
 import maya.utils as mu
 import maya.OpenMaya as om
 
