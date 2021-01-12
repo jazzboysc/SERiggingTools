@@ -9,7 +9,7 @@ from pyfbsdk import *
 from pyfbsdk_additions import *
 import Queue
 
-from ...Utils.MySocketServer2020 import SocketServer, MayaMoboCommands
+from ...Utils.SocketServerMobo import SocketServer, MayaMoboCommands
 
 mServer = SocketServer('', 6000)
 pp = MayaMoboCommands()
