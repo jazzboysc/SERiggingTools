@@ -1,12 +1,14 @@
 from PySide2 import QtCore, QtUiTools, QtWidgets
 from pyfbsdk import *
 from pyfbsdk_additions import *
+
 import pythonidelib
-import MySocketServer2020; reload(MySocketServer2020)
 import os
 import socket
 import cPickle
 import time
+
+from ...Utils import  SocketServerMobo
 
 filePath = os.path.dirname(os.path.abspath(__file__))
 uifile_path = os.path.join(filePath, "MotionbuilderToMaya.ui")
@@ -90,7 +92,7 @@ class MainUI(QtWidgets.QWidget):
             return
         for mapItem in mappingList:
             # Get Mobo Effectors' data
-            sendCommand = MySocketServer2020.MayaMoboCommands()
+            sendCommand = SocketServerMobo.MayaMoboCommands()
             sendCommand.commandType = 2
             moboChar = mapItem[0].encode()
             mayaChar = mapItem[1].encode()
@@ -140,7 +142,7 @@ class MainUI(QtWidgets.QWidget):
     def refreshMayaCharacterList(self):
         self.ui.MayaListWidget.clear()
         
-        sendCommand = MySocketServer2020.MayaMoboCommands()
+        sendCommand = SocketServerMobo.MayaMoboCommands()
         sendCommand.commandType = 1
         recvHIKList = []
         # Socket Setting

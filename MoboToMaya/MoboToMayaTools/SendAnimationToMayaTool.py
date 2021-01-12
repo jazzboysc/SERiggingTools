@@ -3,7 +3,7 @@ from pyfbsdk import *
 from pyfbsdk_additions import *
 
 import shiboken2
-import MoboToMaya.MoboToMayaTools.SendToMayaUI as SendToMayaUI; reload(SendToMayaUI)
+from . import SendToMayaUI
 
 class nativeWidgetHolder(FBWidgetHolder):
     def WidgetCreate(self, pWidgetParent):
@@ -14,7 +14,7 @@ class nativeWidgetHolder(FBWidgetHolder):
 class FileReferenceTool(FBTool):
     def __init__(self, name):
         FBTool.__init__(self, name)
-        self.mNativeWidgetHolder = nativeWidgetHolder();
+        self.mNativeWidgetHolder = nativeWidgetHolder()
         self.BuildLayout()
         self.StartSizeX = 900
         self.StartSizeY = 325
