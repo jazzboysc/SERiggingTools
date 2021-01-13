@@ -8,7 +8,8 @@ import socket
 import cPickle
 import time
 
-from ...Utils import  SocketServerMobo
+#from ...Utils import  SocketServerMobo
+from ...Utils.SocketDataHelper import MayaMoboSocketData
 
 filePath = os.path.dirname(os.path.abspath(__file__))
 uifile_path = os.path.join(filePath, "MotionbuilderToMaya.ui")
@@ -92,7 +93,7 @@ class MainUI(QtWidgets.QWidget):
             return
         for mapItem in mappingList:
             # Get Mobo Effectors' data
-            sendCommand = SocketServerMobo.MayaMoboCommands()
+            sendCommand = MayaMoboSocketData()#SocketServerMobo.MayaMoboCommands()
             sendCommand.commandType = 2
             moboChar = mapItem[0].encode()
             mayaChar = mapItem[1].encode()
@@ -142,7 +143,7 @@ class MainUI(QtWidgets.QWidget):
     def refreshMayaCharacterList(self):
         self.ui.MayaListWidget.clear()
         
-        sendCommand = SocketServerMobo.MayaMoboCommands()
+        sendCommand = MayaMoboSocketData()#SocketServerMobo.MayaMoboCommands()
         sendCommand.commandType = 1
         recvHIKList = []
         # Socket Setting

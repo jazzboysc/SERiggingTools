@@ -6,8 +6,9 @@ import threading
 import cPickle
 import time
 
-from ..Utils import SocketServerMaya
+#from ..Utils.SocketServerMaya import MayaMoboCommands
 from ..Utils import HIKHelper
+from ..Utils.SocketDataHelper import MayaMoboSocketData
 import UIConfig
 
 import maya.mel as mel
@@ -19,8 +20,8 @@ from PySide2 import QtCore, QtGui, QtWidgets , QtUiTools
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
 # Global-----------------
-mayaHIKs = []
-sendToMoboCommand = SocketServerMaya.MayaMoboCommands() 
+#mayaHIKs = []
+#sendToMoboCommand = MayaMoboSocketData() 
 
 
 # UI------------------------------------------------------------
@@ -51,7 +52,7 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.initializeUI()
         self.setButtonsCallBack()
 
-        self.sendToMoboCommand = SocketServerMaya.MayaMoboCommands()
+        self.sendToMoboCommand = MayaMoboSocketData()
 
     def initializeUI(self):
         charList = HIKHelper.characterDefinitionList()
@@ -116,7 +117,7 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             serialized_obj = cPickle.dumps(self.sendToMoboCommand)
             mSocket.send(serialized_obj)#mSocket.send('ddddddd')
             recvData = mSocket.recv(1024)
-            print recvData
+            print(recvData)
         except Exception as e:
             print('Send to Mobo Fail:', e)
         
@@ -141,16 +142,16 @@ def openSendToMoboWindow():
     maya2Mobo.run()
 #-------------------------------------------------------------
 
-def exportSelectionByHand():
-    dirpath = tempfile.gettempdir()#tempfile.mkdtemp()  #
-    filepath = tempFBXPath #os.path.join(dirpath, 'maya2Mobo.fbx')# #dirpath + '\maya2Mobu.fbx'#
-    mel.eval('FBXResetExport;')
-    mel.eval('FBXExportBakeComplexAnimation -v false;')
-    #mel.eval("FBXExportInputConnections -v false;")
-    res = cmds.file(filepath, force = True, type = "FBX export", exportSelected = True)#cmds.file(filepath, force = True, options = "v = 0", type = "FBX export", exportSelected = True)
-    #shutil.rmtree(dirpath)
-    print res
-    return filepath
+# def exportSelectionByHand():
+#     dirpath = tempfile.gettempdir()#tempfile.mkdtemp()  #
+#     filepath = tempFBXPath #os.path.join(dirpath, 'maya2Mobo.fbx')# #dirpath + '\maya2Mobu.fbx'#
+#     mel.eval('FBXResetExport;')
+#     mel.eval('FBXExportBakeComplexAnimation -v false;')
+#     #mel.eval("FBXExportInputConnections -v false;")
+#     res = cmds.file(filepath, force = True, type = "FBX export", exportSelected = True)#cmds.file(filepath, force = True, options = "v = 0", type = "FBX export", exportSelected = True)
+#     #shutil.rmtree(dirpath)
+#     print res
+#     return filepath
 
 # def send_to_maya():
 #     commandPort = 6004

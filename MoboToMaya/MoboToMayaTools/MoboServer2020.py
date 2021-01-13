@@ -10,9 +10,10 @@ from pyfbsdk_additions import *
 import Queue
 
 from ...Utils.SocketServerMobo import SocketServer, MayaMoboCommands
+from ...Utils.SocketDataHelper import MayaMoboSocketData
 
 mServer = SocketServer('', 6000)
-pp = MayaMoboCommands()
+pp = MayaMoboSocketData()
 callback_queue = Queue.Queue()
 conn = None
 address = None
@@ -35,7 +36,8 @@ def create_conn(server):
                     break
                 else:
                     pp = cPickle.loads(data)
-                    callback_queue.put(pp.processCommand)
+                    moboCommand = MayaMoboCommands(pp)
+                    callback_queue.put(moboCommand.processCommand)
                     conn.send("I received!")
                     continue
     
@@ -45,7 +47,7 @@ def create_conn(server):
             print('Close Connection.')
             return
         except Exception as e:
-            print e
+            print(e)
             return
 
 def start_Motionbuilder_server():
