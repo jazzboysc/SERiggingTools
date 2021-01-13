@@ -82,9 +82,15 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         dirpath = tempfile.gettempdir()
         filepath = tempFBXPath
+        # Reserve the current fbx export settings.
+        mel.eval('FBXPushSettings;')
+
         mel.eval('FBXResetExport;')
         mel.eval('FBXExportBakeComplexAnimation -v false;') #mel.eval("FBXExportInputConnections -v false;")
         res = cmds.file(filepath, force = True, type = "FBX export", exportSelected = True)#cmds.file(filepath, force = True, options = "v = 0", type = "FBX export", exportSelected = True)#shutil.rmtree(dirpath)
+        
+        # Recover previous fbx export settings.
+        mel.eval('FBXPopSettings;')
         
         charNameWithoutNamespace = char
         if len(char.split(':')) > 1:
