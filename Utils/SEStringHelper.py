@@ -29,3 +29,8 @@ def SE_RemovePrefix(str):
 
     return strNoPrefix
 #-----------------------------------------------------------------------------
+def SE_GetNamespace(str):
+    namespace = str.rpartition(':')[0]
+    if namespace != '':
+        namespace = namespace + ':'
+    return namespace

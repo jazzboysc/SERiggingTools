@@ -1,4 +1,4 @@
-from PySide2 import QtCore, QtGui, QtWidgets , QtUiTools
+#from PySide2 import QtCore, QtGui, QtWidgets , QtUiTools
 import maya.OpenMayaMPx as OpenMayaMPx
 import maya.OpenMaya as OpenMaya
 import maya.OpenMayaAnim as OpenMayaAnim
@@ -16,6 +16,7 @@ import difflib
 import re
 
 import cPickle
+import traceback
 
 from ..Character import SECharacter
 from ..Base import SERigNaming
@@ -23,11 +24,18 @@ from ..Utils import SEDeformerHelper as DeformerHelper
 from ..Utils import SEJointHelper as JointHelper
 from ..Utils import SERigObjectTypeHelper as RigObjectTypeHelper
 from ..Utils import SEFacsHelper as FacsHelper
+from ..Utils import SEStringHelper as StringHelper
 from ..Rig import SERigBipedLimbComponent
 from ..Rig import SERigHumanFacialComponent
 
 import UIConfig
 
+qtVersion = cmds.about(qtVersion =True)
+
+if qtVersion.startswith("4") or type(qtVersion) not in [str,unicode]:
+    from PySide import QtCore,QtGui,QtWidgets,QtUiTools
+else:
+    from PySide2 import QtCore,QtGui,QtWidgets,QtUiTools
 
 # .ui File Path & Assets File Path
 uiRootFile = os.path.dirname(UIConfig.__file__)
@@ -53,33 +61,40 @@ def maya_main_window():
 class BackendThread(QtCore.QObject):
     update_data = QtCore.Signal(str)
 
-class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
+class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog): #QDialog
     def __init__(self, parent = maya_main_window()):
         super(FACSManagerUI, self).__init__(parent)
         self.setWindowTitle("FACS Manager")     
         #self.setObjectName('FACS Manager UI')
         self.importedAU = []
         self.time_job_id = -1
-        self.mode_job_id = -1
+        self.mode_job_id = []
         self.nameChange_job_id = -1
         self.mask_bs = -1
         self.ctrlDataList = {}
         self.auDataList = {}
         self.skipBuild = 0
         self.facsControlMode = 1
+        self.currentCharacterRigGroup = ''
+        self.currentNamespace = ''
+        self.sizeofBuild = (690, 874)
+        self.sizeofConnectMap = (1421, 874)
+        self.sizeofAUSlider = (950, 950)
+        self.defaultAUsTable = DeformerHelper.dataBufferAUsToBlendshapeAUsTable
         
         QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
         uifile = QtCore.QFile(uifile_path)
         uifile.open(QtCore.QFile.ReadOnly)
         self.uiWindow = QtUiTools.QUiLoader().load(uifile, parentWidget = self)
+        self.centralLayout = QtWidgets.QVBoxLayout(self)
+        self.centralLayout.setContentsMargins(0, 0, 0, 0)
+        self.centralLayout.addWidget(self.uiWindow)
         uifile.close()
         
         self.uiWindow.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.setInitialUI()
         self.setButtonsCallBack()
         #QtWidgets.QApplication.exit()
-        
-        #return uiWindow
     
     def run(self):
         #self.show(dockable = True)
@@ -88,7 +103,8 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         # Initiate the UI   
     def setInitialUI(self):
         # set ui size
-        self.resizeUIWindowSize(600, 650)
+        self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1]) #
+        self.uiWindow.rigCharacterGrpLineEdit.hide()
         
         # Initiate AU Button
         self.uiWindow.hideShowBuildPageBtn.setHidden(True)
@@ -128,12 +144,22 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         # Initiate rig character group
         rigCharacterName = self.getRigCharacterName()
-        if rigCharacterName == []:
+        rigCharacterNames = self.getRigCharacterGroupNames()
+        if rigCharacterNames == []:
+            self.uiWindow.rigCharacterGrpComboBox.addItem("None")
+            self.currentCharacterRigGroup = ''
+
             self.uiWindow.rigCharacterGrpLineEdit.setReadOnly(False)
-            self.uiWindow.rigCharacterGrpLineEdit.textEdited.connect(self.checkRigCharacterGroupValid)
             self.uiWindow.rigCharacterWarnLabel.show()
         else:
-            self.uiWindow.rigCharacterGrpLineEdit.setText(self.getRigCharacterName()) 
+            self.uiWindow.rigCharacterGrpComboBox.clear()
+            for charName in rigCharacterNames:
+                self.uiWindow.rigCharacterGrpComboBox.addItem(charName)
+            
+            self.currentCharacterRigGroup = self.uiWindow.rigCharacterGrpComboBox.itemText(self.uiWindow.rigCharacterGrpComboBox.currentIndex())
+            self.currentNamespace = StringHelper.SE_GetNamespace(self.currentCharacterRigGroup)
+
+            self.uiWindow.rigCharacterGrpLineEdit.setText(self.currentCharacterRigGroup) #rigCharacterNames[0]
             self.uiWindow.rigCharacterGrpLineEdit.setReadOnly(True)
             self.uiWindow.rigCharacterWarnLabel.hide()
             self.checkRigCharacterGroupValid()
@@ -144,45 +170,75 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.createScriptJobForSwitchControlMode()
 
     def resizeUIWindowSize(self, width, height):
-        self.uiWindow.resize(width, height)
-        self.uiWindow.setMaximumSize(width, height)
+        #self.uiWindow.resize(width, height)
+        #self.uiWindow.setMaximumSize(width, height)
         self.resize(width, height)
     #----------------------------------- Check if built by this tool -----------------------------------        
     def isRigBuiltByThisTool(self):
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        #rigCharacterGrp = self.uiWindow.rigCharacterGrpComboBox.itemText(self.uiWindow.rigCharacterGrpComboBox.currentIndex())
+        rigCharacterGrp = self.currentCharacterRigGroup
         if not cmds.objExists(rigCharacterGrp):
             return False
         
         characterName = RigObjectTypeHelper.getRigCharacterName(rigCharacterGrp)
         mainCtrl = RigObjectTypeHelper.getRigGlobalControlObject(characterName, u'RS_Center', u'RT_Global',0)
-        if mainCtrl:
+        meshNames = self.getMeshNamesConnected()
+        #print('isRigBuiltByThisTool')
+        #print('mainCtrl is:', mainCtrl)
+        #print('meshName is:', meshNames)
+        if mainCtrl and meshNames:
+            #print(mainCtrl + '.' + SERigNaming.sFACS_ControlModeAttr)
             if cmds.objExists(mainCtrl + '.' + SERigNaming.sFACS_ControlModeAttr):
                 return True
             else:
                 return False 
         else:
             return False
+    
+    def getMeshNamesConnected(self):      
+        fb = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFacialBase)
+        ft = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFacialTarget)
+        ab = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnAUBase)
+        fc = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFaceCage)
+        lod0 = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFaceLOD0)
+        lod1 = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFaceLOD1)
+        auClean = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnAUClean)
+        faceClean = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFaceClean)
 
-    #----------------------------------- Pre-Build Related -----------------------------------    
+        #print([fb, ft, ab, fc, lod0, lod1, auClean, faceClean])
+
+        if fb == '' or ft == '' or ab == '' or fc == '' or lod0 == '' or lod1 == '' or auClean == '' or faceClean == '':
+            return False
+        else:
+            nameList = [fb, ft, ab, fc, lod0, lod1, auClean, faceClean]
+            #self.unlockObjs(nameList)
+            #print(nameList)
+            return nameList
+  
+    #----------------------------------- Pre-Build Related -----------------------------------     
     # If Rig Character Group Name is Valid, enable next period.        
     def checkRigCharacterGroupValid(self):
-        name = self.uiWindow.rigCharacterGrpLineEdit.text()
+        name = self.currentCharacterRigGroup
         if cmds.objExists(name):
             self.uiWindow.rigCharacterGrpLineEdit.setReadOnly(True)
             self.uiWindow.rigCharacterWarnLabel.hide()
             
-            
             nodeName = name + '.' + SERigNaming.sFACS_BuildSuccessAttr
-            nodeName2 = name + '.' + SERigNaming.sFACS_NameListAttr
-            if cmds.objExists(nodeName) and cmds.objExists(nodeName2):
+            meshNames = self.getMeshNamesConnected()
+            #print('checkRigCharacterGroupValid')
+            if cmds.objExists(nodeName) and meshNames:
                 scFlag = cmds.getAttr(nodeName)
                 if scFlag == 1:
-                    self.fillPrebuildNamesByCache()
-                    self.setFACSBuildSuccess()
+                    self.skipBuild = 1
+                    self.fillPrebuildNamesByCache(meshNames)
+                    self.setFACSBuildSuccess() 
+                    self.enableAUManagerTab(True)
                 else:
                     self.enablePrebuildFacialBase()
                     self.createScriptJobForPreBuildNameChanges()
+                    self.enableAUManagerTab(False)
             else:
+                self.enableAUManagerTab(False)
                 CharacterFacialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(name)
                 faceProxyRivetGrp = RigObjectTypeHelper.getFaceProxyControlRivetsGroup(CharacterFacialComponent)
                 proxyGroupChildren = cmds.listRelatives(faceProxyRivetGrp, c = True, type = 'transform') 
@@ -202,7 +258,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             self.uiWindow.facialTargetWarnLabel.hide()
             self.uiWindow.icon1.show()
             self.enablePrebuildAUBase()
-            self.createScriptJobForPreBuildNameDeleted(name)
+            #self.createScriptJobForPreBuildNameDeleted(name)
         else:
             self.uiWindow.facialTargetWarnLabel.show()
             self.uiWindow.facialTargetWarnLabel.setText('*Warning: Cannot find the "%s" mesh in the scene.' %name)
@@ -215,7 +271,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             self.uiWindow.auBaseWarnLabel.hide()
             self.uiWindow.icon2.show()
             self.enablePrebuildFaceCage()
-            self.createScriptJobForPreBuildNameDeleted(name)
+            #self.createScriptJobForPreBuildNameDeleted(name)
         else:
             self.uiWindow.auBaseWarnLabel.show()
             self.uiWindow.auBaseWarnLabel.setText('*Warning: Cannot find the "%s" mesh in the scene.' %name)
@@ -229,9 +285,9 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 self.uiWindow.facialBaseWarnLabel.hide()
                 self.enablePrebuildFacialTarget()
                 self.uiWindow.icon3.show()
-                self.createScriptJobForPreBuildNameDeleted(name)
+                #self.createScriptJobForPreBuildNameDeleted(name)
             else:
-                rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+                rigCharacterGrp = self.currentCharacterRigGroup
                 modelGrp = RigObjectTypeHelper.getCharacterModelGroup(rigCharacterGrp)
                 if modelGrp != None:
                     cmds.parent(name, modelGrp)
@@ -250,7 +306,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             self.uiWindow.faceCageWarnLabel.hide()
             self.enablePrebuildLOD0()
             self.uiWindow.icon4.show()
-            self.createScriptJobForPreBuildNameDeleted(name)
+            #self.createScriptJobForPreBuildNameDeleted(name)
         else:
             self.uiWindow.faceCageWarnLabel.show()
             self.uiWindow.faceCageWarnLabel.setText('*Warning: Cannot find the "%s" mesh in the scene.' %name)
@@ -263,7 +319,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             self.uiWindow.lod0WarnLabel.hide()
             self.uiWindow.icon5.show()
             self.enablePrebuildLOD1()
-            self.createScriptJobForPreBuildNameDeleted(name)
+            #self.createScriptJobForPreBuildNameDeleted(name)
         else:
             self.uiWindow.lod0WarnLabel.show()
             self.uiWindow.lod0WarnLabel.setText('*Warning: Cannot find the "%s" mesh in the scene.' %name)
@@ -272,16 +328,18 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     
     def checkFaceLOD1Valid(self):
         name = self.uiWindow.lod1LineEdit.text()
+        #print('checkLOD1, name is:%s' %name)
         
         if cmds.objExists(name):
             self.uiWindow.lod1WarnLabel.hide()
             self.uiWindow.icon6.show()
             if self.isNamesValid():
                 if self.skipBuild == 0:
+                    print("skipBuild = 0")
                     self.enableAUConfig()
                 elif self.skipBuild == 1:
                     self.uiWindow.confirmNamesBtn.show()
-                self.createScriptJobForPreBuildNameDeleted(name)
+                #self.createScriptJobForPreBuildNameDeleted(name)
         else:
             self.uiWindow.lod1WarnLabel.show()
             self.uiWindow.lod1WarnLabel.setText('*Warning: Cannot find the "%s" mesh in the scene.' %name)
@@ -291,7 +349,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     
     # check if DataBuffer has connected to AU BlendShape
     def isAUConnectedSuccess(self):
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        rigCharacterGrp = self.currentCharacterRigGroup
         try:
             facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGrp)
             controlMode = FacsHelper.getFACS_ControlMode(facialComponent)
@@ -310,7 +368,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if not cmds.objExists(inObject):
             return False
 
-        rigCharacterName = self.uiWindow.rigCharacterGrpLineEdit.text()
+        rigCharacterName = self.currentCharacterRigGroup
         curParent = cmds.listRelatives(inObject, p = True)
         while curParent:
             curParent = curParent[0]
@@ -319,7 +377,42 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             curParent = cmds.listRelatives(curParent, p = True)
         
         return False
+    
 
+    # connect target model to CharacterRigGroup    
+    def setRigGrpConnectionWithModelName(self, modelName, connIndex):
+        # check if the connection node exists in model
+        nameConnNode = modelName + '.' + DeformerHelper.FACS_ConnAttrTable[connIndex]
+        if not cmds.objExists(nameConnNode):
+            cmds.select(modelName, r = True)
+            cmds.addAttr(longName = DeformerHelper.FACS_ConnAttrTable[connIndex], at = 'message')
+        
+        # connect to rig 
+        connAttr = DeformerHelper.FACS_ConnAttrTable[connIndex]
+        rigCharacterGrp = self.currentCharacterRigGroup
+        nodeName = rigCharacterGrp + '.' + connAttr
+        cmds.select(rigCharacterGrp, r = True)
+        if not cmds.objExists(nodeName):
+            cmds.addAttr(longName = connAttr, at = 'message')
+        if not cmds.isConnected(nameConnNode, nodeName):
+            cmds.connectAttr(nameConnNode, nodeName, f=True)
+    
+    def getRigGrpConnectionWithModelName(self, connIndex):
+        connAttr = DeformerHelper.FACS_ConnAttrTable[connIndex]
+        rigCharacterGrp = self.currentCharacterRigGroup
+        nodeName = rigCharacterGrp + '.' + connAttr
+        if cmds.objExists(nodeName):
+            meshRes = cmds.listConnections(nodeName, s = True, d = False)
+            if not meshRes:
+                return ''
+            if len(meshRes) > 0:
+                return meshRes[0]
+            else:
+                return ''
+        else:
+            return ''
+
+    # set connections with Character Rig Group
     def lockNamesCallback(self):
         if self.isNamesValid():
             self.uiWindow.importFacialTargetBtn.setEnabled(False)
@@ -347,44 +440,45 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             self.killScriptJobForNameDelete()
             if cmds.scriptJob(ex = self.nameChange_job_id):
                 cmds.scriptJob(kill = self.nameChange_job_id, force = True)
+            
+            self.createScriptJobForSwitchControlMode()
         else:
             return
 
     def lockObj(self, inputList):
-        for obj in inputList:
+        for i in range(len(inputList)):
+            obj = inputList[i]
             if cmds.objExists(obj):
-                cmds.lockNode(obj, lock = True)
+                cmds.lockNode(obj, lock = False)
+                self.setRigGrpConnectionWithModelName(obj, i)
         
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        cmds.select(rigCharacterGrp, r = True)
-        if cmds.objExists(nodeName):
-            if cmds.getAttr(nodeName) == None or cmds.getAttr(nodeName) == []:
-                cmds.setAttr(nodeName, type = 'stringArray', *([len(inputList)] + inputList))
-        else:
-            cmds.addAttr(longName = SERigNaming.sFACS_NameListAttr, dt = 'stringArray')
-            cmds.setAttr(nodeName, type = 'stringArray', *([len(inputList)] + inputList))
+        # rigCharacterGrp = self.currentCharacterRigGroup
+        # nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
+        # cmds.select(rigCharacterGrp, r = True)
+        # if cmds.objExists(nodeName):
+        #     if cmds.getAttr(nodeName) == None or cmds.getAttr(nodeName) == []:
+        #         cmds.setAttr(nodeName, type = 'stringArray', *([len(inputList)] + inputList))
+        # else:
+        #     cmds.addAttr(longName = SERigNaming.sFACS_NameListAttr, dt = 'stringArray')
+        #     cmds.setAttr(nodeName, type = 'stringArray', *([len(inputList)] + inputList))
 
         #print cmds.getAttr(nodeName)
-    def unlockObj(self, inputList):
+    def unlockObjs(self, inputList):
         for obj in inputList:
-            cmds.lockNode(obj, lock = False)
-        
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        cmds.select(rigCharacterGrp, r = True)
-        if cmds.objExists(nodeName):
-            cmds.setAttr(nodeName, 0, type = 'stringArray')
+            if cmds.objExists(obj):
+                cmds.lockNode(obj, lock = False)
 
     def createAUandFaceCleanMesh(self):
         auBase = self.uiWindow.auBaseLineEdit.text()
         faceLOD0 = self.uiWindow.lod0LineEdit.text()
-        auClean = cmds.duplicate( auBase, rr = True, n = 'AUBaseClean' )
-        faceClean = cmds.duplicate( faceLOD0, rr = True, n = 'Face_LOD0_Clean' )
+        auClean = cmds.duplicate( auBase, rr = True, n = self.currentNamespace + 'AUBaseClean' )
+        faceClean = cmds.duplicate( faceLOD0, rr = True, n = self.currentNamespace + 'Face_LOD0_Clean' )
         self.uiWindow.cleanAULineEdit.setText(auClean[0])
         self.uiWindow.cleanFaceLineEdit.setText(faceClean[0])
         cmds.hide(auClean)
         cmds.hide(faceClean)
+        self.setRigGrpConnectionWithModelName(auClean[0], SERigNaming.sFACS_ConnAUClean)
+        self.setRigGrpConnectionWithModelName(faceClean[0], SERigNaming.sFACS_ConnFaceClean)
 
         print 'create clean.'
 
@@ -409,7 +503,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     #------------------------------------------------------
     def createScriptJobForPreBuildNameChanges(self):
         if self.nameChange_job_id == -1:
-            cmds.scriptJob(e = ("NameChanged", self.updateStatesForPrebuildNames))
+            self.nameChange_job_id = cmds.scriptJob(e = ("NameChanged", self.updateStatesForPrebuildNames))
     
     def createScriptJobForPreBuildNameDeleted(self, curName):
         newID = cmds.scriptJob(runOnce = True, nd = [curName, self.updateStatesForPrebuildNames])
@@ -434,17 +528,22 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         currentIndex = self.uiWindow.mainTabWidget.currentIndex()
         if currentIndex == 0:
             self.uiWindow.connectionMapStackedWidget.hide()
-            self.resizeUIWindowSize(600, 650)
+            self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(600, 650)
             #print '1'
         elif currentIndex == 1:
             self.uiWindow.connectionMapStackedWidget.hide()
             if self.uiWindow.AUListStackedWidget.currentIndex() == 0:
-                self.resizeUIWindowSize(600, 650)
+                self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(600, 650)
                 #print '2'
             elif self.uiWindow.AUListStackedWidget.currentIndex() == 1:
-                self.resizeUIWindowSize(750, 800)
-                self.resizeUIWindowSize(750, 800)
+                self.resizeUIWindowSize(self.sizeofAUSlider[0], self.sizeofAUSlider[1])#(750, 800)
+                #self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(750, 800)
                 #print '3'
+            # if self.isCharacterFaceRigCompleted():
+            #     self.enableAUManagerTab(True)
+            # else:
+            #     #self.uiWindow.auListTreeWidget.setEnabled(False)
+            #     self.enableAUManagerTab(False)
 
     #------------------------------------------------------
     def skipBuildConfirmBtnCallback(self):
@@ -476,15 +575,14 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.facialTargetLineEdit.setStyleSheet("QLineEdit { background-color : #2b2b2b; }")
         self.uiWindow.importFacialTargetBtn.setEnabled(True)
         
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        if cmds.objExists(nodeName):
-            nameList = cmds.getAttr(nodeName)
-            self.uiWindow.facialTargetLineEdit.setText(nameList[1])
+        rigCharacterGrp = self.currentCharacterRigGroup
+        meshName = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFacialTarget)
+        if meshName != '':
+            self.uiWindow.facialTargetLineEdit.setText(meshName)
             self.checkFacialTargetValid()
         else:
             res = cmds.ls(type = 'transform')
-            similarityRes = self.getMostSimilarString('FacialTarget', res) 
+            similarityRes = self.getMostSimilarString(self.currentNamespace + 'FacialTarget', res) 
             autoFillName = similarityRes[0]
             #print 'facialTarget:' + str(similarityRes[1])
             if autoFillName != '':
@@ -497,15 +595,14 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.auBaseLineEdit.setStyleSheet("QLineEdit { background-color : #2b2b2b; }")
         self.uiWindow.importAUBaseBtn.setEnabled(True)
         
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        if cmds.objExists(nodeName):
-            nameList = cmds.getAttr(nodeName)
-            self.uiWindow.auBaseLineEdit.setText(nameList[2])
+        rigCharacterGrp = self.currentCharacterRigGroup
+        meshName = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnAUBase)
+        if meshName != '':
+            self.uiWindow.auBaseLineEdit.setText(meshName)
             self.checkAUBaseValid()
         else:
             res = cmds.ls(type = 'transform')
-            similarityRes = self.getMostSimilarString('AUBase', res)
+            similarityRes = self.getMostSimilarString(self.currentNamespace + 'AUBase', res)
             autoFillName = similarityRes[0]
             #print 'AUBase:' + str(similarityRes[1])
             if autoFillName != '' and similarityRes[1]>=0.75:
@@ -519,20 +616,19 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.facialBaseLineEdit.setStyleSheet("QLineEdit { background-color : #2b2b2b; }")
         self.uiWindow.importFacialBaseBtn.setEnabled(True)
         
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        if cmds.objExists(nodeName):
-            nameList = cmds.getAttr(nodeName)
-            self.uiWindow.facialBaseLineEdit.setText(nameList[0])
+        rigCharacterGrp = self.currentCharacterRigGroup
+        meshName = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFacialBase)
+        if meshName != '':
+            self.uiWindow.facialBaseLineEdit.setText(meshName)
             self.checkFacialBaseValid()
         else:
             res = cmds.ls(type = 'transform')
-            similarityRes = self.getMostSimilarString('FacialBase', res)
+            similarityRes = self.getMostSimilarString(self.currentNamespace + 'FacialBase', res)
             autoFillName = similarityRes[0]
             #print 'FacialBase:' + str(similarityRes[1])
             if autoFillName != '' and similarityRes[1]>=0.75:
                 self.uiWindow.facialBaseLineEdit.setText(autoFillName)
-                self.checkFacialBaseValid()        
+                self.checkFacialBaseValid()      
         
     def enablePrebuildFaceCage(self):
         self.uiWindow.faceCageLineEdit.setEnabled(True)
@@ -540,17 +636,15 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.faceCageLineEdit.setStyleSheet("QLineEdit { background-color : #2b2b2b; }")
         self.uiWindow.importFaceCageBtn.setEnabled(True)
 
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        if cmds.objExists(nodeName):
-            nameList = cmds.getAttr(nodeName)
-            self.uiWindow.faceCageLineEdit.setText(nameList[3])
+        rigCharacterGrp = self.currentCharacterRigGroup
+        meshName = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFaceCage)
+        if meshName != '':
+            self.uiWindow.faceCageLineEdit.setText(meshName)
             self.checkFaceCageValid()
         else:
             res = cmds.ls(type = 'transform')
-            similarityRes = self.getMostSimilarString('FaceCage', res)
+            similarityRes = self.getMostSimilarString(self.currentNamespace + 'FaceCage', res)
             autoFillName = similarityRes[0]
-            #print 'FaceCage:' + str(similarityRes[1]         )
             if autoFillName != '' and similarityRes[1]>=0.75:
                 self.uiWindow.faceCageLineEdit.setText(autoFillName)
                 self.checkFaceCageValid()         
@@ -559,14 +653,13 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.lod0LineEdit.setEnabled(True)
         self.uiWindow.lod0LineEdit.setReadOnly(False)
         self.uiWindow.lod0LineEdit.setStyleSheet("QLineEdit { background-color : #2b2b2b; }")
-        if self.uiWindow.lod0LineEdit.text() != '':
-            self.checkFaceLOD0Valid()
         
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        if cmds.objExists(nodeName):
-            nameList = cmds.getAttr(nodeName)
-            self.uiWindow.lod0LineEdit.setText(nameList[4])
+        rigCharacterGrp = self.currentCharacterRigGroup
+        meshName = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFaceLOD0)
+        if meshName != '':
+            self.uiWindow.lod0LineEdit.setText(meshName)
+            self.checkFaceLOD0Valid()
+        elif self.uiWindow.lod0LineEdit.text() != '':
             self.checkFaceLOD0Valid()
         
 
@@ -574,15 +667,17 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.lod1LineEdit.setEnabled(True)
         self.uiWindow.lod1LineEdit.setReadOnly(False)
         self.uiWindow.lod1LineEdit.setStyleSheet("QLineEdit { background-color : #2b2b2b; }")
-        if self.uiWindow.lod1LineEdit.text() != '':
-            self.checkFaceLOD1Valid()
         
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        if cmds.objExists(nodeName):
-            nameList = cmds.getAttr(nodeName)
-            self.uiWindow.lod1LineEdit.setText(nameList[5])
-            self.checkFaceLOD1Valid()       
+        rigCharacterGrp = self.currentCharacterRigGroup   
+        meshName = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFaceLOD1)
+        if meshName != '':
+            self.uiWindow.lod1LineEdit.setText(meshName)
+            #print('--------------------1 zai zhe li')
+            self.checkFaceLOD1Valid()
+        elif self.uiWindow.lod1LineEdit.text() != '':
+            #print('--------------------2 feiye')
+            self.checkFaceLOD1Valid()
+
 
     def enableAUConfig(self):        
         AUBaseName = self.uiWindow.auBaseLineEdit.text()
@@ -594,17 +689,19 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             if self.time_job_id == -1:
                 self.createScriptJobForAUBlendShape()
         else:
+            #print("show Connect Map")
             self.enableShowConnectMap()
-            rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
-            nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-            if cmds.objExists(nodeName):
+            rigCharacterGrp = self.currentCharacterRigGroup
+            meshNames = self.getMeshNamesConnected()
+            if meshNames:#cmds.objExists(nodeName):
                 if self.isAUConnectedSuccess():
                     self.enableBuild()
                     self.uiWindow.auConnectBtn.setText('Reconnect')
-                    self.resizeUIWindowSize(600, 650) 
+                    self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(600, 650) 
                     self.lockNamesCallback()  
             else:
-                if not self.isRigBuiltByThisTool():
+                if self.isRigBuiltByThisTool(): #not
+                    #print('Skip Build?')
                     self.confirmNamesAndSkipBuildCallback()            
             
         
@@ -632,7 +729,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.auConnectBtn.setEnabled(False)
 
         self.uiWindow.connectionMapStackedWidget.hide()
-        self.resizeUIWindowSize(600,650)
+        self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(600,650)
         #print '4'
 
     def enableBuild(self):
@@ -668,7 +765,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     #-----------------------------------------------------
     def importFacialTargetCallback(self):
         before = set(cmds.ls(type = 'transform'))
-        multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;All Files (*.*)"
+        multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;FBX (*.fbx);;Object (*.obj);;All Files (*.*)"
         fileNamePath = cmds.fileDialog2(fm = 1, fileFilter = multipleFilters)[0]
         #cmds.file(fileNamePath, i = True, namespace = fileNamePath[:-3])
         namespace = 'facialTarget'
@@ -694,7 +791,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     def importAUBaseCallback(self):
         before = set(cmds.ls(type = 'transform'))
-        multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;All Files (*.*)"
+        multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;FBX (*.fbx);;Object (*.obj);;All Files (*.*)"
         fileNamePath = cmds.fileDialog2(fm = 1, fileFilter = multipleFilters, startingDirectory = auRootFile)[0]
         
         fileType = fileNamePath[-3:]
@@ -727,7 +824,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         sldel = cmds.ls(sl = True)
 
         newGrp = cmds.group(self.importedAU, n = 'ImportedAUGrp')
-        similarityAUBase = self.getMostSimilarString('AUBase', self.importedAU)
+        similarityAUBase = self.getMostSimilarString(self.currentNamespace + 'AUBase', self.importedAU)
         if similarityAUBase[1] > 0.7:
             self.uiWindow.auBaseLineEdit.setText(similarityAUBase[0])
             self.checkAUBaseValid()
@@ -736,7 +833,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     def importFacialBaseCallback(self):
         before = set(cmds.ls(type = 'transform'))
-        multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;All Files (*.*)"
+        multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;FBX (*.fbx);;Object (*.obj);;All Files (*.*)"
         fileNamePath = cmds.fileDialog2(fm = 1, fileFilter = multipleFilters)[0]
         namespace = 'facialBase'
         cmds.file(fileNamePath, i = True, namespace = namespace)
@@ -744,7 +841,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         after = set(cmds.ls(type = 'transform'))
         importedMeshes = after - before
 
-        rigCharacterGroup = self.uiWindow.rigCharacterGrpLineEdit.text()
+        rigCharacterGroup = self.currentCharacterRigGroup
         cmds.parent(importedMeshes, rigCharacterGroup)
 
         cmds.select(clear = True)
@@ -761,7 +858,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     def importFaceCageCallback(self):
         before = set(cmds.ls(type = 'transform'))
-        multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;All Files (*.*)"
+        multipleFilters = "Maya Files (*.ma *.mb);;Maya ASCII (*.ma);;Maya Binary (*.mb);;FBX (*.fbx);;Object (*.obj);;All Files (*.*)"
         fileNamePath = cmds.fileDialog2(fm = 1, fileFilter = multipleFilters, startingDirectory = faceCageRootFile)[0]
         namespace = 'FaceCage'
         #print namespace
@@ -793,15 +890,36 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     # getRigCharacterGroupName
     def getRigCharacterName(self):
         try:
-            characterGrpName = RigObjectTypeHelper.listRigCharacterGroups()[0]
-            return characterGrpName
+            characterGrpNames = RigObjectTypeHelper.listRigCharacterGroups()[0]
+            return characterGrpNames
+        except:
+            cmds.warning('No Rig Character Group found. Please check your file.')
+            return []
+
+    def getRigCharacterGroupNames(self):
+        try:
+            characterGrpNames = RigObjectTypeHelper.listRigCharacterGroups()
+            return characterGrpNames
         except:
             cmds.warning('No Rig Character Group found. Please check your file.')
             return []
     
+    def changeCharacterRigGroupNameCallback(self):
+        self.killScriptJobForAUWeight()
+        self.killScriptJobForSwitchMode()
+        self.ctrlDataList = {}
+        self.auDataList = {}
+        self.uiWindow.tipBuildWidget.hide()
+        self.currentCharacterRigGroup = self.uiWindow.rigCharacterGrpComboBox.itemText(self.uiWindow.rigCharacterGrpComboBox.currentIndex())
+        self.currentNamespace = StringHelper.SE_GetNamespace(self.currentCharacterRigGroup)
+        
+        self.checkRigCharacterGroupValid()
+        self.uiWindow.confirmNamesBtn.hide()
+        self.createScriptJobForSwitchControlMode()
+        self.updateControlModeDisplay()
     #-----------------------------------------------------
     def storeAUsToCustomMap(self, tokenSeparator = '_'):
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(characterRigGrp)
         customMapBuffer = FacsHelper.getFACS_CustomConnectionMapBuffer(facialComponent)
 
@@ -940,6 +1058,9 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.facialBaseHelpBtn.clicked.connect(functools.partial(self.popHelpWindow, 0))
         self.uiWindow.facialTargetHelpBtn.clicked.connect(functools.partial(self.popHelpWindow, 1))
         self.uiWindow.faceCageBtn.clicked.connect(functools.partial(self.popHelpWindow, 3))
+
+        # 'RigCharacterGroupNames' ComboBox
+        self.uiWindow.rigCharacterGrpComboBox.currentTextChanged.connect(self.changeCharacterRigGroupNameCallback)
     
     #------------------------------ Pop Help Window Related ------------------------------
     def popHelpWindow(self, showType):
@@ -986,7 +1107,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             DeformerHelper.connectFACSDataBufferToAUBlendshape()
         else:
             self.confirmConnectMapCallback()
-            characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+            characterRigGrp = self.currentCharacterRigGroup
             facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(characterRigGrp)
             customMapBuffer = FacsHelper.getFACS_CustomConnectionMapBuffer(facialComponent)
             customMap = {}
@@ -994,17 +1115,18 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
                 key = SERigNaming.auAttrList[auType]
                 value = cmds.getAttr(customMapBuffer + '.' + key)
                 customMap[key] = value
+            #print(customMap)
             DeformerHelper.connectFACSDataBufferToAUBlendshape(customMap)
 
       
         self.uiWindow.auConnectBtn.setText('Reconnect')
         self.enableBuild()
         self.lockNamesCallback()
-        self.resizeUIWindowSize(600, 650) 
+        self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(600, 650) 
         #print '5'          
 
     def disconnectAUConnection(self):
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        rigCharacterGrp = self.currentCharacterRigGroup
         facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGrp)
         controlMode = FacsHelper.getFACS_ControlMode(facialComponent)
         if not cmds.objExists("{}.{}".format(controlMode, SERigNaming.sFACS_AUConnectedAttr)):
@@ -1035,7 +1157,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     def buildBtnCallback(self):
         facialTargetName = self.uiWindow.facialTargetLineEdit.text()
         auBaseName = self.uiWindow.auBaseLineEdit.text()
-        rigGroupName = self.uiWindow.rigCharacterGrpLineEdit.text()
+        rigGroupName = self.currentCharacterRigGroup
         facialBaseName = self.uiWindow.facialBaseLineEdit.text()
         faceCageName = self.uiWindow.faceCageLineEdit.text()
         lod1Name = self.uiWindow.lod1LineEdit.text()
@@ -1060,6 +1182,9 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             cmds.select(rigGroupName, r = True)
             jnts = JointHelper.getSlaveFacialBaseJointsFromSelectedRigCharacterGroup()
             cmds.select(jnts, r = True)
+            # optional step: remove namespace
+            newJtns = [cmds.rename(jt, jt.rpartition(":")[2]) for jt in jnts]
+            #print(newJtns)
 
             #Step 3: Bind Skin For FacialBase
             cmds.select(self.uiWindow.facialBaseLineEdit.text(), add = True)
@@ -1070,7 +1195,8 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             faceWeightFileName = self.uiWindow.facialBaseWeightImportComboBox.itemText(self.uiWindow.facialBaseWeightImportComboBox.currentIndex())
             if faceWeightFileName != None:
                 faceWeightFilePath = faceWeightFootFile + faceWeightFileName
-                cmds.deformerWeights(faceWeightFileName, p = faceWeightFootFile, im = True, deformer = faceCluster)  
+                cmds.deformerWeights(faceWeightFileName, p = faceWeightFootFile, im = True, deformer = faceCluster, ignoreName = True)  
+            restoreJtns = [cmds.rename(njt, self.currentNamespace + njt.rpartition(":")[2]) for njt in newJtns]
 
             #Step 5: Triangulate FacialBase To FacialBaseTri and add blendshape
             faceTriName = cmds.duplicate(facialBaseName, n = facialBaseName + "Tri")[0]
@@ -1092,9 +1218,11 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             #Step 8: Mark Success For Rig Character Grp
             self.setFACSBuildSuccess()
 
+
         except Exception as e:
-            print e
+            print("Exception:%s" %e)
             cmds.warning('Build Failed.')
+            traceback.print_exc()
             return
 
     # Check if All the names are matched with meshes in the scene
@@ -1119,10 +1247,11 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.mainTabWidget.setCurrentIndex(1)
         self.uiWindow.connectionMapStackedWidget.hide()
         if self.uiWindow.AUListStackedWidget.currentIndex() == 0:
-            self.resizeUIWindowSize(600, 650)
+            self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(600, 650)
             #print '6'
         else:
-            self.resizeUIWindowSize(750, 800)
+            self.resizeUIWindowSize(self.sizeofAUSlider[0], self.sizeofAUSlider[1])#(750, 800)
+            #print('00')
     
     def enableBuildTab(self, boolValue):
         self.uiWindow.importFacialTargetBtn.setEnabled(boolValue)
@@ -1161,26 +1290,35 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.layoutDefaultBuildSuccess()
         self.synAUList()
         self.enableAUManagerTab(True)
+        self.setBuildSuccessAttr(True)
         
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        auClean = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnAUClean)
+        faceClean = self.getRigGrpConnectionWithModelName(SERigNaming.sFACS_ConnFaceClean)
+        self.uiWindow.cleanAULineEdit.setText(auClean)
+        self.uiWindow.cleanFaceLineEdit.setText(faceClean)
+
+        self.killScriptJobForNameChange()
+        #print('current character is:%s' %self.currentCharacterRigGroup)
+        #print('auclean mesh name is:%s' %auClean)
+        #print('current Namespace is:%s' %self.currentNamespace)
+    
+    def setBuildSuccessAttr(self, flag = True):
+        rigCharacterGrp = self.currentCharacterRigGroup
         nodeName = rigCharacterGrp + '.' + SERigNaming.sFACS_BuildSuccessAttr
         cmds.select(rigCharacterGrp, r = True)
-        if cmds.objExists(nodeName):
-            cmds.setAttr(nodeName, 1)
+        if flag == True:
+            if cmds.objExists(nodeName):
+                cmds.setAttr(nodeName, 1)
+            else:
+                cmds.addAttr(longName = SERigNaming.sFACS_BuildSuccessAttr, dv = 1)
         else:
-            cmds.addAttr(longName = SERigNaming.sFACS_BuildSuccessAttr, dv = 1)
+            if cmds.objExists(nodeName):
+                cmds.setAttr(nodeName, 0)
+            else:
+                cmds.addAttr(longName = SERigNaming.sFACS_BuildSuccessAttr, dv = 0)
 
-        nodeName2 = rigCharacterGrp + '.' + SERigNaming.sFACS_NameListAttr
-        if cmds.objExists(nodeName2):
-            auClean = cmds.getAttr(nodeName2)[6]
-            faceClean = cmds.getAttr(nodeName2)[7]
-            self.uiWindow.cleanAULineEdit.setText(auClean)
-            self.uiWindow.cleanFaceLineEdit.setText(faceClean)
-    
-    def fillPrebuildNamesByCache(self):
-        name = self.uiWindow.rigCharacterGrpLineEdit.text()
-        nodeName = name + '.' + SERigNaming.sFACS_NameListAttr
-        nameList = cmds.getAttr(nodeName)
+    def fillPrebuildNamesByCache(self, nameList):
+        #print('fill name')
         self.uiWindow.facialBaseLineEdit.setText(nameList[0])
         self.uiWindow.facialTargetLineEdit.setText(nameList[1])
         self.uiWindow.auBaseLineEdit.setText(nameList[2])
@@ -1190,6 +1328,17 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.lod1LineEdit.setText(nameList[5])
         self.uiWindow.cleanAULineEdit.setText(nameList[6])
         self.uiWindow.cleanFaceLineEdit.setText(nameList[7])
+    
+    def clearPrebuildNames(self):
+        self.uiWindow.facialBaseLineEdit.setText('')
+        self.uiWindow.facialTargetLineEdit.setText('')
+        self.uiWindow.auBaseLineEdit.setText('')
+        
+        self.uiWindow.faceCageLineEdit.setText('')
+        self.uiWindow.lod0LineEdit.setText('')
+        self.uiWindow.lod1LineEdit.setText('')
+        self.uiWindow.cleanAULineEdit.setText('')
+        self.uiWindow.cleanFaceLineEdit.setText('')
 
     #----------------------------------- Delete Event ------------------------------------
     # Close Window Event
@@ -1208,23 +1357,47 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.killScriptJobForAUWeight()
         self.killScriptJobForNameDelete()
 
-        if self.isRigBuiltByThisTool():
-            self.confirmConnectMapCallback()
+        #if self.isRigBuiltByThisTool():
+        #    self.confirmConnectMapCallback()
         
-        if cmds.scriptJob(ex = self.mode_job_id):
-            cmds.scriptJob(kill = self.mode_job_id)
+        if self.mode_job_id != []:
+            cmds.scriptJob(kill = self.mode_job_id, force = True)
 
         if cmds.scriptJob(ex = self.time_job_id):
             cmds.scriptJob(kill = self.time_job_id, force = True)
 
         if cmds.scriptJob(ex = self.nameChange_job_id):
             cmds.scriptJob(kill = self.nameChange_job_id, force = True)
+    
+    #----------------------------------- sciptJob Event--------------------------------
+    # Kill all AU Script Jobs
+    def killScriptJobForAUWeight(self):
+        global AUjob_id_list
+        if AUjob_id_list != []:
+            cmds.scriptJob(kill = AUjob_id_list, force = True)
+            AUjob_id_list = []
+    
+    def killScriptJobForNameDelete(self):
+        global nameDel_id_list
+        if nameDel_id_list != []:
+            cmds.scriptJob(kill = nameDel_id_list, force = True)
+            nameDel_id_list = []
+    
+    def killScriptJobForNameChange(self):
+        if cmds.scriptJob(ex = self.nameChange_job_id):
+            cmds.scriptJob(kill = self.nameChange_job_id, force = True)
+        self.nameChange_job_id = -1
+    
+    def killScriptJobForSwitchMode(self):
+        if self.mode_job_id != []:
+            cmds.scriptJob(kill = self.mode_job_id, force = True)
+            self.mode_job_id = []
 
     #----------------------------------- AU Related --------------------------------------
     # Synchronize items in AU List
     def synAUList(self):
         # Get AU Object Name From ConnectMap
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         auBaseObj = self.uiWindow.auBaseLineEdit.text()
 
         # toolUsed = True
@@ -1272,19 +1445,19 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         
         if not self.isAUConnectedSuccess():
             if self.uiWindow.noneMapBtn.isChecked():
-                connectMap = DeformerHelper.dataBufferAUsToBlendshapeAUsTable
+                connectMap = self.defaultAUsTable #DeformerHelper.dataBufferAUsToBlendshapeAUsTable
             elif self.uiWindow.customMapBtn.isChecked():
-                connectMap = DeformerHelper.dataBufferAUsToBlendshapeAUsTable
+                connectMap = self.defaultAUsTable #DeformerHelper.dataBufferAUsToBlendshapeAUsTable
                 for name in connectMap:
                     connectMap[name] = cmds.getAttr(customMapBuffer + '.' + name)
         else:
             isUsingCustom = cmds.getAttr(controlMode + '.' + SERigNaming.sFACS_IsUsingCustomMapAttr)
-            #print isUsingCustom
+            #print("Is Using Custom:",isUsingCustom)
             if not isUsingCustom:
-                connectMap = DeformerHelper.dataBufferAUsToBlendshapeAUsTable
+                connectMap = self.defaultAUsTable #DeformerHelper.dataBufferAUsToBlendshapeAUsTable
                 #print 'default map'
             else:
-                connectMap = DeformerHelper.dataBufferAUsToBlendshapeAUsTable
+                connectMap = self.defaultAUsTable #DeformerHelper.dataBufferAUsToBlendshapeAUsTable
                 for name in connectMap:
                     connectMap[name] = cmds.getAttr(customMapBuffer + '.' + name)
                     #print connectMap[name]
@@ -1293,10 +1466,12 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         for auType in DeformerHelper.facialActionUnitTypeList:
             key = SERigNaming.auAttrList[auType]
             value = connectMap[key]
+            value = value.rpartition(':')[2]
             alias = DeformerHelper.AUsAliasTable[key]
 
             ctrlData = [FacsHelper.getFacialActionUnitAttrName(facsCtrlBuffer, auType), alias, key]
             auData =  [FacsHelper.getFacialActionUnitAttrName(facsAUBuffer, auType), alias, key]
+            #print(auData[0])
 
             bsTargetName = DeformerHelper.getBlendshapTargetNameByMatchName(auBlendShapeNode, value, True)
             if bsTargetName and ctrlData and auData:
@@ -1307,6 +1482,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if self.uiWindow.controllerRadioBtn.isChecked():
             self.showControllerAUList()
         else: 
+            #print('Show AU Slider List')
             self.showSliderAUList()
 
 
@@ -1315,13 +1491,15 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if not self.isRigBuiltByThisTool():
             return
 
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(characterRigGrp)
         controlModeGrp = FacsHelper.getFACS_ControlMode(facialComponent)
         if controlModeGrp == None:
             return
-
-        self.mode_job_id = cmds.scriptJob(attributeChange = ["{}.{}".format(controlModeGrp, SERigNaming.sFACS_ControlModeAttr), self.updateControlModeDisplay])
+        
+        j_id = cmds.scriptJob(attributeChange = ["{}.{}".format(controlModeGrp, SERigNaming.sFACS_ControlModeAttr), self.updateControlModeDisplay])
+        self.mode_job_id.append(j_id)
+        print("create script job for: %s, id is %s" %(characterRigGrp, j_id))
 
     # When the mode in MainCtrl Changes, it also changes
     def updateControlModeDisplay(self):
@@ -1332,7 +1510,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             return
         
         #print 'trigger'
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(characterRigGrp)
         controlModeGrp = FacsHelper.getFACS_ControlMode(facialComponent)
 
@@ -1356,9 +1534,9 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.sliderRadioBtn.setEnabled(False)
         self.uiWindow.controllerRadioBtn.setEnabled(False)
 
-    # If the file is not built by FACS tool before, then need to add control mode switch manually
+    # If the file was not built by FACS tool before, then need to add control mode switch manually
     def addSliderControlModeCallback(self):
-        rigCharacterGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        rigCharacterGrp = self.currentCharacterRigGroup
         facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(rigCharacterGrp)
         
         AUBaseName = self.uiWindow.auBaseLineEdit.text()
@@ -1370,33 +1548,60 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             return
 
         # Firstly, disconnect the link between BlendShapes and FACS_Data_Buffer
+        formerConnectMap = {}
         facsDataBuffer = FacsHelper.getFACS_DataBuffer(facialComponent)
         for auType in DeformerHelper.facialActionUnitTypeList:
             key = SERigNaming.auAttrList[auType]
-            value = DeformerHelper.dataBufferAUsToBlendshapeAUsTable[key]
+            #value = self.defaultAUsTable[key] #DeformerHelper.dataBufferAUsToBlendshapeAUsTable[key]
             srcCtrlData = FacsHelper.getFacialActionUnitAttrName(facsDataBuffer, auType)   
             if srcCtrlData:
-                #cmds.disconnectAttr(srcCtrlData, auBlendShape + '.' +)
-                bsNode = DeformerHelper.getBlendshapTargetNameByMatchName(auBlendShape, value, True)
+                #bsNode = DeformerHelper.getBlendshapTargetNameByMatchName(auBlendShape, value, True)
+                allNodes = cmds.connectionInfo(srcCtrlData, destinationFromSource = True)
+                bsNode = [n for n in allNodes if auBlendShape in n]
                 if bsNode:
-                    print bsNode
+                    #print(bsNode[0])
+                    formerConnectMap[key] = self.currentNamespace + bsNode[0].rpartition('.')[2]
                     try:
-                        cmds.disconnectAttr(srcCtrlData, bsNode)
+                        cmds.disconnectAttr(srcCtrlData, bsNode[0])
                     except:
                         pass
+                else:
+                    formerConnectMap[key] = ''
 
-        # Secondly, create AUBuffer and Control Mode Switch Node and Custom Data Map
+        # Secondly, create AUBuffer and Control Mode Switch Node and Custom Data Map. 
         if FacsHelper.getFACS_AUBuffer(facialComponent) == None:
             SERigHumanFacialComponent.createFACS_AUBuffer(facialComponent)
         if FacsHelper.getFACS_ControlMode(facialComponent) == None:
             SERigHumanFacialComponent.createFACS_ControlModeSwitch(facialComponent)
         if FacsHelper.getFACS_CustomConnectionMapBuffer(facialComponent) == None:
             SERigHumanFacialComponent.createCustomConnectionMapBuffer(facialComponent)
+            if formerConnectMap != {}:
+                customMapBuffer = FacsHelper.getFACS_CustomConnectionMapBuffer(facialComponent)
+                for auType in DeformerHelper.facialActionUnitTypeList:
+                    key = SERigNaming.auAttrList[auType]
+                    value = formerConnectMap[key]
+                    cmds.setAttr(customMapBuffer + '.' + key, value, type = 'string')
+            
+            
 
         # Thirdly, connect data and blendshape
-        cmds.select(AUBaseName, r = True)
-        cmds.select(FacialBaseName, add = True)
-        DeformerHelper.connectFACSDataBufferToAUBlendshape()
+        #characterRigGrp = self.currentCharacterRigGroup
+        #facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(characterRigGrp)
+        if formerConnectMap !={}:
+            customMapBuffer = FacsHelper.getFACS_CustomConnectionMapBuffer(facialComponent)
+            if customMapBuffer:
+                customMap = {}
+                for auType in DeformerHelper.facialActionUnitTypeList:
+                    key = SERigNaming.auAttrList[auType]
+                    value = cmds.getAttr(customMapBuffer + '.' + key)
+                    customMap[key] = value
+                cmds.select(AUBaseName, r = True)
+                cmds.select(FacialBaseName, add = True)
+                DeformerHelper.connectFACSDataBufferToAUBlendshape(customMap)
+            else:
+                cmds.select(AUBaseName, r = True)
+                cmds.select(FacialBaseName, add = True)
+                DeformerHelper.connectFACSDataBufferToAUBlendshape()
 
         # Fourthly, create clean meshes
         self.createAUandFaceCleanMesh()
@@ -1407,13 +1612,13 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.controllerRadioBtn.setEnabled(True)
 
         # add script Job
-        if self.mode_job_id == -1:
-            self.createScriptJobForSwitchControlMode()
+        #if self.mode_job_id == -1:
+        self.createScriptJobForSwitchControlMode()
         
 
     # Define Callback: Switch Control Mode
     def switchContrlModeCallback(self):
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         if not cmds.objExists(characterRigGrp):
             cmds.warning('Switch Failed.')
             return
@@ -1423,22 +1628,23 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if mainCtrl:
             if self.uiWindow.controllerRadioBtn.isChecked():
                 cmds.setAttr(mainCtrl + '.' + SERigNaming.sFACS_ControlModeAttr, 1)
-                self.resizeUIWindowSize(600, 650)
+                self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(600, 650)
                 #print '7'
 
             elif self.uiWindow.sliderRadioBtn.isChecked():
                 cmds.setAttr(mainCtrl + '.' + SERigNaming.sFACS_ControlModeAttr, 0)
-                self.resizeUIWindowSize(750, 800)
-                self.resizeUIWindowSize(750, 800)
+                self.resizeUIWindowSize(self.sizeofAUSlider[0], self.sizeofAUSlider[1])#(750, 800)
+                #self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(750, 800)
 
     def showControllerAUList(self):
-        self.resizeUIWindowSize(600, 650)
+        self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(600, 650)
+        #print('ShowControllerAUList')
         self.uiWindow.auListTreeWidget.clear()
         #print 'len:' + str(len(self.ctrlDataList))
         for name in self.ctrlDataList:
             weightNodeName = self.ctrlDataList[name][0]
             alias = self.ctrlDataList[name][1]
-            item = CustomAUListItem(self.uiWindow.auListTreeWidget, name, alias, weightNodeName, 1)
+            item = CustomAUListItem(self.uiWindow.auListTreeWidget, self.currentNamespace + name, alias, weightNodeName, 1)
         for column in range(self.uiWindow.auListTreeWidget.columnCount()):
             self.uiWindow.auListTreeWidget.resizeColumnToContents(column)
         
@@ -1455,8 +1661,9 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         for column in range(self.uiWindow.auListTreeWidget.columnCount()):
             self.uiWindow.auListTreeWidget.resizeColumnToContents(column)
         '''
-        self.resizeUIWindowSize(750, 800)
-        self.resizeUIWindowSize(750, 800)
+        self.resizeUIWindowSize(self.sizeofAUSlider[0], self.sizeofAUSlider[1])#(750, 800)
+        #self.resizeUIWindowSize(self.sizeofBuild[0], self.sizeofBuild[1])#(750, 800)
+        #print('showSlider')
         self.uiWindow.AUListStackedWidget.setCurrentIndex(1)
         self.updateSliderAUList()
 
@@ -1473,7 +1680,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             if self.uiWindow.auNameRadioBtn.isChecked():
                 displayName = auName
             elif self.uiWindow.meshNameRadioBtn.isChecked():
-                displayName = meshName
+                displayName = self.currentNamespace + meshName #weightNodeName
             elif self.uiWindow.aliasRadioBtn.isChecked():
                 displayName = alias
                 if alias == '' or alias == None:
@@ -1524,13 +1731,15 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     def auSliderValueChange(self, weightNode, sliderName, *args):
         getSliderValueStr = "{} = {}.{}.{}".format('sliderValue', 'self.uiWindow', sliderName, 'value()')
         exec(getSliderValueStr)
-        weightValue = sliderValue * 0.01
-        cmds.setAttr(weightNode, weightValue)
+        if self.currentNamespace == StringHelper.SE_GetNamespace(weightNode):
+            weightValue = sliderValue * 0.01
+            cmds.setAttr(weightNode, weightValue)
+            #print(weightNode)
 
 
     def autoFillCustomAUsCallback(self):
         self.uiWindow.customConnectMapTreeWidget.clear()
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(characterRigGrp)
         customMapBuffer = FacsHelper.getFACS_CustomConnectionMapBuffer(facialComponent)
 
@@ -1542,8 +1751,12 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             weightCount = cmds.blendShape(blsNode, q = True, wc = True)
             for index in xrange(weightCount):
                 aliasName = cmds.aliasAttr(attr.format(index), q = True)
-                res = self.getMostSimilarString(aliasName, SERigNaming.auAttrList)
+                shortName = aliasName.rpartition(':')[2]
+                res = self.getMostSimilarString(shortName, SERigNaming.auAttrList)
                 if res[1] >= 0.7:
+                    if StringHelper.SE_GetNamespace(aliasName) != self.currentNamespace:
+                        aliasName = self.currentNamespace + shortName
+                        #print(aliasName)
                     cmds.setAttr(customMapBuffer + '.' + res[0], aliasName, type = 'string')
                     if not cmds.objExists(aliasName):
                         nameInScene = self.findClosestNameInScene(aliasName, 0.9)
@@ -1561,7 +1774,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     def clearCustomAUsCallback(self):
         self.uiWindow.customConnectMapTreeWidget.clear()
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         facialComponent = RigObjectTypeHelper.getCharacterFacialComponentGroup(characterRigGrp)
         customMapBuffer = FacsHelper.getFACS_CustomConnectionMapBuffer(facialComponent)
 
@@ -1579,20 +1792,6 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             return sim[0]
         else:
             return None
-    
-    #-------------------------------------------------------------------------------------
-    # Kill all AU Script Jobs
-    def killScriptJobForAUWeight(self):
-        global AUjob_id_list
-        if AUjob_id_list != []:
-            cmds.scriptJob(kill = AUjob_id_list)
-            AUjob_id_list = []
-    
-    def killScriptJobForNameDelete(self):
-        global nameDel_id_list
-        if nameDel_id_list != []:
-            cmds.scriptJob(kill = nameDel_id_list)
-            nameDel_id_list = []
 
     #--------------------------------- Connect Map Related -------------------------------
     # switch Connect Map Between Default to 
@@ -1602,18 +1801,18 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             self.uiWindow.connectionMapStackedWidget.setCurrentIndex(1)
             self.uiWindow.connectionMapStackedWidget.show()
             self.showDefaultConnectMap()
-            self.resizeUIWindowSize(1200,650)
-            self.resizeUIWindowSize(1200,650)
+            self.resizeUIWindowSize(self.sizeofConnectMap[0], self.sizeofConnectMap[1])#(1200,650)
+            #self.resizeUIWindowSize(1200,650)
         elif self.uiWindow.customMapBtn.isChecked():
             self.uiWindow.connectionMapStackedWidget.setCurrentIndex(0)
             self.uiWindow.connectionMapStackedWidget.show()
             self.showCustomConnectMap()
-            self.resizeUIWindowSize(1200,650)
-            self.resizeUIWindowSize(1200,650)
+            self.resizeUIWindowSize(self.sizeofConnectMap[0], self.sizeofConnectMap[1])#(1200,650)
+            #self.resizeUIWindowSize(1200,650)
             
     def showCustomConnectMap(self):
         self.uiWindow.customConnectMapTreeWidget.clear()
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         if characterRigGrp == None:
             cmds.warn('No character Rig Group Found.')
             return
@@ -1631,12 +1830,12 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
     def showDefaultConnectMap(self):
         self.uiWindow.defaultConnectMapTreeWidget.clear()
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         if characterRigGrp == None:
             cmds.warn('No character Rig Group Found.')
             return
         
-        connectMap = DeformerHelper.dataBufferAUsToBlendshapeAUsTable
+        connectMap = self.defaultAUsTable #DeformerHelper.dataBufferAUsToBlendshapeAUsTable
         for auType in DeformerHelper.facialActionUnitTypeList:
             key = SERigNaming.auAttrList[auType]
             value = connectMap[key]
@@ -1651,7 +1850,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     def confirmConnectMapCallback(self):
         #self.uiWindow.customConnectMapTreeWidget.setHeaderLabels(['AU', 'Alias', 'Custom AU Mesh Name'])
         customMapTable = {}
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         if characterRigGrp == None:
             cmds.warn('No character Rig Group Found.')
             return
@@ -1665,6 +1864,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             customName = str(i.value().customEdit.text())
             cmds.setAttr(customMapBuffer + '.' + auName, customName, type = 'string')
             customMapTable[auName] = customName
+        #print(customMapTable)
         return customMapTable
 
     def exportCustomConnectMap(self):
@@ -1678,7 +1878,7 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
             DeformerHelper.exportCustomConnectMap(fileResult, customMap)
 
     def importCustomConnectMap(self):
-        characterRigGrp = self.uiWindow.rigCharacterGrpLineEdit.text()
+        characterRigGrp = self.currentCharacterRigGroup
         if characterRigGrp == None:
             cmds.warn('Cannot find character Rig Group.')
             return
@@ -1698,9 +1898,11 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     def getDefaultConnectMapMatchRate(self):
         totalCounts = 0
         matchCounts = 0
+        
+        #print self.defaultAUsTable #DeformerHelper.dataBufferAUsToBlendshapeAUsTable
         for auType in DeformerHelper.facialActionUnitTypeList:
             key = SERigNaming.auAttrList[auType]
-            value = DeformerHelper.dataBufferAUsToBlendshapeAUsTable[key]
+            value = self.defaultAUsTable[key] #DeformerHelper.dataBufferAUsToBlendshapeAUsTable[key]
             if value != '' and value != None:
                 totalCounts = totalCounts + 1
                 if cmds.objExists(value):
@@ -1732,7 +1934,8 @@ class FACSManagerUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         baseZ = cmds.getAttr(AUBaseName + ".tz")
         if self.ctrlDataList != {} and self.auDataList != {}:
             for name in self.ctrlDataList:
-                cmds.select(name, add = True)
+                cmds.select(self.currentNamespace + name, add = True)
+                cmds.showHidden()
 
             usedAUs = cmds.ls(sl = True)
             counts = len(usedAUs)
@@ -1925,8 +2128,9 @@ class DefaultConnectionMapItem(QtWidgets.QTreeWidgetItem):
         self.setText(0, self.name)
         self.setText(1, self.aliasName)
         self.setText(2, self.defaultName)
-        if not cmds.objExists(self.defaultName):
-            self.setTextColor(2, 'red')
+        if self.defaultName:
+            if not cmds.objExists(self.defaultName):
+                self.setTextColor(2, 'red')
 
         self.treeWidget().setSelectionMode(QtWidgets.QAbstractItemView.ContiguousSelection)    
 

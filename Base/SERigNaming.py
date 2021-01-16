@@ -47,6 +47,16 @@ sFACS_CustomConnectionMapAttr = 'FACS_CustomConnectionMapBuffer'
 sFACS_NameListAttr = 'FACS_NameList'
 sFACS_BuildSuccessAttr = 'FACS_BuildSuccess'
 sFACS_IsUsingCustomMapAttr = 'FACS_IsUsingCustomMap'
+sFACS_NameToControlGrpAttr = 'FACS_ConnectToRigGrp'
+sFACS_ConnFacialBase = 0
+sFACS_ConnFacialTarget = 1
+sFACS_ConnAUBase = 2
+sFACS_ConnFaceCage = 3
+sFACS_ConnFaceLOD0 = 4
+sFACS_ConnFaceLOD1 = 5
+sFACS_ConnAUClean = 6
+sFACS_ConnFaceClean = 7
+
 
 sOwnerSuffix                               = 'Owner'
 sControlObject                             = 'ControlObject'

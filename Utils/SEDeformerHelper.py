@@ -289,6 +289,16 @@ AUsAliasTable[SERigNaming.sAU_Eye_R_LookLeft_Blink_Attr]    = 'Eye LookLeftBlink
 AUsAliasTable[SERigNaming.sAU_Eye_R_LookRight_Blink_Attr]   = 'Eye LookRightBlink_R'
 AUsAliasTable[SERigNaming.sAU_Eye_R_LookUp_Blink_Attr]      = 'Eye LookUpBlink_R'
 AUsAliasTable[SERigNaming.sAU_Eye_R_LookDown_Blink_Attr]    = 'Eye LookDownBlink_R'
+
+FACS_ConnAttrTable = {}
+FACS_ConnAttrTable[SERigNaming.sFACS_ConnFacialBase] = 'FACS_FacialBaseMesh'
+FACS_ConnAttrTable[SERigNaming.sFACS_ConnFacialTarget] = 'FACS_FacialTargetMesh'
+FACS_ConnAttrTable[SERigNaming.sFACS_ConnAUBase] = 'FACS_AUBaseMesh'
+FACS_ConnAttrTable[SERigNaming.sFACS_ConnFaceCage] = 'FACS_FaceCageMesh'
+FACS_ConnAttrTable[SERigNaming.sFACS_ConnFaceLOD0] = 'FACS_FaceLOD0Mesh'
+FACS_ConnAttrTable[SERigNaming.sFACS_ConnFaceLOD1] = 'FACS_FaceLOD1Mesh'
+FACS_ConnAttrTable[SERigNaming.sFACS_ConnAUClean] = 'FACS_AUCleanMesh'
+FACS_ConnAttrTable[SERigNaming.sFACS_ConnFaceClean] = 'FACS_FaceCleanMesh'
 #-----------------------------------------------------------------------------
 def getMeshVertexPosition(vtxName):
     # Get vertex number and object having that vertex
@@ -370,6 +380,7 @@ def _connectFACSControlModeSwitchToAUBlendShape(facsDataBuffer, faceAUBuffer, co
     for auType in facialActionUnitTypeList:
         key = SERigNaming.auAttrList[auType]
         value = connectionMap[key]
+        value = value.rpartition(':')[2]
 
         srcCtrlData = SEFacsHelper.getFacialActionUnitAttrName(facsDataBuffer, auType)   
         srcAUData =  SEFacsHelper.getFacialActionUnitAttrName(faceAUBuffer, auType)

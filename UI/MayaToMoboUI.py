@@ -88,6 +88,7 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         mel.eval('FBXResetExport;')
         mel.eval('FBXExportBakeComplexAnimation -v false;') #mel.eval("FBXExportInputConnections -v false;")
+        mel.eval("FBXExportInputConnections -v true;")
         res = cmds.file(filepath, force = True, type = "FBX export", exportSelected = True)#cmds.file(filepath, force = True, options = "v = 0", type = "FBX export", exportSelected = True)#shutil.rmtree(dirpath)
         
         # Recover previous fbx export settings.
@@ -133,7 +134,7 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.uiWindow.namespacelineEdit.setText(charName)
 
     def run(self):
-        self.resize(300, 230)
+        #self.resize(300, 230)
         self.show()
 
 def openSendToMoboWindow():

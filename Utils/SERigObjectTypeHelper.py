@@ -21,13 +21,15 @@ def createRigObjectTypeAttr(rigObjectTopGroup, rigObjectTypeNodeStr):
 #-----------------------------------------------------------------------------
 def linkRigObjects(ownerObject, linkedObject, linkAttrStr, linkedAttrStr = ''):
     if ownerObject and linkedObject and linkAttrStr != '':
-        cmds.addAttr(ownerObject, ln = linkAttrStr, at = 'message')
+        if not cmds.objExists(ownerObject + '.' + linkAttrStr):
+            cmds.addAttr(ownerObject, ln = linkAttrStr, at = 'message')
 
         if linkedAttrStr == '':
             linkedAttrStr = linkAttrStr + SERigNaming.sOwnerSuffix
-        cmds.addAttr(linkedObject, ln = linkedAttrStr, at = 'message')
+        if not cmds.objExists(linkedObject + '.' + linkedAttrStr):
+            cmds.addAttr(linkedObject, ln = linkedAttrStr, at = 'message')
 
-        cmds.connectAttr(ownerObject + '.' + linkAttrStr, linkedObject + '.' + linkedAttrStr)
+        cmds.connectAttr(ownerObject + '.' + linkAttrStr, linkedObject + '.' + linkedAttrStr, f = True)
     else:
         cmds.error('Cannot create link attribute.') 
 #-----------------------------------------------------------------------------

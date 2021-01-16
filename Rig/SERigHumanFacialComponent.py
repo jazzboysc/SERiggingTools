@@ -548,6 +548,9 @@ def createFACS_AUBuffer(facialComponentGroup):
     if prefix == None or rigPartsGroup == None:
         cmds.error('Failed creating FACS AU buffer for: ' + facialComponentGroup)
         return None
+    
+    if SEStringHelper.SE_GetNamespace(facialComponentGroup) != SEStringHelper.SE_GetNamespace(prefix):
+        prefix = SEStringHelper.SE_GetNamespace(facialComponentGroup) + prefix
 
     bufferName = prefix + '_FACS_AUBufferGrp'
     if cmds.objExists(bufferName):
@@ -579,6 +582,9 @@ def createFACS_ControlModeSwitch(facialComponentGroup):
     if prefix == None or rigPartsGroup == None:
         cmds.error('Failed creating FACS Control Mode Switch for: ' + facialComponentGroup)
         return None
+    
+    if SEStringHelper.SE_GetNamespace(facialComponentGroup) != SEStringHelper.SE_GetNamespace(prefix):
+        prefix = SEStringHelper.SE_GetNamespace(facialComponentGroup) + prefix
 
     switchName = prefix + '_FACS_ControlModeSwitch'
     if cmds.objExists(switchName):
@@ -618,6 +624,9 @@ def createCustomConnectionMapBuffer(facialComponentGroup):
     if prefix == None or rigPartsGroup == None:
         cmds.error('Failed creating FACS Control Mode Switch for: ' + facialComponentGroup)
         return None
+    
+    if SEStringHelper.SE_GetNamespace(facialComponentGroup) != SEStringHelper.SE_GetNamespace(prefix):
+        prefix = SEStringHelper.SE_GetNamespace(facialComponentGroup) + prefix
 
     connectionMapName = prefix + '_FACS_CustomConnectionMap'
     if cmds.objExists(connectionMapName):
