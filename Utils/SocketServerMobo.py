@@ -123,9 +123,10 @@ class MayaMoboCommands():
             #myChar.ProcessObjectNamespace(FBNamespaceAction.kFBRemoveAllNamespace, "")
             myChar.ProcessObjectNamespace(FBNamespaceAction.kFBConcatNamespace, self.SocketData.importNamespace.encode('ascii', 'ignore'))
             for slotName in self.SocketData.skDefineSlotList:
-                jtName = self.SocketData.skDefineMapList[slotName].encode('ascii', 'ignore')
-                if jtName != 0:
-                    self.mapJointToCharacterDefinition(myChar, slotName, jtName)
+                if self.SocketData.skDefineMapList[slotName] != 0:
+                    jtName = self.SocketData.skDefineMapList[slotName].encode('ascii', 'ignore')
+                    if jtName != 0:
+                        self.mapJointToCharacterDefinition(myChar, slotName, jtName)
 
             # Characterize
             chaRes = myChar.SetCharacterizeOn(True)
@@ -156,12 +157,13 @@ class MayaMoboCommands():
 
     def constrainCustomRigWithEffectors(self):
         for effectorName in self.SocketData.MoboEffectorList:
-            mayaCtrlName = self.SocketData.importNamespace.encode() + ':' + self.SocketData.customRigMapTable[effectorName].encode()
-            effectorName = self.SocketData.characterName.encode() + '_Ctrl:' + effectorName
-            mayaCtrlModel = FBFindModelByLabelName(mayaCtrlName)
-            effectorModel = FBFindModelByLabelName(effectorName)
-            if mayaCtrlModel!= None and effectorModel != None:
-                self.createParentChildConstrain(mayaCtrlModel, effectorModel)
+            if self.SocketData.customRigMapTable[effectorName] != 0:
+                mayaCtrlName = self.SocketData.importNamespace.encode() + ':' + self.SocketData.customRigMapTable[effectorName].encode()
+                effectorName = self.SocketData.characterName.encode() + '_Ctrl:' + effectorName
+                mayaCtrlModel = FBFindModelByLabelName(mayaCtrlName)
+                effectorModel = FBFindModelByLabelName(effectorName)
+                if mayaCtrlModel!= None and effectorModel != None:
+                    self.createParentChildConstrain(mayaCtrlModel, effectorModel)
     
     def createParentChildConstrain(self, child, parent):
         cons = FBConstraintManager().TypeCreateConstraint('Parent/Child')
@@ -181,9 +183,10 @@ class MayaMoboCommands():
         character.AddCharacterExtension(customRigExt)
 
         for effectorName in self.SocketData.MoboEffectorList:
-            mayaCtrlName = self.SocketData.importNamespace.encode() + ':' + self.SocketData.customRigMapTable[effectorName].encode()
-            mayaCtrlModel = FBFindModelByLabelName(mayaCtrlName)
-            if mayaCtrlModel != None:
-                FBConnect(mayaCtrlModel, customRigExt)
-                customRigExt.AddObjectProperties(mayaCtrlModel)
-                customRigExt.UpdateStancePose()
+            if self.SocketData.customRigMapTable[effectorName] != 0:
+                mayaCtrlName = self.SocketData.importNamespace.encode() + ':' + self.SocketData.customRigMapTable[effectorName].encode()
+                mayaCtrlModel = FBFindModelByLabelName(mayaCtrlName)
+                if mayaCtrlModel != None:
+                    FBConnect(mayaCtrlModel, customRigExt)
+                    customRigExt.AddObjectProperties(mayaCtrlModel)
+                    customRigExt.UpdateStancePose()
