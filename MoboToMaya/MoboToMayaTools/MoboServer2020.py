@@ -4,6 +4,7 @@ import threading
 import tempfile
 import cPickle
 import os
+import time
 
 from pyfbsdk import *
 from pyfbsdk_additions import *
@@ -18,6 +19,9 @@ callback_queue = Queue.Queue()
 conn = None
 address = None
 
+
+stopServerEvent = threading.Event()
+
 def get_running_thread():
     lists = []
     for thread in threading.enumerate(): 
@@ -25,8 +29,8 @@ def get_running_thread():
         lists.append(thread.name)
     return lists
 
-def create_conn(server):
-    while True:
+def lisener_thread(server):
+    while not stopServerEvent.is_set():
         try:
             conn, address = server.s.accept()
             print("Client came in Server")
@@ -38,29 +42,53 @@ def create_conn(server):
                     pp = cPickle.loads(data)
                     moboCommand = MayaMoboCommands(pp)
                     callback_queue.put(moboCommand.processCommand)
+                    #moboCommand.processCommand()
                     conn.send("I received!")
                     continue
     
             conn.shutdown(socket.SHUT_RDWR)            
             conn.close()
-            server.s.close()
+            # server.s.close()
             print('Close Connection.')
-            return
+            time.sleep(2.0)
         except Exception as e:
             print(e)
             return
 
+t = None
+serverInitialized = False
+
 def start_Motionbuilder_server():
-    needThread = mServer.get_socket()
-    allRunningthreads = get_running_thread()
-    t = threading.Thread(name = 'MotionbuilderServerThread-1', target=create_conn, args=(mServer,))
-    t.daemon = True
-    t.start()
-    try:
-        callback = callback_queue.get(True, 20) #blocks until an item is available
-        callback()
-    except Queue.Empty:
-        mServer.s.close()
-        print('Did not receive any command to execute.')
+    global serverInitialized
+    global t
+    if not serverInitialized:
+        print('Server initialized.')
+        needThread = mServer.get_socket()
+        allRunningthreads = get_running_thread()
+        t = threading.Thread(name = 'MotionbuilderServerThread-1', target = lisener_thread, args = (mServer,))
+        t.daemon = True
+
+        print('Start lisener thread.')
+        t.start()
+
+        serverInitialized = True
+
+    #print('Start lisener thread.')
+    #t.start()
+
+    while True:
+        try:
+            callback = callback_queue.get(False) #blocks until an item is available
+            if callback:
+                callback()
+                break
+
+        except Queue.Empty:
+            #mServer.s.close()
+            print('Did not receive any command to execute.')
+            time.sleep(1.0)
+
+def stop__Motionbuilder_server():
+    stopServerEvent.set()
 
 #start_Motionbuilder_server()
