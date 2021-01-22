@@ -116,7 +116,7 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         try:
             mSocket.connect(('localhost', commandPort))
             serialized_obj = cPickle.dumps(self.sendToMoboCommand)
-            mSocket.sendall(serialized_obj)#mSocket.send('ddddddd')
+            mSocket.sendall(serialized_obj)
             recvData = mSocket.recv(1024)
             print(recvData)
         except Exception as e:

@@ -1,11 +1,11 @@
 from pyfbsdk import FBMenuManager, FBMessageBox
 
-from ..MoboToMayaTools.MoboServer2020 import start_Motionbuilder_server
+from ..MoboToMayaTools.MoboServer2020 import startMotionbuilderServer
 from ..MoboToMayaTools.SendAnimationToMayaTool import showSendToMayaUI
 
 def OnMenuClick(eventName):
     if eventName == "Start Mobo Server":
-        start_Motionbuilder_server()
+        startMotionbuilderServer()
     elif eventName == "Send To Maya":
         showSendToMayaUI()
     else:
