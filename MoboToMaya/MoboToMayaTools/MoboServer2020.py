@@ -29,7 +29,7 @@ def get_running_thread():
         lists.append(thread.name)
     return lists
 
-def lisener_thread(server):
+def listener_thread(server):
     while not stopServerEvent.is_set():
         try:
             conn, address = server.s.accept()
@@ -65,16 +65,13 @@ def start_Motionbuilder_server():
         print('Server initialized.')
         needThread = mServer.get_socket()
         allRunningthreads = get_running_thread()
-        t = threading.Thread(name = 'MotionbuilderServerThread-1', target = lisener_thread, args = (mServer,))
+        t = threading.Thread(name = 'MotionbuilderServerThread-1', target = listener_thread, args = (mServer,))
         t.daemon = True
 
-        print('Start lisener thread.')
+        print('Start listener thread.')
         t.start()
 
         serverInitialized = True
-
-    #print('Start lisener thread.')
-    #t.start()
 
     while True:
         try:
@@ -90,5 +87,3 @@ def start_Motionbuilder_server():
 
 def stop__Motionbuilder_server():
     stopServerEvent.set()
-
-#start_Motionbuilder_server()
