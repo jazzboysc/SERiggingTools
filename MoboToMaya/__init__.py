@@ -1,2 +1,0 @@
-import MoboToMayaMenu
-import MoboToMayaTools

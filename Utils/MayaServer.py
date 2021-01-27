@@ -4,8 +4,8 @@ import cPickle
 import os
 
 from SocketServerMaya import SocketServerMaya
-from SocketServerMaya import MayaMoboCommands
-from SocketDataHelper import MayaMoboSocketData
+from SocketServerMaya import MayaMobuCommands
+from SocketDataHelper import MayaMobuSocketData
 
 import maya.utils as mu
 import maya.OpenMaya as om
@@ -31,7 +31,7 @@ def create_conn(server, processFunc = processCommandsInMaya ):
                     break
                 else:
                     pp = cPickle.loads(data)
-                    MayaCommand = MayaMoboCommands(pp)
+                    MayaCommand = MayaMobuCommands(pp)
                     cmdres = processFunc(MayaCommand.processCommand)
                     serialized_obj = cPickle.dumps(cmdres)
                     conn.send(serialized_obj)

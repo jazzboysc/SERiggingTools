@@ -8,15 +8,15 @@ import socket
 import cPickle
 import time
 
-#from ...Utils import  SocketServerMobo
-from ...Utils.SocketDataHelper import MayaMoboSocketData
+#from ...Utils import  SocketServerMobu
+from ...Utils.SocketDataHelper import MayaMobuSocketData
 
 filePath = os.path.dirname(os.path.abspath(__file__))
 uifile_path = os.path.join(filePath, "MotionbuilderToMaya.ui")
 print("uifile_path is: %s" %uifile_path)
 splitSymbol = '>>>'
 
-def mobo_print(string):
+def Mobu_print(string):
     print(string)
     pythonidelib.FlushOutput()
 
@@ -45,34 +45,34 @@ class MainUI(QtWidgets.QWidget):
         self.ui.sendBtn.clicked.connect(self.sendBtnCallback)
 
     def quitBtnCallback(self):
-        mobo_main_window = self.get_dialog_parent()
-        CloseTool(mobo_main_window)
+        Mobu_main_window = self.get_dialog_parent()
+        CloseTool(Mobu_main_window)
 
     def refreshBtnCallback(self):
         self.refreshMotionbuilderCharacterList()
         self.refreshMayaCharacterList()
         self.ui.mapListWidget.clear()
-        mobo_print('refresh')
+        Mobu_print('refresh')
 
     def addToQueueBtnCallback(self):
-        moboChar = self.ui.MoboListWidget.selectedItems()
+        MobuChar = self.ui.MobuListWidget.selectedItems()
         mayaChar = self.ui.MayaListWidget.selectedItems()
-        if len(moboChar) == 0:
-            mobo_print('Motionbuilder Character has not been selected!!!')
+        if len(MobuChar) == 0:
+            Mobu_print('Motionbuilder Character has not been selected!!!')
             return
         if len(mayaChar) == 0:
-            mobo_print('Maya Character has not been selected!!!')
+            Mobu_print('Maya Character has not been selected!!!')
             return
 
-        addedText = str(moboChar[0].text()) + splitSymbol + str(mayaChar[0].text())
+        addedText = str(MobuChar[0].text()) + splitSymbol + str(mayaChar[0].text())
         if self.isMappingExistingInQueue(addedText):
-            mobo_print('The Mapping has already been added to the Queue.')
+            Mobu_print('The Mapping has already been added to the Queue.')
             return
         item = QtWidgets.QListWidgetItem(addedText)
         self.ui.mapListWidget.addItem(item)
-        mobo_print('addToQueue')
+        Mobu_print('addToQueue')
     
-    # Send Mobo Animations to Maya
+    # Send Mobu Animations to Maya
     def sendBtnCallback(self):
         # Get MappingList
         mappingList = []
@@ -81,30 +81,30 @@ class MainUI(QtWidgets.QWidget):
             item = self.ui.mapListWidget.item(i).text()
             sp = item.split(splitSymbol)
             if len(sp) > 0:
-                moboChar = sp[0]
+                MobuChar = sp[0]
                 mayaChar = sp[1]
-                mappingList.append([moboChar, mayaChar])
-        mobo_print(mappingList)
-        mobo_print('sendToMaya Clicked.')
+                mappingList.append([MobuChar, mayaChar])
+        Mobu_print(mappingList)
+        Mobu_print('sendToMaya Clicked.')
 
         # Send to Maya
         if len(mappingList) == 0:
-            mobo_print('No retarget mapping was added to queue.')
+            Mobu_print('No retarget mapping was added to queue.')
             return
         for mapItem in mappingList:
-            # Get Mobo Effectors' data
-            sendCommand = MayaMoboSocketData()#SocketServerMobo.MayaMoboCommands()
+            # Get Mobu Effectors' data
+            sendCommand = MayaMobuSocketData()#SocketServerMobu.MayaMobuCommands()
             sendCommand.commandType = 2
-            moboChar = mapItem[0].encode()
+            MobuChar = mapItem[0].encode()
             mayaChar = mapItem[1].encode()
             sendCommand.targetCharacter = mayaChar
-            setDataRes = self.setCharacterDataToCommand(moboChar, sendCommand)
+            setDataRes = self.setCharacterDataToCommand(MobuChar, sendCommand)
             if not setDataRes:
-                mobo_print('Cannot find constraints or controls.')
+                Mobu_print('Cannot find constraints or controls.')
                 return
-            mobo_print('Begin To Send')
+            Mobu_print('Begin To Send')
             sendCommand = setDataRes
-            #mobo_print(sendCommand.moboTransform['RightShoulder'][1]) #HeadEffector
+            #Mobu_print(sendCommand.MobuTransform['RightShoulder'][1]) #HeadEffector
             
             # Socket
             commandPort = 6001
@@ -112,20 +112,20 @@ class MainUI(QtWidgets.QWidget):
             try:
                 mSocket.connect(('localhost', commandPort))
                 serialized_obj = cPickle.dumps(sendCommand)
-                mobo_print('DataSize:' + str(len(serialized_obj)).encode())
+                Mobu_print('DataSize:' + str(len(serialized_obj)).encode())
                 mSocket.send(serialized_obj)
                 data = mSocket.recv(1024)
                 recvData = cPickle.loads(data)
-                mobo_print(recvData)
+                Mobu_print(recvData)
             except Exception as e:
-                mobo_print('Send to Maya Fail:', e)
+                Mobu_print('Send to Maya Fail:', e)
             
             mSocket.close()
-            mobo_print('Socket Connection closed.')
+            Mobu_print('Socket Connection closed.')
 
     def get_dialog_parent(self):
-        if FBToolList.has_key("MoboToMaya Tool"):
-            my_tool = FBToolList["MoboToMaya Tool"]
+        if FBToolList.has_key("MobuToMaya Tool"):
+            my_tool = FBToolList["MobuToMaya Tool"]
             return my_tool
 
     def refreshMotionbuilderCharacterList(self):
@@ -135,15 +135,15 @@ class MainUI(QtWidgets.QWidget):
             if char.GetCurrentControlSet() != None:
                 charNameList.append(char.LongName)
 
-        self.ui.MoboListWidget.clear()
+        self.ui.MobuListWidget.clear()
         for charName in charNameList:
             item = QtWidgets.QListWidgetItem(charName)
-            self.ui.MoboListWidget.addItem(item)
+            self.ui.MobuListWidget.addItem(item)
 
     def refreshMayaCharacterList(self):
         self.ui.MayaListWidget.clear()
         
-        sendCommand = MayaMoboSocketData()#SocketServerMobo.MayaMoboCommands()
+        sendCommand = MayaMobuSocketData()#SocketServerMobu.MayaMobuCommands()
         sendCommand.commandType = 1
         recvHIKList = []
         # Socket Setting
@@ -155,12 +155,12 @@ class MainUI(QtWidgets.QWidget):
             mSocket.send(serialized_obj)
             data = mSocket.recv(1024)
             recvHIKList = cPickle.loads(data)
-            mobo_print(recvHIKList)
+            Mobu_print(recvHIKList)
         except Exception as e:
-            mobo_print('Connect to Maya failed.')
+            Mobu_print('Connect to Maya failed.')
         
         mSocket.close()
-        mobo_print('Socket Connection closed.')
+        Mobu_print('Socket Connection closed.')
 
         if len(recvHIKList) > 0:
             for mayaChar in recvHIKList:
@@ -171,7 +171,7 @@ class MainUI(QtWidgets.QWidget):
     def isMappingExistingInQueue(self, itemText):
         out = self.ui.mapListWidget.findItems(itemText, QtCore.Qt.MatchExactly)
         res = len(out) > 0
-        mobo_print(res)
+        Mobu_print(res)
         return res
 
     def setCharacterDataToCommand(self, charName, command):
@@ -184,7 +184,7 @@ class MainUI(QtWidgets.QWidget):
             nameSpace = splitList[0]
         else:
             nameSpace = ''
-        mobo_print("Namespace of character is:%s" %nameSpace)
+        Mobu_print("Namespace of character is:%s" %nameSpace)
         findConstrainName = nameSpace + ':P/C_*'
         includeNamespace = True
         modelsOnly = False
@@ -195,21 +195,21 @@ class MainUI(QtWidgets.QWidget):
         FBPlayerControl().SetTransportFps(FBTimeMode().kFBTimeMode30Frames)
         for comp in foundComponents:
             mayaCtrl = comp.ReferenceGet(0)
-            moboEffector = comp.ReferenceGet(1)
-            if mayaCtrl != None and moboEffector != None:
+            MobuEffector = comp.ReferenceGet(1)
+            if mayaCtrl != None and MobuEffector != None:
                 mayaCtrlCVs = self.getObjTransformCurves(mayaCtrl)
                 #minFrame, maxFrame = self.getCurvesMaxFrameRange(mayaCtrlCVs)
-                effectorName = moboEffector.Name
-                #thisCommand.moboTransform[effectorName].append(minFrame)
+                effectorName = MobuEffector.Name
+                #thisCommand.MobuTransform[effectorName].append(minFrame)
                 
                 if len(mayaCtrlCVs) != 6:
-                    mobo_print('Warning: The animation curve number may not be correct.')
+                    Mobu_print('Warning: The animation curve number may not be correct.')
                     return
                 
                 keysGroupList = [cv.Keys for cv in mayaCtrlCVs]
                 for keys in keysGroupList: # 6 keysgroup: tx ty tz rx ry rz
                     valueList = [[k.Time.GetFrame(), k.Value] for k in keys]
-                    thisCommand.moboTransform[effectorName].append(valueList)
+                    thisCommand.MobuTransform[effectorName].append(valueList)
             else:
                 return False
         return thisCommand

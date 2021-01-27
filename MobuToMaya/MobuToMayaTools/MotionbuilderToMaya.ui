@@ -29,13 +29,13 @@
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
-        <widget class="QGroupBox" name="MoboGroupBox">
+        <widget class="QGroupBox" name="MobuGroupBox">
          <property name="title">
           <string>Motionbuilder</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QListWidget" name="MoboListWidget">
+           <widget class="QListWidget" name="MobuListWidget">
             <property name="minimumSize">
              <size>
               <width>30</width>

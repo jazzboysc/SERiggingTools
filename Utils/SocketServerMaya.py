@@ -4,7 +4,7 @@ import threading
 import HIKHelper
 import maya.cmds as cmds
 
-class MayaMoboCommands():
+class MayaMobuCommands():
     def __init__(self, data):      
         self.SocketData = data
         
@@ -37,8 +37,8 @@ class MayaMoboCommands():
             cmds.warning('%s is not a valid HIKCharacterNode!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'%char)
             return('Failed to retarget to Maya.')
 
-        for effector in self.SocketData.MoboEffectorList:
-            if self.SocketData.moboTransform[effector] == []:
+        for effector in self.SocketData.MobuEffectorList:
+            if self.SocketData.MobuTransform[effector] == []:
                 continue
 
             # set to 30 fps mode  \\ delete key frames between retarget frame zones.
@@ -71,11 +71,11 @@ class MayaMoboCommands():
             return None
 
     def setKeyOfEffectorlegacy(self, effector, tarRig):
-        keyStartTime = self.SocketData.moboTransform[effector][0]
+        keyStartTime = self.SocketData.MobuTransform[effector][0]
         # set key values
-        for i in range(1, len(self.SocketData.moboTransform[effector])):
+        for i in range(1, len(self.SocketData.MobuTransform[effector])):
             kTime = keyStartTime + i - 1
-            kValue = self.SocketData.moboTransform[effector][i]
+            kValue = self.SocketData.MobuTransform[effector][i]
             kTrans = [kValue[0], kValue[1], kValue[2]]
             kRot = [kValue[3], kValue[4], kValue[5]]
             if len(kValue) == 6:
@@ -87,11 +87,11 @@ class MayaMoboCommands():
                 cmds.setKeyframe(tarRig, at = 'rz', time = kTime, v = kValue[5])
 
     def setKeyOfEffector(self, effector, tarRig):
-        if len(self.SocketData.moboTransform[effector]) != 6:
+        if len(self.SocketData.MobuTransform[effector]) != 6:
             return
 
-        for i in range(len(self.SocketData.moboTransform[effector])):
-            keysGrp = self.SocketData.moboTransform[effector][i]
+        for i in range(len(self.SocketData.MobuTransform[effector])):
+            keysGrp = self.SocketData.MobuTransform[effector][i]
             for j in range(len(keysGrp)):
                 keyTime = keysGrp[j][0]
                 keyValue = keysGrp[j][1]

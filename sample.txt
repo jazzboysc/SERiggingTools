@@ -34,7 +34,7 @@ import SERiggingTools.UI.CreateRigUI                as CreateRigUI
 import SERiggingTools.UI.ControlRigUI               as ControlRigUI
 import SERiggingTools.UI.FACSManagerUI              as FACSManagerUI
 import SERiggingTools.UI.FixJointModeUI             as FixJointModeUI
-import SERiggingTools.UI.MayaToMoboUI               as MayaToMoboUI
+import SERiggingTools.UI.MayaToMobuUI               as MayaToMobuUI
 import SERiggingTools.PoseLibrary.PoseBrowseUI      as PoseBrowseUI
 import SERiggingTools.PoseLibrary.ScreenShot        as ScreenShot
 import SERiggingTools.PoseLibrary.SavePose          as SavePose
@@ -72,9 +72,10 @@ reload(ControlRigUI)
 reload(PoseBrowseUI)
 reload(FACSManagerUI)
 reload(FixJointModeUI)
-reload(MayaToMoboUI)
+reload(MayaToMobuUI)
 reload(ScreenShot)
 reload(SavePose)
+
 
 
 FixJointModeUI.openFixJointModeWindow()
@@ -85,7 +86,9 @@ ControlRigUI.openControlRigWindow()
 
 FACSManagerUI.openFACSManagerWindow()
 
-MayaToMoboUI.openSendToMoboWindow()
+MayaToMobuUI.openSendToMobuWindow()
+
+MayaServer.start_Maya_server()
 
 
 
@@ -227,8 +230,16 @@ Motion Builder：
 import sys
 sys.path.append('D:\Work')
 
-import SERiggingTools.MoboToMaya.MoboToMayaMenu.MoboToMayaMenu as MoboToMayaMenu
-MoboToMayaMenu.LoadMenu()
+import SERiggingTools.Utils.SocketServerMobu as SocketServerMobu
+import SERiggingTools.MobuToMaya.MobuToMayaTools.MobuServer2020 as MobuServer2020
+
+import SERiggingTools.MobuToMaya.MobuToMayaMenu.MobuToMayaMenu as MobuToMayaMenu
+
+reload(SocketServerMobu)
+reload(MobuServer2020)
+
+
+MobuToMayaMenu.LoadMenu()
 
 
 

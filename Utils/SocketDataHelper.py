@@ -1,6 +1,6 @@
-class MayaMoboSocketData():
+class MayaMobuSocketData():
     def __init__(self):    
-        self.MoboEffectorList = [
+        self.MobuEffectorList = [
             'HipsEffector',
             'ChestOriginEffector',
             'ChestEndEffector',
@@ -168,21 +168,21 @@ class MayaMoboSocketData():
         self.skDefineMapList['RightInHandPinky'] = 0
         self.skDefineMapList['RightInHandRing'] = 0
 
-        self.moboTransform = {}
-        self.moboTransform['HipsEffector'] = []
-        self.moboTransform['LeftAnkleEffector'] = []
-        self.moboTransform['RightAnkleEffector'] = []
-        self.moboTransform['LeftWristEffector'] = []
-        self.moboTransform['RightWristEffector'] = []
-        self.moboTransform['LeftKneeEffector'] = []
-        self.moboTransform['RightKneeEffector'] = []
-        self.moboTransform['LeftElbowEffector'] = []
-        self.moboTransform['RightElbowEffector'] = []
-        self.moboTransform['LeftShoulder'] = []
-        self.moboTransform['RightShoulder'] = []
-        self.moboTransform['HeadEffector'] = []
-        self.moboTransform['ChestOriginEffector'] = []
-        self.moboTransform['ChestEndEffector'] = []
+        self.MobuTransform = {}
+        self.MobuTransform['HipsEffector'] = []
+        self.MobuTransform['LeftAnkleEffector'] = []
+        self.MobuTransform['RightAnkleEffector'] = []
+        self.MobuTransform['LeftWristEffector'] = []
+        self.MobuTransform['RightWristEffector'] = []
+        self.MobuTransform['LeftKneeEffector'] = []
+        self.MobuTransform['RightKneeEffector'] = []
+        self.MobuTransform['LeftElbowEffector'] = []
+        self.MobuTransform['RightElbowEffector'] = []
+        self.MobuTransform['LeftShoulder'] = []
+        self.MobuTransform['RightShoulder'] = []
+        self.MobuTransform['HeadEffector'] = []
+        self.MobuTransform['ChestOriginEffector'] = []
+        self.MobuTransform['ChestEndEffector'] = []
         
         # parameters
         self.importFBXPath = ''

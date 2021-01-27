@@ -25,7 +25,7 @@ class SocketServer():
             print("Tried to open port %s, but failed: It is probably already open. \n" %self.PORT)
             return False
 
-class MayaMoboCommands():
+class MayaMobuCommands():
     def __init__(self, data):    
         self.SocketData = data
 
@@ -156,7 +156,7 @@ class MayaMoboCommands():
         property.append(myJoint)
 
     def constrainCustomRigWithEffectors(self):
-        for effectorName in self.SocketData.MoboEffectorList:
+        for effectorName in self.SocketData.MobuEffectorList:
             if self.SocketData.customRigMapTable[effectorName] != 0:
                 mayaCtrlName = self.SocketData.importNamespace.encode() + ':' + self.SocketData.customRigMapTable[effectorName].encode()
                 effectorName = self.SocketData.characterName.encode() + '_Ctrl:' + effectorName
@@ -182,7 +182,7 @@ class MayaMoboCommands():
         customRigExt.ProcessObjectNamespace(FBNamespaceAction.kFBConcatNamespace, self.SocketData.importNamespace.encode())
         character.AddCharacterExtension(customRigExt)
 
-        for effectorName in self.SocketData.MoboEffectorList:
+        for effectorName in self.SocketData.MobuEffectorList:
             if self.SocketData.customRigMapTable[effectorName] != 0:
                 mayaCtrlName = self.SocketData.importNamespace.encode() + ':' + self.SocketData.customRigMapTable[effectorName].encode()
                 mayaCtrlModel = FBFindModelByLabelName(mayaCtrlName)

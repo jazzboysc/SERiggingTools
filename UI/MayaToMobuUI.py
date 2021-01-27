@@ -6,9 +6,9 @@ import threading
 import cPickle
 import time
 
-#from ..Utils.SocketServerMaya import MayaMoboCommands
+#from ..Utils.SocketServerMaya import MayaMobuCommands
 from ..Utils import HIKHelper
-from ..Utils.SocketDataHelper import MayaMoboSocketData
+from ..Utils.SocketDataHelper import MayaMobuSocketData
 import UIConfig
 
 import maya.mel as mel
@@ -21,12 +21,12 @@ from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
 # Global-----------------
 #mayaHIKs = []
-#sendToMoboCommand = MayaMoboSocketData() 
+#sendToMobuCommand = MayaMobuSocketData() 
 
 
 # UI------------------------------------------------------------
 uiRootFile = os.path.dirname(UIConfig.__file__)
-uifile_path = uiRootFile + "/MayaToMobo.ui"
+uifile_path = uiRootFile + "/MayaToMobu.ui"
 
 tempFBXPath = 'C:/Users/claysun/Desktop/myTest3.fbx'
 
@@ -37,10 +37,10 @@ def maya_main_window():
     main_window = mui.MQtUtil.mainWindow()
     return shiboken2.wrapInstance(long(main_window), QtWidgets.QWidget)
 
-class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
+class MayaToMobuUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
     def __init__(self, parent = maya_main_window()):
-        super(MayaToMoboUI, self).__init__(parent)
-        self.setWindowTitle("Send Custom Rig To Mobo")
+        super(MayaToMobuUI, self).__init__(parent)
+        self.setWindowTitle("Send Custom Rig To Mobu")
         
         QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
         uifile = QtCore.QFile(uifile_path)
@@ -52,7 +52,7 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.initializeUI()
         self.setButtonsCallBack()
 
-        self.sendToMoboCommand = MayaMoboSocketData()
+        self.sendToMobuCommand = MayaMobuSocketData()
 
     def initializeUI(self):
         charList = HIKHelper.characterDefinitionList()
@@ -98,16 +98,16 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         if len(char.split(':')) > 1:
         	charNameWithoutNamespace = char.split(':')[1]
         # command content setting
-        self.sendToMoboCommand.commandType = 1
-        self.sendToMoboCommand.importFBXPath = filepath
-        self.sendToMoboCommand.importNamespace = self.uiWindow.namespacelineEdit.text()
-        self.sendToMoboCommand.importModeMerge = True
-        self.sendToMoboCommand.characterName = charNameWithoutNamespace
+        self.sendToMobuCommand.commandType = 1
+        self.sendToMobuCommand.importFBXPath = filepath
+        self.sendToMobuCommand.importNamespace = self.uiWindow.namespacelineEdit.text()
+        self.sendToMobuCommand.importModeMerge = True
+        self.sendToMobuCommand.characterName = charNameWithoutNamespace
 
-        for effector in self.sendToMoboCommand.MoboEffectorList:
-            self.sendToMoboCommand.customRigMapTable[effector] = HIKHelper.matchCustomRigWithEffector(char, effector)
-        for slot in self.sendToMoboCommand.skDefineSlotList:
-            self.sendToMoboCommand.skDefineMapList[slot] = HIKHelper.matchSkeletonDefineWithSlot(char, slot)
+        for effector in self.sendToMobuCommand.MobuEffectorList:
+            self.sendToMobuCommand.customRigMapTable[effector] = HIKHelper.matchCustomRigWithEffector(char, effector)
+        for slot in self.sendToMobuCommand.skDefineSlotList:
+            self.sendToMobuCommand.skDefineMapList[slot] = HIKHelper.matchSkeletonDefineWithSlot(char, slot)
 
         # Socket Setting
         commandPort = 6000
@@ -115,12 +115,12 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
 
         try:
             mSocket.connect(('localhost', commandPort))
-            serialized_obj = cPickle.dumps(self.sendToMoboCommand)
+            serialized_obj = cPickle.dumps(self.sendToMobuCommand)
             mSocket.sendall(serialized_obj)
             recvData = mSocket.recv(1024)
             print(recvData)
         except Exception as e:
-            print('Send to Mobo Fail:', e)
+            print('Send to Mobu Fail:', e)
         
         mSocket.close()
         print('Socket Connection closed.')
@@ -137,15 +137,15 @@ class MayaToMoboUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         #self.resize(300, 230)
         self.show()
 
-def openSendToMoboWindow():
-    maya2Mobo = MayaToMoboUI()
-    maya2Mobo.setMinimumSize( 270, 230 )
-    maya2Mobo.run()
+def openSendToMobuWindow():
+    maya2Mobu = MayaToMobuUI()
+    maya2Mobu.setMinimumSize( 270, 230 )
+    maya2Mobu.run()
 #-------------------------------------------------------------
 
 # def exportSelectionByHand():
 #     dirpath = tempfile.gettempdir()#tempfile.mkdtemp()  #
-#     filepath = tempFBXPath #os.path.join(dirpath, 'maya2Mobo.fbx')# #dirpath + '\maya2Mobu.fbx'#
+#     filepath = tempFBXPath #os.path.join(dirpath, 'maya2Mobu.fbx')# #dirpath + '\maya2Mobu.fbx'#
 #     mel.eval('FBXResetExport;')
 #     mel.eval('FBXExportBakeComplexAnimation -v false;')
 #     #mel.eval("FBXExportInputConnections -v false;")
@@ -158,22 +158,22 @@ def openSendToMoboWindow():
 #     commandPort = 6004
 #     mSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-#     sendToMoboCommand.commandType = 0
-#     if sendToMoboCommand.commandType == 1:
-#         sendToMoboCommand.importFBXPath = exportSelectionByHand()
-#         sendToMoboCommand.importNamespace = ''
-#         sendToMoboCommand.importModeMerge = True;   
+#     sendToMobuCommand.commandType = 0
+#     if sendToMobuCommand.commandType == 1:
+#         sendToMobuCommand.importFBXPath = exportSelectionByHand()
+#         sendToMobuCommand.importNamespace = ''
+#         sendToMobuCommand.importModeMerge = True;   
 
 #     try:
 #         mSocket.connect(('localhost', commandPort))
 #         for ct in range(3):
-#             serialized_obj = cPickle.dumps(sendToMoboCommand)
+#             serialized_obj = cPickle.dumps(sendToMobuCommand)
 #             mSocket.send(serialized_obj)#mSocket.send('ddddddd')
 #             recvHIK = mSocket.recv(1024)
 #             print recvHIK
 #             time.sleep(0.5)
 #     except Exception as e:
-#         print('Send to Mobo Fail:', e)
+#         print('Send to Mobu Fail:', e)
     
 #     mSocket.close()
 #     print('Socket Connection closed.')

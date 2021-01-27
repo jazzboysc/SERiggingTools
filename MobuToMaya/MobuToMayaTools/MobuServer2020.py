@@ -10,11 +10,11 @@ from pyfbsdk import *
 from pyfbsdk_additions import *
 import Queue
 
-from ...Utils.SocketServerMobo import SocketServer, MayaMoboCommands
-from ...Utils.SocketDataHelper import MayaMoboSocketData
+from ...Utils.SocketServerMobu import SocketServer, MayaMobuCommands
+from ...Utils.SocketDataHelper import MayaMobuSocketData
 
 mServer = SocketServer('', 6000)
-pp = MayaMoboSocketData()
+pp = MayaMobuSocketData()
 callback_queue = Queue.Queue()
 conn = None
 address = None
@@ -40,8 +40,8 @@ def listenerThread(server):
                     break
                 else:
                     pp = cPickle.loads(data)
-                    moboCommand = MayaMoboCommands(pp)
-                    callback_queue.put(moboCommand.processCommand)
+                    MobuCommand = MayaMobuCommands(pp)
+                    callback_queue.put(MobuCommand.processCommand)
                     conn.send("I received!")
                     continue
     

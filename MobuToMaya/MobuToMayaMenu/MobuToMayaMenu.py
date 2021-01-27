@@ -1,10 +1,10 @@
 from pyfbsdk import FBMenuManager, FBMessageBox
 
-from ..MoboToMayaTools.MoboServer2020 import startMotionbuilderServer
-from ..MoboToMayaTools.SendAnimationToMayaTool import showSendToMayaUI
+from ..MobuToMayaTools.MobuServer2020 import startMotionbuilderServer
+from ..MobuToMayaTools.SendAnimationToMayaTool import showSendToMayaUI
 
 def OnMenuClick(eventName):
-    if eventName == "Start Mobo Server":
+    if eventName == "Start Mobu Server":
         startMotionbuilderServer()
     elif eventName == "Send To Maya":
         showSendToMayaUI()
@@ -19,12 +19,12 @@ def LoadMenu():
         eventName = event.Name
         OnMenuClick(eventName)
     
-    mainMenuName = "MoboToMaya"
+    mainMenuName = "MobuToMaya"
     
     menuManager = FBMenuManager()
     
     menuManager.InsertLast( None, mainMenuName )
-    menuManager.InsertLast( mainMenuName, "Start Mobo Server" )
+    menuManager.InsertLast( mainMenuName, "Start Mobu Server" )
     menuManager.InsertLast( mainMenuName, "" )
     menuManager.InsertLast( mainMenuName, "Send To Maya" )
     
@@ -33,7 +33,7 @@ def LoadMenu():
     # Sub-menu:                     menuManager.InsertLast( mainMenuName, "TestSubMenu" )
     # Menu option inside sub-menu:  menuManager.InsertLast( mainMenuName + "/TestSubMenu", "TestFunction" )
 
-    # Adds the created menu to the Mobo tool bar.    
+    # Adds the created menu to the Mobu tool bar.    
     def AddMenu(mainMenuName, subMenuName = ""):
         menu = FBMenuManager().GetMenu( mainMenuName + subMenuName)
         if menu:

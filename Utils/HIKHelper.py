@@ -24,7 +24,7 @@ import maya.cmds as cmds
 #     'neck',            #20
 # ]
 
-MoboEffectorList = [
+MobuEffectorList = [
     'HipsEffector',
     'ChestOriginEffector',
     'ChestEndEffector',
@@ -41,21 +41,21 @@ MoboEffectorList = [
     'RightAnkleEffector',
 ]
 
-HIKCustomRigMobo2MayaMapTable = {}
-HIKCustomRigMobo2MayaMapTable['HipsEffector'] = 'HipsGX'
-HIKCustomRigMobo2MayaMapTable['LeftAnkleEffector'] = 'LeftFootGX'
-HIKCustomRigMobo2MayaMapTable['RightAnkleEffector'] = 'RightFootGX'
-HIKCustomRigMobo2MayaMapTable['LeftWristEffector'] = 'LeftHandGX'
-HIKCustomRigMobo2MayaMapTable['RightWristEffector'] = 'RightHandGX'
-HIKCustomRigMobo2MayaMapTable['LeftKneeEffector'] = 'LeftLegGX'
-HIKCustomRigMobo2MayaMapTable['RightKneeEffector'] = 'RightLegGX'
-HIKCustomRigMobo2MayaMapTable['LeftElbowEffector'] = 'LeftForeArmGX'
-HIKCustomRigMobo2MayaMapTable['RightElbowEffector'] = 'RightForeArmGX'
-HIKCustomRigMobo2MayaMapTable['LeftShoulder'] = 'LeftShoulderGX'
-HIKCustomRigMobo2MayaMapTable['RightShoulder'] = 'RightShoulderGX'
-HIKCustomRigMobo2MayaMapTable['HeadEffector'] = 'HeadGX'
-HIKCustomRigMobo2MayaMapTable['ChestOriginEffector'] = 'SpineGX'
-HIKCustomRigMobo2MayaMapTable['ChestEndEffector'] = 'Spine3GX'
+HIKCustomRigMobu2MayaMapTable = {}
+HIKCustomRigMobu2MayaMapTable['HipsEffector'] = 'HipsGX'
+HIKCustomRigMobu2MayaMapTable['LeftAnkleEffector'] = 'LeftFootGX'
+HIKCustomRigMobu2MayaMapTable['RightAnkleEffector'] = 'RightFootGX'
+HIKCustomRigMobu2MayaMapTable['LeftWristEffector'] = 'LeftHandGX'
+HIKCustomRigMobu2MayaMapTable['RightWristEffector'] = 'RightHandGX'
+HIKCustomRigMobu2MayaMapTable['LeftKneeEffector'] = 'LeftLegGX'
+HIKCustomRigMobu2MayaMapTable['RightKneeEffector'] = 'RightLegGX'
+HIKCustomRigMobu2MayaMapTable['LeftElbowEffector'] = 'LeftForeArmGX'
+HIKCustomRigMobu2MayaMapTable['RightElbowEffector'] = 'RightForeArmGX'
+HIKCustomRigMobu2MayaMapTable['LeftShoulder'] = 'LeftShoulderGX'
+HIKCustomRigMobu2MayaMapTable['RightShoulder'] = 'RightShoulderGX'
+HIKCustomRigMobu2MayaMapTable['HeadEffector'] = 'HeadGX'
+HIKCustomRigMobu2MayaMapTable['ChestOriginEffector'] = 'SpineGX'
+HIKCustomRigMobu2MayaMapTable['ChestEndEffector'] = 'Spine3GX'
 
 # CharacterList
 def characterDefinitionList():
@@ -166,8 +166,8 @@ def addSelectCustomRigs(char, selectMesh = True):
         raise Exception('Found no custom rig for character %s.' %char)
     
     cmds.select(clear = True)
-    for effector in MoboEffectorList:
-        attr = HIKCustomRigMobo2MayaMapTable[effector]
+    for effector in MobuEffectorList:
+        attr = HIKCustomRigMobu2MayaMapTable[effector]
         GXAttr = '{}.{}'.format(HIKState[0], attr)
         mappingNode = cmds.listConnections(GXAttr ,d = True, t = 'CustomRigDefaultMappingNode')
         if mappingNode != None:
@@ -195,7 +195,7 @@ def addSelectMeshBySkeleton(skt):
 # Get Custom Rig Map in Maya
 def matchCustomRigWithEffector(char, effector):
     HIKState = getCharacterHIKState(char)
-    attr = HIKCustomRigMobo2MayaMapTable[effector]
+    attr = HIKCustomRigMobu2MayaMapTable[effector]
     GXAttr = '{}.{}'.format(HIKState[0], attr)
     mappingNode = cmds.listConnections(GXAttr ,d = True, t = 'CustomRigDefaultMappingNode')
     if mappingNode != None:

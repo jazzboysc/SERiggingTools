@@ -7,8 +7,8 @@ from . import SendToMayaUI
 
 class nativeWidgetHolder(FBWidgetHolder):
     def WidgetCreate(self, pWidgetParent):
-        self.moboMain = SendToMayaUI.MainUI(shiboken2.wrapInstance(pWidgetParent, QtWidgets.QWidget))
-        return shiboken2.getCppPointer(self.moboMain)[0]
+        self.MobuMain = SendToMayaUI.MainUI(shiboken2.wrapInstance(pWidgetParent, QtWidgets.QWidget))
+        return shiboken2.getCppPointer(self.MobuMain)[0]
 
 
 class FileReferenceTool(FBTool):
@@ -30,7 +30,7 @@ class FileReferenceTool(FBTool):
         self.SetControl("main", self.mNativeWidgetHolder)
 
 def showSendToMayaUI():
-    gToolName = "MoboToMaya Tool"
+    gToolName = "MobuToMaya Tool"
     #Development? - need to recreate each time!!
     gDEVELOPMENT = True
 
