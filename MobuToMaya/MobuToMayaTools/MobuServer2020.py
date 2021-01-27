@@ -47,13 +47,16 @@ def listenerThread(server):
     
             conn.shutdown(socket.SHUT_RDWR)            
             conn.close()
-            # server.s.close()
+            
             print('Close Connection.')
             time.sleep(2.0)
             
         except Exception as e:
             print(e)
             return
+
+    server.s.close()
+    print('Server closed.')
 
 t = None
 serverInitialized = False

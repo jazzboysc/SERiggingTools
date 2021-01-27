@@ -20,8 +20,9 @@ def processCommandsInMaya(MayaCmd):
     except Exception as e:
         om.MGlobal.displayError('Encountered exception: %s' %e)
 
-def create_conn(server, processFunc = processCommandsInMaya ):
-    while True:
+stopServerEvent = threading.Event()
+def listenerThread(server):
+    while not stopServerEvent.is_set():
         try:
             conn, address = server.s.accept()
             print("Client came in Server")
@@ -32,20 +33,40 @@ def create_conn(server, processFunc = processCommandsInMaya ):
                 else:
                     pp = cPickle.loads(data)
                     MayaCommand = MayaMobuCommands(pp)
-                    cmdres = processFunc(MayaCommand.processCommand)
+                    cmdres = processCommandsInMaya(MayaCommand.processCommand)
                     serialized_obj = cPickle.dumps(cmdres)
                     conn.send(serialized_obj)
                     continue
-                    
-            conn.shutdown(socket.SHUT_RDWR)    
+    
+            conn.shutdown(socket.SHUT_RDWR)
             conn.close()
+            
             print('Close Connection.')
+            time.sleep(2.0)
+            
         except Exception as e:
-            print e
+            print(e)
             return
 
-def start_Maya_server():
-    mServer.get_socket()
-    t = threading.Thread(name = 'MayaServerThread-1', target=create_conn, args=(mServer,))
-    t.daemon = True
-    t.start()
+    server.s.close()
+    print('Server closed.')
+
+t = None
+serverInitialized = False
+
+def startMayaServer():
+    global serverInitialized
+    global t
+    if not serverInitialized:
+        mServer.get_socket()
+        t = threading.Thread(name = 'MayaServerThread-1', target = listenerThread, args = (mServer,))
+        t.daemon = True
+
+        print('Start listener thread.')
+        t.start()
+
+        print('Server initialized.')
+        serverInitialized = True
+
+def stopMotionbuilderServer():
+    stopServerEvent.set()
