@@ -10,8 +10,6 @@ from SocketDataHelper import MayaMobuSocketData
 import maya.utils as mu
 import maya.OpenMaya as om
 
-mServer = SocketServerMaya('', 6001)
-
 def processCommandsInMaya(MayaCmd):
     try:
         res = mu.executeInMainThreadWithResult(MayaCmd)
@@ -20,9 +18,10 @@ def processCommandsInMaya(MayaCmd):
     except Exception as e:
         om.MGlobal.displayError('Encountered exception: %s' %e)
 
-stopServerEvent = threading.Event()
+stopMayaServerEvent = threading.Event()
 def listenerThread(server):
-    while not stopServerEvent.is_set():
+    global stopMayaServerEvent
+    while not stopMayaServerEvent.is_set():
         try:
             conn, address = server.s.accept()
             print("Client came in Server")
@@ -35,7 +34,7 @@ def listenerThread(server):
                     MayaCommand = MayaMobuCommands(pp)
                     cmdres = processCommandsInMaya(MayaCommand.processCommand)
                     serialized_obj = cPickle.dumps(cmdres)
-                    conn.send(serialized_obj)
+                    conn.sendall(serialized_obj)
                     continue
     
             conn.shutdown(socket.SHUT_RDWR)
@@ -44,20 +43,27 @@ def listenerThread(server):
             print('Close Connection.')
             time.sleep(2.0)
             
-        except Exception as e:
-            print(e)
-            return
+        except socket.timeout:
+            pass
 
     server.s.close()
     print('Server closed.')
 
 t = None
 serverInitialized = False
+mServer = None
 
 def startMayaServer():
     global serverInitialized
     global t
+    global stopMayaServerEvent
+    global mServer
+
     if not serverInitialized:
+        stopMayaServerEvent.clear()
+
+        mServer = SocketServerMaya('', 6001)
+        mServer.s.settimeout(0.2)
         mServer.get_socket()
         t = threading.Thread(name = 'MayaServerThread-1', target = listenerThread, args = (mServer,))
         t.daemon = True
@@ -68,5 +74,18 @@ def startMayaServer():
         print('Server initialized.')
         serverInitialized = True
 
-def stopMotionbuilderServer():
-    stopServerEvent.set()
+def stopMayaServer():
+    global stopMayaServerEvent
+    global serverInitialized
+    global mServer
+
+    try:
+        stopMayaServerEvent.set()
+        serverInitialized = False
+    except Exception as e:
+        print('2222')
+        print(e)
+        return
+
+def  isMayaServerRunning():
+    return serverInitialized
