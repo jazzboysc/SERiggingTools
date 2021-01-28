@@ -9,6 +9,7 @@ from SocketDataHelper import MayaMobuSocketData
 
 import maya.utils as mu
 import maya.OpenMaya as om
+import time
 
 def processCommandsInMaya(MayaCmd):
     try:
@@ -24,26 +25,32 @@ def listenerThread(server):
     while not stopMayaServerEvent.is_set():
         try:
             conn, address = server.s.accept()
+            conn.setblocking(1) # Make child socket blocking.
             print("Client came in Server")
+
             while True:
-                data = conn.recv(server.SIZE)
-                if not data.strip():
-                    break
-                else:
-                    pp = cPickle.loads(data)
-                    MayaCommand = MayaMobuCommands(pp)
-                    cmdres = processCommandsInMaya(MayaCommand.processCommand)
-                    serialized_obj = cPickle.dumps(cmdres)
-                    conn.sendall(serialized_obj)
-                    continue
+                try:
+                    data = conn.recv(server.SIZE)
+                    if not data.strip():
+                        break
+                    else:
+                        pp = cPickle.loads(data)
+                        MayaCommand = MayaMobuCommands(pp)
+                        cmdres = processCommandsInMaya(MayaCommand.processCommand)
+                        serialized_obj = cPickle.dumps(cmdres)
+                        conn.sendall(serialized_obj)
+                        continue
+                except Exception as e:
+                    print(e)
     
             conn.shutdown(socket.SHUT_RDWR)
             conn.close()
             
-            print('Close Connection.')
+            print('Connection closed.')
             time.sleep(2.0)
             
         except socket.timeout:
+            # Non-blocking accept() call.
             pass
 
     server.s.close()
@@ -63,12 +70,12 @@ def startMayaServer():
         stopMayaServerEvent.clear()
 
         mServer = SocketServerMaya('', 6001)
-        mServer.s.settimeout(0.2)
+        mServer.s.settimeout(0.2) # Make server socket is non-blocking.
         mServer.get_socket()
         t = threading.Thread(name = 'MayaServerThread-1', target = listenerThread, args = (mServer,))
         t.daemon = True
 
-        print('Start listener thread.')
+        print('Start server listener thread.')
         t.start()
 
         print('Server initialized.')
@@ -83,7 +90,6 @@ def stopMayaServer():
         stopMayaServerEvent.set()
         serverInitialized = False
     except Exception as e:
-        print('2222')
         print(e)
         return
 
