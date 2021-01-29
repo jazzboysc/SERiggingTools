@@ -91,6 +91,7 @@ class MainUI(QtWidgets.QWidget):
         if len(mappingList) == 0:
             Mobu_print('No retarget mapping was added to queue.')
             return
+
         for mapItem in mappingList:
             # Get Mobu Effectors' data
             sendCommand = MayaMobuSocketData()#SocketServerMobu.MayaMobuCommands()
@@ -152,7 +153,7 @@ class MainUI(QtWidgets.QWidget):
         try:
             mSocket.connect(('localhost', commandPort))
             serialized_obj = cPickle.dumps(sendCommand)
-            mSocket.send(serialized_obj)
+            mSocket.sendall(serialized_obj)
             data = mSocket.recv(1024)
             recvHIKList = cPickle.loads(data)
             Mobu_print(recvHIKList)
@@ -192,6 +193,7 @@ class MainUI(QtWidgets.QWidget):
         parent = FBFindObjectsByName(findConstrainName, foundComponents, includeNamespace, modelsOnly) #C_SpinUpperBody_Ctrl
         if len(foundComponents) == 0:
             return False
+            
         FBPlayerControl().SetTransportFps(FBTimeMode().kFBTimeMode30Frames)
         for comp in foundComponents:
             mayaCtrl = comp.ReferenceGet(0)
