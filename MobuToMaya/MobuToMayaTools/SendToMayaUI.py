@@ -114,7 +114,7 @@ class MainUI(QtWidgets.QWidget):
                 mSocket.connect(('localhost', commandPort))
                 serialized_obj = cPickle.dumps(sendCommand)
                 Mobu_print('DataSize:' + str(len(serialized_obj)).encode())
-                mSocket.send(serialized_obj)
+                mSocket.sendall(serialized_obj)
                 data = mSocket.recv(1024)
                 recvData = cPickle.loads(data)
                 Mobu_print(recvData)
@@ -193,7 +193,7 @@ class MainUI(QtWidgets.QWidget):
         parent = FBFindObjectsByName(findConstrainName, foundComponents, includeNamespace, modelsOnly) #C_SpinUpperBody_Ctrl
         if len(foundComponents) == 0:
             return False
-            
+
         FBPlayerControl().SetTransportFps(FBTimeMode().kFBTimeMode30Frames)
         for comp in foundComponents:
             mayaCtrl = comp.ReferenceGet(0)
