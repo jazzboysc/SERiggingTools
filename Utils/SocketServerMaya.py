@@ -19,7 +19,8 @@ class MayaMobuCommands():
         elif self.SocketData.commandType == 2:
             print('Receving custom rig animation data.')
             #tarRes = self.setKeyframesOfCustomRigs()
-            return tarRes
+            #return tarRes
+            return 'None'
 
         else:
             print('There is no valid command need to be implemented.')

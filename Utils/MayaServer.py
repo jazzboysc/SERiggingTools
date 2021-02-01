@@ -32,14 +32,20 @@ def listenerThread(server):
                 try:
                     data = conn.recv(server.SIZE)
                     if not data.strip():
+                        print('2222')
                         break
                     else:
+                        print('1111')
                         pp = cPickle.loads(data)
+
+                        pp.debugDumpData()
+
                         MayaCommand = MayaMobuCommands(pp)
                         cmdres = processCommandsInMaya(MayaCommand.processCommand)
                         serialized_obj = cPickle.dumps(cmdres)
                         conn.sendall(serialized_obj)
-                        continue
+                        #continue
+                        break
 
                 except Exception as e:
                     print(e)
