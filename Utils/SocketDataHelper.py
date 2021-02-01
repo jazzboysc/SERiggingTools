@@ -84,6 +84,7 @@ skDefineSlotList = [
             'RightInHandRing',
         ]
 
+
 class MayaMobuSocketData():
     def __init__(self):    
 
@@ -199,9 +200,9 @@ class MayaMobuSocketData():
     def debugDumpData(self):
         print('importFBXPath: ' + self.importFBXPath)
         print('importNamespace: ' + self.importNamespace)
-        print('importModeMerge: ' + self.importModeMerge)
+        print('importModeMerge: ' + str(self.importModeMerge))
         print('skeletonDefinePath: ' + self.skeletonDefinePath)
-        print('commandType: ' + self.commandType)
+        print('commandType: ' + str(self.commandType))
         print('characterName: ' + self.characterName)
         print('targetCharacter: ' + self.targetCharacter)
 
@@ -212,3 +213,9 @@ class MayaMobuSocketData():
         for key in self.skDefineMapList:
             print(key)
             print(self.skDefineMapList[key])
+
+        for effector in self.MobuTransform:
+            print(effector)
+            for curAnimCurve in self.MobuTransform[effector]:
+                for curAnimCurveKey in curAnimCurve:
+                    print(curAnimCurveKey)

@@ -94,18 +94,17 @@ class MainUI(QtWidgets.QWidget):
 
         for mapItem in mappingList:
             # Get Mobu Effectors' data
-            sendCommand = MayaMobuSocketData()#SocketServerMobu.MayaMobuCommands()
+            sendCommand = MayaMobuSocketData()
             sendCommand.commandType = 2
             MobuChar = mapItem[0].encode()
             mayaChar = mapItem[1].encode()
             sendCommand.targetCharacter = mayaChar
-            setDataRes = self.setCharacterDataToCommand(MobuChar, sendCommand)
-            if not setDataRes:
-                Mobu_print('Cannot find constraints or controls.')
-                return
-            Mobu_print('Begin To Send')
-            sendCommand = setDataRes
-            #Mobu_print(sendCommand.MobuTransform['RightShoulder'][1]) #HeadEffector
+            # setDataRes = self.setCharacterDataToCommand(MobuChar, sendCommand)
+            # if not setDataRes:
+            #     Mobu_print('Cannot find constraints or controls.')
+            #     return
+            # Mobu_print('Begin To Send')
+            #sendCommand = setDataRes
             
             # Socket
             commandPort = 6001
@@ -114,15 +113,19 @@ class MainUI(QtWidgets.QWidget):
                 mSocket.connect(('localhost', commandPort))
                 serialized_obj = cPickle.dumps(sendCommand)
                 Mobu_print('DataSize:' + str(len(serialized_obj)).encode())
-                mSocket.sendall(serialized_obj)
+                #mSocket.send(serialized_obj)
 
                 res = cPickle.loads(serialized_obj)
-                print(res)
+                res.debugDumpData()
+
+                pythonidelib.FlushOutput()
+
                 #data = mSocket.recv(1024)
                 #recvData = cPickle.loads(data)
                 #Mobu_print(recvData)
             except Exception as e:
-                Mobu_print('Send to Maya Fail:', e)
+                Mobu_print('Send to Maya Fail:')
+                Mobu_print(e)
             
             mSocket.close()
             Mobu_print('Socket Connection closed.')
