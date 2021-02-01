@@ -6,9 +6,8 @@ import threading
 import cPickle
 import time
 
-#from ..Utils.SocketServerMaya import MayaMobuCommands
 from ..Utils import HIKHelper
-from ..Utils.SocketDataHelper import MayaMobuSocketData
+from ..Utils import SocketDataHelper
 import UIConfig
 
 import maya.mel as mel
@@ -52,7 +51,7 @@ class MayaToMobuUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.initializeUI()
         self.setButtonsCallBack()
 
-        self.sendToMobuCommand = MayaMobuSocketData()
+        self.sendToMobuCommand = SocketDataHelper.MayaMobuSocketData()
 
     def initializeUI(self):
         charList = HIKHelper.characterDefinitionList()
@@ -104,9 +103,10 @@ class MayaToMobuUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         self.sendToMobuCommand.importModeMerge = True
         self.sendToMobuCommand.characterName = charNameWithoutNamespace
 
-        for effector in self.sendToMobuCommand.MobuEffectorList:
+        for effector in SocketDataHelper.MobuEffectorList:
             self.sendToMobuCommand.customRigMapTable[effector] = HIKHelper.matchCustomRigWithEffector(char, effector)
-        for slot in self.sendToMobuCommand.skDefineSlotList:
+            
+        for slot in SocketDataHelper.skDefineSlotList:
             self.sendToMobuCommand.skDefineMapList[slot] = HIKHelper.matchSkeletonDefineWithSlot(char, slot)
 
         # Socket Setting

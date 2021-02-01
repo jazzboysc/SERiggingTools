@@ -1,6 +1,5 @@
-class MayaMobuSocketData():
-    def __init__(self):    
-        self.MobuEffectorList = [
+
+MobuEffectorList = [
             'HipsEffector',
             'ChestOriginEffector',
             'ChestEndEffector',
@@ -14,26 +13,10 @@ class MayaMobuSocketData():
             'LeftKneeEffector',
             'RightKneeEffector',
             'LeftAnkleEffector',
-            'RightAnkleEffector',
-        ]
-        self.customRigMapTable = {}
-        self.customRigMapTable['HipsEffector'] = 0
-        self.customRigMapTable['LeftAnkleEffector'] = 0
-        self.customRigMapTable['RightAnkleEffector'] = 0
-        self.customRigMapTable['LeftWristEffector'] = 0
-        self.customRigMapTable['RightWristEffector'] = 0
-        self.customRigMapTable['LeftKneeEffector'] = 0
-        self.customRigMapTable['RightKneeEffector'] = 0
-        self.customRigMapTable['LeftElbowEffector'] = 0
-        self.customRigMapTable['RightElbowEffector'] = 0
-        self.customRigMapTable['LeftShoulder'] = 0
-        self.customRigMapTable['RightShoulder'] = 0
-        self.customRigMapTable['HeadEffector'] = 0
-        self.customRigMapTable['ChestOriginEffector'] = 0
-        self.customRigMapTable['ChestEndEffector'] = 0
+            'RightAnkleEffector'
+            ]
 
-        # Skeleton Definition Slot List and Map List
-        self.skDefineSlotList = [
+skDefineSlotList = [
             'Hips',
             'LeftUpLeg',
             'LeftLeg',
@@ -101,6 +84,26 @@ class MayaMobuSocketData():
             'RightInHandRing',
         ]
 
+class MayaMobuSocketData():
+    def __init__(self):    
+
+        self.customRigMapTable = {}
+        self.customRigMapTable['HipsEffector'] = 0
+        self.customRigMapTable['LeftAnkleEffector'] = 0
+        self.customRigMapTable['RightAnkleEffector'] = 0
+        self.customRigMapTable['LeftWristEffector'] = 0
+        self.customRigMapTable['RightWristEffector'] = 0
+        self.customRigMapTable['LeftKneeEffector'] = 0
+        self.customRigMapTable['RightKneeEffector'] = 0
+        self.customRigMapTable['LeftElbowEffector'] = 0
+        self.customRigMapTable['RightElbowEffector'] = 0
+        self.customRigMapTable['LeftShoulder'] = 0
+        self.customRigMapTable['RightShoulder'] = 0
+        self.customRigMapTable['HeadEffector'] = 0
+        self.customRigMapTable['ChestOriginEffector'] = 0
+        self.customRigMapTable['ChestEndEffector'] = 0
+
+        # Skeleton Definition Slot List and Map List
         self.skDefineMapList = {}
         self.skDefineMapList['Hips'] = 0
         self.skDefineMapList['LeftUpLeg'] = 0
@@ -192,3 +195,20 @@ class MayaMobuSocketData():
         self.commandType = 0  # 0 represents no command; 1 represents import; 
         self.characterName = '' 
         self.targetCharacter = ''
+
+    def debugDumpData(self):
+        print('importFBXPath: ' + self.importFBXPath)
+        print('importNamespace: ' + self.importNamespace)
+        print('importModeMerge: ' + self.importModeMerge)
+        print('skeletonDefinePath: ' + self.skeletonDefinePath)
+        print('commandType: ' + self.commandType)
+        print('characterName: ' + self.characterName)
+        print('targetCharacter: ' + self.targetCharacter)
+
+        for key in self.customRigMapTable:
+            print(key)
+            print(self.customRigMapTable[key])
+
+        for key in self.skDefineMapList:
+            print(key)
+            print(self.skDefineMapList[key])

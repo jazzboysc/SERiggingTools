@@ -9,13 +9,18 @@ class MayaMobuCommands():
         self.SocketData = data
         
     def processCommand(self):
+        print self.SocketData.commandType
+
         if self.SocketData.commandType == 1:
             print('Start Getting Valid Characters.')
             charRes = self.getValidCharacterListWithCustomRig()
             return charRes
+
         elif self.SocketData.commandType == 2:
-            tarRes = self.setKeyframesOfCustomRigs()
+            print('Receving custom rig animation data.')
+            #tarRes = self.setKeyframesOfCustomRigs()
             return tarRes
+
         else:
             print('There is no valid command need to be implemented.')
             return 0
@@ -35,9 +40,9 @@ class MayaMobuCommands():
         char = self.SocketData.targetCharacter
         if not HIKHelper.isCharacterDefinition(char):
             cmds.warning('%s is not a valid HIKCharacterNode!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'%char)
-            return('Failed to retarget to Maya.')
+            return('Failed to retarget to Maya custom rig.')
 
-        for effector in self.SocketData.MobuEffectorList:
+        for effector in HIKHelper.MobuEffectorList:
             if self.SocketData.MobuTransform[effector] == []:
                 continue
 
@@ -88,6 +93,7 @@ class MayaMobuCommands():
 
     def setKeyOfEffector(self, effector, tarRig):
         if len(self.SocketData.MobuTransform[effector]) != 6:
+            print('Animation channel number does not equal 6: ' + tarRig)
             return
 
         for i in range(len(self.SocketData.MobuTransform[effector])):

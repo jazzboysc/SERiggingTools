@@ -232,12 +232,12 @@ sys.path.append('D:\Work')
 
 import SERiggingTools.Utils.SocketServerMobu as SocketServerMobu
 import SERiggingTools.MobuToMaya.MobuToMayaTools.MobuServer2020 as MobuServer2020
-
+import SERiggingTools.MobuToMaya.MobuToMayaTools.SendToMayaUI as SendToMayaUI
 import SERiggingTools.MobuToMaya.MobuToMayaMenu.MobuToMayaMenu as MobuToMayaMenu
 
 reload(SocketServerMobu)
 reload(MobuServer2020)
-
+reload(SendToMayaUI)
 
 MobuToMayaMenu.LoadMenu()
 

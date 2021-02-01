@@ -3,6 +3,8 @@ import socket
 import threading
 import tempfile
 
+import SocketDataHelper
+
 from pyfbsdk import *
 from pyfbsdk_additions import *
 
@@ -122,7 +124,7 @@ class MayaMobuCommands():
             myChar = FBCharacter(chracterName)
             #myChar.ProcessObjectNamespace(FBNamespaceAction.kFBRemoveAllNamespace, "")
             myChar.ProcessObjectNamespace(FBNamespaceAction.kFBConcatNamespace, self.SocketData.importNamespace.encode('ascii', 'ignore'))
-            for slotName in self.SocketData.skDefineSlotList:
+            for slotName in SocketDataHelper.skDefineSlotList:
                 if self.SocketData.skDefineMapList[slotName] != 0:
                     jtName = self.SocketData.skDefineMapList[slotName].encode('ascii', 'ignore')
                     if jtName != 0:
@@ -156,7 +158,7 @@ class MayaMobuCommands():
         property.append(myJoint)
 
     def constrainCustomRigWithEffectors(self):
-        for effectorName in self.SocketData.MobuEffectorList:
+        for effectorName in SocketDataHelper.MobuEffectorList:
             if self.SocketData.customRigMapTable[effectorName] != 0:
                 mayaCtrlName = self.SocketData.importNamespace.encode() + ':' + self.SocketData.customRigMapTable[effectorName].encode()
                 effectorName = self.SocketData.characterName.encode() + '_Ctrl:' + effectorName
@@ -182,7 +184,7 @@ class MayaMobuCommands():
         customRigExt.ProcessObjectNamespace(FBNamespaceAction.kFBConcatNamespace, self.SocketData.importNamespace.encode())
         character.AddCharacterExtension(customRigExt)
 
-        for effectorName in self.SocketData.MobuEffectorList:
+        for effectorName in SocketDataHelper.MobuEffectorList:
             if self.SocketData.customRigMapTable[effectorName] != 0:
                 mayaCtrlName = self.SocketData.importNamespace.encode() + ':' + self.SocketData.customRigMapTable[effectorName].encode()
                 mayaCtrlModel = FBFindModelByLabelName(mayaCtrlName)

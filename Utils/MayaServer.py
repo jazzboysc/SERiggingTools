@@ -40,6 +40,7 @@ def listenerThread(server):
                         serialized_obj = cPickle.dumps(cmdres)
                         conn.sendall(serialized_obj)
                         continue
+
                 except Exception as e:
                     print(e)
     
