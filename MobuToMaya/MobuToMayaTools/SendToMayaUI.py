@@ -113,7 +113,7 @@ class MainUI(QtWidgets.QWidget):
                 mSocket.connect(('localhost', commandPort))
                 serialized_obj = cPickle.dumps(sendCommand)
                 Mobu_print('DataSize:' + str(len(serialized_obj)).encode())
-                mSocket.send(serialized_obj)
+                mSocket.sendall(serialized_obj)
 
                 res = cPickle.loads(serialized_obj)
                 res.debugDumpData()
@@ -127,7 +127,7 @@ class MainUI(QtWidgets.QWidget):
                 Mobu_print('Send to Maya Fail:')
                 Mobu_print(e)
             
-            time.sleep(5.0)
+            #time.sleep(5.0)
             mSocket.close()
             Mobu_print('Socket Connection closed.')
 

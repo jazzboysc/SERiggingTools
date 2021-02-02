@@ -19,42 +19,69 @@ def processCommandsInMaya(MayaCmd):
     except Exception as e:
         om.MGlobal.displayError('Encountered exception: %s' %e)
 
+def recv(theSocket,timeout = 2):
+    # make socket non blocking
+    theSocket.setblocking(0)
+    
+    # total data partwise in an array
+    totalData = []
+    data = ''
+    
+    # beginning time
+    begin = time.time()
+    while True:
+        # if you got some data, then break after timeout
+        if totalData and time.time() - begin > timeout:
+            break
+        
+        # if you got no data at all, wait a little longer, twice the timeout
+        elif time.time() - begin > timeout * 2:
+            break
+        
+        # recv something
+        try:
+            data = theSocket.recv(8192)
+            if data:
+                totalData.append(data)
+                # change the beginning time for measurement
+                begin = time.time()
+            else:
+                # sleep for sometime to indicate a gap
+                time.sleep(0.1)
+        except:
+            pass
+    
+    # join all parts to make final string
+    return ''.join(totalData)
+
 stopMayaServerEvent = threading.Event()
 def listenerThread(server):
     global stopMayaServerEvent
     while not stopMayaServerEvent.is_set():
         try:
             conn, address = server.s.accept()
-            conn.setblocking(1) # Make child socket blocking.
             print("Client came in Server")
 
-            while True:
-                try:
-                    data = conn.recv(server.SIZE)
-                    if not data.strip():
-                        print('2222')
-                        break
-                    else:
-                        print('1111')
-                        pp = cPickle.loads(data)
+            data = recv(conn)
 
-                        pp.debugDumpData()
+            if not data.strip():
+                print('Nothing received')
+            else:
+                print('Data received')
+                pp = cPickle.loads(data)
 
-                        MayaCommand = MayaMobuCommands(pp)
-                        cmdres = processCommandsInMaya(MayaCommand.processCommand)
-                        serialized_obj = cPickle.dumps(cmdres)
-                        conn.sendall(serialized_obj)
-                        #continue
-                        break
+                pp.debugDumpData()
 
-                except Exception as e:
-                    print(e)
+                MayaCommand = MayaMobuCommands(pp)
+                cmdres = processCommandsInMaya(MayaCommand.processCommand)
+                serialized_obj = cPickle.dumps(cmdres)
+                conn.sendall(serialized_obj)
     
             conn.shutdown(socket.SHUT_RDWR)
             conn.close()
             
             print('Connection closed.')
-            time.sleep(2.0)
+            time.sleep(0.1)
             
         except socket.timeout:
             # Non-blocking accept() call.
