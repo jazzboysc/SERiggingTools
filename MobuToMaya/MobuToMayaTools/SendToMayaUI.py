@@ -99,12 +99,12 @@ class MainUI(QtWidgets.QWidget):
             MobuChar = mapItem[0].encode()
             mayaChar = mapItem[1].encode()
             sendCommand.targetCharacter = mayaChar
-            # setDataRes = self.setCharacterDataToCommand(MobuChar, sendCommand)
-            # if not setDataRes:
-            #     Mobu_print('Cannot find constraints or controls.')
-            #     return
-            # Mobu_print('Begin To Send')
-            #sendCommand = setDataRes
+            setDataRes = self.setCharacterDataToCommand(MobuChar, sendCommand)
+            if not setDataRes:
+                Mobu_print('Cannot find constraints or controls.')
+                return
+            Mobu_print('Begin To Send')
+            sendCommand = setDataRes
             
             # Socket
             commandPort = 6001
@@ -116,7 +116,7 @@ class MainUI(QtWidgets.QWidget):
                 mSocket.sendall(serialized_obj)
 
                 res = cPickle.loads(serialized_obj)
-                res.debugDumpData()
+                #res.debugDumpData()
 
                 pythonidelib.FlushOutput()
 

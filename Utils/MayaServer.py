@@ -20,38 +20,38 @@ def processCommandsInMaya(MayaCmd):
         om.MGlobal.displayError('Encountered exception: %s' %e)
 
 def recv(theSocket,timeout = 2):
-    # make socket non blocking
+    # Make socket non blocking
     theSocket.setblocking(0)
     
-    # total data partwise in an array
+    # Total data partwise in an array
     totalData = []
     data = ''
     
-    # beginning time
+    # Beginning time
     begin = time.time()
     while True:
-        # if you got some data, then break after timeout
+        # If you got some data, then break after timeout
         if totalData and time.time() - begin > timeout:
             break
         
-        # if you got no data at all, wait a little longer, twice the timeout
+        # If you got no data at all, wait a little longer, twice the timeout
         elif time.time() - begin > timeout * 2:
             break
         
-        # recv something
+        # Recv something
         try:
             data = theSocket.recv(8192)
             if data:
                 totalData.append(data)
-                # change the beginning time for measurement
+                # Change the beginning time for measurement
                 begin = time.time()
             else:
-                # sleep for sometime to indicate a gap
+                # Sleep for sometime to indicate a gap
                 time.sleep(0.1)
         except:
             pass
     
-    # join all parts to make final string
+    # Join all parts to make final string
     return ''.join(totalData)
 
 stopMayaServerEvent = threading.Event()
@@ -63,14 +63,16 @@ def listenerThread(server):
             print("Client came in Server")
 
             data = recv(conn)
-
             if not data.strip():
                 print('Nothing received')
             else:
                 print('Data received')
+                dataSize = len(data)
+                print('Data size:' + str(dataSize))
+
                 pp = cPickle.loads(data)
 
-                pp.debugDumpData()
+                #pp.debugDumpData()
 
                 MayaCommand = MayaMobuCommands(pp)
                 cmdres = processCommandsInMaya(MayaCommand.processCommand)
