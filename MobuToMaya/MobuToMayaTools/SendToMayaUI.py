@@ -116,7 +116,7 @@ class MainUI(QtWidgets.QWidget):
                 mSocket.sendall(serialized_obj)
 
                 res = cPickle.loads(serialized_obj)
-                #res.debugDumpData()
+                #res.debugDumpData() # DEBUG DUMP TO MOBU CONSOLE, TIME CONSUMING!!!
 
                 pythonidelib.FlushOutput()
 
@@ -127,7 +127,6 @@ class MainUI(QtWidgets.QWidget):
                 Mobu_print('Send to Maya Fail:')
                 Mobu_print(e)
             
-            #time.sleep(5.0)
             mSocket.close()
             Mobu_print('Socket Connection closed.')
 
@@ -217,8 +216,8 @@ class MainUI(QtWidgets.QWidget):
                 
                 keysGroupList = [cv.Keys for cv in mayaCtrlCVs]
                 for keys in keysGroupList: # 6 keysgroup: tx ty tz rx ry rz
-                    valueList = [[k.Time.GetFrame(), k.Value] for k in keys]
-                    thisCommand.MobuTransform[effectorName].append(valueList)
+                    keyValueList = [(k.Time.GetFrame(), k.Value) for k in keys]
+                    thisCommand.MobuTransform[effectorName].append(keyValueList)
             else:
                 return False
         return thisCommand

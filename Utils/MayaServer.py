@@ -72,7 +72,7 @@ def listenerThread(server):
 
                 pp = cPickle.loads(data)
 
-                #pp.debugDumpData()
+                #pp.debugDumpData() # DEBUG DUMP TO MAYA CONSOLE, TIME CONSUMING!!!
 
                 MayaCommand = MayaMobuCommands(pp)
                 cmdres = processCommandsInMaya(MayaCommand.processCommand)
@@ -106,7 +106,7 @@ def startMayaServer():
         stopMayaServerEvent.clear()
 
         mServer = SocketServerMaya('', 6001)
-        mServer.s.settimeout(0.2) # Make server socket is non-blocking.
+        mServer.s.settimeout(0.2) # Make server socket non-blocking.
         mServer.get_socket()
         t = threading.Thread(name = 'MayaServerThread-1', target = listenerThread, args = (mServer,))
         t.daemon = True
