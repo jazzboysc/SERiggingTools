@@ -18,9 +18,8 @@ class MayaMobuCommands():
 
         elif self.SocketData.commandType == 2:
             print('Receving custom rig animation data.')
-            #tarRes = self.setKeyframesOfCustomRigs()
-            #return tarRes
-            return 'None'
+            tarRes = self.setKeyframesOfCustomRigs()
+            return tarRes
 
         else:
             print('There is no valid command need to be implemented.')
@@ -50,16 +49,16 @@ class MayaMobuCommands():
             # set to 30 fps mode  \\ delete key frames between retarget frame zones.
             cmds.currentUnit(t = 'ntsc' )
             #cmds.playbackOptions(minTime = newMinTime)
-            tarRig = HIKHelper.matchCustomRigWithEffector(char, effector)
-            if tarRig == 0:
+            tarRigControl = HIKHelper.matchCustomRigWithEffector(char, effector)
+            if tarRigControl == 0:
                 return('Failed to retarget to Maya.2')
 
-            parentDrivenNode = self.getDrivenParent(tarRig)
+            parentDrivenNode = self.getDrivenParent(tarRigControl)
             if parentDrivenNode != None:
                 print('This controller:%s might need to be set to world space.'%parentDrivenNode)
             
             # set key values
-            self.setKeyOfEffector(effector, tarRig)
+            self.setKeyOfEffector(effector, tarRigControl)
 
 
         return('Reraget to %s completed.' %char)
@@ -67,7 +66,7 @@ class MayaMobuCommands():
     def getDrivenParent(self, nodeName):
         attrList = ['tx', 'ty', 'tz', 'rx', 'ry', 'rz']
         parent = cmds.listRelatives(nodeName, ap = True)
-        if len(parent) > 0:
+        if parent and len(parent) > 0:
             par = parent[0]
             for attr in attrList:
                 res = cmds.connectionInfo('{}.{}'.format(par, attr), id=True)
@@ -77,6 +76,10 @@ class MayaMobuCommands():
             return None
 
     def setKeyOfEffectorlegacy(self, effector, tarRig):
+        if not self.SocketData.MobuTransform[effector]:
+            print('Effector is none:' + effector)
+            return
+
         keyStartTime = self.SocketData.MobuTransform[effector][0]
         # set key values
         for i in range(1, len(self.SocketData.MobuTransform[effector])):
@@ -84,6 +87,11 @@ class MayaMobuCommands():
             kValue = self.SocketData.MobuTransform[effector][i]
             kTrans = [kValue[0], kValue[1], kValue[2]]
             kRot = [kValue[3], kValue[4], kValue[5]]
+
+            if not kValue:
+                print('kValue is none:' + effector + str(i))
+                continue
+
             if len(kValue) == 6:
                 cmds.setKeyframe(tarRig, at = 'tx', time = kTime, v = kValue[0])
                 cmds.setKeyframe(tarRig, at = 'ty', time = kTime, v = kValue[1])
@@ -93,12 +101,16 @@ class MayaMobuCommands():
                 cmds.setKeyframe(tarRig, at = 'rz', time = kTime, v = kValue[5])
 
     def setKeyOfEffector(self, effector, tarRig):
-        if len(self.SocketData.MobuTransform[effector]) != 6:
+        if self.SocketData.MobuTransform[effector] and len(self.SocketData.MobuTransform[effector]) != 6:
             print('Animation channel number does not equal 6: ' + tarRig)
             return
 
         for i in range(len(self.SocketData.MobuTransform[effector])):
             keysGrp = self.SocketData.MobuTransform[effector][i]
+
+            if not keysGrp:
+                continue
+            
             for j in range(len(keysGrp)):
                 keyTime = keysGrp[j][0]
                 keyValue = keysGrp[j][1]
