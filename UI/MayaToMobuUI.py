@@ -109,6 +109,8 @@ class MayaToMobuUI(MayaQWidgetDockableMixin, QtWidgets.QDialog):
         for slot in SocketDataHelper.skDefineSlotList:
             self.sendToMobuCommand.skDefineMapList[slot] = HIKHelper.matchSkeletonDefineWithSlot(char, slot)
 
+        #self.sendToMobuCommand.debugDumpData()
+
         # Socket Setting
         commandPort = 6000
         mSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

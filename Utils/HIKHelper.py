@@ -55,7 +55,7 @@ HIKCustomRigMobu2MayaMapTable['LeftShoulder'] = 'LeftShoulderGX'
 HIKCustomRigMobu2MayaMapTable['RightShoulder'] = 'RightShoulderGX'
 HIKCustomRigMobu2MayaMapTable['HeadEffector'] = 'HeadGX'
 HIKCustomRigMobu2MayaMapTable['ChestOriginEffector'] = 'SpineGX'
-HIKCustomRigMobu2MayaMapTable['ChestEndEffector'] = 'Spine3GX'
+HIKCustomRigMobu2MayaMapTable['ChestEndEffector'] = 'Spine4GX'
 
 # CharacterList
 def characterDefinitionList():
