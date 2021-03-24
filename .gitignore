@@ -106,3 +106,4 @@ venv.bak/
 *.suo
 *.swt
 *.user
+.vscode/settings.json
